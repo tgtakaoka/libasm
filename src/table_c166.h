@@ -32,7 +32,7 @@ struct TableC166 final : InsnTable<CpuType> {
 extern const TableC166 TABLE;
 
 Error searchName(CpuType, AsmInsn &insn);
-Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
+Error searchOpCode(CpuType, bool mac, DisInsn &insn, StrBuffer &out);
 
 // The reg and bitoff fields which address |addr|, or -1 if none does.
 int16_t shortReg(const AsmInsn &insn, uint32_t addr);

@@ -84,9 +84,40 @@ test.bin: error: Illegal operand mode: "4, 2345h"
             0xe6, 0x09, 0x34, 0x12, 0x08, 0x1e, 0x3d, 0x01, 0x3f, 0x01, 0xfa, 0x04, 0x45, 0x23);
 }
 
+void test_dis_xc16x() {
+    PREP_DIS(c166::DisC166);
+
+    driver.setUpperHex(false);
+
+    DIS8("xc16x", 0x12340,
+            R"(      cpu              xc16x
+      org              012340h
+      comul            r1, [r2+]
+      - usr1 comacm    [idx0+], [r3+qr0]
+      costore          r4, mal
+      jmpa             cc_nusr1, 012340h
+      jmpa-            cc_z, 012356h
+      sbrk
+      comac            r5, r6, rnd
+)",
+            R"(       0 :                            cpu              xc16x
+   12340 :                            org              012340h
+   12340 : 83 12 c0 02                comul            r1, [r2+]
+   12344 : 93 23 d8 64                - usr1 comacm    [idx0+], [r3+qr0]
+   12348 : c3 44 20 00                costore          r4, mal
+   1234c : ea 1a 40 23                jmpa             cc_nusr1, 012340h
+   12350 : ea 21 56 23                jmpa-            cc_z, 012356h
+   12354 : 8c 00                      sbrk
+   12356 : a3 56 d1 00                comac            r5, r6, rnd
+)",
+            0x83, 0x12, 0xc0, 0x02, 0x93, 0x23, 0xd8, 0x64, 0xc3, 0x44, 0x20, 0x00, 0xea, 0x1a,
+            0x40, 0x23, 0xea, 0x21, 0x56, 0x23, 0x8c, 0x00, 0xa3, 0x56, 0xd1, 0x00);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_c166);
     RUN_TEST(test_dis_c166);
+    RUN_TEST(test_dis_xc16x);
 }
 
 }  // namespace test

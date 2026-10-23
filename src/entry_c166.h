@@ -48,33 +48,40 @@ enum AddrMode : uint8_t {
     M_REGB = 16,  // byte reg
     M_CC = 17,    // cc in the high nibble
     M_CCO = 18,   // cc in the high nibble of the opcode
-    M_BITO = 19,  // bitaddr; bitoff, and the bit in the high nibble of the opcode
-    M_BOFF = 20,  // bitoff
-    M_REL = 21,   // rel
-    M_SEG = 22,   // seg
-    M_RNG = 23,   // #irang2 in bits 5:4
-    M_RNGR = 24,  // #irang2 in bits 5:4, which also starts an ESFR sequence
+    M_XCC = 19,   // xcc in bits 7:3
+    M_BITO = 20,  // bitaddr; bitoff, and the bit in the high nibble of the opcode
+    M_BOFF = 21,  // bitoff
+    M_REL = 22,   // rel
+    M_SEG = 23,   // seg
+    M_RNG = 24,   // #irang2 in bits 5:4
+    M_RNGR = 25,  // #irang2 in bits 5:4, which also starts an ESFR sequence
+    M_QIX = 26,   // [IDXi*]; IDXi and its update in the high nibble
+    M_RND = 27,   // rnd
     // Operands which need the second word.
-    M_IXL = 25,   // [Rw+#data16]; Rw in the low nibble
-    M_IM16 = 26,  // #data16
-    M_IM8 = 27,   // #data8 in the low byte; the high byte is not significant
-    M_MEM = 28,   // mem
-    M_CADR = 29,  // caddr
-    M_BITQ = 30,  // bitaddr; bitoff, and the bit in the high nibble of the 4th byte
-    M_BITZ = 31,  // bitaddr; bitoff in the 3rd byte, the bit in the low nibble of the 4th byte
-    M_MDL = 32,   // #mask8 in the 3rd byte, #data8 in the 4th byte
-    M_MDH = 33,   // #data8 in the 3rd byte, #mask8 in the 4th byte
-    M_RELW = 34,  // rel in the 3rd byte; the low nibble of the 4th byte is unused
-    M_PAG = 35,   // #pag10
-    M_SEG8 = 36,  // #seg8
+    M_IXL = 28,    // [Rw+#data16]; Rw in the low nibble
+    M_IM16 = 29,   // #data16
+    M_IM8 = 30,    // #data8 in the low byte; the high byte is not significant
+    M_MEM = 31,    // mem
+    M_CADR = 32,   // caddr
+    M_BITQ = 33,   // bitaddr; bitoff, and the bit in the high nibble of the 4th byte
+    M_BITZ = 34,   // bitaddr; bitoff in the 3rd byte, the bit in the low nibble of the 4th byte
+    M_MDL = 35,    // #mask8 in the 3rd byte, #data8 in the 4th byte
+    M_MDH = 36,    // #data8 in the 3rd byte, #mask8 in the 4th byte
+    M_RELW = 37,   // rel in the 3rd byte; the low nibble of the 4th byte is unused
+    M_PAG = 38,    // #pag10
+    M_SEG8 = 39,   // #seg8
+    M_QIRL = 40,   // [Rw*]; Rw in the low nibble, its update in bits 2:0 of the 4th byte
+    M_QNOP = 41,   // no operand; R0 in the low nibble, no update in bits 2:0 of the 4th byte
+    M_D5 = 42,     // #data5 in bits 4:0 of the 4th byte
+    M_COREG = 43,  // CoREG in bits 7:3 of the 3rd byte
     // Assembler operands which several of the above accept.
-    M_RW = 37,    // Rw
-    M_RB = 38,    // Rb
-    M_IDIR = 39,  // [Rw]
-    M_PINC = 40,  // [Rw+]
-    M_IMM = 41,   // #imm
-    M_BIT = 42,   // bitaddr
-    M_ADDR = 43,  // address
+    M_RW = 44,    // Rw
+    M_RB = 45,    // Rb
+    M_IDIR = 46,  // [Rw]
+    M_PINC = 47,  // [Rw+]
+    M_IMM = 48,   // #imm
+    M_BIT = 49,   // bitaddr
+    M_ADDR = 50,  // address
 };
 
 constexpr auto M_WORD2 = M_IXL;
@@ -94,21 +101,32 @@ enum CodeFormat : uint8_t {
     CF_NN = 9,   // the same register in both nibbles
     CF_PD = 10,  // none; the second word repeats the opcode
     CF_OP = 11,  // all, and the high nibble of the opcode
+    CF_FA = 12,  // bits 7:3 and bit 1
+    CF_F8 = 13,  // bits 7:3
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint16_t _attr;
+        uint32_t _attr;
 
-        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                               (static_cast<uint16_t>(src) << src_gp) |
-                                               (static_cast<uint16_t>(cf) << cf_gp))};
+        static constexpr Flags create(CodeFormat cf, AddrMode dst, AddrMode src,
+                AddrMode ext = M_NONE, bool rrr = false, bool hasSub = false, uint8_t sub = 0) {
+            return Flags{(static_cast<uint32_t>(dst) << dst_gp) |
+                         (static_cast<uint32_t>(src) << src_gp) |
+                         (static_cast<uint32_t>(ext) << ext_gp) |
+                         (static_cast<uint32_t>(cf) << cf_gp) | (rrr ? rrr_bm : 0) |
+                         (hasSub ? sub_bm : 0) | (static_cast<uint32_t>(sub) << sub_gp)};
         }
 
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
+        AddrMode ext() const { return AddrMode((_attr >> ext_gp) & mode_gm); }
         CodeFormat cf() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
+        // A CoXXX instruction, with its repeat control in bits 7:5 of the 4th byte.
+        bool rrr() const { return _attr & rrr_bm; }
+        // The 3rd byte is a sub-opcode.
+        bool hasSub() const { return _attr & sub_bm; }
+        uint8_t sub() const { return _attr >> sub_gp; }
         uint8_t opCodeMask() const { return cf() == CF_OP ? 0xF0 : 0; }
         uint8_t postMask() const {
             static constexpr uint8_t MASK[] PROGMEM = {
@@ -124,15 +142,23 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xFF,  // CF_NN
                     0x00,  // CF_PD
                     0xFF,  // CF_OP
+                    0xFA,  // CF_FA
+                    0xF8,  // CF_F8
             };
             return pgm_read_byte(&MASK[cf()]);
         }
-        bool word2() const { return dst() >= M_WORD2 || src() >= M_WORD2 || cf() == CF_PD; }
+        bool word2() const {
+            return dst() >= M_WORD2 || src() >= M_WORD2 || cf() == CF_PD || rrr();
+        }
 
     private:
         static constexpr int dst_gp = 0;
         static constexpr int src_gp = 6;
-        static constexpr int cf_gp = 12;
+        static constexpr int ext_gp = 12;
+        static constexpr int cf_gp = 18;
+        static constexpr int sub_gp = 24;
+        static constexpr uint32_t rrr_bm = UINT32_C(1) << 22;
+        static constexpr uint32_t sub_bm = UINT32_C(1) << 23;
         static constexpr uint_fast8_t mode_gm = 0x3F;
         static constexpr uint_fast8_t cf_gm = 0xF;
     };
@@ -141,7 +167,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
             const /* PROGMEM */ char *name_P)
         : Base(name_P, opc), _flags_P(flags), _post_P(post) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{pgm_read_dword(&_flags_P._attr)}; }
     Config::opcode_t readPost() const { return pgm_read_byte(&_post_P); }
 
 private:

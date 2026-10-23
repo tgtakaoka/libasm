@@ -33,6 +33,7 @@ struct DisC166 final : Disassembler, Config {
     Error setIndexSharp(bool enable);
     Error setCanonicalMem(bool enable);
     Error setExtPrefix(bool enable);
+    Error setRepeatPrefix(bool enable);
     Error setSfrName(bool enable);
     Error setGnuAs(bool enable) override;
 
@@ -41,12 +42,14 @@ private:
     const BoolOption<DisC166> _opt_indexSharp;
     const BoolOption<DisC166> _opt_canonicalMem;
     const BoolOption<DisC166> _opt_extPrefix;
+    const BoolOption<DisC166> _opt_repeatPrefix;
     const BoolOption<DisC166> _opt_sfrName;
 
     bool _ccPrefix;
     bool _indexSharp;
     bool _canonicalMem;
     bool _extPrefix;
+    bool _repeatPrefix;
     bool _sfrName;
 
     void decodeShortReg(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
@@ -57,6 +60,7 @@ private:
     void decodeCodeAddress(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     Error decodeInsn(DisInsn &insn, StrBuffer &out, bool follower = false) const;
+    bool decodeRepeat(DisInsn &insn, StrBuffer &out) const;
     Error decodeFollower(Insn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;

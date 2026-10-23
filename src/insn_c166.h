@@ -29,7 +29,9 @@ namespace c166 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
+    AddrMode ext() const { return flags().ext(); }
     CodeFormat cf() const { return flags().cf(); }
+    bool rrr() const { return flags().rrr(); }
     bool hasWord2() const { return flags().word2(); }
 };
 
@@ -103,11 +105,29 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
-        : DisInsnImpl(insn, memory, out), _post(0), _byte3(0), _byte4(0), _esfr(false) {}
+        : DisInsnImpl(insn, memory, out),
+          _post(0),
+          _byte3(0),
+          _byte4(0),
+          _read(0),
+          _esfr(false),
+          _follower(false) {}
 
     void readPost() { _post = readByte(); }
-    void readByte3() { _byte3 = readByte(); }
-    void readByte4() { _byte4 = readByte(); }
+    // Each byte of the second word is read once, however often it is asked for.
+    void readByte3() {
+        if (_read < 3) {
+            _byte3 = readByte();
+            _read = 3;
+        }
+    }
+    void readByte4() {
+        readByte3();
+        if (_read < 4) {
+            _byte4 = readByte();
+            _read = 4;
+        }
+    }
     uint8_t post() const { return _post; }
     uint8_t byte3() const { return _byte3; }
     uint8_t byte4() const { return _byte4; }
@@ -115,12 +135,17 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 
     void setEsfr(bool esfr) { _esfr = esfr; }
     bool esfr() const { return _esfr; }
+    // The instruction an EXTR, EXTPR or EXTSR prefix reads with it.
+    void setFollower() { _follower = true; }
+    bool follower() const { return _follower; }
 
 private:
     uint8_t _post;
     uint8_t _byte3;
     uint8_t _byte4;
+    uint8_t _read;
     bool _esfr;
+    bool _follower;
 };
 
 }  // namespace c166
