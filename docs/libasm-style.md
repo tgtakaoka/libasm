@@ -16,12 +16,12 @@ here as the maintainer's standing preference.
    at that commit. Comments are part of the contract too.
 3. No dead code: a file or symbol added before its first use counts as
    dead in the earlier commit.
-4. The `usage: asm ...` / `usage: dis ...` blocks in `README.md` and
-   `README_.adoc` are the actual `./cli/asm --help` / `./cli/dis --help`
-   output for *that commit*. Don't hand-edit them; regenerate them
-   from the built binaries. When adding/renaming a CLI option, list
-   "regenerate README CLI blocks" as a follow-up step rather than
-   patching the README directly.
+4. The `usage: asm ...` / `usage: dis ...` blocks in `README.md` are the
+   actual `./cli/asm --help` / `./cli/dis --help` output for *that
+   commit*. Don't hand-edit them; regenerate them from the built
+   binaries. When adding/renaming a CLI option, list "regenerate README
+   CLI blocks" as a follow-up step rather than patching the README
+   directly.
 
 ### Commit messages
 
@@ -2178,8 +2178,7 @@ closing quote -- it does not change the native form.
 `asm --help` / `dis --help` write to **stderr**, and the first line is
 `no input file`; the wrapped CPU-list lines also carry **trailing spaces**.
 Capture stdout+stderr, drop that line, `rstrip()` every line, and replace the
-WHOLE indented run (README.md) or the text between the `----` delimiters
-(README_.adoc) -- anchoring on the `libasm ... (version` line instead lets
+WHOLE indented run -- anchoring on the `libasm ... (version` line instead lets
 stray lines accumulate above it. Regenerate at each commit that changes a CLI
 option or adds a CPU, since the blocks must be that commit's actual output.
 
@@ -2233,7 +2232,7 @@ All mechanical:
 |---|---|
 | `src/version.h` | `LIBASM_VERSION_PATCH` and `LIBASM_VERSION_STRING` |
 | `library.json` | `"version"`, plus `keywords` if an arch was added |
-| `README.md`, `README_.adoc` | the CLI blocks, REGENERATED not hand-edited |
+| `README.md` | the CLI blocks, REGENERATED not hand-edited |
 
 Three traps, all hit for real:
 
@@ -2271,7 +2270,7 @@ The bump goes through a PR like anything else. After it merges:
    empty** before tagging. The tag is the step you cannot quietly redo.
 2. Re-run the checks on the MERGED commit, not the pre-merge one: both binaries
    print the new version, `ninja -C test` green, no old version string left
-   (`grep -rl` over `*.h *.json *.md *.adoc`).
+   (`grep -rl` over `*.h *.json *.md`).
 3. `git tag vX.Y.Z <merged-sha>` -- lightweight, like every prior tag -- then
    `git push origin vX.Y.Z`.
 

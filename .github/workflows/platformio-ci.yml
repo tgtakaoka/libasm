@@ -9,7 +9,6 @@ on:
       - '*.*.*'
     paths-ignore:
       - ".github/**"
-      - "**/*.adoc"
       - "**/*.md"
       - "**/*.txt"
       - "library.*"
