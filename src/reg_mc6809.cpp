@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_0,   REG_0   },
     { TEXT_REG_A,   REG_A   },
     { TEXT_REG_B,   REG_B   },
@@ -49,13 +49,13 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_Z,   REG_Z   },
 };
 
-PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-constexpr RegName SYSTEM_STACK_REGS[8] PROGMEM = {
+constexpr RegName SYSTEM_STACK_REGS[8] = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC,
 };
 
-constexpr RegName USER_STACK_REGS[8] PROGMEM = {
+constexpr RegName USER_STACK_REGS[8] = {
     REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC,
 };
 
@@ -70,7 +70,7 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
         scan = p;
         return RegName(entry->name());
     }
-    if (scan.iexpectWord_P(PSTR("SP")))
+    if (scan.iexpectWord_P("SP"))
         return REG_S;
     if (scan.iexpectWord_P(TEXT_REG_0))
         return REG_0;
@@ -178,7 +178,7 @@ uint8_t encodeStackReg(RegName name, bool userStack) {
     auto *end = userStack ? ARRAY_END(USER_STACK_REGS) : ARRAY_END(SYSTEM_STACK_REGS);
     uint8_t bit = 0x01;
     while (reg < end) {
-        if (pgm_read_byte(reg) == name)
+        if (*reg == name)
             break;
         reg++;
         bit <<= 1;
@@ -188,7 +188,7 @@ uint8_t encodeStackReg(RegName name, bool userStack) {
 
 RegName decodeStackReg(uint8_t bitPos, bool userStack) {
     auto *reg = userStack ? ARRAY_BEGIN(USER_STACK_REGS) : ARRAY_BEGIN(SYSTEM_STACK_REGS);
-    return RegName(pgm_read_byte(reg + bitPos));
+    return RegName(reg[bitPos]);
 }
 
 RegName decodeBitOpReg(uint8_t num) {

@@ -31,7 +31,7 @@ namespace tms370 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TMS370_TABLE[] PROGMEM = {
+constexpr Entry TMS370_TABLE[] = {
     E0(0xFF, TEXT_NOP),
     E0(0xF6, TEXT_IDLE),
     E1(0xF0, TEXT_LDST,  M_IM8),
@@ -259,7 +259,7 @@ constexpr Entry TMS370_TABLE[] PROGMEM = {
     E1(0xE0, TEXT_TRAP,  M_TVEC),
 };
 
-constexpr uint8_t TMS370_INDEX[] PROGMEM = {
+constexpr uint8_t TMS370_INDEX[] = {
      20,  // TEXT_ADC
      35,  // TEXT_ADC
      51,  // TEXT_ADC
@@ -487,7 +487,7 @@ constexpr uint8_t TMS370_INDEX[] PROGMEM = {
     150,  // TEXT_XOR
 };
 
-constexpr Entry TMS370_TF4[] PROGMEM = {
+constexpr Entry TMS370_TF4[] = {
     E2(0xE8, TEXT_MOVW,  M_RIMM, M_RN),
     E2(0xEA, TEXT_MOV,   M_RIDX, M_A),
     E2(0xEB, TEXT_MOV,   M_A,    M_RIDX),
@@ -499,7 +499,7 @@ constexpr Entry TMS370_TF4[] PROGMEM = {
     E1(0xEF, TEXT_CALLR, M_RIDX),
 };
 
-constexpr uint8_t TMS370_IF4[] PROGMEM = {
+constexpr uint8_t TMS370_IF4[] = {
       6,  // TEXT_BR
       7,  // TEXT_CALL
       8,  // TEXT_CALLR
@@ -511,14 +511,14 @@ constexpr uint8_t TMS370_IF4[] PROGMEM = {
       0,  // TEXT_MOVW
 };
 
-constexpr Entry TMS370_TF0[] PROGMEM = {
+constexpr Entry TMS370_TF0[] = {
     E0(0x00, TEXT_DINT),
     E0(0x04, TEXT_EINTH),
     E0(0x08, TEXT_EINTL),
     E0(0x0C, TEXT_EINT),
 };
 
-constexpr uint8_t TMS370_IF0[] PROGMEM = {
+constexpr uint8_t TMS370_IF0[] = {
       0,  // TEXT_DINT
       3,  // TEXT_EINT
       1,  // TEXT_EINTH
@@ -529,7 +529,7 @@ constexpr uint8_t TMS370_IF0[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage TMS370_PAGES[] PROGMEM = {
+constexpr EntryPage TMS370_PAGES[] = {
         {0x00, ARRAY_RANGE(TMS370_TABLE), ARRAY_RANGE(TMS370_INDEX)},
         {0xF4, ARRAY_RANGE(TMS370_TF4), ARRAY_RANGE(TMS370_IF4)},
         {0xF0, ARRAY_RANGE(TMS370_TF0), ARRAY_RANGE(TMS370_IF0)},
@@ -537,7 +537,7 @@ constexpr EntryPage TMS370_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {TMS370, TEXT_CPU_TMS370, ARRAY_RANGE(TMS370_PAGES)},
 };
 
@@ -592,16 +592,16 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code) && code != 0xF0;
 }
 
-const /*PROGMEM*/ char *TableTms370::listCpu_P() const {
+const char *TableTms370::listCpu_P() const {
     return TEXT_CPU_TMS370;
 }
 
-const /*PROGMEM*/ char *TableTms370::cpuName_P(CpuType cpuType) const {
+const char *TableTms370::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
 Error TableTms370::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.iequals(TEXT_CPU_TMS370) || strncasecmp_P(TEXT_CPU_TMS370C, name.str(), 7) == 0) {
+    if (name.iequals(TEXT_CPU_TMS370) || strncasecmp(TEXT_CPU_TMS370C, name.str(), 7) == 0) {
         cpuType = TMS370;
         return OK;
     }

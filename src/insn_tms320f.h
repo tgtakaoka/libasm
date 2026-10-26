@@ -89,7 +89,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
     void bytesToOpCode();
     bool hasContinue() const { return _insn.hasContinue(); }
-    void setContinueMark_P(const /*PROGMEM*/ char *mark_P) const {
+    void setContinueMark_P(const char *mark_P) const {
         _insn.setContinueMark_P(mark_P);
     }
 

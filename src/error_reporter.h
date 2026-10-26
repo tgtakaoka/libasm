@@ -113,8 +113,8 @@ struct ErrorReporter {
     Error setError(const ErrorReporter &o) { return setError(o.getError()); }
     Error setErrorIf(const ErrorReporter &o) { return setErrorIf(o.getError()); }
 
-    const /*PROGMEM*/ char *errorText_P() const { return errorText_P(_error); }
-    static const /*PROGMEM*/ char *errorText_P(Error error);
+    const char *errorText_P() const { return errorText_P(_error); }
+    static const char *errorText_P(Error error);
 
 private:
     Error _error;

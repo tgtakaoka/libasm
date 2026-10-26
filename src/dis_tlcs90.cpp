@@ -88,7 +88,7 @@ void DisTlcs90::decodeRelative(
 }
 
 RegName mode2reg(AddrMode mode) {
-    static constexpr RegName REG[] PROGMEM = {
+    static constexpr RegName REG[] = {
             REG_A,    // R_A=22
             REG_C,    // R_C=23
             REG_AFP,  // R_AFP=24
@@ -98,7 +98,7 @@ RegName mode2reg(AddrMode mode) {
             REG_SP,   // R_SP=28
             REG_AF,   // R_AF=29
     };
-    return RegName(pgm_read_byte(&REG[mode - R_A]));
+    return RegName(REG[mode - R_A]);
 }
 
 void DisTlcs90::decodeOperand(

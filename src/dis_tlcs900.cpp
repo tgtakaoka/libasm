@@ -59,7 +59,7 @@ static Error decodeComplexAddr(DisInsn &insn, Operand &op) {
         op.base = insn.readByte();
         const uint8_t idx_byte = insn.readByte();
         // E0=A, E1=W, E4=C, E5=B, E8=E, E9=D, EC=L, ED=H
-        static const RegName IDX_MAP[] PROGMEM = {
+        static const RegName IDX_MAP[] = {
                 REG_A,  // E0
                 REG_W,  // E1
                 REG_UNDEF,
@@ -77,7 +77,7 @@ static Error decodeComplexAddr(DisInsn &insn, Operand &op) {
         };
         const uint8_t offset = idx_byte - 0xE0;
         if (offset < sizeof(IDX_MAP) / sizeof(IDX_MAP[0])) {
-            op.idx = RegName(pgm_read_byte(&IDX_MAP[offset]));
+            op.idx = RegName(IDX_MAP[offset]);
         }
         if (op.idx == REG_UNDEF)
             op.setError(UNKNOWN_INSTRUCTION);

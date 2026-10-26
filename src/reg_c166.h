@@ -102,7 +102,7 @@ StrBuffer &outCcName(StrBuffer &out, CcName name, bool prefix);
 RegName decodeWordReg(uint8_t num);
 RegName decodeByteReg(uint8_t num);
 // The name of the core SFR at |addr|, or nullptr.
-const /*PROGMEM*/ char *sfrName_P(uint16_t addr, CpuType cpuType);
+const char *sfrName_P(uint16_t addr, CpuType cpuType);
 uint8_t encodeCcNum(CcName name);
 CcName decodeCcNum(uint8_t num);
 bool isXccOnly(CcName name);

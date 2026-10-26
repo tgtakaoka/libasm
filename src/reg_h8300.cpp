@@ -30,7 +30,7 @@ namespace reg {
 namespace {
 // clang-format off
 // Sorted alphabetically for binary search
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_CCR, REG_CCR },
     { TEXT_REG_E0,  REG_E0  },
     { TEXT_REG_E1,  REG_E1  },
@@ -79,7 +79,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 };
 // clang-format on
 
-PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
 }  // namespace
 

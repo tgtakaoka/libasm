@@ -25,19 +25,19 @@ AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
 bool is99110() {
-    return strcmp_P("99110", assembler.config().cpu_P()) == 0;
+    return strcmp("99110", assembler.config().cpu_P()) == 0;
 }
 
 bool is991xx() {
-    return strcmp_P("99105", assembler.config().cpu_P()) == 0 || is99110();
+    return strcmp("99105", assembler.config().cpu_P()) == 0 || is99110();
 }
 
 bool is9995() {
-    return strcmp_P("9995", assembler.config().cpu_P()) == 0 || is991xx();
+    return strcmp("9995", assembler.config().cpu_P()) == 0 || is991xx();
 }
 
 bool is9980() {
-    return strcmp_P("9980", assembler.config().cpu_P()) == 0;
+    return strcmp("9980", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

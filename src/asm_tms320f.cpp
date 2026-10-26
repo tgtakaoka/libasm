@@ -28,7 +28,7 @@ using namespace text::common;
 using namespace text::tms320f;
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dINT,    &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_dORG,    &Assembler::defineOrigin       },
@@ -36,9 +36,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_LONG },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] PROGMEM = {
+constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] = {
     { TEXT_dALIGN,   &AsmTms320f::alignOrigin    },
     { TEXT_dBYTE,    &AsmTms320f::defineInteger,  UINT8_MAX  },
     { TEXT_dFLOAT,   &AsmTms320f::defineFloat,    32         },
@@ -48,7 +48,7 @@ constexpr AsmTms320f::PseudoTms320F AsmTms320f::PSEUDO_TMS320F_TABLE[] PROGMEM =
     { TEXT_SILICON,  &AsmTms320f::processSilicon },
     { TEXT_PARALLEL, &AsmTms320f::encodeParallel },
 };
-PROGMEM constexpr AsmTms320f::PseudosTms320F AsmTms320f::PSEUDOS_TMS320F{
+constexpr AsmTms320f::PseudosTms320F AsmTms320f::PSEUDOS_TMS320F{
         ARRAY_RANGE(PSEUDO_TMS320F_TABLE)};
 // clang-format on
 

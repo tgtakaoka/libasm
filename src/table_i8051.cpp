@@ -29,7 +29,7 @@ namespace i8051 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_I8051[] PROGMEM = {
+constexpr Entry TABLE_I8051[] = {
     E0(0x00, CF_00, TEXT_NOP),
     E1(0x01, CF_E0, TEXT_AJMP,  M_ADR11),
     E1(0x02, CF_00, TEXT_LJMP,  M_ADR16),
@@ -143,7 +143,7 @@ constexpr Entry TABLE_I8051[] PROGMEM = {
     E2(0xF8, CF_07, TEXT_MOV,   M_RREG,  M_AREG),
 };
 
-constexpr uint8_t INDEX_I8051[] PROGMEM = {
+constexpr uint8_t INDEX_I8051[] = {
       9,  // TEXT_ACALL
      19,  // TEXT_ADD
      20,  // TEXT_ADD
@@ -260,13 +260,13 @@ constexpr uint8_t INDEX_I8051[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage I8051_PAGES[] PROGMEM = {
+constexpr EntryPage I8051_PAGES[] = {
         {ARRAY_RANGE(TABLE_I8051), ARRAY_RANGE(INDEX_I8051)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {I8051, TEXT_CPU_8051, ARRAY_RANGE(I8051_PAGES)},
 };
 
@@ -311,11 +311,11 @@ bool invalidDirect(Config::opcode_t opc, uint16_t addr) {
     return opc == 0xE5 && addr == 0xE0;
 }
 
-const /*PROGMEM*/ char *TableI8051::listCpu_P() const {
+const char *TableI8051::listCpu_P() const {
     return TEXT_CPU_I8051;
 }
 
-const /*PROGMEM*/ char *TableI8051::cpuName_P(CpuType cpuType) const {
+const char *TableI8051::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

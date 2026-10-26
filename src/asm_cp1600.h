@@ -50,8 +50,8 @@ private:
 
     using PseudoCp1600 = pseudo::__Pseudo<AsmCp1600, Insn>;
     using PseudosCp1600 = pseudo::__Pseudos<PseudoCp1600>;
-    static const PseudoCp1600 PSEUDO_CP1600_TABLE[] PROGMEM;
-    static const PseudosCp1600 PSEUDOS_CP1600 PROGMEM;
+    static const PseudoCp1600 PSEUDO_CP1600_TABLE[];
+    static const PseudosCp1600 PSEUDOS_CP1600;
 
 public:
     // Cross-instruction state carried on the Insn (per Insn::state<T>).

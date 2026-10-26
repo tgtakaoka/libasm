@@ -30,7 +30,7 @@ namespace tlcs90 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_TLCS90[] PROGMEM = {
+constexpr Entry TABLE_TLCS90[] = {
     E0(0x00, CF_00, TEXT_NOP),
     E0(0x01, CF_00, TEXT_HALT),
     E0(0x02, CF_00, TEXT_DI),
@@ -129,7 +129,7 @@ constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E0(0xFF, CF_00, TEXT_SWI),
 };
 
-constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
+constexpr uint8_t INDEX_TLCS90[] = {
      43,  // TEXT_ADC
      51,  // TEXT_ADC
      59,  // TEXT_ADC
@@ -228,7 +228,7 @@ constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
      71,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_SRC[] PROGMEM = {
+constexpr Entry TABLE_SRC[] = {
     E1(0x10, CF_00, TEXT_RLD,  M_DST),
     E1(0x11, CF_00, TEXT_RRD,  M_DST),
     E2(0x12, CF_00, TEXT_MUL,  R_HL,    M_SRC),
@@ -272,7 +272,7 @@ constexpr Entry TABLE_SRC[] PROGMEM = {
     E2(0xB8, CF_07, TEXT_SET,  M_BIT,   M_SRC),
 };
 
-constexpr uint8_t INDEX_SRC[] PROGMEM = {
+constexpr uint8_t INDEX_SRC[] = {
      11,  // TEXT_ADC
      19,  // TEXT_ADC
       4,  // TEXT_ADD
@@ -316,7 +316,7 @@ constexpr uint8_t INDEX_SRC[] PROGMEM = {
      23,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_DST[] PROGMEM = {
+constexpr Entry TABLE_DST[] = {
     E2(0x20, CF_07, TEXT_LD,   M_DST,   M_REG8),
     E2(0x37, CF_00, TEXT_LD,   M_DST,   M_IMM8),
     E2(0x3F, CF_00, TEXT_LDW,  M_DST,   M_IMM16),
@@ -331,7 +331,7 @@ constexpr Entry TABLE_DST[] PROGMEM = {
     E2(0x6F, CF_00, TEXT_CP,   M_DST,   M_IMM8),
 };
 
-constexpr uint8_t INDEX_DST[] PROGMEM = {
+constexpr uint8_t INDEX_DST[] = {
       5,  // TEXT_ADC
       4,  // TEXT_ADD
       8,  // TEXT_AND
@@ -346,7 +346,7 @@ constexpr uint8_t INDEX_DST[] PROGMEM = {
       9,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_REG[] PROGMEM = {
+constexpr Entry TABLE_REG[] = {
     E2(0x12, CF_00, TEXT_MUL,  R_HL,    M_SRC),
     E2(0x13, CF_00, TEXT_DIV,  R_HL,    M_SRC),
     E2(0x18, CF_07, TEXT_TSET, M_BIT,   M_SRC),
@@ -390,7 +390,7 @@ constexpr Entry TABLE_REG[] PROGMEM = {
     E2(0x77, CF_00, TEXT_CP,   R_HL,    M_SRC16),
 };
 
-constexpr uint8_t INDEX_REG[] PROGMEM = {
+constexpr uint8_t INDEX_REG[] = {
       5,  // TEXT_ADC
      13,  // TEXT_ADC
      34,  // TEXT_ADC
@@ -434,40 +434,40 @@ constexpr uint8_t INDEX_REG[] PROGMEM = {
      38,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_LDA[] PROGMEM = {
+constexpr Entry TABLE_LDA[] = {
     E2(0x38, CF_07, TEXT_LDA,  M_REG16, M_SRC),
 };
 
 
-constexpr uint8_t INDEX_LDA[] PROGMEM = {
+constexpr uint8_t INDEX_LDA[] = {
       0,  // TEXT_LDA
 };
 
-constexpr Entry TABLE_JMP[] PROGMEM = {
+constexpr Entry TABLE_JMP[] = {
     E2(0xC0, CF_0F, TEXT_JP,   M_CC,    M_SRC),
     E1(0xC8, CF_00, TEXT_JP,   M_DST),
     E2(0xD0, CF_0F, TEXT_CALL, M_CC,    M_SRC),
     E1(0xD8, CF_00, TEXT_CALL, M_DST),
 };
 
-constexpr uint8_t INDEX_JMP[] PROGMEM = {
+constexpr uint8_t INDEX_JMP[] = {
       2,  // TEXT_CALL
       3,  // TEXT_CALL
       0,  // TEXT_JP
       1,  // TEXT_JP
 };
 
-constexpr Entry TABLE_COND[] PROGMEM = {
+constexpr Entry TABLE_COND[] = {
     E0(0xD8, CF_00, TEXT_RET),
     E1(0xD0, CF_0F, TEXT_RET,  M_CC),
 };
 
-constexpr uint8_t INDEX_COND[] PROGMEM = {
+constexpr uint8_t INDEX_COND[] = {
       0,  // TEXT_RET
       1,  // TEXT_RET
 };
 
-constexpr Entry TABLE_BLOCK[] PROGMEM = {
+constexpr Entry TABLE_BLOCK[] = {
     E0(0x58, CF_00, TEXT_LDI),
     E0(0x59, CF_00, TEXT_LDIR),
     E0(0x5A, CF_00, TEXT_LDD),
@@ -478,7 +478,7 @@ constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E0(0x5F, CF_00, TEXT_CPDR),
 };
 
-constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
+constexpr uint8_t INDEX_BLOCK[] = {
       6,  // TEXT_CPD
       7,  // TEXT_CPDR
       4,  // TEXT_CPI
@@ -491,7 +491,7 @@ constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    AddrMode readPrefixMode() const { return AddrMode(pgm_read_byte(&_mode_P)); }
+    AddrMode readPrefixMode() const { return AddrMode(_mode_P); }
     bool prefixMatcher(Config::opcode_t code) const;
 
     constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *head_P,
@@ -522,7 +522,7 @@ bool EntryPage::prefixMatcher(Config::opcode_t code) const {
 }
 
 // clang-format off
-constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS90_PAGES[] = {
     {0x00, M_NONE,  ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
     {0xE7, M_DIR,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (FFnn)
     {0xE3, M_EXT,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (nnnn)
@@ -547,7 +547,7 @@ constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
 // clang-format on
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *head_P,
+    constexpr Cpu(CpuType cpuType, const char *name_P, const EntryPage *head_P,
             const EntryPage *tail_P)
         : CpuBase(cpuType, name_P, head_P, tail_P) {}
 
@@ -565,7 +565,7 @@ bool Cpu::isPrefix(Config::opcode_t code, AddrMode &prefixMode) const {
     return false;
 }
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
 };
 
@@ -679,11 +679,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code, AddrMode &mode) {
     return cpu(cpuType)->isPrefix(code, mode);
 }
 
-const /*PROGMEM*/ char *TableTlcs90::listCpu_P() const {
+const char *TableTlcs90::listCpu_P() const {
     return TEXT_CPU_TLCS90;
 }
 
-const /*PROGMEM*/ char *TableTlcs90::cpuName_P(CpuType cpuType) const {
+const char *TableTlcs90::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

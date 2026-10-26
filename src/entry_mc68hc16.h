@@ -76,12 +76,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t post() const { return (_attr >> post_gp) & post_gm; }
         CodeFormat format() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
         uint8_t mask() const {
-            static constexpr uint8_t MASK[] PROGMEM = {
+            static constexpr uint8_t MASK[] = {
                     0x00,  // CF_00 = 0
                     0x30,  // CF_30 = 1
                     0xFF,  // CF_FF = 1
             };
-            return pgm_read_byte(MASK + format());
+            return MASK[format()];
         }
 
     private:
@@ -98,10 +98,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint16_t post_fm = uint16_t(1) << 14;  // has post byte
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

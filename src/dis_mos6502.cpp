@@ -29,8 +29,8 @@ using namespace text::option;
 
 namespace {
 
-const char OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
-const char OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
+const char OPT_BOOL_INDIRECT_LONG[] = "indirect-long";
+const char OPT_DESC_INDIRECT_LONG[] = "[] for indirect long operand";
 
 }  // namespace
 

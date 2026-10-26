@@ -38,7 +38,7 @@ using namespace libasm::text::z80;
 
 // clang-format off
 // Z180 ED:xx
-constexpr Entry TABLE_Z180_EXT[] PROGMEM = {
+constexpr Entry TABLE_Z180_EXT[] = {
     E1(0x4C, 0060, TEXT_MLT,    M_R16),
     E1(0x04, 0070, TEXT_TST,    M_DST),
     E1(0x64, 0000, TEXT_TST,    M_IM8),
@@ -52,7 +52,7 @@ constexpr Entry TABLE_Z180_EXT[] PROGMEM = {
     E0(0x76, 0000, TEXT_SLP),
 };
 
-constexpr uint8_t INDEX_Z180_EXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z180_EXT[] = {
       4,  // TEXT_IN0
       0,  // TEXT_MLT
       8,  // TEXT_OTDM
@@ -67,7 +67,7 @@ constexpr uint8_t INDEX_Z180_EXT[] PROGMEM = {
 };
 // clang-format on
 
-constexpr EntryPage Z180_PAGES[] PROGMEM = {
+constexpr EntryPage Z180_PAGES[] = {
         {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {Entry::EXT, ARRAY_RANGE(TABLE_Z80_EXT), ARRAY_RANGE(INDEX_Z80_EXT)},
         {Entry::EXT, ARRAY_RANGE(TABLE_Z180_EXT), ARRAY_RANGE(INDEX_Z180_EXT)},

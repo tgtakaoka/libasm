@@ -339,7 +339,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
         auto valid = false;
         for (const auto *dir : _driver) {
             for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                if (strcmp(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;
                 }
@@ -347,7 +347,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
             if (valid)
                 continue;
             for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                if (strcmp(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;
                 }

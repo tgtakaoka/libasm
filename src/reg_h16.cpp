@@ -48,7 +48,7 @@ int8_t parseRegNum(StrScanner &p) {
 // Control register entries (sorted by text).  NameEntry::name is int8_t; CR
 // codes >= 0x80 wrap to negative when stored, but uint8_t() cast on read
 // recovers them.
-constexpr NameEntry CR_ENTRIES[] PROGMEM = {
+constexpr NameEntry CR_ENTRIES[] = {
     { TEXT_REG_BMR,  int8_t(CR_BMR)  },
     { TEXT_REG_BSP,  int8_t(CR_BSP)  },
     { TEXT_REG_CBNR, int8_t(CR_CBNR) },
@@ -62,12 +62,12 @@ constexpr NameEntry CR_ENTRIES[] PROGMEM = {
     { TEXT_REG_VBNR, int8_t(CR_VBNR) },
 };
 
-PROGMEM constexpr NameTable CR_TABLE{ARRAY_RANGE(CR_ENTRIES)};
+constexpr NameTable CR_TABLE{ARRAY_RANGE(CR_ENTRIES)};
 
 // Condition code entries (sorted by text).  HS and LO are at the 0x10
 // offset so they parse to distinct enum values but encode to the same
 // 4-bit code as CC and CS respectively.
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_CC,  CC_CC  },
     { TEXT_CC_CS,  CC_CS  },
     { TEXT_CC_EQ,  CC_EQ  },
@@ -88,7 +88,7 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_VS,  CC_VS  },
 };
 
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // clang-format on
 }  // namespace

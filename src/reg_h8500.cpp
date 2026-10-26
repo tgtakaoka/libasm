@@ -30,7 +30,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_FP,  REG_FP  },
     { TEXT_REG_R0,  REG_R0  },
     { TEXT_REG_R1,  REG_R1  },
@@ -43,9 +43,9 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_SP,  REG_SP  },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-constexpr NameEntry CR_ENTRIES[] PROGMEM = {
+constexpr NameEntry CR_ENTRIES[] = {
     { TEXT_REG_BR,  CR_BR   },
     { TEXT_REG_CCR, CR_CCR  },
     // CP (code page) is recognised so that "LDC R0, CP" / "STC CP, R0" can
@@ -59,9 +59,9 @@ constexpr NameEntry CR_ENTRIES[] PROGMEM = {
     { TEXT_REG_TP,  CR_TP   },
 };
 
-PROGMEM constexpr NameTable CR_TABLE{ARRAY_RANGE(CR_ENTRIES)};
+constexpr NameTable CR_TABLE{ARRAY_RANGE(CR_ENTRIES)};
 
-constexpr NameEntry PAGE_ENTRIES[] PROGMEM = {
+constexpr NameEntry PAGE_ENTRIES[] = {
     { TEXT_REG_BR,  PAGE_BR },
     { TEXT_REG_CP,  PAGE_CP },
     { TEXT_REG_DP,  PAGE_DP },
@@ -69,9 +69,9 @@ constexpr NameEntry PAGE_ENTRIES[] PROGMEM = {
     { TEXT_REG_TP,  PAGE_TP },
 };
 
-PROGMEM constexpr NameTable PAGE_TABLE{ARRAY_RANGE(PAGE_ENTRIES)};
+constexpr NameTable PAGE_TABLE{ARRAY_RANGE(PAGE_ENTRIES)};
 
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_BCC,    CC_CC  },
     { TEXT_BCS,    CC_CS  },
     { TEXT_BEQ,    CC_EQ  },
@@ -94,7 +94,7 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_BVS,    CC_VS  },
 };
 
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -153,7 +153,7 @@ CcName parseCcName(StrScanner &scan, const ValueParser &parser) {
 }
 
 StrBuffer &outCcName(StrBuffer &out, CcName name) {
-    static const char *const CC_NAMES[] PROGMEM = {
+    static const char *const CC_NAMES[] = {
             TEXT_BRA,
             TEXT_BRN,
             TEXT_BHI,
@@ -172,7 +172,7 @@ StrBuffer &outCcName(StrBuffer &out, CcName name) {
             TEXT_BLE,
     };
     if (name >= 0 && name <= CC_LE) {
-        const auto *n = reinterpret_cast<const char *>(pgm_read_ptr(&CC_NAMES[name]));
+        const auto *n = CC_NAMES[name];
         out.text_P(n);
     }
     return out;

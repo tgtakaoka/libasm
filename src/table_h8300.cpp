@@ -32,7 +32,7 @@ namespace h8300 {
 
 // clang-format off
 
-constexpr Entry H8300_TABLE[] PROGMEM = {
+constexpr Entry H8300_TABLE[] = {
     E2(0xF000, TEXT_MOV,   ISZ_DATA, SZ_BYTE, M_IMM8,  M_REG8,  POS__FF, POS_F__), // MOV.B #xx:8, Rd
     E2(0x7900, TEXT_MOV,   ISZ_DATA, SZ_WORD, M_IMM16, M_REG16, POS____, POS___F), // MOV.W #xx:16, Rd
     E2(0x8000, TEXT_ADD,   ISZ_DATA, SZ_BYTE, M_IMM8,  M_REG8,  POS__FF, POS_F__), // ADD.B #xx:8, Rd
@@ -154,7 +154,7 @@ constexpr Entry H8300_TABLE[] PROGMEM = {
     E2(0x0700, TEXT_LDC,   ISZ_NONE, SZ_BYTE, M_IMM8,  M_CCR,   POS__FF, POS____), // LDC  #xx:8, CCR
 };
 
-constexpr uint8_t H8300_INDEX[] PROGMEM = {
+constexpr uint8_t H8300_INDEX[] = {
       2,  // TEXT_ADD
      31,  // TEXT_ADD
      32,  // TEXT_ADD
@@ -277,11 +277,11 @@ constexpr uint8_t H8300_INDEX[] PROGMEM = {
 };
 
 // 0x7B5C, CF_0000
-constexpr Entry H8300_7B5C_TABLE[] PROGMEM = {
+constexpr Entry H8300_7B5C_TABLE[] = {
     E1(0x598F, TEXT_EEPMOV, ISZ_NONE, SZ_BYTE, M_NONE, POS____),  // EEPMOV / EEPMOV.B
 };
 
-constexpr uint8_t H8300_7B5C_INDEX[] PROGMEM = {
+constexpr uint8_t H8300_7B5C_INDEX[] = {
       0,  // TEXT_EEPMOV
 };
 
@@ -300,7 +300,7 @@ constexpr Entry H8300_7C00_TABLE[] = {
     E2(0x7780, TEXT_BILD,  ISZ_NONE, SZ_BYTE, M_IMM3, M_INDIR, POS__7_, POS_PRX), // BILD  #xx:3, @Rd/@aa:8
 };
 
-constexpr uint8_t H8300_7C00_INDEX[] PROGMEM = {
+constexpr uint8_t H8300_7C00_INDEX[] = {
       6,  // TEXT_BAND
       7,  // TEXT_BIAND
       9,  // TEXT_BILD
@@ -329,7 +329,7 @@ constexpr Entry H8300_7D00_TABLE[] = {
 // 0x0100 prefix: MOV.L addressing modes (reuses MOV.W opcode patterns).
 // POP.L / PUSH.L entries come first so they win over MOV.L @SP+/@-SP for
 // the ER7 register slot.
-constexpr Entry H8300H_0100_TABLE[] PROGMEM = {
+constexpr Entry H8300H_0100_TABLE[] = {
     E1(0x6D70, TEXT_POP,  ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // POP.L  ERd
     E1(0x6DF0, TEXT_PUSH, ISZ_DATA, SZ_LONG, M_REG32, POS___7),                   // PUSH.L ERs
     E2(0x6900, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_INDIR, M_REG32, POS__7_, POS___7), // MOV.L @ERs, ERd
@@ -344,7 +344,7 @@ constexpr Entry H8300H_0100_TABLE[] PROGMEM = {
     E2(0x6BA0, TEXT_MOV,  ISZ_DATA, SZ_LONG, M_REG32, M_ABS24, POS___7, POS____), // MOV.L ERs, @aa:24
 };
 
-constexpr uint8_t H8300H_0100_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_0100_INDEX[] = {
       2,  // TEXT_MOV
       3,  // TEXT_MOV
       4,  // TEXT_MOV
@@ -360,13 +360,13 @@ constexpr uint8_t H8300H_0100_INDEX[] PROGMEM = {
 };
 
 // 0x01F0 prefix: OR.L / XOR.L / AND.L reg-reg.
-constexpr Entry H8300H_01F0_TABLE[] PROGMEM = {
+constexpr Entry H8300H_01F0_TABLE[] = {
     E2(0x6400, TEXT_OR,  ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // OR.L  ERs, ERd
     E2(0x6500, TEXT_XOR, ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // XOR.L ERs, ERd
     E2(0x6600, TEXT_AND, ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // AND.L ERs, ERd
 };
 
-constexpr uint8_t H8300H_01F0_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_01F0_INDEX[] = {
       2,  // TEXT_AND
       0,  // TEXT_OR
       1,  // TEXT_XOR
@@ -374,7 +374,7 @@ constexpr uint8_t H8300H_01F0_INDEX[] PROGMEM = {
 
 // 0x0140 prefix: LDC/STC ccr with memory operand (reuses MOV.W byte patterns
 // with the register operand rewritten to CCR).
-constexpr Entry H8300H_0140_TABLE[] PROGMEM = {
+constexpr Entry H8300H_0140_TABLE[] = {
     E2(0x6900, TEXT_LDC, ISZ_NONE, SZ_WORD, M_INDIR, M_CCR,  POS__7_, POS____), // LDC @ER, CCR
     E2(0x6980, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_INDIR,POS____, POS__7_), // STC CCR, @ER
     E2(0x6D00, TEXT_LDC, ISZ_NONE, SZ_WORD, M_PINC,  M_CCR,  POS__7_, POS____), // LDC @ER+, CCR
@@ -387,7 +387,7 @@ constexpr Entry H8300H_0140_TABLE[] PROGMEM = {
     E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_ABS24,POS____, POS____), // STC CCR, @aa:24
 };
 
-constexpr uint8_t H8300H_0140_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_0140_INDEX[] = {
       0,  // TEXT_LDC
       2,  // TEXT_LDC
       4,  // TEXT_LDC
@@ -402,14 +402,14 @@ constexpr uint8_t H8300H_0140_INDEX[] PROGMEM = {
 
 // 0x7800 prefix: ERn pointer for @(d:24,ERn) MOV.B / MOV.W variants.
 // ERn is encoded at bits 6:4 of the prefix word; disp24 follows the opcode.
-constexpr Entry H8300H_7800_TABLE[] PROGMEM = {
+constexpr Entry H8300H_7800_TABLE[] = {
     E2(0x6A20, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_IDX24, M_REG8,  POS_PRX, POS___F), // MOV.B @(d:24,ER), Rd
     E2(0x6AA0, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_REG8,  M_IDX24, POS___F, POS_PRX), // MOV.B Rs, @(d:24,ER)
     E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_WORD, M_IDX24, M_REG16, POS_PRX, POS___F), // MOV.W @(d:24,ER), Rd
     E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_WORD, M_REG16, M_IDX24, POS___F, POS_PRX), // MOV.W Rs, @(d:24,ER)
 };
 
-constexpr uint8_t H8300H_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_7800_INDEX[] = {
       0,  // TEXT_MOV
       1,  // TEXT_MOV
       2,  // TEXT_MOV
@@ -417,57 +417,57 @@ constexpr uint8_t H8300H_7800_INDEX[] PROGMEM = {
 };
 
 // 0x0140 super-prefix + 0x7800 normal prefix: LDC/STC ccr,@(d:24,ERn).
-constexpr Entry H8300H_0140_7800_TABLE[] PROGMEM = {
+constexpr Entry H8300H_0140_7800_TABLE[] = {
     E2(0x6B20, TEXT_LDC, ISZ_NONE, SZ_WORD, M_IDX24, M_CCR,   POS_PRX, POS____), // LDC @(d:24,ER), CCR
     E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_IDX24, POS____, POS_PRX), // STC CCR, @(d:24,ER)
 };
 
-constexpr uint8_t H8300H_0140_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_0140_7800_INDEX[] = {
       0,  // TEXT_LDC
       1,  // TEXT_STC
 };
 
 // 0x0100 super-prefix + 0x7800 normal prefix: MOV.L @(d:24,ERs), ERd (load).
-constexpr Entry H8300H_0100_7800_TABLE[] PROGMEM = {
+constexpr Entry H8300H_0100_7800_TABLE[] = {
     E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_LONG, M_IDX24, M_REG32, POS_PRX, POS___7), // MOV.L @(d:24,ERs), ERd
 };
 
-constexpr uint8_t H8300H_0100_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_0100_7800_INDEX[] = {
       0,  // TEXT_MOV
 };
 
 // 0x0100 super-prefix + 0x7880 normal prefix: MOV.L ERs, @(d:24,ERd) (store).
-constexpr Entry H8300H_0100_7880_TABLE[] PROGMEM = {
+constexpr Entry H8300H_0100_7880_TABLE[] = {
     E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_LONG, M_REG32, M_IDX24, POS___7, POS_PRX), // MOV.L ERs, @(d:24,ERd)
 };
 
-constexpr uint8_t H8300H_0100_7880_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_0100_7880_INDEX[] = {
       0,  // TEXT_MOV
 };
 
 // 0x01C0 prefix: MULXS (signed multiply).
-constexpr Entry H8300H_01C0_TABLE[] PROGMEM = {
+constexpr Entry H8300H_01C0_TABLE[] = {
     E2(0x5000, TEXT_MULXS, ISZ_DATA, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // MULXS.B Rs, Rd
     E2(0x5200, TEXT_MULXS, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // MULXS.W Rs, ERd
 };
 
-constexpr uint8_t H8300H_01C0_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_01C0_INDEX[] = {
       0,  // TEXT_MULXS
       1,  // TEXT_MULXS
 };
 
 // 0x7BD4 prefix: EEPMOV.W (the 0x7B5C prefix is EEPMOV / EEPMOV.B).
-constexpr Entry H8300H_7BD4_TABLE[] PROGMEM = {
+constexpr Entry H8300H_7BD4_TABLE[] = {
     E1(0x598F, TEXT_EEPMOV, ISZ_DATA, SZ_WORD, M_NONE, POS____),  // EEPMOV.W
 };
 
-constexpr uint8_t H8300H_7BD4_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_7BD4_INDEX[] = {
       0,  // TEXT_EEPMOV
 };
 
 // H8S/2000-only base instructions (no prefix).
 // The shift/rotate #2,Rd forms add bit 6 of byte 2 over the #1,Rd opcode.
-constexpr Entry H8S2000_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_TABLE[] = {
     E2(0x0210, TEXT_STC,   ISZ_NONE, SZ_BYTE, M_EXR,   M_REG8,  POS____, POS___F), // STC EXR, Rd
     E2(0x0310, TEXT_LDC,   ISZ_NONE, SZ_BYTE, M_REG8,  M_EXR,   POS___F, POS____), // LDC Rs, EXR
     E2(0x1040, TEXT_SHLL,  ISZ_NONE, SZ_BYTE, M_VAL2,  M_REG8,  POS____, POS___F), // SHLL  #2, Rd
@@ -497,7 +497,7 @@ constexpr Entry H8S2000_TABLE[] PROGMEM = {
 };
 
 // Sorted alphabetically by mnemonic, then ascending by table offset.
-constexpr uint8_t H8S2000_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_INDEX[] = {
       1,  // TEXT_LDC
      17,  // TEXT_ROTL
      18,  // TEXT_ROTL
@@ -528,24 +528,24 @@ constexpr uint8_t H8S2000_INDEX[] PROGMEM = {
 
 // H8S/2000 0x01E0 prefix: TAS @ERn (architectural set is ER0/ER1/ER4/ER5;
 // other ER registers also produce valid encodings but are not recommended).
-constexpr Entry H8S2000_01E0_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_01E0_TABLE[] = {
     E1(0x7B0C, TEXT_TAS, ISZ_NONE, SZ_BYTE, M_INDIR, POS__7_),
 };
 
-constexpr uint8_t H8S2000_01E0_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_01E0_INDEX[] = {
       0,  // TEXT_TAS
 };
 
 // H8S/2000 0x7800 prefix (load): MOV.B/W @(d:32,ERs), Rd. Same byte shape
 // as H8/300H @(d:24,ERn) but full 32-bit displacement.
-constexpr Entry H8S2000_7800_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_7800_TABLE[] = {
     E2(0x6A20, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_IDX32, M_REG8,  POS_PRX, POS___F), // MOV.B @(d:32,ER), Rd
     E2(0x6AA0, TEXT_MOV, ISZ_DATA, SZ_BYTE, M_REG8,  M_IDX32, POS___F, POS_PRX), // MOV.B Rs, @(d:32,ER)
     E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_WORD, M_IDX32, M_REG16, POS_PRX, POS___F), // MOV.W @(d:32,ER), Rd
     E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_WORD, M_REG16, M_IDX32, POS___F, POS_PRX), // MOV.W Rs, @(d:32,ER)
 };
 
-constexpr uint8_t H8S2000_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_7800_INDEX[] = {
       0,  // TEXT_MOV
       1,  // TEXT_MOV
       2,  // TEXT_MOV
@@ -553,49 +553,49 @@ constexpr uint8_t H8S2000_7800_INDEX[] PROGMEM = {
 };
 
 // H8S/2000 0x0100+0x7800 prefix: MOV.L @(d:32,ERs), ERd (load form).
-constexpr Entry H8S2000_0100_7800_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_0100_7800_TABLE[] = {
     E2(0x6B20, TEXT_MOV, ISZ_DATA, SZ_LONG, M_IDX32, M_REG32, POS_PRX, POS___7),
 };
 
-constexpr uint8_t H8S2000_0100_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_0100_7800_INDEX[] = {
       0,  // TEXT_MOV
 };
 
 // H8S/2000 0x0100+0x7880 prefix: MOV.L ERs, @(d:32,ERd) (store form).
-constexpr Entry H8S2000_0100_7880_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_0100_7880_TABLE[] = {
     E2(0x6BA0, TEXT_MOV, ISZ_DATA, SZ_LONG, M_REG32, M_IDX32, POS___7, POS_PRX),
 };
 
-constexpr uint8_t H8S2000_0100_7880_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_0100_7880_INDEX[] = {
       0,  // TEXT_MOV
 };
 
 // H8S/2000 0x0140+0x7800 prefix: LDC/STC CCR with @(d:32,ERn). Mirrors the
 // H8/300H @(d:24,ERn) form but takes a full 32-bit displacement.
-constexpr Entry H8S2000_0140_7800_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_0140_7800_TABLE[] = {
     E2(0x6B20, TEXT_LDC, ISZ_NONE, SZ_WORD, M_IDX32, M_CCR,   POS_PRX, POS____), // LDC @(d:32,ER), CCR
     E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_CCR,   M_IDX32, POS____, POS_PRX), // STC CCR, @(d:32,ER)
 };
 
-constexpr uint8_t H8S2000_0140_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_0140_7800_INDEX[] = {
       0,  // TEXT_LDC
       1,  // TEXT_STC
 };
 
 // H8S/2000 0x0141+0x7800 prefix: LDC/STC EXR with @(d:32,ERn).
-constexpr Entry H8S2000_0141_7800_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_0141_7800_TABLE[] = {
     E2(0x6B20, TEXT_LDC, ISZ_NONE, SZ_WORD, M_IDX32, M_EXR,   POS_PRX, POS____), // LDC @(d:32,ER), EXR
     E2(0x6BA0, TEXT_STC, ISZ_NONE, SZ_WORD, M_EXR,   M_IDX32, POS____, POS_PRX), // STC EXR, @(d:32,ER)
 };
 
-constexpr uint8_t H8S2000_0141_7800_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_0141_7800_INDEX[] = {
       0,  // TEXT_LDC
       1,  // TEXT_STC
 };
 
 // H8S/2000 0x0141 super-prefix: LDC/STC/ANDC/ORC/XORC with EXR (mirror of
 // the 0x0140 CCR memory/immediate set, just routing to EXR).
-constexpr Entry H8S2000_0141_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_0141_TABLE[] = {
     E2(0x0400, TEXT_ORC,  ISZ_NONE, SZ_BYTE, M_IMM8,  M_EXR,   POS__FF, POS____), // ORC  #xx:8, EXR
     E2(0x0500, TEXT_XORC, ISZ_NONE, SZ_BYTE, M_IMM8,  M_EXR,   POS__FF, POS____), // XORC #xx:8, EXR
     E2(0x0600, TEXT_ANDC, ISZ_NONE, SZ_BYTE, M_IMM8,  M_EXR,   POS__FF, POS____), // ANDC #xx:8, EXR
@@ -612,7 +612,7 @@ constexpr Entry H8S2000_0141_TABLE[] PROGMEM = {
     E2(0x6BA0, TEXT_STC,  ISZ_NONE, SZ_WORD, M_EXR,   M_ABS24, POS____, POS____), // STC EXR, @aa:32
 };
 
-constexpr uint8_t H8S2000_0141_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_0141_INDEX[] = {
       2,  // TEXT_ANDC
       3,  // TEXT_LDC
       4,  // TEXT_LDC
@@ -633,19 +633,19 @@ constexpr uint8_t H8S2000_0141_INDEX[] PROGMEM = {
 // repeated under 0x0110, 0x0120, 0x0130 prefixes (count - 1 in the prefix's
 // low byte). The M_RLIST operand carries first-register + count.
 // byte 4 low bits: LDM uses (first + count - 1), STM uses first.
-constexpr Entry H8S2000_LDM_STM_TABLE[] PROGMEM = {
+constexpr Entry H8S2000_LDM_STM_TABLE[] = {
     E2(0x6D70, TEXT_LDM, ISZ_DATA, SZ_LONG, M_PINC,  M_RLIST, POS____, POS___7), // LDM.L @SP+, list
     E2(0x6DF0, TEXT_STM, ISZ_DATA, SZ_LONG, M_RLIST, M_PDEC,  POS___7, POS____), // STM.L list, @-SP
 };
 
-constexpr uint8_t H8S2000_LDM_STM_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2000_LDM_STM_INDEX[] = {
       0,  // TEXT_LDM
       1,  // TEXT_STM
 };
 
 // H8S/2600-only instructions: MAC unit register transfers and CLRMAC.
 // MACH/MACL are operand modes (M_MACH / M_MACL); ERs/ERd lives in bits 2:0.
-constexpr Entry H8S2600_TABLE[] PROGMEM = {
+constexpr Entry H8S2600_TABLE[] = {
     E0(0x01A0, TEXT_CLRMAC),                                                           // CLRMAC
     E2(0x0320, TEXT_LDMAC, ISZ_NONE, SZ_NONE, M_REG32, M_MACH, POS___7, POS____),      // LDMAC ERs, MACH
     E2(0x0330, TEXT_LDMAC, ISZ_NONE, SZ_NONE, M_REG32, M_MACL, POS___7, POS____),      // LDMAC ERs, MACL
@@ -653,7 +653,7 @@ constexpr Entry H8S2600_TABLE[] PROGMEM = {
     E2(0x0230, TEXT_STMAC, ISZ_NONE, SZ_NONE, M_MACL,  M_REG32, POS____, POS___7),     // STMAC MACL, ERd
 };
 
-constexpr uint8_t H8S2600_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2600_INDEX[] = {
       0,  // TEXT_CLRMAC
       1,  // TEXT_LDMAC
       2,  // TEXT_LDMAC
@@ -664,26 +664,26 @@ constexpr uint8_t H8S2600_INDEX[] PROGMEM = {
 // H8S/2600 0x0160 prefix: MAC @ERn+,@ERm+ (signed 16x16 multiply-accumulate).
 // Body word is 0x6Dnm where n is the ERn pointer (bits 6:4) and m is the ERm
 // pointer (bits 2:0); both registers post-increment by 2 after the access.
-constexpr Entry H8S2600_0160_TABLE[] PROGMEM = {
+constexpr Entry H8S2600_0160_TABLE[] = {
     E2(0x6D00, TEXT_MAC, ISZ_NONE, SZ_NONE, M_PINC, M_PINC, POS__7_, POS___7),
 };
 
-constexpr uint8_t H8S2600_0160_INDEX[] PROGMEM = {
+constexpr uint8_t H8S2600_0160_INDEX[] = {
       0,  // TEXT_MAC
 };
 
 // 0x01D0 prefix: DIVXS (signed divide).
-constexpr Entry H8300H_01D0_TABLE[] PROGMEM = {
+constexpr Entry H8300H_01D0_TABLE[] = {
     E2(0x5100, TEXT_DIVXS, ISZ_DATA, SZ_BYTE, M_REG8,  M_REG16, POS__F_, POS___F), // DIVXS.B Rs, Rd
     E2(0x5300, TEXT_DIVXS, ISZ_DATA, SZ_WORD, M_REG16, M_REG32, POS__F_, POS___7), // DIVXS.W Rs, ERd
 };
 
-constexpr uint8_t H8300H_01D0_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_01D0_INDEX[] = {
       0,  // TEXT_DIVXS
       1,  // TEXT_DIVXS
 };
 
-constexpr uint8_t H8300_7D00_INDEX[] PROGMEM = {
+constexpr uint8_t H8300_7D00_INDEX[] = {
       2,  // TEXT_BCLR
       7,  // TEXT_BCLR
       4,  // TEXT_BIST
@@ -695,7 +695,7 @@ constexpr uint8_t H8300_7D00_INDEX[] PROGMEM = {
 };
 
 // H8/300H-only instructions.
-constexpr Entry H8300H_TABLE[] PROGMEM = {
+constexpr Entry H8300H_TABLE[] = {
     E2(0x0F80, TEXT_MOV,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // MOV.L  ERs, ERd
     E2(0x0A80, TEXT_ADD,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // ADD.L  ERs, ERd
     E2(0x1A80, TEXT_SUB,   ISZ_DATA, SZ_LONG, M_REG32, M_REG32, POS__7_, POS___7), // SUB.L  ERs, ERd
@@ -782,7 +782,7 @@ constexpr Entry H8300H_TABLE[] PROGMEM = {
     E1(0x5E00, TEXT_JSR,   ISZ_NONE, SZ_NONE, M_ABS24, POS__FF),                   // JSR @aa:24
 };
 
-constexpr uint8_t H8300H_INDEX[] PROGMEM = {
+constexpr uint8_t H8300H_INDEX[] = {
       1,  // TEXT_ADD
      39,  // TEXT_ADD
      51,  // TEXT_ADD
@@ -880,12 +880,12 @@ struct EntryPage : entry::PrefixTableBase<Entry> {
           _attr_P(static_cast<uint8_t>((dpos << dpos_gp) | (rprx << rprx_gp))) {}
 
     Config::opcode_t prefixMask() const { return Entry::posMask(readDstPos()); }
-    AddrMode readDstMode() const { return static_cast<AddrMode>(pgm_read_byte(&_dmode_P)); }
+    AddrMode readDstMode() const { return static_cast<AddrMode>(_dmode_P); }
     OprPos readDstPos() const {
-        return static_cast<OprPos>((pgm_read_byte(&_attr_P) >> dpos_gp) & dpos_gm);
+        return static_cast<OprPos>((_attr_P >> dpos_gp) & dpos_gm);
     }
     SuperPrefix readSuperPrefix() const {
-        return static_cast<SuperPrefix>((pgm_read_byte(&_attr_P) >> rprx_gp) & rprx_gm);
+        return static_cast<SuperPrefix>((_attr_P >> rprx_gp) & rprx_gm);
     }
 
 private:
@@ -898,7 +898,7 @@ private:
 };
 
 // clang-format off
-constexpr EntryPage H8300_PAGES[] PROGMEM = {
+constexpr EntryPage H8300_PAGES[] = {
         {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),      ARRAY_RANGE(H8300_INDEX)},
         {0x7C00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
         {0x7E00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE), ARRAY_RANGE(H8300_7C00_INDEX)},
@@ -907,7 +907,7 @@ constexpr EntryPage H8300_PAGES[] PROGMEM = {
         {0x7B5C, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_7B5C_TABLE), ARRAY_RANGE(H8300_7B5C_INDEX)},
 };
 
-constexpr EntryPage H8300H_PAGES[] PROGMEM = {
+constexpr EntryPage H8300H_PAGES[] = {
         {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),       ARRAY_RANGE(H8300_INDEX)},
         {0x7C00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
         {0x7E00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
@@ -927,7 +927,7 @@ constexpr EntryPage H8300H_PAGES[] PROGMEM = {
         {0x7BD4, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300H_7BD4_TABLE), ARRAY_RANGE(H8300H_7BD4_INDEX)},
 };
 
-constexpr EntryPage H8S2000_PAGES[] PROGMEM = {
+constexpr EntryPage H8S2000_PAGES[] = {
         // H8S/2000 inherits the full H8/300H instruction set EXCEPT the
         // 0x7800 d:24 pages, which become d:32 below.
         {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),       ARRAY_RANGE(H8300_INDEX)},
@@ -965,7 +965,7 @@ constexpr EntryPage H8S2000_PAGES[] PROGMEM = {
 
 // H8S/2600 inherits the H8S/2000 instruction set and adds CLRMAC / LDMAC /
 // STMAC (base) plus MAC @ERn+,@ERm+ (under a 0x0160 prefix).
-constexpr EntryPage H8S2600_PAGES[] PROGMEM = {
+constexpr EntryPage H8S2600_PAGES[] = {
         {0x0000, SPRX_NONE, M_NONE,  POS____, ARRAY_RANGE(H8300_TABLE),       ARRAY_RANGE(H8300_INDEX)},
         {0x7C00, SPRX_NONE, M_INDIR, POS__7_, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
         {0x7E00, SPRX_NONE, M_ABS8,  POS__FF, ARRAY_RANGE(H8300_7C00_TABLE),  ARRAY_RANGE(H8300_7C00_INDEX)},
@@ -1004,7 +1004,7 @@ constexpr EntryPage H8S2600_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {H8300, TEXT_CPU_H8300, ARRAY_RANGE(H8300_PAGES)},
         {H8300H, TEXT_CPU_H8300H, ARRAY_RANGE(H8300H_PAGES)},
         {H8S2000, TEXT_CPU_H8S2000, ARRAY_RANGE(H8S2000_PAGES)},
@@ -1149,11 +1149,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code, prefixMatcher);
 }
 
-const /*PROGMEM*/ char *TableH8300::listCpu_P() const {
+const char *TableH8300::listCpu_P() const {
     return TEXT_H8300_LIST;
 }
 
-const /*PROGMEM*/ char *TableH8300::cpuName_P(CpuType cpuType) const {
+const char *TableH8300::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

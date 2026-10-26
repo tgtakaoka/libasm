@@ -25,11 +25,11 @@ DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 
 bool cdp1804() {
-    return strcmp_P("1804", disassembler.config().cpu_P()) == 0;
+    return strcmp("1804", disassembler.config().cpu_P()) == 0;
 }
 
 bool cdp1804a() {
-    return strcmp_P("1804A", disassembler.config().cpu_P()) == 0;
+    return strcmp("1804A", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

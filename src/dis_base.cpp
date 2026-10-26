@@ -20,24 +20,24 @@ namespace libasm {
 
 namespace {
 
-constexpr char OPT_BOOL_UPPER_HEX[] PROGMEM = "upper-hex";
-constexpr char OPT_DESC_UPPER_HEX[] PROGMEM = "use upper case letter for hexadecimal";
-constexpr char OPT_BOOL_UPPERCASE[] PROGMEM = "upper-case";
-constexpr char OPT_DESC_UPPERCASE[] PROGMEM = "use upper case letter for output";
-constexpr char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
-constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
-constexpr char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
-constexpr char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
-constexpr char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
-constexpr char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
-constexpr char OPT_BOOL_INTEL_STYLE[] PROGMEM = "intel-style";
-constexpr char OPT_DESC_INTEL_STYLE[] PROGMEM = "Intel style hexadecimal/octal/binary";
-constexpr char OPT_BOOL_MOTOROLA_STYLE[] PROGMEM = "motorola-style";
-constexpr char OPT_DESC_MOTOROLA_STYLE[] PROGMEM = "Motorola style hexadecimal/octal/binary";
-constexpr char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
-constexpr char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
-constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
-constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible";
+constexpr char OPT_BOOL_UPPER_HEX[] = "upper-hex";
+constexpr char OPT_DESC_UPPER_HEX[] = "use upper case letter for hexadecimal";
+constexpr char OPT_BOOL_UPPERCASE[] = "upper-case";
+constexpr char OPT_DESC_UPPERCASE[] = "use upper case letter for output";
+constexpr char OPT_INT_LIST_RADIX[] = "list-radix";
+constexpr char OPT_DESC_LIST_RADIX[] = "set listing radix (8, 16)";
+constexpr char OPT_BOOL_RELATIVE[] = "relative";
+constexpr char OPT_DESC_RELATIVE[] = "program counter relative branch target";
+constexpr char OPT_BOOL_CSTYLE[] = "c-style";
+constexpr char OPT_DESC_CSTYLE[] = "C language style number constant";
+constexpr char OPT_BOOL_INTEL_STYLE[] = "intel-style";
+constexpr char OPT_DESC_INTEL_STYLE[] = "Intel style hexadecimal/octal/binary";
+constexpr char OPT_BOOL_MOTOROLA_STYLE[] = "motorola-style";
+constexpr char OPT_DESC_MOTOROLA_STYLE[] = "Motorola style hexadecimal/octal/binary";
+constexpr char OPT_CHAR_ORIGIN[] = "origin-char";
+constexpr char OPT_DESC_ORIGIN[] = "letter for origin symbol";
+constexpr char OPT_BOOL_GNU_AS[] = "gnu-as";
+constexpr char OPT_DESC_GNU_AS[] = "GNU assembler compatible";
 
 }  // namespace
 

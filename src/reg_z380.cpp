@@ -31,7 +31,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_A,    REG_A    },
     { TEXT_REG_AF,   REG_AF   },
     { TEXT_REG_B,    REG_B    },
@@ -58,7 +58,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_YSR,  REG_YSR  },
 };
 
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_C,  CC_C  },
     { TEXT_CC_M,  CC_M  },
     { TEXT_CC_NC, CC_NC },
@@ -73,23 +73,23 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_Z,  CC_Z  },
 };
 
-constexpr NameEntry DD_ENTRIES[] PROGMEM = {
+constexpr NameEntry DD_ENTRIES[] = {
     { PSTR_IB, DD_IB },
     { PSTR_IW, DD_IW },
     { PSTR_LW, DD_LW },
     { PSTR_W,  DD_W  },
 };
 
-constexpr NameEntry CTL_ENTRIES[] PROGMEM = {
+constexpr NameEntry CTL_ENTRIES[] = {
     { PSTR_LCK, CTL_LCK },
     { PSTR_LW,  CTL_LW  },
     { PSTR_XM,  CTL_XM  },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
-PROGMEM constexpr NameTable DD_TABLE{ARRAY_RANGE(DD_ENTRIES)};
-PROGMEM constexpr NameTable CTL_TABLE{ARRAY_RANGE(CTL_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable DD_TABLE{ARRAY_RANGE(DD_ENTRIES)};
+constexpr NameTable CTL_TABLE{ARRAY_RANGE(CTL_ENTRIES)};
 
 // clang-format on
 }  // namespace

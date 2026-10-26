@@ -30,7 +30,7 @@ namespace i8080 {
 #define U2(_opc, _cf, _name, _dst, _src) {_opc, Entry::Flags::undef(_cf, _dst, _src), _name}
 
 // clang-format off
-constexpr Entry TABLE_I8080[] PROGMEM = {
+constexpr Entry TABLE_I8080[] = {
     E0(0x00, CF_00, TEXT_NOP),
     E2(0x01, CF_30, TEXT_LXI,  M_PTR,  M_IM16),
     E1(0x09, CF_30, TEXT_DAD,  M_PTR),
@@ -111,7 +111,7 @@ constexpr Entry TABLE_I8080[] PROGMEM = {
     E1(0xC7, CF_38, TEXT_RST,  M_VEC),
 };
 
-constexpr uint8_t INDEX_I8080[] PROGMEM = {
+constexpr uint8_t INDEX_I8080[] = {
      70,  // TEXT_ACI
      25,  // TEXT_ADC
      24,  // TEXT_ADD
@@ -192,7 +192,7 @@ constexpr uint8_t INDEX_I8080[] PROGMEM = {
      55,  // TEXT_XTHL
 };
 
-constexpr Entry TABLE_Z8080[] PROGMEM = {
+constexpr Entry TABLE_Z8080[] = {
     E0(0x00, CF_00, TEXT_NOP),
     E2(0x01, CF_30, TEXT_LD,   M_PTR, M_IM16),
     E2(0x09, CF_30, TEXT_ADD,  R_HL,  M_PTR),
@@ -265,7 +265,7 @@ constexpr Entry TABLE_Z8080[] PROGMEM = {
     E1(0xC7, CF_38, TEXT_RST,  M_VEC),
 };
 
-constexpr uint8_t INDEX_Z8080[] PROGMEM = {
+constexpr uint8_t INDEX_Z8080[] = {
      26,  // TEXT_ADC
      57,  // TEXT_ADC
       2,  // TEXT_ADD
@@ -338,32 +338,32 @@ constexpr uint8_t INDEX_Z8080[] PROGMEM = {
      64,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_I8085[] PROGMEM = {
+constexpr Entry TABLE_I8085[] = {
     E0(0x20, CF_00, TEXT_RIM),
     E0(0x30, CF_00, TEXT_SIM),
 };
 
-constexpr uint8_t INDEX_I8085[] PROGMEM = {
+constexpr uint8_t INDEX_I8085[] = {
       0,  // TEXT_RIM
       1,  // TEXT_SIM
 };
 
-constexpr Entry TABLE_Z8085[] PROGMEM = {
+constexpr Entry TABLE_Z8085[] = {
     E2(0x20, CF_00, TEXT_LD, R_A,  R_IM),
     E2(0x30, CF_00, TEXT_LD, R_IM, R_A),
 };
 
-constexpr uint8_t INDEX_Z8085[] PROGMEM = {
+constexpr uint8_t INDEX_Z8085[] = {
       0,  // TEXT_LD
       1,  // TEXT_LD
 };
 
-constexpr Entry TABLE_V30EMU[] PROGMEM = {
+constexpr Entry TABLE_V30EMU[] = {
     E1(0xED, CF_00, TEXT_CALLN, M_IM8),
     E0(0xFD, CF_00, TEXT_RETEM),
 };
 
-constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
+constexpr uint8_t INDEX_V30EMU[] = {
       0,  // TEXT_CALLN
       1,  // TEXT_RETEM
 };
@@ -372,43 +372,43 @@ constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage I8080_PAGES[] PROGMEM = {
+constexpr EntryPage I8080_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-constexpr EntryPage Z8080_PAGES[] PROGMEM = {
+constexpr EntryPage Z8080_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
 };
 
-constexpr EntryPage I8085_PAGES[] PROGMEM = {
+constexpr EntryPage I8085_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
-constexpr EntryPage Z8085_PAGES[] PROGMEM = {
+constexpr EntryPage Z8085_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
         {0x00, ARRAY_RANGE(TABLE_Z8085), ARRAY_RANGE(INDEX_Z8085)},
 };
 
-constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
+constexpr EntryPage V30EMU_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
-constexpr EntryPage Z30EMU_PAGES[] PROGMEM = {
+constexpr EntryPage Z30EMU_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_Z8080), ARRAY_RANGE(INDEX_Z8080)},
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu INTEL_TABLE[] PROGMEM = {
+constexpr Cpu INTEL_TABLE[] = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
-constexpr Cpu ZILOG_TABLE[] PROGMEM = {
+constexpr Cpu ZILOG_TABLE[] = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(Z8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(Z8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(Z30EMU_PAGES)},
@@ -493,11 +493,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpuType == V30EMU && code == 0xED;
 }
 
-const /*PROGMEM*/ char *TableI8080::listCpu_P() const {
+const char *TableI8080::listCpu_P() const {
     return TEXT_I8080_LIST;
 }
 
-const /*PROGMEM*/ char *TableI8080::cpuName_P(CpuType cpuType) const {
+const char *TableI8080::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType, false)->name_P();
 }
 

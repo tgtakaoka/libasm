@@ -71,7 +71,7 @@ using namespace libasm::text::i8086;
     F2(_opc, _cf, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 
 // clang-format off
-constexpr Entry T8086_00[] PROGMEM = {
+constexpr Entry T8086_00[] = {
     E2(0xA0, CF_00, TEXT_MOV,    SZ_BYTE, M_AL,   M_BDIR, P_NONE, P_OPR),
     E2(0xA1, CF_00, TEXT_MOV,    SZ_DATA, M_AX,   M_WDIR, P_NONE, P_OPR),
     E2(0xA2, CF_00, TEXT_MOV,    SZ_BYTE, M_BDIR, M_AL,   P_OPR,  P_NONE),
@@ -287,7 +287,7 @@ constexpr Entry T8086_00[] PROGMEM = {
     E0(0xFD, CF_00, TEXT_STD,    SZ_NONE),
 };
 
-constexpr uint8_t I8086_00[] PROGMEM = {
+constexpr uint8_t I8086_00[] = {
      57,  // TEXT_AAA
      65,  // TEXT_AAS
      22,  // TEXT_ADC
@@ -503,7 +503,7 @@ constexpr uint8_t I8086_00[] PROGMEM = {
      55,  // TEXT_XOR
 };
 
-constexpr Entry T8086_80[] PROGMEM = {
+constexpr Entry T8086_80[] = {
     M2(000, CF_00, TEXT_ADD, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
     M2(010, CF_00, TEXT_OR,  SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
     M2(020, CF_00, TEXT_ADC, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
@@ -514,7 +514,7 @@ constexpr Entry T8086_80[] PROGMEM = {
     N2(070, CF_00, TEXT_CMP, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
-constexpr uint8_t I8086_8X[] PROGMEM = {
+constexpr uint8_t I8086_8X[] = {
       2,  // TEXT_ADC
       0,  // TEXT_ADD
       4,  // TEXT_AND
@@ -525,7 +525,7 @@ constexpr uint8_t I8086_8X[] PROGMEM = {
       6,  // TEXT_XOR
 };
 
-constexpr Entry T8086_81[] PROGMEM = {
+constexpr Entry T8086_81[] = {
     M2(000, CF_00, TEXT_ADD, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
     M2(010, CF_00, TEXT_OR,  SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
     M2(020, CF_00, TEXT_ADC, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
@@ -536,7 +536,7 @@ constexpr Entry T8086_81[] PROGMEM = {
     N2(070, CF_00, TEXT_CMP, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
-constexpr Entry T8086_83[] PROGMEM = {
+constexpr Entry T8086_83[] = {
     M2(000, CF_00, TEXT_ADD, SZ_DATA, M_WMOD, M_BIMM, P_OMOD, P_OPR),
     M2(010, CF_00, TEXT_OR,  SZ_DATA, M_WMOD, M_BIMM, P_OMOD, P_OPR),
     M2(020, CF_00, TEXT_ADC, SZ_DATA, M_WMOD, M_BIMM, P_OMOD, P_OPR),
@@ -547,31 +547,31 @@ constexpr Entry T8086_83[] PROGMEM = {
     N2(070, CF_00, TEXT_CMP, SZ_DATA, M_WMOD, M_BIMM, P_OMOD, P_OPR),
 };
 
-constexpr Entry T8086_8F[] PROGMEM = {
+constexpr Entry T8086_8F[] = {
     E1(000, CF_00, TEXT_POP, SZ_WORD, M_WMOD, P_OMOD),
 };
 
-constexpr uint8_t I8086_8F[] PROGMEM = {
+constexpr uint8_t I8086_8F[] = {
       0,  // TEXT_POP
 };
 
-constexpr Entry T8086_C6[] PROGMEM = {
+constexpr Entry T8086_C6[] = {
     N2(000, CF_00, TEXT_MOV, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
-constexpr uint8_t I8086_C6[] PROGMEM = {
+constexpr uint8_t I8086_C6[] = {
       0,  // TEXT_MOV
 };
 
-constexpr Entry T8086_C7[] PROGMEM = {
+constexpr Entry T8086_C7[] = {
     N2(000, CF_00, TEXT_MOV, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
 };
 
-constexpr uint8_t I8086_C7[] PROGMEM = {
+constexpr uint8_t I8086_C7[] = {
       0,  // TEXT_MOV
 };
 
-constexpr Entry T8086_D0[] PROGMEM = {
+constexpr Entry T8086_D0[] = {
     N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
     N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
     N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
@@ -582,7 +582,7 @@ constexpr Entry T8086_D0[] PROGMEM = {
     N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-constexpr uint8_t I8086_DX[] PROGMEM = {
+constexpr uint8_t I8086_DX[] = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -593,7 +593,7 @@ constexpr uint8_t I8086_DX[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-constexpr Entry T8086_D1[] PROGMEM = {
+constexpr Entry T8086_D1[] = {
     N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
@@ -604,7 +604,7 @@ constexpr Entry T8086_D1[] PROGMEM = {
     N2(070, CF_00, TEXT_SAR, SZ_DATA, M_WMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-constexpr Entry T8086_D2[] PROGMEM = {
+constexpr Entry T8086_D2[] = {
     N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
     N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
     N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
@@ -615,7 +615,7 @@ constexpr Entry T8086_D2[] PROGMEM = {
     N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
 };
 
-constexpr Entry T8086_D3[] PROGMEM = {
+constexpr Entry T8086_D3[] = {
     N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
     N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
     N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
@@ -626,23 +626,23 @@ constexpr Entry T8086_D3[] PROGMEM = {
     N2(070, CF_00, TEXT_SAR, SZ_DATA, M_WMOD, M_CL, P_OMOD, P_NONE),
 };
 
-constexpr Entry T8086_D4[] PROGMEM = {
+constexpr Entry T8086_D4[] = {
     E0(0x0A, CF_00, TEXT_AAM, SZ_NONE),
 };
 
-constexpr uint8_t I8086_D4[] PROGMEM = {
+constexpr uint8_t I8086_D4[] = {
       0,  // TEXT_AAM
 };
 
-constexpr Entry T8086_D5[] PROGMEM = {
+constexpr Entry T8086_D5[] = {
     E0(0x0A, CF_00, TEXT_AAD, SZ_NONE),
 };
 
-constexpr uint8_t I8086_D5[] PROGMEM = {
+constexpr uint8_t I8086_D5[] = {
       0,  // TEXT_AAD
 };
 
-constexpr Entry T8086_F6[] PROGMEM = {
+constexpr Entry T8086_F6[] = {
     N2(000, CF_00, TEXT_TEST, SZ_BYTE, M_BMOD, M_WIMM, P_OMOD, P_OPR),
     M1(020, CF_00, TEXT_NOT,  SZ_BYTE, M_BMOD, P_OMOD),
     M1(030, CF_00, TEXT_NEG,  SZ_BYTE, M_BMOD, P_OMOD),
@@ -652,7 +652,7 @@ constexpr Entry T8086_F6[] PROGMEM = {
     N1(070, CF_00, TEXT_IDIV, SZ_BYTE, M_BMOD, P_OMOD),
 };
 
-constexpr uint8_t I8086_FX[] PROGMEM = {
+constexpr uint8_t I8086_FX[] = {
       5,  // TEXT_DIV
       6,  // TEXT_IDIV
       4,  // TEXT_IMUL
@@ -662,7 +662,7 @@ constexpr uint8_t I8086_FX[] PROGMEM = {
       0,  // TEXT_TEST
 };
 
-constexpr Entry T8086_F7[] PROGMEM = {
+constexpr Entry T8086_F7[] = {
     N2(000, CF_00, TEXT_TEST, SZ_DATA, M_WMOD, M_WIMM, P_OMOD, P_OPR),
     M1(020, CF_00, TEXT_NOT,  SZ_DATA, M_WMOD, P_OMOD),
     M1(030, CF_00, TEXT_NEG,  SZ_DATA, M_WMOD, P_OMOD),
@@ -672,17 +672,17 @@ constexpr Entry T8086_F7[] PROGMEM = {
     N1(070, CF_00, TEXT_IDIV, SZ_DATA, M_WMOD, P_OMOD),
 };
 
-constexpr Entry T8086_FE[] PROGMEM = {
+constexpr Entry T8086_FE[] = {
     M1(000, CF_00, TEXT_INC, SZ_BYTE, M_BMOD, P_OMOD),
     M1(010, CF_00, TEXT_DEC, SZ_BYTE, M_BMOD, P_OMOD),
 };
 
-constexpr uint8_t I8086_FE[] PROGMEM = {
+constexpr uint8_t I8086_FE[] = {
       1,  // TEXT_DEC
       0,  // TEXT_INC
 };
 
-constexpr Entry T8086_FF[] PROGMEM = {
+constexpr Entry T8086_FF[] = {
     M1(000, CF_00, TEXT_INC,   SZ_WORD, M_WMOD, P_OMOD),
     M1(010, CF_00, TEXT_DEC,   SZ_WORD, M_WMOD, P_OMOD),
     E1(020, CF_00, TEXT_CALL,  SZ_NONE, M_WMOD, P_OMOD),
@@ -696,7 +696,7 @@ constexpr Entry T8086_FF[] PROGMEM = {
     E1(060, CF_00, TEXT_PUSH,  SZ_WORD, M_WMOD, P_OMOD),
 };
 
-constexpr uint8_t I8086_FF[] PROGMEM = {
+constexpr uint8_t I8086_FF[] = {
       2,  // TEXT_CALL
       3,  // TEXT_CALL
       4,  // TEXT_CALLF
@@ -712,7 +712,7 @@ constexpr uint8_t I8086_FF[] PROGMEM = {
 
 // i80186
 
-constexpr Entry T80186_00[] PROGMEM = {
+constexpr Entry T80186_00[] = {
     E0(0x60, CF_00, TEXT_PUSHA, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPA,  SZ_NONE),
     E2(0x62, CF_00, TEXT_BOUND, SZ_DATA, M_WREG, M_WMEM, P_REG,  P_MOD),
@@ -738,7 +738,7 @@ constexpr Entry T80186_00[] PROGMEM = {
     E0(0xC9, CF_00, TEXT_LEAVE, SZ_NONE),
 };
 
-constexpr uint8_t I80186_00[] PROGMEM = {
+constexpr uint8_t I80186_00[] = {
       2,  // TEXT_BOUND
      21,  // TEXT_ENTER
       4,  // TEXT_IMUL
@@ -764,7 +764,7 @@ constexpr uint8_t I80186_00[] PROGMEM = {
       0,  // TEXT_PUSHA
 };
 
-constexpr Entry T80186_C0[] PROGMEM = {
+constexpr Entry T80186_C0[] = {
     N2(000, CF_00, TEXT_ROL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
     N2(010, CF_00, TEXT_ROR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
     N2(020, CF_00, TEXT_RCL, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
@@ -775,7 +775,7 @@ constexpr Entry T80186_C0[] PROGMEM = {
     N2(070, CF_00, TEXT_SAR, SZ_BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
 };
 
-constexpr uint8_t I80186_CX[] PROGMEM = {
+constexpr uint8_t I80186_CX[] = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -786,7 +786,7 @@ constexpr uint8_t I80186_CX[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-constexpr Entry T80186_C1[] PROGMEM = {
+constexpr Entry T80186_C1[] = {
     N2(000, CF_00, TEXT_ROL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
     N2(010, CF_00, TEXT_ROR, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
     N2(020, CF_00, TEXT_RCL, SZ_DATA, M_WMOD, M_BIT, P_OMOD, P_OPR),
@@ -799,31 +799,31 @@ constexpr Entry T80186_C1[] PROGMEM = {
 
 // i80286
 
-constexpr Entry T80286_00[] PROGMEM = {
+constexpr Entry T80286_00[] = {
     F2(0x63, CF_00, TEXT_ARPL,  SZ_WORD, M_WMOD, M_WREG, P_MOD, P_REG),
     E1(0xD7, CF_00, TEXT_XLAT,  SZ_BYTE, M_BMEM, P_NONE),
     E0(0xD7, CF_00, TEXT_XLATB, SZ_NONE),
 };
 
-constexpr uint8_t I80286_00[] PROGMEM = {
+constexpr uint8_t I80286_00[] = {
       0,  // TEXT_ARPL
       1,  // TEXT_XLAT
       2,  // TEXT_XLATB
 };
 
-constexpr Entry T80286_0F[] PROGMEM = {
+constexpr Entry T80286_0F[] = {
     E0(0x06, CF_00, TEXT_CLTS, SZ_NONE),
     E2(0x02, CF_00, TEXT_LAR,  SZ_DATA, M_WREG, M_WMOD, P_REG, P_MOD),
     E2(0x03, CF_00, TEXT_LSL,  SZ_DATA, M_WREG, M_WMOD, P_REG, P_MOD),
 };
 
-constexpr uint8_t I80286_0F[] PROGMEM = {
+constexpr uint8_t I80286_0F[] = {
       0,  // TEXT_CLTS
       1,  // TEXT_LAR
       2,  // TEXT_LSL
 };
 
-constexpr Entry T80286_0F00[] PROGMEM = {
+constexpr Entry T80286_0F00[] = {
     E1(000, CF_00, TEXT_SLDT, SZ_WORD, M_WMOD, P_OMOD),
     E1(010, CF_00, TEXT_STR,  SZ_WORD, M_WMOD, P_OMOD),
     F1(020, CF_00, TEXT_LLDT, SZ_WORD, M_WMOD, P_OMOD),
@@ -832,7 +832,7 @@ constexpr Entry T80286_0F00[] PROGMEM = {
     F1(050, CF_00, TEXT_VERW, SZ_WORD, M_WMOD, P_OMOD),
 };
 
-constexpr uint8_t I80286_0F00[] PROGMEM = {
+constexpr uint8_t I80286_0F00[] = {
       2,  // TEXT_LLDT
       3,  // TEXT_LTR
       0,  // TEXT_SLDT
@@ -841,7 +841,7 @@ constexpr uint8_t I80286_0F00[] PROGMEM = {
       5,  // TEXT_VERW
 };
 
-constexpr Entry T80286_0F01[] PROGMEM = {
+constexpr Entry T80286_0F01[] = {
     E1(000, CF_00, TEXT_SGDT, SZ_NONE, M_MEM,  P_OMOD),
     E1(010, CF_00, TEXT_SIDT, SZ_NONE, M_MEM,  P_OMOD),
     E1(020, CF_00, TEXT_LGDT, SZ_NONE, M_MEM,  P_OMOD),
@@ -850,7 +850,7 @@ constexpr Entry T80286_0F01[] PROGMEM = {
     F1(060, CF_00, TEXT_LMSW, SZ_WORD, M_WMOD, P_OMOD),
 };
 
-constexpr uint8_t I80286_0F01[] PROGMEM = {
+constexpr uint8_t I80286_0F01[] = {
       2,  // TEXT_LGDT
       3,  // TEXT_LIDT
       5,  // TEXT_LMSW
@@ -861,7 +861,7 @@ constexpr uint8_t I80286_0F01[] PROGMEM = {
 
 // i80386
 
-constexpr Entry T80386_00[] PROGMEM = {
+constexpr Entry T80386_00[] = {
     E0(0x64, CF_00, TEXT_SEGFS, SZ_NONE),
     E0(0x65, CF_00, TEXT_SEGGS, SZ_NONE),
     // PUSHD imm32: asm-only alias for "DATA32 PUSH imm32" in use16 / "PUSH
@@ -875,7 +875,7 @@ constexpr Entry T80386_00[] PROGMEM = {
     E2(0xE2, CF_00, TEXT_LOOP,   SZ_NONE, M_REL8, M_ECX, P_OPR, P_NONE),
 };
 
-constexpr uint8_t I80386_00[] PROGMEM = {
+constexpr uint8_t I80386_00[] = {
       7,  // TEXT_LOOP
       5,  // TEXT_LOOPE
       3,  // TEXT_LOOPNE
@@ -886,11 +886,11 @@ constexpr uint8_t I80386_00[] PROGMEM = {
       1,  // TEXT_SEGGS
 };
 
-constexpr Entry T80386_8F[] PROGMEM = {
+constexpr Entry T80386_8F[] = {
     N1(000, CF_00, TEXT_POP, SZ_DATA, M_WMOD, P_OMOD),
 };
 
-constexpr Entry T80386_FF[] PROGMEM = {
+constexpr Entry T80386_FF[] = {
     M1(000, CF_00, TEXT_INC,   SZ_DATA, M_WMOD, P_OMOD),
     M1(010, CF_00, TEXT_DEC,   SZ_DATA, M_WMOD, P_OMOD),
     N1(020, CF_00, TEXT_CALL,  SZ_DATA, M_WMOD, P_OMOD),
@@ -904,7 +904,7 @@ constexpr Entry T80386_FF[] PROGMEM = {
     N1(060, CF_00, TEXT_PUSH,  SZ_DATA, M_WMOD, P_OMOD),
 };
 
-constexpr Entry TCODE16_00[] PROGMEM = {
+constexpr Entry TCODE16_00[] = {
     E0(0x60, CF_00, TEXT_PUSHA, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPA,  SZ_NONE),
     S2(0x6D, CF_00, TEXT_INSW,  STR_MOVE, SZ_WORD, M_WMEM, M_DX),
@@ -929,7 +929,7 @@ constexpr Entry TCODE16_00[] PROGMEM = {
     E1(0xE3, CF_00, TEXT_JCXZ,  SZ_NONE,  M_REL8, P_OPR),
 };
 
-constexpr Entry TCODE32_00[] PROGMEM = {
+constexpr Entry TCODE32_00[] = {
     E0(0x60, CF_00, TEXT_PUSHAD, SZ_NONE),
     E0(0x61, CF_00, TEXT_POPAD,  SZ_NONE),
     S2(0x6D, CF_00, TEXT_INSD,   STR_MOVE, SZ_DWORD, M_DMEM, M_DX),
@@ -954,7 +954,7 @@ constexpr Entry TCODE32_00[] PROGMEM = {
     E1(0xE3, CF_00, TEXT_JECXZ,  SZ_NONE,  M_REL8, P_OPR),
 };
 
-constexpr uint8_t ICODE32_00[] PROGMEM = {
+constexpr uint8_t ICODE32_00[] = {
           7,  // TEXT_CDQ
          12,  // TEXT_CMPSD
          13,  // TEXT_CMPSD
@@ -979,7 +979,7 @@ constexpr uint8_t ICODE32_00[] PROGMEM = {
          15,  // TEXT_STOSD
 };
 
-constexpr uint8_t ICODE16_00[] PROGMEM = {
+constexpr uint8_t ICODE16_00[] = {
           6,  // TEXT_CBW
          12,  // TEXT_CMPSW
          13,  // TEXT_CMPSW
@@ -1004,7 +1004,7 @@ constexpr uint8_t ICODE16_00[] PROGMEM = {
          15,  // TEXT_STOSW
 };
 
-constexpr Entry T80386_0F[] PROGMEM = {
+constexpr Entry T80386_0F[] = {
     E2(0x20, CF_00, TEXT_MOV,  SZ_DWORD, M_DREG, M_CTLR, P_MOD, P_REG),
     E2(0x21, CF_00, TEXT_MOV,  SZ_DWORD, M_DREG, M_DBGR, P_MOD, P_REG),
     E2(0x22, CF_00, TEXT_MOV,  SZ_DWORD, M_CTLR, M_DREG, P_REG, P_MOD),
@@ -1095,7 +1095,7 @@ constexpr Entry T80386_0F[] PROGMEM = {
     N2(0xBF, CF_00, TEXT_MOVSX,  SZ_DATA, M_WREG, M_WMOD16, P_REG,  P_MOD),
 };
 
-constexpr uint8_t I80386_0F[] PROGMEM = {
+constexpr uint8_t I80386_0F[] = {
      82,  // TEXT_BSF
      83,  // TEXT_BSR
      68,  // TEXT_BT
@@ -1185,14 +1185,14 @@ constexpr uint8_t I80386_0F[] PROGMEM = {
      75,  // TEXT_SHRD
 };
 
-constexpr Entry T80386_0FBA[] PROGMEM = {
+constexpr Entry T80386_0FBA[] = {
     N2(040, CF_00, TEXT_BT,  SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
     N2(050, CF_00, TEXT_BTS, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
     N2(060, CF_00, TEXT_BTR, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
     N2(070, CF_00, TEXT_BTC, SZ_DATA, M_WMOD, M_UI8, P_OMOD, P_OPR),
 };
 
-constexpr uint8_t I80386_0FBA[] PROGMEM = {
+constexpr uint8_t I80386_0FBA[] = {
     0,  // TEXT_BT
     3,  // TEXT_BTC
     2,  // TEXT_BTR
@@ -1201,7 +1201,7 @@ constexpr uint8_t I80386_0FBA[] PROGMEM = {
 
 // i80486
 
-constexpr Entry T80486_0F[] PROGMEM = {
+constexpr Entry T80486_0F[] = {
     E0(0x08, CF_00, TEXT_INVD,    SZ_NONE),
     E0(0x09, CF_00, TEXT_WBINVD,  SZ_NONE),
     E1(0xC8, CF_07, TEXT_BSWAP,   SZ_DATA,  M_DREG, P_OREG),
@@ -1211,7 +1211,7 @@ constexpr Entry T80486_0F[] PROGMEM = {
     L2(0xB1, CF_00, TEXT_CMPXCHG, SZ_DATA,  M_WMOD, M_WREG, P_MOD, P_REG),
 };
 
-constexpr uint8_t I80486_0F[] PROGMEM = {
+constexpr uint8_t I80486_0F[] = {
       2,  // TEXT_BSWAP
       5,  // TEXT_CMPXCHG (byte)
       6,  // TEXT_CMPXCHG (data)
@@ -1221,27 +1221,27 @@ constexpr uint8_t I80486_0F[] PROGMEM = {
       4,  // TEXT_XADD (data)
 };
 
-constexpr Entry T80486_0F01[] PROGMEM = {
+constexpr Entry T80486_0F01[] = {
     N1(0070, CF_00, TEXT_INVLPG, SZ_NONE, M_MEM, P_OMOD),
 };
 
-constexpr uint8_t I80486_0F01[] PROGMEM = {
+constexpr uint8_t I80486_0F01[] = {
       0,  // TEXT_INVLPG
 };
 
 // V series
 
-constexpr Entry TVSERIES_00[] PROGMEM = {
+constexpr Entry TVSERIES_00[] = {
     E0(0x64, CF_00, TEXT_REPNC,  SZ_NONE),
     E0(0x65, CF_00, TEXT_REPC,   SZ_NONE),
 };
 
-constexpr uint8_t IVSERIES_00[] PROGMEM = {
+constexpr uint8_t IVSERIES_00[] = {
       1,  // TEXT_REPC
       0,  // TEXT_REPNC
 };
 
-constexpr Entry TVSERIES_0F[] PROGMEM = {
+constexpr Entry TVSERIES_0F[] = {
     S2(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
     S0(0x20, CF_00, TEXT_ADD4S,  STR_BCD,  SZ_NONE),
     S2(0x26, CF_00, TEXT_CMP4S,  STR_BCD,  SZ_BYTE, M_BMEM, M_BMEM),
@@ -1272,7 +1272,7 @@ constexpr Entry TVSERIES_0F[] PROGMEM = {
     N2(0x19, CF_00, TEXT_TEST1,  SZ_WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
 };
 
-constexpr uint8_t IVSERIES_0F[] PROGMEM = {
+constexpr uint8_t IVSERIES_0F[] = {
       0,  // TEXT_ADD4S
       1,  // TEXT_ADD4S
      12,  // TEXT_CLR1
@@ -1305,29 +1305,29 @@ constexpr uint8_t IVSERIES_0F[] PROGMEM = {
 
 // V30
 
-constexpr Entry TV30_0F[] PROGMEM = {
+constexpr Entry TV30_0F[] = {
     E1(0xFF, CF_00, TEXT_BRKEM,  SZ_BYTE, M_UI8,  P_OPR),
 };
 
-constexpr uint8_t IV30_0F[] PROGMEM = {
+constexpr uint8_t IV30_0F[] = {
       0,  // TEXT_BRKEM
 };
 
 // V33
 
-constexpr Entry TV33_0F[] PROGMEM = {
+constexpr Entry TV33_0F[] = {
     E1(0xE0, CF_00, TEXT_BRKXA,  SZ_BYTE, M_UI8,  P_OPR),
     E1(0xF0, CF_00, TEXT_RETXA,  SZ_BYTE, M_UI8,  P_OPR),
 };
 
-constexpr uint8_t IV33_0F[] PROGMEM = {
+constexpr uint8_t IV33_0F[] = {
       0,  // TEXT_BRKXA
       1,  // TEXT_RETXA
 };
 
 // V35
 
-constexpr Entry TV35_0F[] PROGMEM = {
+constexpr Entry TV35_0F[] = {
     E0(0x25, CF_00, TEXT_MOVSPA, SZ_NONE),
     E0(0x91, CF_00, TEXT_RETRBI, SZ_NONE),
     E0(0x92, CF_00, TEXT_FINT,   SZ_NONE),
@@ -1335,7 +1335,7 @@ constexpr Entry TV35_0F[] PROGMEM = {
     E0(0x9E, CF_00, TEXT_STOP,   SZ_NONE),
 };
 
-constexpr uint8_t IV35_0F[] PROGMEM = {
+constexpr uint8_t IV35_0F[] = {
       3,  // TEXT_BTCLR
       2,  // TEXT_FINT
       0,  // TEXT_MOVSPA
@@ -1346,40 +1346,40 @@ constexpr uint8_t IV35_0F[] PROGMEM = {
 // The register operand of these three is a mod-reg byte with a fixed reg
 // field, so each takes a page of its own like the i80386 0FBA group.
 
-constexpr Entry TV35_0F2D[] PROGMEM = {
+constexpr Entry TV35_0F2D[] = {
     E1(000, CF_00, TEXT_BRKCS,  SZ_WORD, M_WREG, P_OMOD),
 };
 
-constexpr uint8_t IV35_0F2D[] PROGMEM = {
+constexpr uint8_t IV35_0F2D[] = {
       0,  // TEXT_BRKCS
 };
 
-constexpr Entry TV35_0F94[] PROGMEM = {
+constexpr Entry TV35_0F94[] = {
     E1(070, CF_00, TEXT_TSKSW,  SZ_WORD, M_WREG, P_OMOD),
 };
 
-constexpr uint8_t IV35_0F94[] PROGMEM = {
+constexpr uint8_t IV35_0F94[] = {
       0,  // TEXT_TSKSW
 };
 
-constexpr Entry TV35_0F95[] PROGMEM = {
+constexpr Entry TV35_0F95[] = {
     E1(070, CF_00, TEXT_MOVSPB, SZ_WORD, M_WREG, P_OMOD),
 };
 
-constexpr uint8_t IV35_0F95[] PROGMEM = {
+constexpr uint8_t IV35_0F95[] = {
       0,  // TEXT_MOVSPB
 };
 
 #if !defined(LIBASM_I8086_NOFPU)
-constexpr Entry T8087_00[] PROGMEM = {
+constexpr Entry T8087_00[] = {
     E0(0x9B, CF_00, TEXT_FWAIT,  SZ_NONE),
 };
 
-constexpr uint8_t I8087_00[] PROGMEM = {
+constexpr uint8_t I8087_00[] = {
       0,  // TEXT_FWAIT
 };
 
-constexpr Entry T8087_D8[] PROGMEM = {
+constexpr Entry T8087_D8[] = {
     E2(0xC0, CF_07, TEXT_FADD,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
     E2(0xC8, CF_07, TEXT_FMUL,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
     E1(0xD0, CF_07, TEXT_FCOM,   SZ_NONE,  M_STI,  P_OREG),
@@ -1398,7 +1398,7 @@ constexpr Entry T8087_D8[] PROGMEM = {
     N1(070,  CF_00, TEXT_FDIVR,  SZ_DWORD, M_DMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_D8[] PROGMEM = {
+constexpr uint8_t I8087_D8[] = {
       0,  // TEXT_FADD
       8,  // TEXT_FADD
       2,  // TEXT_FCOM
@@ -1417,7 +1417,7 @@ constexpr uint8_t I8087_D8[] PROGMEM = {
      13,  // TEXT_FSUBR
 };
 
-constexpr Entry T8087_D9[] PROGMEM = {
+constexpr Entry T8087_D9[] = {
     E1(0xC0, CF_07, TEXT_FLD,     SZ_NONE,  M_STI,  P_OREG),
     E1(0xC8, CF_07, TEXT_FXCH,    SZ_NONE,  M_STI,  P_OREG),
     E0(0xD0, CF_00, TEXT_FNOP,    SZ_NONE),
@@ -1453,7 +1453,7 @@ constexpr Entry T8087_D9[] PROGMEM = {
     E1(070,  CF_00, TEXT_FNSTCW,  SZ_WORD,  M_WMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_D9[] PROGMEM = {
+constexpr uint8_t I8087_D9[] = {
      14,  // TEXT_F2XM1
       4,  // TEXT_FABS
       3,  // TEXT_FCHS
@@ -1489,7 +1489,7 @@ constexpr uint8_t I8087_D9[] PROGMEM = {
      22,  // TEXT_FYL2XP1
 };
 
-constexpr Entry T8087_DA[] PROGMEM = {
+constexpr Entry T8087_DA[] = {
     N1(000,  CF_00, TEXT_FIADD,  SZ_DWORD, M_DMEM, P_OMOD),
     N1(010,  CF_00, TEXT_FIMUL,  SZ_DWORD, M_DMEM, P_OMOD),
     N1(020,  CF_00, TEXT_FICOM,  SZ_DWORD, M_DMEM, P_OMOD),
@@ -1500,7 +1500,7 @@ constexpr Entry T8087_DA[] PROGMEM = {
     N1(070,  CF_00, TEXT_FIDIVR, SZ_DWORD, M_DMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DA[] PROGMEM = {
+constexpr uint8_t I8087_DA[] = {
       0,  // TEXT_FIADD
       2,  // TEXT_FICOM
       3,  // TEXT_FICOMP
@@ -1511,7 +1511,7 @@ constexpr uint8_t I8087_DA[] PROGMEM = {
       5,  // TEXT_FISUBR
 };
 
-constexpr Entry T8087_DB[] PROGMEM = {
+constexpr Entry T8087_DB[] = {
     E0(0xE0, CF_00, TEXT_FNENI,  SZ_NONE),
     E0(0xE1, CF_00, TEXT_FNDISI, SZ_NONE),
     E0(0xE2, CF_00, TEXT_FNCLEX, SZ_NONE),
@@ -1523,7 +1523,7 @@ constexpr Entry T8087_DB[] PROGMEM = {
     N1(070,  CF_00, TEXT_FSTP,   SZ_TBYTE, M_FMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DB[] PROGMEM = {
+constexpr uint8_t I8087_DB[] = {
       4,  // TEXT_FILD
       5,  // TEXT_FIST
       6,  // TEXT_FISTP
@@ -1535,7 +1535,7 @@ constexpr uint8_t I8087_DB[] PROGMEM = {
       8,  // TEXT_FSTP
 };
 
-constexpr Entry T8087_DC[] PROGMEM = {
+constexpr Entry T8087_DC[] = {
     E2(0xC0, CF_07, TEXT_FADD,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
     E2(0xC8, CF_07, TEXT_FMUL,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
     E2(0xE8, CF_07, TEXT_FSUB,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
@@ -1552,7 +1552,7 @@ constexpr Entry T8087_DC[] PROGMEM = {
     N1(070,  CF_00, TEXT_FDIVR, SZ_QWORD, M_FMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DC[] PROGMEM = {
+constexpr uint8_t I8087_DC[] = {
       0,  // TEXT_FADD
       6,  // TEXT_FADD
       8,  // TEXT_FCOM
@@ -1569,7 +1569,7 @@ constexpr uint8_t I8087_DC[] PROGMEM = {
      11,  // TEXT_FSUBR
 };
 
-constexpr Entry T8087_DD[] PROGMEM = {
+constexpr Entry T8087_DD[] = {
     E1(0xC0, CF_07, TEXT_FFREE,  SZ_NONE,  M_STI,  P_OREG),
     E1(0xD0, CF_07, TEXT_FST,    SZ_NONE,  M_STI,  P_OREG),
     E1(0xD8, CF_07, TEXT_FSTP,   SZ_NONE,  M_STI,  P_OREG),
@@ -1581,7 +1581,7 @@ constexpr Entry T8087_DD[] PROGMEM = {
     E1(070,  CF_00, TEXT_FNSTSW, SZ_WORD,  M_WMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DD[] PROGMEM = {
+constexpr uint8_t I8087_DD[] = {
       0,  // TEXT_FFREE
       3,  // TEXT_FLD
       7,  // TEXT_FNSAVE
@@ -1593,7 +1593,7 @@ constexpr uint8_t I8087_DD[] PROGMEM = {
       5,  // TEXT_FSTP
 };
 
-constexpr Entry T8087_DE[] PROGMEM = {
+constexpr Entry T8087_DE[] = {
     E2(0xC0, CF_07, TEXT_FADDP,  SZ_NONE, M_STI,  M_ST0, P_OREG, P_NONE),
     E2(0xC8, CF_07, TEXT_FMULP,  SZ_NONE, M_STI,  M_ST0, P_OREG, P_NONE),
     E0(0xD9, CF_00, TEXT_FCOMPP, SZ_NONE),
@@ -1611,7 +1611,7 @@ constexpr Entry T8087_DE[] PROGMEM = {
     N1(070,  CF_00, TEXT_FIDIVR, SZ_WORD, M_WMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DE[] PROGMEM = {
+constexpr uint8_t I8087_DE[] = {
       0,  // TEXT_FADDP
       2,  // TEXT_FCOMPP
       6,  // TEXT_FDIVP
@@ -1629,7 +1629,7 @@ constexpr uint8_t I8087_DE[] PROGMEM = {
       3,  // TEXT_FSUBRP
 };
 
-constexpr Entry T8087_DF[] PROGMEM = {
+constexpr Entry T8087_DF[] = {
     N1(000,  CF_00, TEXT_FILD,  SZ_WORD,  M_WMEM, P_OMOD),
     N1(020,  CF_00, TEXT_FIST,  SZ_WORD,  M_WMEM, P_OMOD),
     N1(030,  CF_00, TEXT_FISTP, SZ_WORD,  M_WMEM, P_OMOD),
@@ -1639,7 +1639,7 @@ constexpr Entry T8087_DF[] PROGMEM = {
     N1(070,  CF_00, TEXT_FISTP, SZ_QWORD, M_FMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_DF[] PROGMEM = {
+constexpr uint8_t I8087_DF[] = {
       3,  // TEXT_FBLD
       5,  // TEXT_FBSTP
       0,  // TEXT_FILD
@@ -1649,102 +1649,102 @@ constexpr uint8_t I8087_DF[] PROGMEM = {
       6,  // TEXT_FISTP
 };
 
-constexpr Entry T8087_9BD9[] PROGMEM = {
+constexpr Entry T8087_9BD9[] = {
     E1(060,  CF_00, TEXT_FSTENV, SZ_NONE, M_MEM,  P_OMOD),
     E1(070,  CF_00, TEXT_FSTCW,  SZ_WORD, M_WMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_9BD9[] PROGMEM = {
+constexpr uint8_t I8087_9BD9[] = {
       1,  // TEXT_FSTCW
       0,  // TEXT_FSTENV
 };
 
-constexpr Entry T8087_9BDB[] PROGMEM = {
+constexpr Entry T8087_9BDB[] = {
     E0(0xE0, CF_00, TEXT_FENI,  SZ_NONE),
     E0(0xE1, CF_00, TEXT_FDISI, SZ_NONE),
     E0(0xE2, CF_00, TEXT_FCLEX, SZ_NONE),
     E0(0xE3, CF_00, TEXT_FINIT, SZ_NONE),
 };
 
-constexpr uint8_t I8087_9BDB[] PROGMEM = {
+constexpr uint8_t I8087_9BDB[] = {
       2,  // TEXT_FCLEX
       1,  // TEXT_FDISI
       0,  // TEXT_FENI
       3,  // TEXT_FINIT
 };
 
-constexpr Entry T8087_9BDD[] PROGMEM = {
+constexpr Entry T8087_9BDD[] = {
     E1(060,  CF_00, TEXT_FSAVE, SZ_NONE, M_MEM,  P_OMOD),
     E1(070,  CF_00, TEXT_FSTSW, SZ_WORD, M_WMEM, P_OMOD),
 };
 
-constexpr uint8_t I8087_9BDD[] PROGMEM = {
+constexpr uint8_t I8087_9BDD[] = {
       0,  // TEXT_FSAVE
       1,  // TEXT_FSTSW
 };
 
-constexpr Entry T80287_DB[] PROGMEM = {
+constexpr Entry T80287_DB[] = {
     E0(0xE4, CF_00, TEXT_FNSETPM, SZ_NONE),
 };
 
-constexpr uint8_t I80287_DB[] PROGMEM = {
+constexpr uint8_t I80287_DB[] = {
       0,  // TEXT_FNSETPM
 };
 
-constexpr Entry T80287_DF[] PROGMEM = {
+constexpr Entry T80287_DF[] = {
     E1(0xE0, CF_00, TEXT_FNSTSW, SZ_NONE,  M_AX, P_NONE),
 };
 
-constexpr uint8_t I80287_DF[] PROGMEM = {
+constexpr uint8_t I80287_DF[] = {
       0,  // TEXT_FNSTSW
 };
 
 // i80287 WAIT forms (9B prefix): FSETPM (9B DB E4) and FSTSW AX (9B DF E0),
 // the WAIT counterparts of FNSETPM/FNSTSW AX.
-constexpr Entry T80287_9BDB[] PROGMEM = {
+constexpr Entry T80287_9BDB[] = {
     E0(0xE4, CF_00, TEXT_FSETPM, SZ_NONE),
 };
 
-constexpr uint8_t I80287_9BDB[] PROGMEM = {
+constexpr uint8_t I80287_9BDB[] = {
       0,  // TEXT_FSETPM
 };
 
-constexpr Entry T80287_9BDF[] PROGMEM = {
+constexpr Entry T80287_9BDF[] = {
     E1(0xE0, CF_00, TEXT_FSTSW, SZ_NONE, M_AX, P_NONE),
 };
 
-constexpr uint8_t I80287_9BDF[] PROGMEM = {
+constexpr uint8_t I80287_9BDF[] = {
       0,  // TEXT_FSTSW
 };
 
-constexpr Entry T80387_D9[] PROGMEM = {
+constexpr Entry T80387_D9[] = {
     E0(0xF5, CF_00, TEXT_FPREM1,  SZ_NONE),
     E0(0xFB, CF_00, TEXT_FSINCOS, SZ_NONE),
     E0(0xFE, CF_00, TEXT_FSIN,    SZ_NONE),
     E0(0xFF, CF_00, TEXT_FCOS,    SZ_NONE),
 };
 
-constexpr uint8_t I80387_D9[] PROGMEM = {
+constexpr uint8_t I80387_D9[] = {
       3,  // TEXT_FCOS
       0,  // TEXT_FPREM1
       2,  // TEXT_FSIN
       1,  // TEXT_FSINCOS
 };
 
-constexpr Entry T80387_DA[] PROGMEM = {
+constexpr Entry T80387_DA[] = {
     E0(0xE9, CF_00, TEXT_FUCOMPP, SZ_NONE),
 };
 
-constexpr uint8_t I80387_DA[] PROGMEM = {
+constexpr uint8_t I80387_DA[] = {
       0,  // TEXT_FUCOMPP
 };
 
-constexpr Entry T80387_DD[] PROGMEM = {
+constexpr Entry T80387_DD[] = {
     E1(0xE0, CF_07, TEXT_FUCOM,  SZ_NONE, M_STI, P_OREG),
     E1(0xE8, CF_07, TEXT_FUCOMP, SZ_NONE, M_STI, P_OREG),
 };
 
-constexpr uint8_t I80387_DD[] PROGMEM = {
+constexpr uint8_t I80387_DD[] = {
       0,  // TEXT_FUCOM
       1,  // TEXT_FUCOMP
 };
@@ -1754,7 +1754,7 @@ constexpr uint8_t I80387_DD[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage I8086_PAGES[] PROGMEM = {
+constexpr EntryPage I8086_PAGES[] = {
         {0x83, ARRAY_RANGE(T8086_83), ARRAY_RANGE(I8086_8X)},  // M_BIMM
         {0x00, ARRAY_RANGE(T8086_00), ARRAY_RANGE(I8086_00)},
         {0x80, ARRAY_RANGE(T8086_80), ARRAY_RANGE(I8086_8X)},
@@ -1774,7 +1774,7 @@ constexpr EntryPage I8086_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
-constexpr EntryPage I80186_PAGES[] PROGMEM = {
+constexpr EntryPage I80186_PAGES[] = {
         // i80186
         {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
         {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
@@ -1799,7 +1799,7 @@ constexpr EntryPage I80186_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
-constexpr EntryPage I80286_PAGES[] PROGMEM = {
+constexpr EntryPage I80286_PAGES[] = {
         // i80186
         {0x00, ARRAY_RANGE(T80186_00), ARRAY_RANGE(I80186_00)},
         {0xD0, ARRAY_RANGE(T8086_D0), ARRAY_RANGE(I8086_DX)},    // M_VAL1
@@ -1829,7 +1829,7 @@ constexpr EntryPage I80286_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
-constexpr EntryPage I80386_PAGES[] PROGMEM = {
+constexpr EntryPage I80386_PAGES[] = {
         // i80386
         {0x00, ARRAY_RANGE(TCODE16_00), ARRAY_RANGE(ICODE16_00)},
         {0x00, ARRAY_RANGE(TCODE32_00), ARRAY_RANGE(ICODE32_00)},
@@ -1866,7 +1866,7 @@ constexpr EntryPage I80386_PAGES[] PROGMEM = {
         {0x0FBA, ARRAY_RANGE(T80386_0FBA), ARRAY_RANGE(I80386_0FBA)},
 };
 
-constexpr EntryPage I80486_PAGES[] PROGMEM = {
+constexpr EntryPage I80486_PAGES[] = {
         // i80386 inherited
         {0x00, ARRAY_RANGE(TCODE16_00), ARRAY_RANGE(ICODE16_00)},
         {0x00, ARRAY_RANGE(TCODE32_00), ARRAY_RANGE(ICODE32_00)},
@@ -1906,7 +1906,7 @@ constexpr EntryPage I80486_PAGES[] PROGMEM = {
         {0x0F01, ARRAY_RANGE(T80486_0F01), ARRAY_RANGE(I80486_0F01)},
 };
 
-constexpr EntryPage V30_PAGES[] PROGMEM = {
+constexpr EntryPage V30_PAGES[] = {
         // V30
         {0x0F, ARRAY_RANGE(TV30_0F), ARRAY_RANGE(IV30_0F)},
         // V series
@@ -1936,7 +1936,7 @@ constexpr EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
-constexpr EntryPage V33_PAGES[] PROGMEM = {
+constexpr EntryPage V33_PAGES[] = {
         // V33
         {0x0F, ARRAY_RANGE(TV33_0F), ARRAY_RANGE(IV33_0F)},
         // V series
@@ -1966,7 +1966,7 @@ constexpr EntryPage V33_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(T8086_FF), ARRAY_RANGE(I8086_FF)},
 };
 
-constexpr EntryPage V35_PAGES[] PROGMEM = {
+constexpr EntryPage V35_PAGES[] = {
         // V35
         {0x0F2D, ARRAY_RANGE(TV35_0F2D), ARRAY_RANGE(IV35_0F2D)},
         {0x0F94, ARRAY_RANGE(TV35_0F94), ARRAY_RANGE(IV35_0F94)},
@@ -2001,7 +2001,7 @@ constexpr EntryPage V35_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {I80286, TEXT_CPU_80286, ARRAY_RANGE(I80286_PAGES)},
@@ -2019,7 +2019,7 @@ const Cpu *cpu(CpuType cpuType) {
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
 #if !defined(LIBASM_I8086_NOFPU)
-constexpr EntryPage I8087_PAGES[] PROGMEM = {
+constexpr EntryPage I8087_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
@@ -2035,7 +2035,7 @@ constexpr EntryPage I8087_PAGES[] PROGMEM = {
         {0x9BDD, ARRAY_RANGE(T8087_9BDD), ARRAY_RANGE(I8087_9BDD)},
 };
 
-constexpr EntryPage I80287_PAGES[] PROGMEM = {
+constexpr EntryPage I80287_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
@@ -2056,7 +2056,7 @@ constexpr EntryPage I80287_PAGES[] PROGMEM = {
         {0x9BDF, ARRAY_RANGE(T80287_9BDF), ARRAY_RANGE(I80287_9BDF)},
 };
 
-constexpr EntryPage I80387_PAGES[] PROGMEM = {
+constexpr EntryPage I80387_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
@@ -2083,7 +2083,7 @@ constexpr EntryPage I80387_PAGES[] PROGMEM = {
 
 using Fpu = entry::CpuBase<FpuType, EntryPage>;
 
-constexpr Fpu FPU_TABLE[] PROGMEM = {
+constexpr Fpu FPU_TABLE[] = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_I80287, TEXT_FPU_80287, ARRAY_RANGE(I80287_PAGES)},
         {FPU_I80387, TEXT_FPU_80387, ARRAY_RANGE(I80387_PAGES)},
@@ -2444,11 +2444,11 @@ bool isPrefix(const CpuSpec &cpuSpec, uint16_t code) {
     ;
 }
 
-const /*PROGMEM*/ char *TableI8086::listCpu_P() const {
+const char *TableI8086::listCpu_P() const {
     return TEXT_I8086_LIST;
 }
 
-const /*PROGMEM*/ char *TableI8086::cpuName_P(CpuType cpuType) const {
+const char *TableI8086::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

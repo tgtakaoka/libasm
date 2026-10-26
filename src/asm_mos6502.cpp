@@ -29,10 +29,10 @@ using namespace text::mos6502;
 using namespace text::option;
 
 namespace {
-constexpr char TEXT_aequal[] PROGMEM = "*=";
+constexpr char TEXT_aequal[] = "*=";
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_aequal, &Assembler::defineOrigin       },
     { TEXT_dALIGN, &Assembler::alignOrigin        },
     { TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE           },
@@ -42,7 +42,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_FDB,    &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_RMB,    &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -318,11 +318,11 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
 Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), OPT_BOOL_LONGA) == 0) {
+    if (strcasecmp(insn.name(), OPT_BOOL_LONGA) == 0) {
         const auto error = _opt_longa.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-    if (strcasecmp_P(insn.name(), OPT_BOOL_LONGI) == 0) {
+    if (strcasecmp(insn.name(), OPT_BOOL_LONGI) == 0) {
         const auto error = _opt_longi.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }

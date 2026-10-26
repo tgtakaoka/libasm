@@ -65,8 +65,8 @@ private:
 
     using PseudoTms320F = pseudo::__Pseudo<AsmTms320f, Insn>;
     using PseudosTms320F = pseudo::__Pseudos<PseudoTms320F>;
-    static const PseudoTms320F PSEUDO_TMS320F_TABLE[] PROGMEM;
-    static const PseudosTms320F PSEUDOS_TMS320F PROGMEM;
+    static const PseudoTms320F PSEUDO_TMS320F_TABLE[];
+    static const PseudosTms320F PSEUDOS_TMS320F;
 };
 
 }  // namespace tms320f

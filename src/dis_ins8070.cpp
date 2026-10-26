@@ -25,8 +25,8 @@ using namespace reg;
 
 namespace {
 
-const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
-const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
+const char OPT_BOOL_USE_SHARP[] = "use-sharp";
+const char OPT_DESC_USE_SHARP[] = "use # (default =) for immediate";
 
 }  // namespace
 

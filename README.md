@@ -1,14 +1,10 @@
 ![<https://github.com/tgtakaoka/libasm/blob/main/LICENSE.md>](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![<https://github.com/tgtakaoka/libasm/releases>](https://img.shields.io/github/v/release/tgtakaoka/libasm.svg?maxAge=3600)
 ![badge](https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg)
-![<https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml>](https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml/badge.svg)
-![<https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml>](https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml/badge.svg)
 
 # libasm: cross assemble/disassemble library
 
-The libasm allows assembling and disassembling supported retro CPUs on
-a small environment (less than 9kB-17kB Flash and 350B RAM on AVR
-Arduino).
+The libasm allows assembling and disassembling supported retro CPUs.
 
 ## Assembler library interface
 
@@ -61,10 +57,10 @@ assert(std::string(insn.name()) == "jmp");
 assert(std::string(opr) == "(*+$1234,pc)");
 ```
 
-## Arduino sketch examples
+## PlatformIO examples
 
-There are assembler and disassembler example sketches you can try to
-run on actual Arduino board at
+There are interactive assembler and disassembler examples you can
+build and run on the host with PlatformIO at
 [examples](https://github.com/tgtakaoka/libasm/tree/devel/examples).
 
 ## Assembler command line interface
@@ -216,9 +212,7 @@ It can read Intel HEX or Motorola S-Record input.
 
 ## Supported host environment
 
-  - Arduino (avr, megaavr, samd, teensy)
-
-  - PlatformIO (atmelavr, atmelmegaavr, atmelsam, teensy)
+  - PlatformIO (native)
 
   - Linux, macOS (C++14)
 

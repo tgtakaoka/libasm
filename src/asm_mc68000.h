@@ -83,8 +83,8 @@ private:
 
     using PseudoMc68000 = pseudo::__Pseudo<AsmMc68000, Insn>;
     using PseudosMc68000 = pseudo::__Pseudos<PseudoMc68000>;
-    static const PseudoMc68000 PSEUDO_MC68000_TABLE[] PROGMEM;
-    static const PseudosMc68000 PSEUDOS_MC68000 PROGMEM;
+    static const PseudoMc68000 PSEUDO_MC68000_TABLE[];
+    static const PseudosMc68000 PSEUDOS_MC68000;
 };
 
 }  // namespace mc68000

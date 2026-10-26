@@ -57,12 +57,12 @@ void set_up() {}
 void tear_down() {}
 
 namespace {
-constexpr NameEntry EMPTY_ENTRIES[] PROGMEM = {};
+constexpr NameEntry EMPTY_ENTRIES[] = {};
 }
 
 // clang-format off
 void test_empty() {
-    static PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(EMPTY_ENTRIES)};
+    static constexpr NameTable TABLE{ARRAY_RANGE(EMPTY_ENTRIES)};
 
     NON_NAME("   0",    0);
     NON_NAME(" 127",  127);
@@ -77,24 +77,24 @@ void test_empty() {
 namespace {
 // clang-format off
 
-constexpr char TEXT_REG_A[]   PROGMEM = "A";
-constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
-constexpr char TEXT_REG_AFP[] PROGMEM = "AF'";
-constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
-constexpr char TEXT_REG_D0[]  PROGMEM = "D0";
-constexpr char TEXT_REG_D1[]  PROGMEM = "D1";
-constexpr char TEXT_REG_D2[]  PROGMEM = "D2";
-constexpr char TEXT_REG_D3[]  PROGMEM = "D3";
-constexpr char TEXT_REG_D4[]  PROGMEM = "D4";
-constexpr char TEXT_REG_D5[]  PROGMEM = "D5";
-constexpr char TEXT_REG_D6[]  PROGMEM = "D6";
-constexpr char TEXT_REG_D7[]  PROGMEM = "D7";
-constexpr char TEXT_REG_DR0[] PROGMEM = "DR0";
-constexpr char TEXT_REG_H[]   PROGMEM = "H";
-constexpr char TEXT_REG_P[]   PROGMEM = "P";
-constexpr char TEXT_REG_P1[]  PROGMEM = "P1";
-constexpr char TEXT_REG_P2[]  PROGMEM = "P2";
-constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
+constexpr char TEXT_REG_A[]   = "A";
+constexpr char TEXT_REG_AF[]  = "AF";
+constexpr char TEXT_REG_AFP[] = "AF'";
+constexpr char TEXT_REG_CCR[] = "CCR";
+constexpr char TEXT_REG_D0[]  = "D0";
+constexpr char TEXT_REG_D1[]  = "D1";
+constexpr char TEXT_REG_D2[]  = "D2";
+constexpr char TEXT_REG_D3[]  = "D3";
+constexpr char TEXT_REG_D4[]  = "D4";
+constexpr char TEXT_REG_D5[]  = "D5";
+constexpr char TEXT_REG_D6[]  = "D6";
+constexpr char TEXT_REG_D7[]  = "D7";
+constexpr char TEXT_REG_DR0[] = "DR0";
+constexpr char TEXT_REG_H[]   = "H";
+constexpr char TEXT_REG_P[]   = "P";
+constexpr char TEXT_REG_P1[]  = "P1";
+constexpr char TEXT_REG_P2[]  = "P2";
+constexpr char TEXT_REG_SP[]  = "SP";
 
 enum : int8_t {
     REG_A = 1,  // 1
@@ -117,7 +117,7 @@ enum : int8_t {
     REG_SP,     // 18
 };
 
-constexpr NameEntry ENTRIES[] PROGMEM = {
+constexpr NameEntry ENTRIES[] = {
     { TEXT_REG_A,   REG_A   },
     { TEXT_REG_AF,  REG_AF  },
     { TEXT_REG_AFP, REG_AFP },
@@ -143,7 +143,7 @@ constexpr NameEntry ENTRIES[] PROGMEM = {
 
 // clang-format off
 void test_searchName() {
-    static PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(ENTRIES)};
+    static constexpr NameTable TABLE{ARRAY_RANGE(ENTRIES)};
 
     HAS_NAME("searchName A",   REG_A,   "A");
     HAS_NAME("searchName AF",  REG_AF,  "AF");
@@ -170,7 +170,7 @@ void test_searchName() {
 }
 
 void test_searchText() {
-    static PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(ENTRIES)};
+    static constexpr NameTable TABLE{ARRAY_RANGE(ENTRIES)};
 
     HAS_TEXT("searchText A",   "A",   REG_A);
     NON_TEXT("searchText AB",  "AB");

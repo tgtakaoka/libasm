@@ -114,7 +114,7 @@ void DisMc68000::outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const
 void DisMc68000::outPointerPair(DisInsn &insn, StrBuffer &out) const {
     const auto reg1 = decodeGeneralReg(insn.postfix() >> 12);
     const auto reg2 = decodeGeneralReg(insn.post2 >> 12);
-    outRegName(outRegName(out.letter('('), reg1).text_P(PSTR("):(")), reg2).letter(')');
+    outRegName(outRegName(out.letter('('), reg1).text_P("):("), reg2).letter(')');
 }
 
 void DisMc68000::outControlReg(DisInsn &insn, StrBuffer &out) const {
@@ -962,7 +962,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
 }
 
 OprSize decodeSize(DisInsn &insn) {
-    static constexpr OprSize INT_SIZES[] PROGMEM = {
+    static constexpr OprSize INT_SIZES[] = {
             SZ_BYTE,
             SZ_WORD,
             SZ_LONG,
@@ -971,12 +971,12 @@ OprSize decodeSize(DisInsn &insn) {
     const auto osize = insn.oprSize();
     const auto opc = insn.opCode();
     if (osize == SZ_DATA)
-        return pgm_read_byte(&INT_SIZES[(opc >> 6) & 3]);
+        return INT_SIZES[(opc >> 6) & 3];
     if (osize == SZ_DATH)
-        return pgm_read_byte(&INT_SIZES[(opc >> 9) & 3]);
+        return INT_SIZES[(opc >> 9) & 3];
 #if !defined(LIBASM_MC68000_NOFPU)
     if (osize == SZ_FDAT) {
-        static constexpr OprSize FLT_SIZES[] PROGMEM = {
+        static constexpr OprSize FLT_SIZES[] = {
                 SZ_LONG,
                 SZ_SNGL,
                 SZ_XTND,
@@ -989,15 +989,15 @@ OprSize decodeSize(DisInsn &insn) {
         const auto fmt = (insn.postfix() >> 10) & 7;
         if (fmt == 7)
             insn.setErrorIf(ILLEGAL_SIZE);
-        return pgm_read_byte(&FLT_SIZES[fmt]);
+        return FLT_SIZES[fmt];
     }
 #endif
     if (osize == SZ_ADDR)
-        return pgm_read_byte(&INT_SIZES[((opc >> 6) & 1) + 1]);
+        return INT_SIZES[((opc >> 6) & 1) + 1];
     if (osize == SZ_ADR8)
-        return pgm_read_byte(&INT_SIZES[((opc >> 8) & 1) + 1]);
+        return INT_SIZES[((opc >> 8) & 1) + 1];
     if (osize == SZ_CAS1 || osize == SZ_CAS2)
-        return pgm_read_byte(&INT_SIZES[((opc >> 9) & 3) - 1]);
+        return INT_SIZES[((opc >> 9) & 3) - 1];
     return osize;
 }
 

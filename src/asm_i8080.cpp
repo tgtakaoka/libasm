@@ -29,7 +29,7 @@ using namespace text::option;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
@@ -38,7 +38,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 struct I8080SymbolParser final : PrefixSymbolParser, Singleton<I8080SymbolParser> {
@@ -248,7 +248,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmI8080::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), PSTR("Z80SYNTAX")) == 0) {
+    if (strcasecmp(insn.name(), "Z80SYNTAX") == 0) {
         const auto error = _opt_zilog.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }

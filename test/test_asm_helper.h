@@ -46,7 +46,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace libasm
 
 #define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
-#define EQUALS_P(msg, expected, /* PROGMEM */ actual_P) \
+#define EQUALS_P(msg, expected, actual_P) \
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define __VASSERT(file, line, err, at, addr, src, ...)                            \
     do {                                                                          \

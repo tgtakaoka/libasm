@@ -29,19 +29,19 @@ using namespace text::option;
 
 // clang-format off
 namespace {
-constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
-constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "optimize segment override";
-constexpr char OPT_BOOL_GNU_AS[] PROGMEM = "gnu-as";
-constexpr char OPT_DESC_GNU_AS[] PROGMEM = "GNU assembler compatible";
+constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] = "optimize-segment";
+constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] = "optimize segment override";
+constexpr char OPT_BOOL_GNU_AS[] = "gnu-as";
+constexpr char OPT_DESC_GNU_AS[] = "GNU assembler compatible";
 
-constexpr char TEXT_DQ[]   PROGMEM = "dq";
-constexpr char TEXT_DT[]   PROGMEM = "dt";
-constexpr char TEXT_RESB[] PROGMEM = "resb";
-constexpr char TEXT_RESD[] PROGMEM = "resd";
-constexpr char TEXT_RESW[] PROGMEM = "resw";
+constexpr char TEXT_DQ[]   = "dq";
+constexpr char TEXT_DT[]   = "dt";
+constexpr char TEXT_RESB[] = "resb";
+constexpr char TEXT_RESD[] = "resd";
+constexpr char TEXT_RESW[] = "resw";
 }  // namespace
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD },
@@ -49,17 +49,17 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG },
     { TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] PROGMEM = {
+constexpr AsmI8086::PseudoI8086 AsmI8086::PSEUDO_I8086_TABLE[] = {
     { TEXT_DD,    &AsmI8086::defineConstant, DATA_DD       },
     { TEXT_DQ,    &AsmI8086::defineConstant, DATA_DQ       },
     { TEXT_DT,    &AsmI8086::defineConstant, DATA_DT       },
     { TEXT_FPU,   &AsmI8086::setCoprocessor },
 };
-PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
+constexpr AsmI8086::PseudosI8086 AsmI8086::PSEUDOS_I8086{ARRAY_RANGE(PSEUDO_I8086_TABLE)};
 
-constexpr AsmI8086::PseudoI8086 AsmI8086::PREFIX_TABLE[] PROGMEM = {
+constexpr AsmI8086::PseudoI8086 AsmI8086::PREFIX_TABLE[] = {
     { TEXT_PRE_ADDR32, &AsmI8086::encodePrefix,  AsmInsn::ADDR32      },
     { TEXT_PRE_DATA16, &AsmI8086::encodePrefix,  AsmInsn::DATA32      },  // 0x66: use32 -> 16-bit
     { TEXT_PRE_DATA32, &AsmI8086::encodePrefix,  AsmInsn::DATA32      },
@@ -72,7 +72,7 @@ constexpr AsmI8086::PseudoI8086 AsmI8086::PREFIX_TABLE[] PROGMEM = {
     { TEXT_REPNZ,      &AsmI8086::encodePrefix,  0xF2                 },
     { TEXT_REPZ,       &AsmI8086::encodePrefix,  0xF3                 },
 };
-PROGMEM constexpr AsmI8086::PseudosI8086 AsmI8086::PREFIXES{ARRAY_RANGE(PREFIX_TABLE)};
+constexpr AsmI8086::PseudosI8086 AsmI8086::PREFIXES{ARRAY_RANGE(PREFIX_TABLE)};
 
 // clang-format on
 

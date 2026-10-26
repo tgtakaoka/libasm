@@ -28,13 +28,13 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dequal, &Assembler::defineOrigin       },
     { TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -232,7 +232,7 @@ Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmIns8070::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), TEXT_dADDR) == 0)
+    if (strcasecmp(insn.name(), TEXT_dADDR) == 0)
         return defineAddrConstant(scan, insn);
     return Assembler::processPseudo(scan, insn);
 }

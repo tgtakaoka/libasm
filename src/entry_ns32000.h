@@ -148,24 +148,24 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
 
         static AddrMode toAddrMode(Ex2Mode mode) {
-            static constexpr AddrMode ex2Modes[] PROGMEM = {
+            static constexpr AddrMode ex2Modes[] = {
                     M_NONE,   // EM2_NONE
                     M_IMM,    // EM2_IMM
                     M_BFLEN,  // EM2_BFLEN
                     M_LEN32,  // EM2_LEN32
                     M_NONE,   // EM2_ERROR
             };
-            return AddrMode(pgm_read_byte(ex2Modes + mode));
+            return AddrMode(ex2Modes[mode]);
         }
 
         static OprPos toOprPos(Ex2Pos pos) {
-            static constexpr OprPos ex2Pos[] PROGMEM = {
+            static constexpr OprPos ex2Pos[] = {
                     P_NONE,  // EP2_NONE
                     P_IMPL,  // EP2_IMPL
                     P_DISP,  // EP2_DISP
                     P_NONE,  // EP2_ERROR
             };
-            return OprPos(pgm_read_byte(ex2Pos + pos));
+            return OprPos(ex2Pos[pos]);
         }
 
         // |_src|, |_dst|, |_ext1|
@@ -182,12 +182,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint8_t size_gm = 0x07;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
-                pgm_read_byte(&_flags_P._ext1), pgm_read_byte(&_flags_P._ext2)};
+        return Flags{_flags_P._src, _flags_P._dst,
+                _flags_P._ext1, _flags_P._ext2};
     }
 
 private:

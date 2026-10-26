@@ -31,7 +31,7 @@ namespace mc6805 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry MC6805_TABLE[] PROGMEM = {
+constexpr Entry MC6805_TABLE[] = {
     E1(0x20, CF_00, TEXT_BRA,  M_REL),
     E1(0x21, CF_00, TEXT_BRN,  M_REL),
     E1(0x22, CF_00, TEXT_BHI,  M_REL),
@@ -148,7 +148,7 @@ constexpr Entry MC6805_TABLE[] PROGMEM = {
     E3(0x01, CF_00, TEXT_BRCLR, M_BNO, M_DIR, M_REL),
 };
 
-constexpr uint8_t MC6805_INDEX[] PROGMEM = {
+constexpr uint8_t MC6805_INDEX[] = {
      75,  // TEXT_ADC
      92,  // TEXT_ADC
      77,  // TEXT_ADD
@@ -265,25 +265,25 @@ constexpr uint8_t MC6805_INDEX[] PROGMEM = {
     109,  // TEXT_TXA
 };
 
-constexpr Entry MC146805_TABLE[] PROGMEM = {
+constexpr Entry MC146805_TABLE[] = {
     E0(0x8E, CF_00, TEXT_STOP),
     E0(0x8F, CF_00, TEXT_WAIT),
 };
 
-constexpr uint8_t MC146805_INDEX[] PROGMEM = {
+constexpr uint8_t MC146805_INDEX[] = {
       0,  // TEXT_STOP
       1,  // TEXT_WAIT
 };
 
-constexpr Entry MC68HC05_TABLE[] PROGMEM = {
+constexpr Entry MC68HC05_TABLE[] = {
     E0(0x42, CF_00, TEXT_MUL),
 };
 
-constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC05_INDEX[] = {
       0,  // TEXT_MUL
 };
 
-constexpr Entry MC68HC08_TABLE[] PROGMEM = {
+constexpr Entry MC68HC08_TABLE[] = {
     E1(0x35, CF_00, TEXT_STHX,  M_DIR),
     E1(0x45, CF_00, TEXT_LDHX,  M_IM16),
     E1(0x55, CF_00, TEXT_LDHX,  M_DIR),
@@ -327,7 +327,7 @@ constexpr Entry MC68HC08_TABLE[] PROGMEM = {
     E2(0x71, CF_00, TEXT_CBEQ,  M_IX0P, M_REL),
 };
 
-constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC08_INDEX[] = {
      10,  // TEXT_AIS
      11,  // TEXT_AIX
      26,  // TEXT_BGE
@@ -371,7 +371,7 @@ constexpr uint8_t MC68HC08_INDEX[] PROGMEM = {
      24,  // TEXT_TXS
 };
 
-constexpr Entry MC68HC08_P9E[] PROGMEM = {
+constexpr Entry MC68HC08_P9E[] = {
     E1(0x60, CF_00, TEXT_NEG,  M_SP1),
     E2(0x61, CF_00, TEXT_CBEQ, M_SP1,  M_REL),
     E1(0x63, CF_00, TEXT_COM,  M_SP1),
@@ -416,7 +416,7 @@ constexpr Entry MC68HC08_P9E[] PROGMEM = {
     E1(0xDF, CF_00, TEXT_STX,  M_SP2),
 };
 
-constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
+constexpr uint8_t MC68HC08_I9E[] = {
      23,  // TEXT_ADC
      37,  // TEXT_ADC
      25,  // TEXT_ADD
@@ -461,7 +461,7 @@ constexpr uint8_t MC68HC08_I9E[] PROGMEM = {
      12,  // TEXT_TST
 };
 
-constexpr Entry MC68HCS08_TABLE[] PROGMEM = {
+constexpr Entry MC68HCS08_TABLE[] = {
     E1(0x35, CF_00, TEXT_STHX, M_DIR),
     E1(0x55, CF_00, TEXT_LDHX, M_DIR),
     E1(0x75, CF_00, TEXT_CPHX, M_DIR),
@@ -471,7 +471,7 @@ constexpr Entry MC68HCS08_TABLE[] PROGMEM = {
     E0(0x82, CF_00, TEXT_BGND),
 };
 
-constexpr uint8_t MC68HCS08_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HCS08_INDEX[] = {
       6,  // TEXT_BGND
       2,  // TEXT_CPHX
       4,  // TEXT_CPHX
@@ -481,7 +481,7 @@ constexpr uint8_t MC68HCS08_INDEX[] PROGMEM = {
       5,  // TEXT_STHX
 };
 
-constexpr Entry MC68HCS08_P9E[] PROGMEM = {
+constexpr Entry MC68HCS08_P9E[] = {
     E1(0xAE, CF_00, TEXT_LDHX, M_IX0),
     E1(0xBE, CF_00, TEXT_LDHX, M_IX2),
     E1(0xCE, CF_00, TEXT_LDHX, M_IX1),
@@ -490,7 +490,7 @@ constexpr Entry MC68HCS08_P9E[] PROGMEM = {
     E1(0xF3, CF_00, TEXT_CPHX, M_SP1),
 };
 
-constexpr uint8_t MC68HCS08_I9E[] PROGMEM = {
+constexpr uint8_t MC68HCS08_I9E[] = {
       5,  // TEXT_CPHX
       0,  // TEXT_LDHX
       1,  // TEXT_LDHX
@@ -503,22 +503,22 @@ constexpr uint8_t MC68HCS08_I9E[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage MC6805_PAGES[] PROGMEM = {
+constexpr EntryPage MC6805_PAGES[] = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
 };
 
-constexpr EntryPage MC146805_PAGES[] PROGMEM = {
+constexpr EntryPage MC146805_PAGES[] = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
 };
 
-constexpr EntryPage MC68HC05_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC05_PAGES[] = {
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {0x00, ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
         {0x00, ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
 };
 
-constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC08_PAGES[] = {
         {0x00, ARRAY_RANGE(MC68HC08_TABLE), ARRAY_RANGE(MC68HC08_INDEX)},
         // Above definitions overrides unknown instructions defined below.
         {0x00, ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
@@ -527,7 +527,7 @@ constexpr EntryPage MC68HC08_PAGES[] PROGMEM = {
         {0x9E, ARRAY_RANGE(MC68HC08_P9E), ARRAY_RANGE(MC68HC08_I9E)},
 };
 
-constexpr EntryPage MC68HCS08_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HCS08_PAGES[] = {
         {0x00, ARRAY_RANGE(MC68HCS08_TABLE), ARRAY_RANGE(MC68HCS08_INDEX)},
         {0x00, ARRAY_RANGE(MC68HC08_TABLE), ARRAY_RANGE(MC68HC08_INDEX)},
         // Above definitions overrides unknown instructions defined below.
@@ -540,7 +540,7 @@ constexpr EntryPage MC68HCS08_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MC6805, TEXT_CPU_6805, ARRAY_RANGE(MC6805_PAGES)},
         {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
         {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
@@ -609,11 +609,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableMc6805::listCpu_P() const {
+const char *TableMc6805::listCpu_P() const {
     return TEXT_MC6805_LIST;
 }
 
-const /*PROGMEM*/ char *TableMc6805::cpuName_P(CpuType cpuType) const {
+const char *TableMc6805::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

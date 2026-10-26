@@ -29,7 +29,7 @@ const ValueFormatter::Plugins &DisMn1610::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
         const SurroundHexFormatter _hex{PSTR_X_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;

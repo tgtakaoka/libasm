@@ -28,14 +28,14 @@ using namespace text::i960;
 
 namespace {
 
-constexpr NameEntry NAMED_REGS[] PROGMEM = {
+constexpr NameEntry NAMED_REGS[] = {
         {TEXT_REG_FP, REG_FP},
         {TEXT_REG_PFP, REG_PFP},
         {TEXT_REG_RIP, REG_RIP},
         {TEXT_REG_SP, REG_SP},
 };
 
-PROGMEM constexpr NameTable NAMED_REG_TABLE{ARRAY_RANGE(NAMED_REGS)};
+constexpr NameTable NAMED_REG_TABLE{ARRAY_RANGE(NAMED_REGS)};
 
 }  // namespace
 

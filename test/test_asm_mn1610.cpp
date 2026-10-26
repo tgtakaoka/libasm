@@ -25,11 +25,11 @@ AsmMn1610 as1610;
 Assembler &assembler(as1610);
 
 bool is1613() {
-    return strcmp_P("MN1613", assembler.config().cpu_P()) == 0;
+    return strcmp("MN1613", assembler.config().cpu_P()) == 0;
 }
 
 bool is1613a() {
-    return strcmp_P("MN1613A", assembler.config().cpu_P()) == 0;
+    return strcmp("MN1613A", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

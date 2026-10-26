@@ -29,8 +29,8 @@ using namespace text::ns32000;
 
 namespace {
 
-const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
-const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as external addressing";
+const char OPT_BOOL_EXTERNAL_PAREN[] = "external-paren";
+const char OPT_DESC_EXTERNAL_PAREN[] = "disp2(disp(ext)) as external addressing";
 
 }  // namespace
 
@@ -38,7 +38,7 @@ const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return NationalHexFormatter::singleton(); }
         char locationSymbol() const override { return '.'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_SHARP; }
+        const char *lineComment_P() const override { return PSTR_SHARP; }
     } PLUGINS{};
     return PLUGINS;
 }

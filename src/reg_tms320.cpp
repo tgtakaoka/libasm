@@ -30,7 +30,7 @@ namespace reg {
 
 namespace {
 // clang-format off
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_BMAR, REG_BMAR },
     { TEXT_REG_C,    REG_C    },
     { TEXT_REG_CNF,  REG_CNF  },
@@ -42,9 +42,9 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_XF,   REG_XF   },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_BIO, CC_BIO },
     { TEXT_CC_C,   CC_C   },
     { TEXT_CC_EQ,  CC_EQ  },
@@ -61,7 +61,7 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_UNC, CC_UNC },
 };
 
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -121,7 +121,7 @@ uint_fast8_t encodeControlName(RegName name, bool is320C2x) {
 }
 
 RegName decodeControlNum(uint_fast8_t num) {
-    static constexpr RegName CTL_C20X[] PROGMEM = {
+    static constexpr RegName CTL_C20X[] = {
             REG_INTM,  // 0
             REG_OVM,   // 1
             REG_CNF,   // 2
@@ -131,7 +131,7 @@ RegName decodeControlNum(uint_fast8_t num) {
             REG_XF,    // 6
             REG_C,     // 7
     };
-    return RegName(pgm_read_byte(CTL_C20X + (num & 7)));
+    return RegName(CTL_C20X[(num & 7)]);
 }
 
 CcName parseCcName(StrScanner &scan, const ValueParser &parser) {

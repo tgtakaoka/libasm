@@ -19,6 +19,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
+#include <strings.h>
 #include "config_libasm.h"
 #include "version.h"
 
@@ -34,40 +36,6 @@ struct Singleton {
     }
 };
 
-#if defined(AVR)
-#include <avr/pgmspace.h>
-
-#elif !defined(PROGMEM)  // AVR
-
-namespace libasm {
-namespace host {
-typedef union {
-    void *p;
-    uintptr_t i;
-} read_ptr_t;
-}  // namespace host
-}  // namespace libasm
-
-#define pgm_read_byte(p) *(p)
-#define pgm_read_word(p) *(p)
-#define pgm_read_dword(p) *(p)
-#define pgm_read_ptr(p) ((libasm::host::read_ptr_t *)(p))->i
-#define PROGMEM
-#define PSTR(text) (text)
-#define F(text) (text)
-#include <string.h>
-#define strlen_P(s) strlen((s))
-#define strcpy_P(d, s) strcpy((d), (s))
-#define strncpy_P(d, s, n) strncpy((d), (s), (n))
-#define strcmp_P(d, s) strcmp((d), (s))
-#define strchr_P(s, c) strchr((s), (c))
-#define memcpy_P(d, s, n) memcpy((d), (s), (n))
-#include <strings.h>
-#define strcasecmp_P(d, s) strcasecmp((d), (s))
-#define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
-#define snprintf_P(s, n, f, ...) snprintf((s), (n), (f), __VA_ARGS__)
-
-#endif  // AVR
 #endif  // __LIBASM_CONFIG_HOST_H__
 
 // Local Variables:

@@ -35,9 +35,9 @@ struct OptionBase {
         OPT_TEXT = 3,
     };
 
-    const /*PROGMEM*/ char *name_P() const { return _name_P; }
+    const char *name_P() const { return _name_P; }
     OptionSpec spec() const { return _spec; }
-    const /*PROGMEM*/ char *description_P() const { return _desc_P; }
+    const char *description_P() const { return _desc_P; }
     /** An option without description is for tests and not listed for users. */
     bool isPrivate() const { return _desc_P == nullptr; }
     virtual Error set(StrScanner &scan) const = 0;
@@ -46,7 +46,7 @@ struct OptionBase {
     static Error parseBoolOption(StrScanner &scan, bool &value);
 
 protected:
-    constexpr OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
+    constexpr OptionBase(const char *name_P, const char *desc_P,
             OptionSpec spec, const OptionBase *next)
         : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(next) {}
 
@@ -55,8 +55,8 @@ protected:
     static Error parseTextOption(StrScanner &scan, StrScanner &value);
 
 private:
-    const /*PROGMEM*/ char *const _name_P;
-    const /*PROGMEM*/ char *const _desc_P;
+    const char *const _name_P;
+    const char *const _desc_P;
     const OptionSpec _spec;
     const OptionBase *const _next;
 };
@@ -65,8 +65,8 @@ template <typename APP>
 struct BoolOption : public OptionBase {
     using Setter = Error (APP::*)(bool);
 
-    constexpr BoolOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
+    constexpr BoolOption(APP *app, Setter setter, const char *name_P,
+            const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_BOOL, next), _app(app), _setter(setter) {}
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
@@ -93,8 +93,8 @@ template <typename APP>
 struct IntOption : public OptionBase {
     using Setter = Error (APP::*)(int32_t);
 
-    constexpr IntOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
+    constexpr IntOption(APP *app, Setter setter, const char *name_P,
+            const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_INT, next), _app(app), _setter(setter) {}
 
     template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
@@ -121,8 +121,8 @@ template <typename APP>
 struct CharOption : public OptionBase {
     using Setter = Error (APP::*)(char);
 
-    constexpr CharOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
+    constexpr CharOption(APP *app, Setter setter, const char *name_P,
+            const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_CHAR, next), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
@@ -140,8 +140,8 @@ template <typename APP>
 struct TextOption : public OptionBase {
     using Setter = Error (APP::*)(StrScanner &scan);
 
-    constexpr TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P = nullptr, const OptionBase *next = nullptr)
+    constexpr TextOption(APP *app, Setter setter, const char *name_P,
+            const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_TEXT, next), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
@@ -171,26 +171,26 @@ private:
 namespace text {
 namespace option {
 
-extern const char OPT_TEXT_FPU[] PROGMEM;
-extern const char OPT_DESC_FPU[] PROGMEM;
-extern const char OPT_TEXT_PMMU[] PROGMEM;
-extern const char OPT_DESC_PMMU[] PROGMEM;
-extern const char OPT_BOOL_LONGA[] PROGMEM;
-extern const char OPT_DESC_LONGA[] PROGMEM;
-extern const char OPT_BOOL_LONGI[] PROGMEM;
-extern const char OPT_DESC_LONGI[] PROGMEM;
-extern const char OPT_BOOL_IMPLICIT_WORD[] PROGMEM;
-extern const char OPT_DESC_IMPLICIT_WORD[] PROGMEM;
-extern const char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM;
-extern const char OPT_DESC_ZILOG_SYNTAX[] PROGMEM;
-extern const char OPT_BOOL_EXTMODE[] PROGMEM;
-extern const char OPT_DESC_EXTMODE[] PROGMEM;
-extern const char OPT_BOOL_LWORDMODE[] PROGMEM;
-extern const char OPT_DESC_LWORDMODE[] PROGMEM;
-extern const char OPT_BOOL_USE16[] PROGMEM;
-extern const char OPT_DESC_USE16[] PROGMEM;
-extern const char OPT_BOOL_USE32[] PROGMEM;
-extern const char OPT_DESC_USE32[] PROGMEM;
+extern const char OPT_TEXT_FPU[];
+extern const char OPT_DESC_FPU[];
+extern const char OPT_TEXT_PMMU[];
+extern const char OPT_DESC_PMMU[];
+extern const char OPT_BOOL_LONGA[];
+extern const char OPT_DESC_LONGA[];
+extern const char OPT_BOOL_LONGI[];
+extern const char OPT_DESC_LONGI[];
+extern const char OPT_BOOL_IMPLICIT_WORD[];
+extern const char OPT_DESC_IMPLICIT_WORD[];
+extern const char OPT_BOOL_ZILOG_SYNTAX[];
+extern const char OPT_DESC_ZILOG_SYNTAX[];
+extern const char OPT_BOOL_EXTMODE[];
+extern const char OPT_DESC_EXTMODE[];
+extern const char OPT_BOOL_LWORDMODE[];
+extern const char OPT_DESC_LWORDMODE[];
+extern const char OPT_BOOL_USE16[];
+extern const char OPT_DESC_USE16[];
+extern const char OPT_BOOL_USE32[];
+extern const char OPT_DESC_USE32[];
 
 }  // namespace option
 }  // namespace text

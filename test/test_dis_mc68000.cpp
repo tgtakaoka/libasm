@@ -25,23 +25,23 @@ DisMc68000 dis68000;
 Disassembler &disassembler(dis68000);
 
 bool mc68k00() {
-    return strcmp_P("68000", disassembler.config().cpu_P()) == 0;
+    return strcmp("68000", disassembler.config().cpu_P()) == 0;
 }
 
 bool mc68010() {
-    return strcmp_P("68010", disassembler.config().cpu_P()) == 0;
+    return strcmp("68010", disassembler.config().cpu_P()) == 0;
 }
 
 bool mc68020() {
-    return strcmp_P("68020", disassembler.config().cpu_P()) == 0;
+    return strcmp("68020", disassembler.config().cpu_P()) == 0;
 }
 
 bool mc68030() {
-    return strcmp_P("68030", disassembler.config().cpu_P()) == 0;
+    return strcmp("68030", disassembler.config().cpu_P()) == 0;
 }
 
 bool mc68040() {
-    return strcmp_P("68040", disassembler.config().cpu_P()) == 0;
+    return strcmp("68040", disassembler.config().cpu_P()) == 0;
 }
 
 bool firstGen() {

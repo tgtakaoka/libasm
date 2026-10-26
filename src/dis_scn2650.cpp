@@ -28,7 +28,7 @@ using namespace text::common;
 const ValueFormatter::Plugins &DisScn2650::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
         const SurroundHexFormatter _hex{PSTR_H_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;

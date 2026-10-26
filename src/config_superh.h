@@ -66,7 +66,7 @@ struct Config
     void setCpuType(CpuType cpuType) override;
     const CpuSpec &cpuSpec() const { return _cpuSpec; }
 
-    const /* PROGMEM */ char *fpu_P() const;
+    const char *fpu_P() const;
     FpuType fpuType() const { return _cpuSpec.fpu; }
     Error setFpuType(FpuType fpuType);
     Error setFpuName(StrScanner &scan) override;

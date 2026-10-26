@@ -25,19 +25,19 @@ AsmMos6502 as6502;
 Assembler &assembler(as6502);
 
 bool m6502() {
-    return strcmp_P("6502", assembler.config().cpu_P()) == 0;
+    return strcmp("6502", assembler.config().cpu_P()) == 0;
 }
 
 bool r65c02() {
-    return strcmp_P("65C02", assembler.config().cpu_P()) == 0;
+    return strcmp("65C02", assembler.config().cpu_P()) == 0;
 }
 
 bool w65c02s() {
-    return strcmp_P("W65C02S", assembler.config().cpu_P()) == 0;
+    return strcmp("W65C02S", assembler.config().cpu_P()) == 0;
 }
 
 bool w65c816() {
-    return strcmp_P("65816", assembler.config().cpu_P()) == 0;
+    return strcmp("65816", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

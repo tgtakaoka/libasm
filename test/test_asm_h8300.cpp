@@ -27,15 +27,15 @@ Assembler &assembler(as8300);
 // True for any CPU in the H8S family (H8S/2000 and H8S/2600).
 bool is_h8s() {
     const auto *cpu_P = assembler.config().cpu_P();
-    return strcmp_P("H8S/2000", cpu_P) == 0 || strcmp_P("H8S/2600", cpu_P) == 0;
+    return strcmp("H8S/2000", cpu_P) == 0 || strcmp("H8S/2600", cpu_P) == 0;
 }
 
 bool is_h8s2600() {
-    return strcmp_P("H8S/2600", assembler.config().cpu_P()) == 0;
+    return strcmp("H8S/2600", assembler.config().cpu_P()) == 0;
 }
 
 bool is_h8300h() {
-    return strcmp_P("H8/300H", assembler.config().cpu_P()) == 0;
+    return strcmp("H8/300H", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

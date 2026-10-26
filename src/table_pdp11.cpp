@@ -30,7 +30,7 @@ namespace pdp11 {
 #define E0(_opc, _size, _name) E1(_opc, _size, _name, M_NONE, P_NONE)
 
 // clang-format off
-constexpr Entry TABLE_BASE[] PROGMEM = {
+constexpr Entry TABLE_BASE[] = {
     E2(0010000, SZ_WORD, TEXT_MOV,   M_GENS, P_7700, M_GEND, P_0077),
     E2(0110000, SZ_BYTE, TEXT_MOVB,  M_GENS, P_7700, M_GEND, P_0077),
     E2(0020000, SZ_WORD, TEXT_CMP,   M_GENS, P_7700, M_GENS, P_0077),
@@ -118,7 +118,7 @@ constexpr Entry TABLE_BASE[] PROGMEM = {
     E0(0000260, SZ_NONE, TEXT_NOP),
 };
 
-constexpr uint8_t INDEX_BASE[] PROGMEM = {
+constexpr uint8_t INDEX_BASE[] = {
      25,  // TEXT_ADC
      26,  // TEXT_ADCB
      10,  // TEXT_ADD
@@ -204,35 +204,35 @@ constexpr uint8_t INDEX_BASE[] PROGMEM = {
      12,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_EIS[] PROGMEM = {
+constexpr Entry TABLE_EIS[] = {
     E2(0070000, SZ_INTG, TEXT_MUL,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0071000, SZ_INTG, TEXT_DIV,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0072000, SZ_WORD, TEXT_ASH,   M_GENS, P_0077, M_GENR, P_0700),
     E2(0073000, SZ_WORD, TEXT_ASHC,  M_GENS, P_0077, M_GENR, P_0700),
 };
 
-constexpr uint8_t INDEX_EIS[] PROGMEM = {
+constexpr uint8_t INDEX_EIS[] = {
       2,  // TEXT_ASH
       3,  // TEXT_ASHC
       1,  // TEXT_DIV
       0,  // TEXT_MUL
 };
 
-constexpr Entry TABLE_MFPMTP[] PROGMEM = {
+constexpr Entry TABLE_MFPMTP[] = {
     E1(0006500, SZ_WORD, TEXT_MFPI,  M_GENA, P_0077),
     E1(0106500, SZ_WORD, TEXT_MFPD,  M_GENA, P_0077),
     E1(0006600, SZ_WORD, TEXT_MTPI,  M_GENA, P_0077),
     E1(0106600, SZ_WORD, TEXT_MTPD,  M_GENA, P_0077),
 };
 
-constexpr uint8_t INDEX_MFPMTP[] PROGMEM = {
+constexpr uint8_t INDEX_MFPMTP[] = {
       1,  // TEXT_MFPD
       0,  // TEXT_MFPI
       3,  // TEXT_MTPD
       2,  // TEXT_MTPI
 };
 
-constexpr Entry TABLE_J11[] PROGMEM = {
+constexpr Entry TABLE_J11[] = {
     E1(0006400, SZ_NONE, TEXT_MARK,  M_IMM6, P_0077),
     E1(0007000, SZ_WORD, TEXT_CSM,   M_GENS, P_0077),
     E1(0000230, SZ_NONE, TEXT_SPL,   M_IMM3, P_0007),
@@ -240,7 +240,7 @@ constexpr Entry TABLE_J11[] PROGMEM = {
     E1(0007300, SZ_WORD, TEXT_WRTLCK, M_GENA, P_0077),
 };
 
-constexpr uint8_t INDEX_J11[] PROGMEM = {
+constexpr uint8_t INDEX_J11[] = {
       1,  // TEXT_CSM
       0,  // TEXT_MARK
       2,  // TEXT_SPL
@@ -248,7 +248,7 @@ constexpr uint8_t INDEX_J11[] PROGMEM = {
       4,  // TEXT_WRTLCK
 };
 
-constexpr Entry TABLE_FP11[] PROGMEM = {
+constexpr Entry TABLE_FP11[] = {
     E0(0170000, SZ_NONE, TEXT_CFCC),
     E0(0170011, SZ_NONE, TEXT_SETD),
     E0(0170001, SZ_NONE, TEXT_SETF),
@@ -297,7 +297,7 @@ constexpr Entry TABLE_FP11[] PROGMEM = {
     E1(0170500, SZ_FLOT, TEXT_TSTF,  M_GENF, P_0077),
 };
 
-constexpr uint8_t INDEX_FP11[] PROGMEM = {
+constexpr uint8_t INDEX_FP11[] = {
      10,  // TEXT_ABSD
      28,  // TEXT_ABSF
      11,  // TEXT_ADDD
@@ -350,7 +350,7 @@ constexpr uint8_t INDEX_FP11[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
+constexpr EntryPage DCJ11_PAGES[] = {
         {ARRAY_RANGE(TABLE_BASE), ARRAY_RANGE(INDEX_BASE)},
         {ARRAY_RANGE(TABLE_EIS), ARRAY_RANGE(INDEX_EIS)},
         {ARRAY_RANGE(TABLE_J11), ARRAY_RANGE(INDEX_J11)},
@@ -358,13 +358,13 @@ constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_MFPMTP), ARRAY_RANGE(INDEX_MFPMTP)},
 };
 
-constexpr EntryPage DCT11_PAGES[] PROGMEM = {
+constexpr EntryPage DCT11_PAGES[] = {
         {ARRAY_RANGE(TABLE_BASE), ARRAY_RANGE(INDEX_BASE)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {J11, TEXT_CPU_J11, ARRAY_RANGE(DCJ11_PAGES)},
         {T11, TEXT_CPU_T11, ARRAY_RANGE(DCT11_PAGES)},
 };
@@ -420,11 +420,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TablePdp11::listCpu_P() const {
+const char *TablePdp11::listCpu_P() const {
     return TEXT_PDP11_LIST;
 }
 
-const /*PROGMEM*/ char *TablePdp11::cpuName_P(CpuType cpuType) const {
+const char *TablePdp11::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

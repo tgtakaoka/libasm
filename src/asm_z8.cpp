@@ -28,21 +28,21 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_BOOL_ALIAS[]  PROGMEM = "reg-alias";
-constexpr char OPT_DESC_ALIAS[]  PROGMEM = "emit register alias for the current setrp value";
-constexpr char OPT_BOOL_OPTIMIZE_INDEX[] PROGMEM = "optimize-index";
-constexpr char OPT_DESC_OPTIMIZE_INDEX[] PROGMEM = "optimize zero index";
-constexpr char OPT_INT_SETRP[]   PROGMEM = "setrp";
-constexpr char OPT_INT_SETRP0[]  PROGMEM = "setrp0";
-constexpr char OPT_INT_SETRP1[]  PROGMEM = "setrp1";
+constexpr char OPT_BOOL_ALIAS[]  = "reg-alias";
+constexpr char OPT_DESC_ALIAS[]  = "emit register alias for the current setrp value";
+constexpr char OPT_BOOL_OPTIMIZE_INDEX[] = "optimize-index";
+constexpr char OPT_DESC_OPTIMIZE_INDEX[] = "optimize zero index";
+constexpr char OPT_INT_SETRP[]   = "setrp";
+constexpr char OPT_INT_SETRP0[]  = "setrp0";
+constexpr char OPT_INT_SETRP1[]  = "setrp1";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -217,16 +217,16 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0) {
+    if (strcasecmp(insn.name(), OPT_INT_SETRP) == 0) {
         const auto error = _opt_setrp.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
     if (isSuper8()) {
-        if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0) {
+        if (strcasecmp(insn.name(), OPT_INT_SETRP0) == 0) {
             const auto error = _opt_setrp0.set(scan);
             return error ? insn.setErrorIf(at, error) : OK;
         }
-        if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0) {
+        if (strcasecmp(insn.name(), OPT_INT_SETRP1) == 0) {
             const auto error = _opt_setrp1.set(scan);
             return error ? insn.setErrorIf(at, error) : OK;
         }

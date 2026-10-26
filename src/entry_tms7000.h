@@ -67,10 +67,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode ext() const { return AddrMode((_attr >> ext_gp) & mode_gm); }
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

@@ -25,8 +25,8 @@ using namespace reg;
 
 namespace {
 
-const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
-const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
+const char OPT_BOOL_WORK_REGISTER[] = "work-register";
+const char OPT_DESC_WORK_REGISTER[] = "prefer work register name than alias address";
 
 }  // namespace
 

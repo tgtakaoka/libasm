@@ -26,19 +26,19 @@ DisMc6805 dis6805;
 Disassembler &disassembler(dis6805);
 
 bool m146805() {
-    return strcmp_P("146805", disassembler.config().cpu_P()) == 0;
+    return strcmp("146805", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hc05() {
-    return strcmp_P("68HC05", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HC05", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hc08() {
-    return strcmp_P("68HC08", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HC08", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hcs08() {
-    return strcmp_P("68HCS08", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HCS08", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

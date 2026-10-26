@@ -25,11 +25,11 @@ AsmZ380 asz380;
 Assembler &assembler(asz380);
 
 bool isZ180() {
-    return strcasecmp_P("Z180", assembler.config().cpu_P()) == 0;
+    return strcasecmp("Z180", assembler.config().cpu_P()) == 0;
 }
 
 bool isZ380() {
-    return strcasecmp_P("Z380", assembler.config().cpu_P()) == 0;
+    return strcasecmp("Z380", assembler.config().cpu_P()) == 0;
 }
 
 #define DDIR_W 0xDD, 0xC0    // DDIR W

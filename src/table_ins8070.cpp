@@ -33,7 +33,7 @@ namespace ins8070 {
 #define U1(_opc, _cf, _name, _dst) U2(_opc, _cf, _name, _dst, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_INS8070[] PROGMEM = {
+constexpr Entry TABLE_INS8070[] = {
     E0(0x00, CF_00, TEXT_NOP),
     E2(0x01, CF_00, TEXT_XCH,  M_AR,   M_ER,   SZ_BYTE),
     E2(0x01, CF_00, TEXT_XCH,  M_ER,   M_AR,   SZ_BYTE),
@@ -106,7 +106,7 @@ constexpr Entry TABLE_INS8070[] PROGMEM = {
     E2(0xF8, CF_07, TEXT_SUB,  M_AR,   M_GEN,  SZ_BYTE),
 };
 
-constexpr uint8_t INDEX_INS8070[] PROGMEM = {
+constexpr uint8_t INDEX_INS8070[] = {
      46,  // TEXT_ADD
      60,  // TEXT_ADD
      68,  // TEXT_ADD
@@ -182,13 +182,13 @@ constexpr uint8_t INDEX_INS8070[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage INS8070_PAGES[] PROGMEM = {
+constexpr EntryPage INS8070_PAGES[] = {
         {ARRAY_RANGE(TABLE_INS8070), ARRAY_RANGE(INDEX_INS8070)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {INS8070, TEXT_CPU_8070, ARRAY_RANGE(INS8070_PAGES)},
 };
 
@@ -244,11 +244,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableIns8070::listCpu_P() const {
+const char *TableIns8070::listCpu_P() const {
     return TEXT_CPU_INS8070;
 }
 
-const /*PROGMEM*/ char *TableIns8070::cpuName_P(CpuType cpuType) const {
+const char *TableIns8070::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

@@ -130,7 +130,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x38FF,  // CF_38FF = 18
                     0x3FFF,  // CF_3FFF = 19
             };
-            return pgm_read_word(&MASK[(_attr >> cf_gp) & cf_gm]);
+            return MASK[(_attr >> cf_gp) & cf_gm];
         }
 
     private:
@@ -146,10 +146,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t cf_gm = 0x1F;
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_dword(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

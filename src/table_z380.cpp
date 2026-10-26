@@ -24,7 +24,7 @@ namespace z380 {
 using namespace libasm::text::z380;
 using namespace libasm::z80::common;
 
-constexpr Entry TABLE_Z380[] PROGMEM = {
+constexpr Entry TABLE_Z380[] = {
     E1(0x0B, 0060, TEXT_DECW, M_R16),
     E1(0x03, 0060, TEXT_INCW, M_R16),
     E1(0x2F, 0000, TEXT_CPL,  R_A),
@@ -43,7 +43,7 @@ constexpr Entry TABLE_Z380[] PROGMEM = {
     E1(0x2F, 0000, TEXT_CPL,  R_A),
 };
 
-constexpr uint8_t INDEX_Z380[] PROGMEM = {
+constexpr uint8_t INDEX_Z380[] = {
       9,  // TEXT_ADC
      12,  // TEXT_ADC
       8,  // TEXT_ADD
@@ -63,7 +63,7 @@ constexpr uint8_t INDEX_Z380[] PROGMEM = {
 };
 
 // Z380 ED:xx
-constexpr Entry TABLE_Z380_EXT[] PROGMEM = {
+constexpr Entry TABLE_Z380_EXT[] = {
     E2(0xC4, 0070, TEXT_CALR,  M_CC8,   M_REL8),
     E1(0xCD, 0000, TEXT_CALR,  M_REL8),
     L2(0x05, 0000, TEXT_EX,    R_BC,    R_DE),
@@ -186,7 +186,7 @@ constexpr Entry TABLE_Z380_EXT[] PROGMEM = {
     E1(0xBF, 0000, TEXT_CPW,   R_HL),
 };
 
-constexpr uint8_t INDEX_Z380_EXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_EXT[] = {
      35,  // TEXT_ADCW
      36,  // TEXT_ADCW
      37,  // TEXT_ADCW
@@ -310,7 +310,7 @@ constexpr uint8_t INDEX_Z380_EXT[] PROGMEM = {
 };
 
 // Z380 DD:xx, FD:xx
-constexpr Entry TABLE_Z380_IDX[] PROGMEM = {
+constexpr Entry TABLE_Z380_IDX[] = {
     I1(0x34, 0000, TEXT_INC,  M_IDX),
     I1(0x35, 0000, TEXT_DEC,  M_IDX),
     I2(0x36, 0000, TEXT_LD,   M_IDX,  M_IM8),
@@ -412,7 +412,7 @@ constexpr Entry TABLE_Z380_IDX[] PROGMEM = {
     I1(0xFE, 0000, TEXT_CPW,  M_IDX),
 };
 
-constexpr uint8_t INDEX_Z380_IDX[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IDX[] = {
       6,  // TEXT_ADC
      39,  // TEXT_ADC
      66,  // TEXT_ADC
@@ -515,7 +515,7 @@ constexpr uint8_t INDEX_Z380_IDX[] PROGMEM = {
 };
 
 // Z380 DD:xx
-constexpr Entry TABLE_Z380_IX[] PROGMEM = {
+constexpr Entry TABLE_Z380_IX[] = {
     E2(0x20, 0030, TEXT_JR,    M_CC4,   M_REL16),
     E1(0x18, 0000, TEXT_JR,    M_REL16),
     E2(0xC4, 0070, TEXT_CALR,  M_CC8,   M_REL16),
@@ -561,7 +561,7 @@ constexpr Entry TABLE_Z380_IX[] PROGMEM = {
     E0(0xD9, 0000, TEXT_EXXX),
 };
 
-constexpr uint8_t INDEX_Z380_IX[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IX[] = {
       2,  // TEXT_CALR
       3,  // TEXT_CALR
      19,  // TEXT_CPLW
@@ -608,7 +608,7 @@ constexpr uint8_t INDEX_Z380_IX[] PROGMEM = {
 };
 
 // Z380 FD:xx
-constexpr Entry TABLE_Z380_IY[] PROGMEM = {
+constexpr Entry TABLE_Z380_IY[] = {
     E2(0x20, 0030, TEXT_JR,    M_CC4,   M_REL24),
     E1(0x18, 0000, TEXT_JR,    M_REL24),
     E2(0xC4, 0070, TEXT_CALR,  M_CC8,   M_REL24),
@@ -641,7 +641,7 @@ constexpr Entry TABLE_Z380_IY[] PROGMEM = {
     E1(0xF7, 0000, TEXT_SETC,  M_XM),
 };
 
-constexpr uint8_t INDEX_Z380_IY[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IY[] = {
       2,  // TEXT_CALR
       3,  // TEXT_CALR
      21,  // TEXT_DDIR
@@ -675,16 +675,16 @@ constexpr uint8_t INDEX_Z380_IY[] PROGMEM = {
 };
 
 // Z380 CB
-constexpr Entry TABLE_Z380_BIT[] PROGMEM = {
+constexpr Entry TABLE_Z380_BIT[] = {
     L2(0x30, 0007, TEXT_EX,     M_SR8,  R_ALT),
 };
 
-constexpr uint8_t INDEX_Z380_BIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_BIT[] = {
       0,  // TEXT_EX
 };
 
 // Z380 ED:CB
-constexpr Entry TABLE_Z380_EXTBIT[] PROGMEM = {
+constexpr Entry TABLE_Z380_EXTBIT[] = {
     L2(0x30, 0001, TEXT_EX,     R_PTRL, R_ALT),
     L2(0x33, 0000, TEXT_EX,     R_HL,   R_ALT),
     L2(0x34, 0001, TEXT_EX,     R_IDXL, R_ALT),
@@ -742,7 +742,7 @@ constexpr Entry TABLE_Z380_EXTBIT[] PROGMEM = {
     E1(0xBF, 0000, TEXT_DIVUW,  M_IM16),
 };
 
-constexpr uint8_t INDEX_Z380_EXTBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_EXTBIT[] = {
      39,  // TEXT_DIVUW
      40,  // TEXT_DIVUW
      41,  // TEXT_DIVUW
@@ -801,7 +801,7 @@ constexpr uint8_t INDEX_Z380_EXTBIT[] PROGMEM = {
 };
 
 // Z380 DD:CB, FD:CB
-constexpr Entry TABLE_Z380_IDXBIT[] PROGMEM = {
+constexpr Entry TABLE_Z380_IDXBIT[] = {
     D2(0x01, 0020, TEXT_LDW,    R_PTRH, M_SPX),
     D2(0x21, 0000, TEXT_LDW,    R_IDX,  M_SPX),
     D2(0x31, 0000, TEXT_LDW,    R_HL,   M_SPX),
@@ -839,7 +839,7 @@ constexpr Entry TABLE_Z380_IDXBIT[] PROGMEM = {
     I1(0xBA, 0000, TEXT_DIVUW,  M_IDX),
 };
 
-constexpr uint8_t INDEX_Z380_IDXBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IDXBIT[] = {
      31,  // TEXT_DIVUW
      34,  // TEXT_DIVUW
      11,  // TEXT_LD
@@ -878,14 +878,14 @@ constexpr uint8_t INDEX_Z380_IDXBIT[] PROGMEM = {
 };
 
 // Z380 DD:CB
-constexpr Entry TABLE_Z380_IXBIT[] PROGMEM = {
+constexpr Entry TABLE_Z380_IXBIT[] = {
     D2(0x23, 0000, TEXT_LDW,   R_IY,   M_IDX),
     D2(0x2B, 0000, TEXT_LDW,   M_IDX,  R_IY),
     D2(0x23, 0000, TEXT_LD,    R_IY,   M_IDX),
     D2(0x2B, 0000, TEXT_LD,    M_IDX,  R_IY),
 };
 
-constexpr uint8_t INDEX_Z380_IXBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IXBIT[] = {
       2,  // TEXT_LD
       3,  // TEXT_LD
       0,  // TEXT_LDW
@@ -893,14 +893,14 @@ constexpr uint8_t INDEX_Z380_IXBIT[] PROGMEM = {
 };
 
 // Z380 FD:CB
-constexpr Entry TABLE_Z380_IYBIT[] PROGMEM = {
+constexpr Entry TABLE_Z380_IYBIT[] = {
     D2(0x23, 0000, TEXT_LDW,   R_IX,   M_IDX),
     D2(0x2B, 0000, TEXT_LDW,   M_IDX,  R_IX),
     D2(0x23, 0000, TEXT_LD,    R_IX,   M_IDX),
     D2(0x2B, 0000, TEXT_LD,    M_IDX,  R_IX),
 };
 
-constexpr uint8_t INDEX_Z380_IYBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z380_IYBIT[] = {
       2,  // TEXT_LD
       3,  // TEXT_LD
       0,  // TEXT_LDW
@@ -909,7 +909,7 @@ constexpr uint8_t INDEX_Z380_IYBIT[] PROGMEM = {
 
 // clang-format on
 
-constexpr EntryPage Z380_PAGES[] PROGMEM = {
+constexpr EntryPage Z380_PAGES[] = {
         {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {0x0000, ARRAY_RANGE(TABLE_Z380), ARRAY_RANGE(INDEX_Z380)},
         {Entry::EXT, ARRAY_RANGE(TABLE_Z80_EXT), ARRAY_RANGE(INDEX_Z80_EXT)},
@@ -934,7 +934,7 @@ constexpr EntryPage Z380_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {Z180, TEXT_CPU_Z180, ARRAY_RANGE(Z180_PAGES)},
         {Z380, TEXT_CPU_Z380, ARRAY_RANGE(Z380_PAGES)},
@@ -1027,11 +1027,11 @@ bool EntryInsn::ixBit() const {
     return (prefix() == Entry::IXBIT || prefix() == Entry::IYBIT);
 }
 
-const /*PROGMEM*/ char *TableZ380::listCpu_P() const {
+const char *TableZ380::listCpu_P() const {
     return TEXT_Z380_LIST;
 }
 
-const /*PROGMEM*/ char *TableZ380::cpuName_P(CpuType cpuType) const {
+const char *TableZ380::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

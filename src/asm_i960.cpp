@@ -35,21 +35,21 @@ namespace {
 // The i960 Processor Assembler User's Guide spells every directive with a
 // leading dot, and .equ and .set take the symbol name as their first operand
 // rather than as a line label; the driver's I960Directive registers those two.
-constexpr char TEXT_dDOUBLE[]   PROGMEM = ".double";
-constexpr char TEXT_dEXTENDED[] PROGMEM = ".extended";
-constexpr char TEXT_dFPU[]      PROGMEM = ".fpu";
-constexpr char TEXT_dFLOAT[]    PROGMEM = ".float";
-constexpr char TEXT_dHWORD[]    PROGMEM = ".hword";
-constexpr char TEXT_dINT[]      PROGMEM = ".int";
-constexpr char TEXT_dIPOPERAND[] PROGMEM = ".ipoperand";
-constexpr char TEXT_dMODEBITS[] PROGMEM = ".modebits";
-constexpr char TEXT_dSHORT[]    PROGMEM = ".short";
-constexpr char TEXT_dSINGLE[]   PROGMEM = ".single";
-constexpr char TEXT_dSPACE[]    PROGMEM = ".space";
+constexpr char TEXT_dDOUBLE[]   = ".double";
+constexpr char TEXT_dEXTENDED[] = ".extended";
+constexpr char TEXT_dFPU[]      = ".fpu";
+constexpr char TEXT_dFLOAT[]    = ".float";
+constexpr char TEXT_dHWORD[]    = ".hword";
+constexpr char TEXT_dINT[]      = ".int";
+constexpr char TEXT_dIPOPERAND[] = ".ipoperand";
+constexpr char TEXT_dMODEBITS[] = ".modebits";
+constexpr char TEXT_dSHORT[]    = ".short";
+constexpr char TEXT_dSINGLE[]   = ".single";
+constexpr char TEXT_dSPACE[]    = ".space";
 
 // .short and .hword are half-word aligned, and .int, .long, .word, .float,
 // .single and .double word aligned; see the Guide, page 5-5.
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
     { TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
     { TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2 },
@@ -63,18 +63,18 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2    },
 };
 
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-const AsmI960::PseudoI960 AsmI960::PSEUDO_I960_TABLE[] PROGMEM = {
+const AsmI960::PseudoI960 AsmI960::PSEUDO_I960_TABLE[] = {
         {TEXT_dEXTENDED, &AsmI960::defineExtended},
         {TEXT_dFPU, &AsmI960::processFpu},
         {TEXT_dIPOPERAND, &AsmI960::processIpOperand},
         {TEXT_dMODEBITS, &AsmI960::processModeBits},
 };
 
-PROGMEM constexpr AsmI960::PseudosI960 AsmI960::PSEUDOS_I960{
+constexpr AsmI960::PseudosI960 AsmI960::PSEUDOS_I960{
         ARRAY_RANGE(AsmI960::PSEUDO_I960_TABLE)};
 
 const ValueParser::Plugins &AsmI960::defaultPlugins() {

@@ -38,7 +38,7 @@ namespace c166 {
     {_opc, _post, Entry::Flags::create(_cf, _dst, _src, _ext, true), _name}
 
 // clang-format off
-constexpr Entry TABLE_C166[] PROGMEM = {
+constexpr Entry TABLE_C166[] = {
     E2(0x00, 0x00, CF_FF, TEXT_ADD,    M_RWH,  M_RWL),
     E2(0x08, 0x08, CF_F3, TEXT_ADD,    M_RWH,  M_IR2),
     E2(0x08, 0x0C, CF_F3, TEXT_ADD,    M_RWH,  M_PI2),
@@ -261,7 +261,7 @@ constexpr Entry TABLE_C166[] PROGMEM = {
     E1(0xFC, 0x00, CF_FF, TEXT_POP,    M_REGW),
 };
 
-constexpr uint8_t INDEX_C166[] PROGMEM = {
+constexpr uint8_t INDEX_C166[] = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADD
@@ -485,7 +485,7 @@ constexpr uint8_t INDEX_C166[] PROGMEM = {
 };
 
 // Not available on the 80C166.
-constexpr Entry TABLE_C167[] PROGMEM = {
+constexpr Entry TABLE_C167[] = {
     E1(0xD1, 0x00, CF_30, TEXT_ATOMIC, M_RNG),
     E1(0xD1, 0x80, CF_30, TEXT_EXTR,   M_RNGR),
     E2(0xDC, 0x00, CF_3F, TEXT_EXTS,   M_RWL,  M_RNG),
@@ -498,7 +498,7 @@ constexpr Entry TABLE_C167[] PROGMEM = {
     E2(0xD7, 0xC0, CF_30, TEXT_EXTPR,  M_PAG,  M_RNGR),
 };
 
-constexpr uint8_t INDEX_C167[] PROGMEM = {
+constexpr uint8_t INDEX_C167[] = {
       0,  // TEXT_ATOMIC
       3,  // TEXT_EXTP
       7,  // TEXT_EXTP
@@ -511,7 +511,7 @@ constexpr uint8_t INDEX_C167[] PROGMEM = {
       8,  // TEXT_EXTSR
 };
 // Not available on the 80C166 and the 80C167.
-constexpr Entry TABLE_XC16X[] PROGMEM = {
+constexpr Entry TABLE_XC16X[] = {
     E2(0xEA, 0x00, CF_FA, TEXT_JMPA,    M_XCC,  M_CADR),
     E2(0xEA, 0x00, CF_FA, TEXT_JMPA_P,  M_XCC,  M_CADR),
     E2(0xEA, 0x01, CF_FA, TEXT_JMPA_M,  M_XCC,  M_CADR),
@@ -522,7 +522,7 @@ constexpr Entry TABLE_XC16X[] PROGMEM = {
     E0(0x8C, 0x00, CF_00, TEXT_SBRK),
 };
 
-constexpr uint8_t INDEX_XC16X[] PROGMEM = {
+constexpr uint8_t INDEX_XC16X[] = {
       3,  // TEXT_CALLA
       4,  // TEXT_CALLA_P
       5,  // TEXT_CALLA_M
@@ -534,7 +534,7 @@ constexpr uint8_t INDEX_XC16X[] PROGMEM = {
 };
 
 // The MAC unit.
-constexpr Entry TABLE_MAC[] PROGMEM = {
+constexpr Entry TABLE_MAC[] = {
     X3(0x83, 0x00, CF_FF, 0x00, TEXT_COMULU,     M_RWH,   M_QIRL,  M_NONE),
     X3(0x83, 0x00, CF_FF, 0x01, TEXT_COMULU,     M_RWH,   M_QIRL,  M_RND),
     X3(0x83, 0x00, CF_FF, 0x02, TEXT_COADD,      M_RWH,   M_QIRL,  M_NONE),
@@ -717,7 +717,7 @@ constexpr Entry TABLE_MAC[] PROGMEM = {
     X3(0xD3, 0x00, CF_FF, 0x00, TEXT_COMOV,      M_QIX,   M_QIRL,  M_NONE),
 };
 
-constexpr uint8_t INDEX_MAC[] PROGMEM = {
+constexpr uint8_t INDEX_MAC[] = {
      44,  // TEXT_COABS
     108,  // TEXT_COABS
     127,  // TEXT_COABS
@@ -903,16 +903,16 @@ constexpr uint8_t INDEX_MAC[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage C166_PAGES[] PROGMEM = {
+constexpr EntryPage C166_PAGES[] = {
         {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
 };
 
-constexpr EntryPage C167_PAGES[] PROGMEM = {
+constexpr EntryPage C167_PAGES[] = {
         {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
         {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
 };
 
-constexpr EntryPage XC16X_PAGES[] PROGMEM = {
+constexpr EntryPage XC16X_PAGES[] = {
         {ARRAY_RANGE(TABLE_XC16X), ARRAY_RANGE(INDEX_XC16X)},
         {ARRAY_RANGE(TABLE_MAC), ARRAY_RANGE(INDEX_MAC)},
         {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
@@ -920,7 +920,7 @@ constexpr EntryPage XC16X_PAGES[] PROGMEM = {
 };
 
 // The XC16X without the MAC unit, which GNU as does not know.
-constexpr EntryPage XC16X_NOMAC_PAGES[] PROGMEM = {
+constexpr EntryPage XC16X_NOMAC_PAGES[] = {
         {ARRAY_RANGE(TABLE_XC16X), ARRAY_RANGE(INDEX_XC16X)},
         {ARRAY_RANGE(TABLE_C166), ARRAY_RANGE(INDEX_C166)},
         {ARRAY_RANGE(TABLE_C167), ARRAY_RANGE(INDEX_C167)},
@@ -928,13 +928,13 @@ constexpr EntryPage XC16X_NOMAC_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {C166, TEXT_CPU_80C166, ARRAY_RANGE(C166_PAGES)},
         {C167, TEXT_CPU_80C167, ARRAY_RANGE(C167_PAGES)},
         {XC16X, TEXT_CPU_XC16X, ARRAY_RANGE(XC16X_PAGES)},
 };
 
-constexpr Cpu XC16X_NOMAC PROGMEM = {XC16X, TEXT_CPU_XC16X, ARRAY_RANGE(XC16X_NOMAC_PAGES)};
+constexpr Cpu XC16X_NOMAC = {XC16X, TEXT_CPU_XC16X, ARRAY_RANGE(XC16X_NOMAC_PAGES)};
 
 const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
@@ -1082,11 +1082,11 @@ Error searchOpCode(CpuType cpuType, bool mac, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableC166::listCpu_P() const {
+const char *TableC166::listCpu_P() const {
     return TEXT_C166_LIST;
 }
 
-const /*PROGMEM*/ char *TableC166::cpuName_P(CpuType cpuType) const {
+const char *TableC166::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

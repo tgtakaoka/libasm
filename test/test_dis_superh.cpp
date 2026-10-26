@@ -25,23 +25,23 @@ DisSuperH dissuperh;
 Disassembler &disassembler(dissuperh);
 
 bool isSh1() {
-    return strcasecmp_P("SH-1", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-1", disassembler.config().cpu_P()) == 0;
 }
 
 bool isSh2() {
-    return strcasecmp_P("SH-2", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-2", disassembler.config().cpu_P()) == 0;
 }
 
 bool isShDsp() {
-    return strcasecmp_P("SH-DSP", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-DSP", disassembler.config().cpu_P()) == 0;
 }
 
 bool isSh2e() {
-    return strcasecmp_P("SH-2E", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-2E", disassembler.config().cpu_P()) == 0;
 }
 
 bool isSh2a() {
-    return strcasecmp_P("SH-2A", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-2A", disassembler.config().cpu_P()) == 0;
 }
 
 // The FPU is usable only when compiled in (LIBASM_SUPERH_NOFPU keeps fpuType()

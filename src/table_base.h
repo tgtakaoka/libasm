@@ -24,17 +24,16 @@ namespace libasm {
 namespace table {
 
 /**
- * Template for any table in PROGMEM.
+ * Template for any table.
  *
- * A table consists of a constant array of |ITEM| in PROGMEM. So that special consideration, such as
- * using |pgm_read_byte| etc., is necessary to read any contents via |ITEM| pointer.
+ * A table consists of a constant array of |ITEM|.
  */
-template <typename /*PROGMEM*/ ITEM>
+template <typename ITEM>
 struct Table {
-    const ITEM *readHead() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_head_P)); }
-    const ITEM *readTail() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_tail_P)); }
+    const ITEM *readHead() const { return _head_P; }
+    const ITEM *readTail() const { return _tail_P; }
 
-    constexpr Table(const /*PROGMEM*/ ITEM *head_P, const /*PROGMEM*/ ITEM *tail_P)
+    constexpr Table(const ITEM *head_P, const ITEM *tail_P)
         : _head_P(head_P), _tail_P(tail_P) {}
 
     /**
@@ -106,20 +105,20 @@ struct Table {
     }
 
 private:
-    const /* PROGMEM */ ITEM *const _head_P;
-    const /* PROGMEM */ ITEM *const _tail_P;
+    const ITEM *const _head_P;
+    const ITEM *const _tail_P;
 };
 
 /**
  *  Template for indexed table in template.
  */
-template <typename /*PROGMEM*/ ITEM, typename INDEX>
+template <typename ITEM, typename INDEX>
 struct IndexedTable {
     const ITEM *readHead() const { return _items.readHead(); }
     const ITEM *readTail() const { return _items.readTail(); }
 
-    constexpr IndexedTable(const /*PROGMEM*/ ITEM *head_P, const /*PROGMEM*/ ITEM *tail_P,
-            const /*PROGMEM*/ INDEX *ihead_P, const /*PROGMEM*/ INDEX *itail_P)
+    constexpr IndexedTable(const ITEM *head_P, const ITEM *tail_P,
+            const INDEX *ihead_P, const INDEX *itail_P)
         : _items(head_P, tail_P), _indexes(ihead_P, itail_P) {}
 
     template <typename DATA, typename EXTRA>
@@ -179,11 +178,7 @@ private:
     const Table<INDEX> _indexes;
 
     const ITEM *itemAt(const INDEX *index) const {
-        if (sizeof(INDEX) == 1) {
-            return _items.readHead() + pgm_read_byte(index);
-        } else {
-            return _items.readHead() + pgm_read_word(index);
-        }
+        return _items.readHead() + *index;
     }
 };
 

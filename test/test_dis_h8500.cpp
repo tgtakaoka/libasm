@@ -25,11 +25,11 @@ DisH8500 dish8500;
 Disassembler &disassembler(dish8500);
 
 bool isH8520() {
-    return strcasecmp_P("H8/520", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("H8/520", disassembler.config().cpu_P()) == 0;
 }
 
 bool isH8530() {
-    return strcasecmp_P("H8/530", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("H8/530", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

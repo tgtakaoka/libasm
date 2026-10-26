@@ -51,8 +51,8 @@ private:
 
     using PseudoAm29000 = pseudo::__Pseudo<AsmAm29000, Insn>;
     using PseudosAm29000 = pseudo::__Pseudos<PseudoAm29000>;
-    static const PseudoAm29000 PSEUDO_AM29000_TABLE[] PROGMEM;
-    static const PseudosAm29000 PSEUDOS_AM29000 PROGMEM;
+    static const PseudoAm29000 PSEUDO_AM29000_TABLE[];
+    static const PseudosAm29000 PSEUDOS_AM29000;
     Error processFpu(StrScanner &scan, Insn &insn, uint16_t extra);
     Error processIntMul(StrScanner &scan, Insn &insn, uint16_t extra);
 };

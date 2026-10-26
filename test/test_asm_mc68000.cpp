@@ -24,23 +24,23 @@ AsmMc68000 as68000;
 Assembler &assembler(as68000);
 
 bool mc68k00() {
-    return strcmp_P("68000", assembler.config().cpu_P()) == 0;
+    return strcmp("68000", assembler.config().cpu_P()) == 0;
 }
 
 bool mc68010() {
-    return strcmp_P("68010", assembler.config().cpu_P()) == 0;
+    return strcmp("68010", assembler.config().cpu_P()) == 0;
 }
 
 bool mc68020() {
-    return strcmp_P("68020", assembler.config().cpu_P()) == 0;
+    return strcmp("68020", assembler.config().cpu_P()) == 0;
 }
 
 bool mc68030() {
-    return strcmp_P("68030", assembler.config().cpu_P()) == 0;
+    return strcmp("68030", assembler.config().cpu_P()) == 0;
 }
 
 bool mc68040() {
-    return strcmp_P("68040", assembler.config().cpu_P()) == 0;
+    return strcmp("68040", assembler.config().cpu_P()) == 0;
 }
 
 bool firstGen() {

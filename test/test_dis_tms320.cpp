@@ -25,11 +25,11 @@ DisTms320 dis320;
 Disassembler &disassembler(dis320);
 
 bool is32010() {
-    return strcasecmp_P("32010", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("32010", disassembler.config().cpu_P()) == 0;
 }
 
 bool is32015() {
-    return strcasecmp_P("32015", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("32015", disassembler.config().cpu_P()) == 0;
 }
 
 bool is3201x() {
@@ -37,15 +37,15 @@ bool is3201x() {
 }
 
 bool is32020() {
-    return strcasecmp_P("32020", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("32020", disassembler.config().cpu_P()) == 0;
 }
 
 bool is320C25() {
-    return strcasecmp_P("320C25", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("320C25", disassembler.config().cpu_P()) == 0;
 }
 
 bool is320C26() {
-    return strcasecmp_P("320C26", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("320C26", disassembler.config().cpu_P()) == 0;
 }
 
 bool is3202x() {
@@ -57,11 +57,11 @@ bool is320C2x() {
 }
 
 bool is320C20x() {
-    return strcasecmp_P("320C20x", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("320C20x", disassembler.config().cpu_P()) == 0;
 }
 
 bool is320C5x() {
-    return strcasecmp_P("320C5x", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("320C5x", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {
@@ -3014,7 +3014,7 @@ void test_illegal_c20x() {
         if ((opc & 0x80) == 0 || (opc & 0xF) != 0)
             UNKN(opc);
     }
-    static constexpr Config::opcode_t ILLEGAL[] PROGMEM = {
+    static constexpr Config::opcode_t ILLEGAL[] = {
         0xA100, 0xA400, 0xAA00, 0xAB00, 0xAC00, 0xAD00,
     };
     // MAC..IN
@@ -3067,7 +3067,7 @@ void test_illegal_c5x() {
     // BLDP..ADRK
     for (auto opc = 0x5700; opc < 0x7800; opc += 0x100)
         assert_indirect_2x(opc);
-    static constexpr Config::opcode_t BRANCH[] PROGMEM = {
+    static constexpr Config::opcode_t BRANCH[] = {
         0x7900, 0x7A00, 0x7B00, 0x7D00, 0x7E00, 0x7F00,
     };
     for (auto opc : BRANCH)

@@ -81,8 +81,8 @@ struct SfrNameTokenizer final : Tokenizer {
             const auto *name_P = libasm::c166::reg::sfrName_P(addr, cpuType);
             if (name_P) {
                 std::string name;
-                for (auto p = name_P; pgm_read_byte(p); p++)
-                    name += tolower(pgm_read_byte(p));
+                for (auto p = name_P; *p; p++)
+                    name += tolower(*p);
                 _names.insert(name);
             }
         }

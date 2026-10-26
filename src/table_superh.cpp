@@ -40,7 +40,7 @@ namespace superh {
 // Common SH-1/SH-2 instructions.
 // Each Entry opcode is the 16-bit template with all variable bits zero;
 // matchOpCode() masks those bits out (per opcodeMask) before comparing.
-constexpr Entry TABLE_COMMON[] PROGMEM = {
+constexpr Entry TABLE_COMMON[] = {
     E2(0x0002, TEXT_STC,     ISZ_NONE, M_SR,    M_RN),    // STC SR,Rn
     E2(0x0012, TEXT_STC,     ISZ_NONE, M_GBR,   M_RN),    // STC GBR,Rn
     E2(0x0022, TEXT_STC,     ISZ_NONE, M_VBR,   M_RN),    // STC VBR,Rn
@@ -155,7 +155,7 @@ constexpr Entry TABLE_COMMON[] PROGMEM = {
 };
 
 // SH-2-only additions.
-constexpr Entry TABLE_SH2[] PROGMEM = {
+constexpr Entry TABLE_SH2[] = {
     E1(0x0003, TEXT_BSRF,    ISZ_NONE, M_RN),            // BSRF Rm
     E2(0x0007, TEXT_MUL,     ISZ_LONG, M_RM,    M_RN),   // MUL.L Rm,Rn
     E2(0x000F, TEXT_MAC_L,   ISZ_NONE, M_INCM,  M_INCN), // MAC.L @Rm+,@Rn+
@@ -169,7 +169,7 @@ constexpr Entry TABLE_SH2[] PROGMEM = {
 
 // SH-DSP additions: DSP register file (DSR/A0/X0/X1/Y0/Y1), repeat control
 // (MOD/RS/RE), and the LDRS/LDRE/SETRC repeat instructions.
-constexpr Entry TABLE_DSP[] PROGMEM = {
+constexpr Entry TABLE_DSP[] = {
     E2(0x0052, TEXT_STC,     ISZ_NONE, M_MOD,   M_RN),   // STC MOD,Rn
     E2(0x0062, TEXT_STC,     ISZ_NONE, M_RS,    M_RN),   // STC RS,Rn
     E2(0x006A, TEXT_STS,     ISZ_NONE, M_DSR,   M_RN),   // STS DSR,Rn
@@ -213,7 +213,7 @@ constexpr Entry TABLE_DSP[] PROGMEM = {
 };
 
 // SH-2A 16-bit CPU additions.
-constexpr Entry TABLE_SH2A[] PROGMEM = {
+constexpr Entry TABLE_SH2A[] = {
     E1(0x0039, TEXT_MOVRT,   ISZ_NONE, M_RN),            // MOVRT Rn        0000nnnn00111001
     E0(0x005B, TEXT_RESBANK, ISZ_NONE),                  // RESBANK         0000000001011011
     E0(0x0068, TEXT_NOTT,    ISZ_NONE),                  // NOTT            0000000001101000
@@ -244,14 +244,14 @@ constexpr Entry TABLE_SH2A[] PROGMEM = {
 // template (with variable bits zero); the disassembler reads a 2nd word when
 // matched. Long form is inferred from the M_IMM20/M_D12 operands;
 // word 2 carries the displacement, immediate, or bit field.
-constexpr Entry TABLE_SH2A_LONG[] PROGMEM = {
+constexpr Entry TABLE_SH2A_LONG[] = {
     E2(0x0000, TEXT_MOVI20,  ISZ_NONE, M_IMM20,  M_RN),  // MOVI20 #imm20,Rn
     E2(0x0001, TEXT_MOVI20S, ISZ_NONE, M_IMM20,  M_RN),  // MOVI20S #imm20,Rn
 };
 
 #if !defined(LIBASM_SUPERH_NOFPU)
 // SH-2A FPU additions.
-constexpr Entry TABLE_FPU_SH2A[] PROGMEM = {
+constexpr Entry TABLE_FPU_SH2A[] = {
     E2(0xF0AD, TEXT_FCNVSD,  ISZ_NONE, M_FPUL,  M_DRN),  // FCNVSD FPUL,DRn 1111nnn010101101
     E2(0xF0BD, TEXT_FCNVDS,  ISZ_NONE, M_DRN,   M_FPUL), // FCNVDS DRn,FPUL 1111nnn010111101
 };
@@ -261,7 +261,7 @@ constexpr Entry TABLE_FPU_SH2A[] PROGMEM = {
 // but they access FPU registers that exist only when the FPU is present, so
 // like the floating-point page they are gated by the FPU (mandatory on SH-2E,
 // optional on SH-2A). On an SH-2A without FPU these are undefined code.
-constexpr Entry TABLE_FPU_CPU[] PROGMEM = {
+constexpr Entry TABLE_FPU_CPU[] = {
     E2(0x005A, TEXT_STS,     ISZ_NONE, M_FPUL,  M_RN),   // STS FPUL,Rn
     E2(0x006A, TEXT_STS,     ISZ_NONE, M_FPSCR, M_RN),   // STS FPSCR,Rn
     E2(0x4052, TEXT_STS,     ISZ_LONG, M_FPUL,  M_DECN), // STS.L FPUL,@-Rn
@@ -274,7 +274,7 @@ constexpr Entry TABLE_FPU_CPU[] PROGMEM = {
 
 // SH-2E floating-point instructions (shared with SH-2A when FPU is enabled).
 // All encodings have the 0xF000 high nibble.
-constexpr Entry TABLE_FPU[] PROGMEM = {
+constexpr Entry TABLE_FPU[] = {
     E2(0xF000, TEXT_FADD,    ISZ_NONE, M_FRM,   M_FRN),  // FADD FRm,FRn
     E2(0xF001, TEXT_FSUB,    ISZ_NONE, M_FRM,   M_FRN),  // FSUB FRm,FRn
     E2(0xF002, TEXT_FMUL,    ISZ_NONE, M_FRM,   M_FRN),  // FMUL FRm,FRn
@@ -304,7 +304,7 @@ constexpr Entry TABLE_FPU[] PROGMEM = {
 // TEXT_X identifier), so the binary-search comparator (strcasecmp_P on
 // the mnemonic) sees the index ordering match its sort. Regenerate via
 // the awk pipeline in this file's commit history if TABLE_* changes.
-constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+constexpr uint8_t INDEX_COMMON[] = {
      38,  // TEXT_ADD
      89,  // TEXT_ADD
      39,  // TEXT_ADDC
@@ -418,7 +418,7 @@ constexpr uint8_t INDEX_COMMON[] PROGMEM = {
      26,  // TEXT_XTRCT
 };
 
-constexpr uint8_t INDEX_SH2[] PROGMEM = {
+constexpr uint8_t INDEX_SH2[] = {
       8,  // TEXT_BF_S
       3,  // TEXT_BRAF
       0,  // TEXT_BSRF
@@ -430,7 +430,7 @@ constexpr uint8_t INDEX_SH2[] PROGMEM = {
       1,  // TEXT_MUL
 };
 
-constexpr uint8_t INDEX_SH2A[] PROGMEM = {
+constexpr uint8_t INDEX_SH2A[] = {
      20,  // TEXT_BCLR
      23,  // TEXT_BLD
      21,  // TEXT_BSET
@@ -456,17 +456,17 @@ constexpr uint8_t INDEX_SH2A[] PROGMEM = {
       8,  // TEXT_SHLD
      14,  // TEXT_STBANK
 };
-constexpr uint8_t INDEX_SH2A_LONG[] PROGMEM = {
+constexpr uint8_t INDEX_SH2A_LONG[] = {
       0,  // TEXT_MOVI20
       1,  // TEXT_MOVI20S
 };
 #if !defined(LIBASM_SUPERH_NOFPU)
-constexpr uint8_t INDEX_FPU_SH2A[] PROGMEM = {
+constexpr uint8_t INDEX_FPU_SH2A[] = {
       1,  // TEXT_FCNVDS
       0,  // TEXT_FCNVSD
 };
 
-constexpr uint8_t INDEX_FPU_CPU[] PROGMEM = {
+constexpr uint8_t INDEX_FPU_CPU[] = {
       4,  // TEXT_LDS
       7,  // TEXT_LDS
       3,  // TEXT_LDS
@@ -477,7 +477,7 @@ constexpr uint8_t INDEX_FPU_CPU[] PROGMEM = {
       5,  // TEXT_STS
 };
 
-constexpr uint8_t INDEX_FPU[] PROGMEM = {
+constexpr uint8_t INDEX_FPU[] = {
      19,  // TEXT_FABS
       0,  // TEXT_FADD
       4,  // TEXT_FCMP_EQ
@@ -503,7 +503,7 @@ constexpr uint8_t INDEX_FPU[] PROGMEM = {
 };
 #endif  // !LIBASM_SUPERH_NOFPU
 
-constexpr uint8_t INDEX_DSP[] PROGMEM = {
+constexpr uint8_t INDEX_DSP[] = {
      11,  // TEXT_LDC
      12,  // TEXT_LDC
      16,  // TEXT_LDC
@@ -550,18 +550,18 @@ constexpr uint8_t INDEX_DSP[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage SH1_PAGES[] PROGMEM = {
+constexpr EntryPage SH1_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
-constexpr EntryPage SH2_PAGES[] PROGMEM = {
+constexpr EntryPage SH2_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
 };
 
 // SH-DSP is SH-2 plus the orthogonal DSP feature (DSP page comes from the DSP
 // dispatch table below, enabled by DSP_ON).
-constexpr EntryPage SH_DSP_PAGES[] PROGMEM = {
+constexpr EntryPage SH_DSP_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
 };
@@ -569,14 +569,14 @@ constexpr EntryPage SH_DSP_PAGES[] PROGMEM = {
 // SH-2E inherits SH-2 instructions. The FPU page (floating-point plus the
 // FPU-related CPU instructions) comes from the FPU dispatch table below
 // (mandatory FPU_SH2E).
-constexpr EntryPage SH2E_PAGES[] PROGMEM = {
+constexpr EntryPage SH2E_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
 };
 
 // SH-2A: SH-2 + SH-2A 16-bit + SH-2A 32-bit. The FPU page is optional via
 // FPU_TABLE; without it the FPU system registers do not exist.
-constexpr EntryPage SH2A_PAGES[] PROGMEM = {
+constexpr EntryPage SH2A_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_SH2), ARRAY_RANGE(INDEX_SH2)},
         {ARRAY_RANGE(TABLE_SH2A), ARRAY_RANGE(INDEX_SH2A)},
@@ -584,19 +584,19 @@ constexpr EntryPage SH2A_PAGES[] PROGMEM = {
 };
 
 #if !defined(LIBASM_SUPERH_NOFPU)
-constexpr EntryPage FPU_PAGES[] PROGMEM = {
+constexpr EntryPage FPU_PAGES[] = {
         {ARRAY_RANGE(TABLE_FPU_CPU), ARRAY_RANGE(INDEX_FPU_CPU)},
         {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
 };
 
-constexpr EntryPage FPU_SH2A_PAGES[] PROGMEM = {
+constexpr EntryPage FPU_SH2A_PAGES[] = {
         {ARRAY_RANGE(TABLE_FPU_CPU), ARRAY_RANGE(INDEX_FPU_CPU)},
         {ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
         {ARRAY_RANGE(TABLE_FPU_SH2A), ARRAY_RANGE(INDEX_FPU_SH2A)},
 };
 #endif  // !LIBASM_SUPERH_NOFPU
 
-constexpr EntryPage DSP_PAGES[] PROGMEM = {
+constexpr EntryPage DSP_PAGES[] = {
         {ARRAY_RANGE(TABLE_DSP), ARRAY_RANGE(INDEX_DSP)},
 };
 
@@ -608,7 +608,7 @@ using Fpu = entry::CpuBase<FpuType, EntryPage>;
 #endif
 using Dsp = entry::CpuBase<DspType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {SH1, TEXT_CPU_SH1, ARRAY_RANGE(SH1_PAGES)},
         {SH2, TEXT_CPU_SH2, ARRAY_RANGE(SH2_PAGES)},
         {SH_DSP, TEXT_CPU_SH_DSP, ARRAY_RANGE(SH_DSP_PAGES)},
@@ -617,7 +617,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
 };
 
 #if !defined(LIBASM_SUPERH_NOFPU)
-constexpr Fpu FPU_TABLE[] PROGMEM = {
+constexpr Fpu FPU_TABLE[] = {
         {FPU_NONE, TEXT_FPU_NONE, EMPTY_RANGE(FPU_PAGES)},
         {FPU_SH2E, TEXT_FPU_SH2E, ARRAY_RANGE(FPU_PAGES)},
         {FPU_SH2A, TEXT_FPU_SH2A, ARRAY_RANGE(FPU_SH2A_PAGES)},
@@ -625,7 +625,7 @@ constexpr Fpu FPU_TABLE[] PROGMEM = {
 #endif  // !LIBASM_SUPERH_NOFPU
 
 // DSP is enabled only by the SH-DSP CPU, so the names are internal (not parsed).
-constexpr Dsp DSP_TABLE[] PROGMEM = {
+constexpr Dsp DSP_TABLE[] = {
         {DSP_NONE, TEXT_FPU_NONE, EMPTY_RANGE(DSP_PAGES)},
         {DSP_ON, TEXT_CPU_SH_DSP, ARRAY_RANGE(DSP_PAGES)},
 };
@@ -798,11 +798,11 @@ Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
     return insn.getError();
 }
 
-const /* PROGMEM */ char *TableSuperH::listCpu_P() const {
+const char *TableSuperH::listCpu_P() const {
     return TEXT_SUPERH_LIST;
 }
 
-const /* PROGMEM */ char *TableSuperH::cpuName_P(CpuType cpuType) const {
+const char *TableSuperH::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
@@ -828,7 +828,7 @@ void Config::setCpuType(CpuType cpuType) {
     _cpuSpec.dsp = (cpuType == SH_DSP) ? DSP_ON : DSP_NONE;
 }
 
-const /* PROGMEM */ char *Config::fpu_P() const {
+const char *Config::fpu_P() const {
 #if defined(LIBASM_SUPERH_NOFPU)
     return TEXT_FPU_NONE;
 #else

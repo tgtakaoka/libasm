@@ -31,7 +31,7 @@ namespace mc68hc12 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry MC68HC12_TABLE[] PROGMEM = {
+constexpr Entry MC68HC12_TABLE[] = {
     E0(0x02, CF_00, TEXT_INY),
     E0(0x03, CF_00, TEXT_DEY),
     E1(0x05, CF_00, TEXT_JMP,  M_IDX),
@@ -185,7 +185,7 @@ constexpr Entry MC68HC12_TABLE[] PROGMEM = {
     E1(0x4A, CF_00, TEXT_CALL,  M_FEXT),
 };
 
-constexpr uint8_t MC68HC12_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC12_INDEX[] = {
     120,  // TEXT_ADCA
     138,  // TEXT_ADCB
     122,  // TEXT_ADDA
@@ -339,7 +339,7 @@ constexpr uint8_t MC68HC12_INDEX[] PROGMEM = {
      63,  // TEXT_WAI
 };
 
-constexpr Entry MC68HC12_P04[] PROGMEM = {
+constexpr Entry MC68HC12_P04[] = {
     E2(0x00, CF_11, TEXT_DBEQ, M_R8L,  M_RL9),
     E2(0x20, CF_11, TEXT_DBNE, M_R8L,  M_RL9),
     E2(0x40, CF_11, TEXT_TBEQ, M_R8L,  M_RL9),
@@ -354,7 +354,7 @@ constexpr Entry MC68HC12_P04[] PROGMEM = {
     E2(0xA4, CF_13, TEXT_IBNE, M_R16L, M_RL9),
 };
 
-constexpr uint8_t MC68HC12_I04[] PROGMEM = {
+constexpr uint8_t MC68HC12_I04[] = {
       0,  // TEXT_DBEQ
       6,  // TEXT_DBEQ
       1,  // TEXT_DBNE
@@ -369,17 +369,17 @@ constexpr uint8_t MC68HC12_I04[] PROGMEM = {
       9,  // TEXT_TBNE
 };
 
-constexpr Entry MC68HC12_P4B[] PROGMEM = {
+constexpr Entry MC68HC12_P4B[] = {
     E1(0xE3, CF_1C, TEXT_CALL, M_CIDX),
     E2(0x00, CF_FF, TEXT_CALL, M_CIDX, M_PAG),
 };
 
-constexpr uint8_t MC68HC12_I4B[] PROGMEM = {
+constexpr uint8_t MC68HC12_I4B[] = {
       0,  // TEXT_CALL
       1,  // TEXT_CALL
 };
 
-constexpr Entry MC68HC12_PB7[] PROGMEM = {
+constexpr Entry MC68HC12_PB7[] = {
     E2(0x00, CF_33, TEXT_TFR, M_R8H,  M_R8L),
     E2(0x04, CF_33, TEXT_SEX, M_R8H,  M_R16L),
     E2(0x44, CF_33, TEXT_TFR, M_R16H, M_R16L),
@@ -401,7 +401,7 @@ constexpr Entry MC68HC12_PB7[] PROGMEM = {
     E0(0xC6, CF_00, TEXT_XGDY),
 };
 
-constexpr Entry MC68HCS12X_PB7[] PROGMEM = {
+constexpr Entry MC68HCS12X_PB7[] = {
     E1(0x08, CF_77, TEXT_SEX, M_XSEX),
     E1(0x08, CF_77, TEXT_TFR, M_XPAIR),
     E1(0x88, CF_77, TEXT_EXG, M_XPAIR),
@@ -415,7 +415,7 @@ constexpr Entry MC68HCS12X_PB7[] PROGMEM = {
     E2(0xC8, CF_33, TEXT_EXG, M_R16H, M_R8L),
 };
 
-constexpr uint8_t MC68HCS12X_IB7[] PROGMEM = {
+constexpr uint8_t MC68HCS12X_IB7[] = {
       2,  // TEXT_EXG
       6,  // TEXT_EXG
       7,  // TEXT_EXG
@@ -429,7 +429,7 @@ constexpr uint8_t MC68HCS12X_IB7[] PROGMEM = {
       8,  // TEXT_TFR
 };
 
-constexpr uint8_t MC68HC12_IB7[] PROGMEM = {
+constexpr uint8_t MC68HC12_IB7[] = {
       3,  // TEXT_EXG
       4,  // TEXT_EXG
       6,  // TEXT_EXG
@@ -451,7 +451,7 @@ constexpr uint8_t MC68HC12_IB7[] PROGMEM = {
      18,  // TEXT_XGDY
 };
 
-constexpr Entry MC68HC12_P18[] PROGMEM = {
+constexpr Entry MC68HC12_P18[] = {
     E2(0x00, CF_00, TEXT_MOVW, M_IM16, M_NIDX),
     E2(0x01, CF_00, TEXT_MOVW, M_EXT,  M_NIDX),
     E2(0x02, CF_00, TEXT_MOVW, M_NIDX, M_NIDX),
@@ -515,7 +515,7 @@ constexpr Entry MC68HC12_P18[] PROGMEM = {
     E1(0x80, CF_7F, TEXT_TRAP,  M_TRAP),
 };
 
-constexpr uint8_t MC68HC12_I18[] PROGMEM = {
+constexpr uint8_t MC68HC12_I18[] = {
       6,  // TEXT_ABA
      23,  // TEXT_CBA
       7,  // TEXT_DAA
@@ -579,57 +579,57 @@ constexpr uint8_t MC68HC12_I18[] PROGMEM = {
      52,  // TEXT_WAV
 };
 
-constexpr Entry MC68HC12_P10[] PROGMEM = {
+constexpr Entry MC68HC12_P10[] = {
     E0(0xFE, CF_00, TEXT_CLC),
     E0(0xEF, CF_00, TEXT_CLI),
     E0(0xFD, CF_00, TEXT_CLV),
 };
 
-constexpr uint8_t MC68HC12_I10[] PROGMEM = {
+constexpr uint8_t MC68HC12_I10[] = {
       0,  // TEXT_CLC
       1,  // TEXT_CLI
       2,  // TEXT_CLV
 };
 
-constexpr Entry MC68HC12_P14[] PROGMEM = {
+constexpr Entry MC68HC12_P14[] = {
     E0(0x01, CF_00, TEXT_SEC),
     E0(0x10, CF_00, TEXT_SEI),
     E0(0x02, CF_00, TEXT_SEV),
 };
 
-constexpr uint8_t MC68HC12_I14[] PROGMEM = {
+constexpr uint8_t MC68HC12_I14[] = {
       0,  // TEXT_SEC
       1,  // TEXT_SEI
       2,  // TEXT_SEV
 };
 
-constexpr Entry MC68HC12_P19[] PROGMEM = {
+constexpr Entry MC68HC12_P19[] = {
     E0(0xED, CF_00, TEXT_ABY),
 };
 
-constexpr uint8_t MC68HC12_I19[] PROGMEM = {
+constexpr uint8_t MC68HC12_I19[] = {
       0,  // TEXT_ABY
 };
 
-constexpr Entry MC68HC12_P1A[] PROGMEM = {
+constexpr Entry MC68HC12_P1A[] = {
     E0(0xE5, CF_00, TEXT_ABX),
 };
 
-constexpr uint8_t MC68HC12_I1A[] PROGMEM = {
+constexpr uint8_t MC68HC12_I1A[] = {
       0,  // TEXT_ABX
 };
 
-constexpr Entry MC68HC12_P1B[] PROGMEM = {
+constexpr Entry MC68HC12_P1B[] = {
     E0(0x9F, CF_00, TEXT_DES),
     E0(0x81, CF_00, TEXT_INS),
 };
 
-constexpr uint8_t MC68HC12_I1B[] PROGMEM = {
+constexpr uint8_t MC68HC12_I1B[] = {
       0,  // TEXT_DES
       1,  // TEXT_INS
 };
 
-constexpr Entry MC68HCS12X_P18[] PROGMEM = {
+constexpr Entry MC68HCS12X_P18[] = {
     E2(0x00, CF_00, TEXT_MOVW,  M_IM16, M_IDX),
     E2(0x01, CF_00, TEXT_MOVW,  M_EXT,  M_IDX),
     E2(0x02, CF_00, TEXT_MOVW,  M_IDX,  M_IDX),
@@ -740,7 +740,7 @@ constexpr Entry MC68HCS12X_P18[] PROGMEM = {
     E1(0xFF, CF_00, TEXT_GLDS,  M_GEXT),
 };
 
-constexpr uint8_t MC68HCS12X_I18[] PROGMEM = {
+constexpr uint8_t MC68HCS12X_I18[] = {
      70,  // TEXT_ADDX
      89,  // TEXT_ADDY
      83,  // TEXT_ADED
@@ -854,7 +854,7 @@ constexpr uint8_t MC68HCS12X_I18[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage MC68HC12_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC12_PAGES[] = {
         {0x00, ARRAY_RANGE(MC68HC12_TABLE), ARRAY_RANGE(MC68HC12_INDEX)},
         {0x18, ARRAY_RANGE(MC68HC12_P18), ARRAY_RANGE(MC68HC12_I18)},
         {0x04, ARRAY_RANGE(MC68HC12_P04), ARRAY_RANGE(MC68HC12_I04)},
@@ -867,7 +867,7 @@ constexpr EntryPage MC68HC12_PAGES[] PROGMEM = {
         {0x1B, ARRAY_RANGE(MC68HC12_P1B), ARRAY_RANGE(MC68HC12_I1B)},
 };
 
-constexpr EntryPage MC68HCS12X_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HCS12X_PAGES[] = {
         {0x00, ARRAY_RANGE(MC68HC12_TABLE), ARRAY_RANGE(MC68HC12_INDEX)},
         {0x18, ARRAY_RANGE(MC68HCS12X_P18), ARRAY_RANGE(MC68HCS12X_I18)},
         {0x18, ARRAY_RANGE(MC68HC12_P18), ARRAY_RANGE(MC68HC12_I18)},
@@ -884,7 +884,7 @@ constexpr EntryPage MC68HCS12X_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MC68HC12, TEXT_CPU_68HC12, ARRAY_RANGE(MC68HC12_PAGES)},
         {MC68HCS12, TEXT_CPU_68HCS12, ARRAY_RANGE(MC68HC12_PAGES)},
         {MC68HCS12X, TEXT_CPU_68HCS12X, ARRAY_RANGE(MC68HCS12X_PAGES)},
@@ -898,7 +898,7 @@ struct XferPair {
 };
 
 // clang-format off
-constexpr XferPair TFR_PAIRS[] PROGMEM = {
+constexpr XferPair TFR_PAIRS[] = {
     { 0x20, REG_CCRL, REG_A    },
     { 0x21, REG_CCRL, REG_B    },
     { 0x22, REG_CCRL, REG_CCRL },
@@ -936,7 +936,7 @@ constexpr XferPair TFR_PAIRS[] PROGMEM = {
     { 0x2F, REG_CCRW, REG_SP   },
 };
 
-constexpr XferPair SEX_PAIRS[] PROGMEM = {
+constexpr XferPair SEX_PAIRS[] = {
     { 0x24, REG_CCRL, REG_D    },
     { 0x25, REG_CCRL, REG_X    },
     { 0x26, REG_CCRL, REG_Y    },
@@ -946,7 +946,7 @@ constexpr XferPair SEX_PAIRS[] PROGMEM = {
     { 0x4F, REG_D,    REG_SP   },
 };
 
-constexpr XferPair EXG_PAIRS[] PROGMEM = {
+constexpr XferPair EXG_PAIRS[] = {
     { 0xA0, REG_CCRL, REG_A    },
     { 0xA1, REG_CCRL, REG_B    },
     { 0xA2, REG_CCRL, REG_CCRL },
@@ -1003,8 +1003,8 @@ const XferPair *xferPairs(AddrMode mode, Config::opcode_t opc, const XferPair *&
 bool encodeXferPair(AddrMode mode, Config::opcode_t &opc, RegName src, RegName dst) {
     const XferPair *end;
     for (auto p = xferPairs(mode, opc, end); p < end; p++) {
-        if (pgm_read_byte(&p->src) == src && pgm_read_byte(&p->dst) == dst) {
-            opc = pgm_read_byte(&p->code);
+        if (p->src == src && p->dst == dst) {
+            opc = p->code;
             return true;
         }
     }
@@ -1014,9 +1014,9 @@ bool encodeXferPair(AddrMode mode, Config::opcode_t &opc, RegName src, RegName d
 bool decodeXferPair(AddrMode mode, Config::opcode_t opc, RegName &src, RegName &dst) {
     const XferPair *end;
     for (auto p = xferPairs(mode, opc, end); p < end; p++) {
-        if (pgm_read_byte(&p->code) == opc) {
-            src = RegName(static_cast<int8_t>(pgm_read_byte(&p->src)));
-            dst = RegName(static_cast<int8_t>(pgm_read_byte(&p->dst)));
+        if (p->code == opc) {
+            src = RegName(static_cast<int8_t>(p->src));
+            dst = RegName(static_cast<int8_t>(p->dst));
             return true;
         }
     }
@@ -1102,11 +1102,11 @@ struct MemoryRegion {
     uint8_t shift;  // page shift in physical address
     uint32_t phys;  // physical address of |base| on page 0
 
-    uint16_t readBase() const { return pgm_read_word(&base); }
-    uint16_t readLast() const { return pgm_read_word(&last); }
-    PageReg readReg() const { return PageReg(pgm_read_byte(&reg)); }
-    uint8_t readShift() const { return pgm_read_byte(&shift); }
-    uint32_t readPhys() const { return pgm_read_dword(&phys); }
+    uint16_t readBase() const { return base; }
+    uint16_t readLast() const { return last; }
+    PageReg readReg() const { return PageReg(reg); }
+    uint8_t readShift() const { return shift; }
+    uint32_t readPhys() const { return phys; }
 };
 
 struct PageRegister {
@@ -1116,7 +1116,7 @@ struct PageRegister {
 
 // clang-format off
 // MC68HC812A4 expansion address ADDR21-ADDR0
-constexpr MemoryRegion MC68HC12_REGIONS[] PROGMEM = {
+constexpr MemoryRegion MC68HC12_REGIONS[] = {
     { 0x0000, 0x03FF, PAGE_NONE,   0, 0x3F0000 },
     { 0x0400, 0x07FF, PAGE_EPAGE, 10, 0x3C0000 },
     { 0x0800, 0x6FFF, PAGE_NONE,   0, 0x3F0800 },
@@ -1125,26 +1125,26 @@ constexpr MemoryRegion MC68HC12_REGIONS[] PROGMEM = {
     { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x3FC000 },
 };
 
-constexpr PageRegister MC68HC12_PAGE_REGISTERS[] PROGMEM = {
+constexpr PageRegister MC68HC12_PAGE_REGISTERS[] = {
     { PAGE_PPAGE, 8 },
     { PAGE_DPAGE, 8 },
     { PAGE_EPAGE, 8 },
 };
 
 // Linear address; $4000 and $C000 are fixed to page $3E and $3F
-constexpr MemoryRegion MC68HCS12_REGIONS[] PROGMEM = {
+constexpr MemoryRegion MC68HCS12_REGIONS[] = {
     { 0x0000, 0x3FFF, PAGE_NONE,   0, 0x000000 },
     { 0x4000, 0x7FFF, PAGE_NONE,   0, 0x0F8000 },
     { 0x8000, 0xBFFF, PAGE_PPAGE, 14, 0x000000 },
     { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x0FC000 },
 };
 
-constexpr PageRegister MC68HCS12_PAGE_REGISTERS[] PROGMEM = {
+constexpr PageRegister MC68HCS12_PAGE_REGISTERS[] = {
     { PAGE_PPAGE, 6 },
 };
 
 // Global address
-constexpr MemoryRegion MC68HCS12X_REGIONS[] PROGMEM = {
+constexpr MemoryRegion MC68HCS12X_REGIONS[] = {
     { 0x0000, 0x07FF, PAGE_NONE,   0, 0x000000 },
     { 0x0800, 0x0BFF, PAGE_EPAGE, 10, 0x100000 },
     { 0x0C00, 0x0FFF, PAGE_NONE,   0, 0x13FC00 },
@@ -1155,7 +1155,7 @@ constexpr MemoryRegion MC68HCS12X_REGIONS[] PROGMEM = {
     { 0xC000, 0xFFFF, PAGE_NONE,   0, 0x7FC000 },
 };
 
-constexpr PageRegister MC68HCS12X_PAGE_REGISTERS[] PROGMEM = {
+constexpr PageRegister MC68HCS12X_PAGE_REGISTERS[] = {
     { PAGE_PPAGE,  8 },
     { PAGE_EPAGE,  8 },
     { PAGE_RPAGE,  8 },
@@ -1169,7 +1169,7 @@ struct CpuPaging {
     table::Table<PageRegister> registers;
 };
 
-constexpr CpuPaging CPU_PAGINGS[] PROGMEM = {
+constexpr CpuPaging CPU_PAGINGS[] = {
     { MC68HC12,   { ARRAY_RANGE(MC68HC12_REGIONS)   }, { ARRAY_RANGE(MC68HC12_PAGE_REGISTERS)   } },
     { MC68HCS12,  { ARRAY_RANGE(MC68HCS12_REGIONS)  }, { ARRAY_RANGE(MC68HCS12_PAGE_REGISTERS)  } },
     { MC68HCS12X, { ARRAY_RANGE(MC68HCS12X_REGIONS) }, { ARRAY_RANGE(MC68HCS12X_PAGE_REGISTERS) } },
@@ -1178,7 +1178,7 @@ constexpr CpuPaging CPU_PAGINGS[] PROGMEM = {
 
 const CpuPaging *paging(CpuType cpuType) {
     for (const auto &p : CPU_PAGINGS) {
-        if (CpuType(pgm_read_byte(&p.cpuType)) == cpuType)
+        if (CpuType(p.cpuType) == cpuType)
             return &p;
     }
     return nullptr;
@@ -1201,7 +1201,7 @@ const MemoryRegion *findWindow(CpuType cpuType, uint16_t addr) {
 const PageRegister *findRegister(CpuType cpuType, PageReg reg) {
     const auto &registers = paging(cpuType)->registers;
     for (auto r = registers.readHead(); r < registers.readTail(); r++) {
-        if (PageReg(pgm_read_byte(&r->reg)) == reg)
+        if (PageReg(r->reg) == reg)
             return r;
     }
     return nullptr;
@@ -1219,7 +1219,7 @@ uint16_t pageWindowLast(CpuType cpuType, uint16_t addr) {
 
 uint_fast8_t pageRegisterBits(CpuType cpuType, PageReg reg) {
     const auto *r = findRegister(cpuType, reg);
-    return r ? pgm_read_byte(&r->bits) : 0;
+    return r ? r->bits : 0;
 }
 
 uint32_t toPhysical(CpuType cpuType, uint16_t addr, uint8_t page) {
@@ -1324,11 +1324,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableMc68HC12::listCpu_P() const {
+const char *TableMc68HC12::listCpu_P() const {
     return TEXT_MC68HC12_LIST;
 }
 
-const /*PROGMEM*/ char *TableMc68HC12::cpuName_P(CpuType cpuType) const {
+const char *TableMc68HC12::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

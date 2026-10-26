@@ -34,17 +34,17 @@ const ValueFormatter::Plugins &DisCp1600::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '!'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_SEMI; }
+        const char *lineComment_P() const override { return PSTR_SEMI; }
         const SurroundHexFormatter _hex{PSTR_X_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }
 
 namespace {
-constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "decode R6 as SP";
-constexpr char OPT_BOOL_PC_ALIAS[] PROGMEM = "pc-alias";
-constexpr char OPT_DESC_PC_ALIAS[] PROGMEM = "decode R7 as PC";
+constexpr char OPT_BOOL_SP_ALIAS[] = "sp-alias";
+constexpr char OPT_DESC_SP_ALIAS[] = "decode R6 as SP";
+constexpr char OPT_BOOL_PC_ALIAS[] = "pc-alias";
+constexpr char OPT_DESC_PC_ALIAS[] = "decode R7 as PC";
 }  // namespace
 
 DisCp1600::DisCp1600(const ValueFormatter::Plugins &plugins)

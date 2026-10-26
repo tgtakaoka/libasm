@@ -33,15 +33,15 @@ constexpr Config::opcode_t ADDR32 = 0x67;
 constexpr Config::opcode_t ADDR16 = 0x67;
 
 bool v30() {
-    return strcmp_P("V30", disassembler.config().cpu_P()) == 0;
+    return strcmp("V30", disassembler.config().cpu_P()) == 0;
 }
 
 bool v33() {
-    return strcmp_P("V33", disassembler.config().cpu_P()) == 0;
+    return strcmp("V33", disassembler.config().cpu_P()) == 0;
 }
 
 bool v35() {
-    return strcmp_P("V35", disassembler.config().cpu_P()) == 0;
+    return strcmp("V35", disassembler.config().cpu_P()) == 0;
 }
 
 bool vseries() {
@@ -49,23 +49,23 @@ bool vseries() {
 }
 
 bool is8086() {
-    return strcmp_P("8086", disassembler.config().cpu_P()) == 0;
+    return strcmp("8086", disassembler.config().cpu_P()) == 0;
 }
 
 bool is80186() {
-    return strcmp_P("80186", disassembler.config().cpu_P()) == 0;
+    return strcmp("80186", disassembler.config().cpu_P()) == 0;
 }
 
 bool is80286() {
-    return strcmp_P("80286", disassembler.config().cpu_P()) == 0;
+    return strcmp("80286", disassembler.config().cpu_P()) == 0;
 }
 
 bool is80386() {
-    return strcmp_P("80386", disassembler.config().cpu_P()) == 0;
+    return strcmp("80386", disassembler.config().cpu_P()) == 0;
 }
 
 bool is80486() {
-    return strcmp_P("80486", disassembler.config().cpu_P()) == 0;
+    return strcmp("80486", disassembler.config().cpu_P()) == 0;
 }
 
 bool is80x86() {
@@ -86,16 +86,16 @@ bool hasExtraSeg() {
 }
 
 bool is8087() {
-    return strcmp_P("8087", dis8086.fpu_P()) == 0;
+    return strcmp("8087", dis8086.fpu_P()) == 0;
 }
 
 bool is80287() {
-    return strcmp_P("80287", dis8086.fpu_P()) == 0;
+    return strcmp("80287", dis8086.fpu_P()) == 0;
 }
 
 bool is80387() {
-    return strcmp_P("80387", dis8086.fpu_P()) == 0 || strcmp_P("80487", dis8086.fpu_P()) == 0
-        || strcmp_P("80C187", dis8086.fpu_P()) == 0;
+    return strcmp("80387", dis8086.fpu_P()) == 0 || strcmp("80487", dis8086.fpu_P()) == 0
+        || strcmp("80C187", dis8086.fpu_P()) == 0;
 }
 
 bool fpu_on() {

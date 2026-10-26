@@ -31,7 +31,7 @@ const ValueFormatter::Plugins &DisTms320f::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
         const SuffixHexFormatter _hex{'h'};
     } PLUGINS{};
     return PLUGINS;
@@ -104,7 +104,7 @@ RegName DisTms320f::decodeIndirect(DisInsn &insn, StrBuffer &out, uint_fast8_t m
     } else if (mod == 0x18) {
         outRegName(out.letter('*'), ar);
     } else if (mod == 0x19) {
-        outRegName(out.letter('*'), ar).text_P(PSTR("++(IR0)B"));
+        outRegName(out.letter('*'), ar).text_P("++(IR0)B");
     } else {
         insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
     }

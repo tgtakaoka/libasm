@@ -31,13 +31,13 @@ using namespace text::ns32000;
 namespace {
 
 // clang-format off
-constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
-constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
-constexpr char TEXT_dFLOAT[]  PROGMEM = ".float";
-constexpr char TEXT_dLONG[]   PROGMEM = ".long";
-constexpr char TEXT_dSPACE[]  PROGMEM = ".space";
+constexpr char TEXT_dBLKD[]   = ".blkd";
+constexpr char TEXT_dDOUBLE[] = ".double";
+constexpr char TEXT_dFLOAT[]  = ".float";
+constexpr char TEXT_dLONG[]   = ".long";
+constexpr char TEXT_dSPACE[]  = ".space";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dALIGN,  &Assembler::alignOrigin        },
     { TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE    },
     { TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE    },
@@ -53,7 +53,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE    },
     { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD    },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -667,11 +667,11 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     auto name = insn.name();
     if (*name == '.')  // accept an optional leading dot, like the base lookup
         ++name;
-    if (strcasecmp_P(name, TEXT_FPU) == 0) {
+    if (strcasecmp(name, TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }
-    if (strcasecmp_P(name, TEXT_PMMU) == 0) {
+    if (strcasecmp(name, TEXT_PMMU) == 0) {
         const auto error = _opt_pmmu.set(scan);
         return error ? insn.setErrorIf(at, error) : OK;
     }

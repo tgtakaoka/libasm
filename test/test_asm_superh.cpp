@@ -26,8 +26,8 @@ Assembler &assembler(asmsuperh);
 
 bool isSh2() {
     const auto *cpu = assembler.config().cpu_P();
-    return strcasecmp_P("SH-2", cpu) == 0 || strcasecmp_P("SH-DSP", cpu) == 0 ||
-           strcasecmp_P("SH-2E", cpu) == 0 || strcasecmp_P("SH-2A", cpu) == 0;
+    return strcasecmp("SH-2", cpu) == 0 || strcasecmp("SH-DSP", cpu) == 0 ||
+           strcasecmp("SH-2E", cpu) == 0 || strcasecmp("SH-2A", cpu) == 0;
 }
 
 void set_up() {
@@ -430,15 +430,15 @@ void test_sh2_only() {
 }
 
 bool isShDsp() {
-    return strcasecmp_P("SH-DSP", assembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-DSP", assembler.config().cpu_P()) == 0;
 }
 
 bool isSh2e() {
-    return strcasecmp_P("SH-2E", assembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-2E", assembler.config().cpu_P()) == 0;
 }
 
 bool isSh2a() {
-    return strcasecmp_P("SH-2A", assembler.config().cpu_P()) == 0;
+    return strcasecmp("SH-2A", assembler.config().cpu_P()) == 0;
 }
 
 // The FPU is usable only when compiled in (LIBASM_SUPERH_NOFPU keeps fpuType()

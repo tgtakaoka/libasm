@@ -25,15 +25,15 @@ DisZ380 disz380;
 Disassembler &disassembler(disz380);
 
 bool isZ80() {
-    return strcasecmp_P("Z80", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("Z80", disassembler.config().cpu_P()) == 0;
 }
 
 bool isZ180() {
-    return strcasecmp_P("Z180", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("Z180", disassembler.config().cpu_P()) == 0;
 }
 
 bool isZ380() {
-    return strcasecmp_P("Z380", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("Z380", disassembler.config().cpu_P()) == 0;
 }
 
 void extmode(bool enable) {

@@ -34,7 +34,7 @@ DisMc68HC16::DisMc68HC16(const ValueFormatter::Plugins &plugins)
 
 void DisMc68HC16::decodeRegisterList(DisInsn &insn, StrBuffer &out) const {
     const auto push = (insn.opCode() == 0x34);  // PSHM
-    static constexpr RegName MASK[] PROGMEM = {
+    static constexpr RegName MASK[] = {
             REG_D,    // PSHM push D first.
             REG_E,    //
             REG_X,    //
@@ -50,7 +50,7 @@ void DisMc68HC16::decodeRegisterList(DisInsn &insn, StrBuffer &out) const {
         insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
     for (uint_fast8_t i = 0, n = 0; i < 7; ++i, mask >>= 1) {
         if (mask & 1) {
-            const auto reg = RegName(pgm_read_byte(MASK + (push ? i : 6 - i)));
+            const auto reg = RegName(MASK[(push ? i : 6 - i)]);
             if (n++)
                 out.letter(',');
             outRegName(out, reg);

@@ -66,11 +66,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 using namespace libasm::test;
 
 std::vector<std::string> cpu_list() {
-    const /* PROGMEM */ char *list_P = assembler.config().listCpu_P();
-    char buffer[strlen_P(list_P) + 1];
-    strcpy_P(buffer, list_P);
     std::vector<std::string> list;
-    const char *s = buffer;
+    const char *s = assembler.config().listCpu_P();
     while (true) {
         const char *e = strchr(s, ',');
         if (e == nullptr) {

@@ -25,7 +25,7 @@ using namespace libasm::text::z280;
 using namespace libasm::z80::common;
 
 // clang-format off
-constexpr Entry TABLE_Z280[] PROGMEM = {
+constexpr Entry TABLE_Z280[] = {
     E2(0x01, 0060, TEXT_LDW,  M_R16,  M_IM16),
     E2(0x21, 0000, TEXT_LDA,  R_HL,   M_ABS),
     E2(0x22, 0000, TEXT_LDW,  M_ABS,  R_HL),
@@ -43,7 +43,7 @@ constexpr Entry TABLE_Z280[] PROGMEM = {
     E2(0xF9, 0000, TEXT_LDW,  R_SP,  R_HL),
 };
 
-constexpr uint8_t INDEX_Z280[] PROGMEM = {
+constexpr uint8_t INDEX_Z280[] = {
       7,  // TEXT_ADC
      10,  // TEXT_ADC
       6,  // TEXT_ADD
@@ -62,7 +62,7 @@ constexpr uint8_t INDEX_Z280[] PROGMEM = {
 };
 
 // Z280 ED:xx
-constexpr Entry TABLE_Z280_EXT[] PROGMEM = {
+constexpr Entry TABLE_Z280_EXT[] = {
     E2(0x02, 0070, TEXT_LDA,    R_HL,   M_FIDX),
     E2(0x03, 0070, TEXT_LD,     M_FIDX, R_A),
     E2(0x04, 0070, TEXT_LDW,    R_HL,   M_FIDX),
@@ -142,7 +142,7 @@ constexpr Entry TABLE_Z280_EXT[] PROGMEM = {
     E2(0xBF, 0000, TEXT_OUT,    I_C,    R_HL),
 };
 
-constexpr uint8_t INDEX_Z280_EXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_EXT[] = {
      53,  // TEXT_ADD
      29,  // TEXT_ADDW
      42,  // TEXT_ADDW
@@ -224,7 +224,7 @@ constexpr uint8_t INDEX_Z280_EXT[] PROGMEM = {
 
 #if defined(LIBASM_Z280_EPU)
 // Z280 ED:xx (EPU related)
-constexpr Entry TABLE_Z280_EPU[] PROGMEM = {
+constexpr Entry TABLE_Z280_EPU[] = {
     E1(0x97, 0000, TEXT_EPUF,   M_EPU),
     E1(0x9F, 0000, TEXT_EPUI,   M_EPU),
     E2(0x84, 0070, TEXT_EPUM,   M_FIDX, M_EPU),
@@ -235,7 +235,7 @@ constexpr Entry TABLE_Z280_EPU[] PROGMEM = {
     E2(0xAF, 0000, TEXT_MEPU,   M_ABS,  M_EPU),
 };
 
-constexpr uint8_t INDEX_Z280_EPU[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_EPU[] = {
       0,  // TEXT_EPUF
       1,  // TEXT_EPUI
       2,  // TEXT_EPUM
@@ -248,7 +248,7 @@ constexpr uint8_t INDEX_Z280_EPU[] PROGMEM = {
 #endif
 
 // Z280 DD:xx
-constexpr Entry TABLE_Z280_IX[] PROGMEM = {
+constexpr Entry TABLE_Z280_IX[] = {
     E2(0x01, 0020, TEXT_LDW,  M_MPTR,  M_IM16),
     E1(0x03, 0020, TEXT_INCW, M_MPTR),
     E1(0x04, 0030, TEXT_INC,  M_BIXH),
@@ -306,7 +306,7 @@ constexpr Entry TABLE_Z280_IX[] PROGMEM = {
     E1(0xF5, 0000, TEXT_PUSH, M_REL16),
 };
 
-constexpr uint8_t INDEX_Z280_IX[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IX[] = {
      17,  // TEXT_ADC
      18,  // TEXT_ADC
      34,  // TEXT_ADC
@@ -365,7 +365,7 @@ constexpr uint8_t INDEX_Z280_IX[] PROGMEM = {
 };
 
 // Z280 FD:xx
-constexpr Entry TABLE_Z280_IY[] PROGMEM = {
+constexpr Entry TABLE_Z280_IY[] = {
     E1(0x03, 0020, TEXT_INCW, M_IDX16),
     E1(0x04, 0030, TEXT_INC,  M_PIXH),
     E1(0x05, 0030, TEXT_DEC,  M_PIXH),
@@ -396,7 +396,7 @@ constexpr Entry TABLE_Z280_IY[] PROGMEM = {
     E1(0xF5, 0000, TEXT_PUSH, M_IM16),
 };
 
-constexpr uint8_t INDEX_Z280_IY[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IY[] = {
       7,  // TEXT_ADC
      16,  // TEXT_ADC
       6,  // TEXT_ADD
@@ -428,16 +428,16 @@ constexpr uint8_t INDEX_Z280_IY[] PROGMEM = {
 };
 
 // Z280 CB:xx
-constexpr Entry TABLE_Z280_BIT[] PROGMEM = {
+constexpr Entry TABLE_Z280_BIT[] = {
     E1(0x30, 0007, TEXT_TSET, M_SRC),
 };
 
-constexpr uint8_t INDEX_Z280_BIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_BIT[] = {
       0,  // TEXT_TSET
 };
 
 // Z280 DD:xx, FD:xx
-constexpr Entry TABLE_Z280_IDX[] PROGMEM = {
+constexpr Entry TABLE_Z280_IDX[] = {
     E2(0x21, 0000, TEXT_LDW,  R_IDX,   M_IM16),
     E2(0x21, 0000, TEXT_LDA,  R_IDX,   M_ABS),
     E2(0x22, 0000, TEXT_LDW,  M_ABS,   R_IDX),
@@ -474,7 +474,7 @@ constexpr Entry TABLE_Z280_IDX[] PROGMEM = {
     E2(0xF9, 0000, TEXT_LDW,  R_SP,   R_IDX),
 };
 
-constexpr uint8_t INDEX_Z280_IDX[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IDX[] = {
      15,  // TEXT_ADC
      17,  // TEXT_ADC
      25,  // TEXT_ADC
@@ -512,7 +512,7 @@ constexpr uint8_t INDEX_Z280_IDX[] PROGMEM = {
 };
 
 // Z280 DD:ED:xx, FD:ED:xx
-constexpr Entry TABLE_Z280_IDXEXT[] PROGMEM = {
+constexpr Entry TABLE_Z280_IDXEXT[] = {
     E2(0x02, 0070, TEXT_LDA,    R_IDX,  M_FIDX),
     E2(0x04, 0070, TEXT_LDW,    R_IDX,  M_FIDX),
     E2(0x04, 0070, TEXT_LD,     R_IDX,  M_FIDX),
@@ -571,7 +571,7 @@ constexpr Entry TABLE_Z280_IDXEXT[] PROGMEM = {
     E1(0xF5, 0000, TEXT_DIVU,   M_IDX8),
 };
 
-constexpr uint8_t INDEX_Z280_IDXEXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IDXEXT[] = {
      14,  // TEXT_ADC
      18,  // TEXT_ADD
      32,  // TEXT_ADDW
@@ -630,7 +630,7 @@ constexpr uint8_t INDEX_Z280_IDXEXT[] PROGMEM = {
      51,  // TEXT_SUBW
 };
 
-constexpr Entry TABLE_Z280_IXEXT[] PROGMEM = {
+constexpr Entry TABLE_Z280_IXEXT[] = {
     E2(0x07, 0030, TEXT_EX,     R_A,    M_BIXH),
     E2(0x07, 0000, TEXT_EX,     M_BIXH, R_A),
     E2(0x3F, 0000, TEXT_EX,     R_A,    M_ABS),
@@ -685,7 +685,7 @@ constexpr Entry TABLE_Z280_IXEXT[] PROGMEM = {
     E1(0xFE, 0000, TEXT_SUBW,   M_REL16),
 };
 
-constexpr uint8_t INDEX_Z280_IXEXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IXEXT[] = {
      14,  // TEXT_ADDW
      21,  // TEXT_ADDW
      36,  // TEXT_ADDW
@@ -740,7 +740,7 @@ constexpr uint8_t INDEX_Z280_IXEXT[] PROGMEM = {
      51,  // TEXT_SUBW
 };
 
-constexpr Entry TABLE_Z280_IYEXT[] PROGMEM = {
+constexpr Entry TABLE_Z280_IYEXT[] = {
     E2(0x07, 0030, TEXT_EX,     R_A,    M_PIXH),
     E2(0x40, 0030, TEXT_IN,     M_PIXH, I_C),
     E2(0x41, 0030, TEXT_OUT,    I_C,    M_PIXH),
@@ -790,7 +790,7 @@ constexpr Entry TABLE_Z280_IYEXT[] PROGMEM = {
     E1(0xFE, 0000, TEXT_SUBW,   M_IM16),
 };
 
-constexpr uint8_t INDEX_Z280_IYEXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IYEXT[] = {
       9,  // TEXT_ADDW
      16,  // TEXT_ADDW
      31,  // TEXT_ADDW
@@ -841,11 +841,11 @@ constexpr uint8_t INDEX_Z280_IYEXT[] PROGMEM = {
 };
 
 // Z280 DD:CB:dd:xx, FD:CB:dd:xx
-constexpr Entry TABLE_Z280_IDXBIT[] PROGMEM = {
+constexpr Entry TABLE_Z280_IDXBIT[] = {
     E1(0x36, 0000, TEXT_TSET, M_IDX),
 };
 
-constexpr uint8_t INDEX_Z280_IDXBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z280_IDXBIT[] = {
       0,  // TEXT_TSET
 };
 
@@ -853,7 +853,7 @@ constexpr uint8_t INDEX_Z280_IDXBIT[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage Z280_PAGES[] PROGMEM = {
+constexpr EntryPage Z280_PAGES[] = {
         {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {0x0000, ARRAY_RANGE(TABLE_Z280), ARRAY_RANGE(INDEX_Z280)},
         {Entry::IX, ARRAY_RANGE(TABLE_Z80_IDX), ARRAY_RANGE(INDEX_Z80_IDX)},
@@ -883,7 +883,7 @@ constexpr EntryPage Z280_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {Z280, TEXT_CPU_Z280, ARRAY_RANGE(Z280_PAGES)},
 };
@@ -984,11 +984,11 @@ bool EntryInsn::ixBit() const {
     return (prefix() == Entry::IXBIT || prefix() == Entry::IYBIT);
 }
 
-const /*PROGMEM*/ char *TableZ280::listCpu_P() const {
+const char *TableZ280::listCpu_P() const {
     return TEXT_Z280_LIST;
 }
 
-const /*PROGMEM*/ char *TableZ280::cpuName_P(CpuType cpuType) const {
+const char *TableZ280::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

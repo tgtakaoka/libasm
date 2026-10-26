@@ -37,7 +37,7 @@ namespace h8500 {
 // M_EASRC/M_EADST/M_IMM* slot; matchCode validates the resolved EA mode against
 // it, which is how immediate-vs-reg/mem restriction (ANDC vs BCLR at 0x58) is
 // expressed without an eaByte special case.
-constexpr Entry TABLE_GEN[] PROGMEM = {
+constexpr Entry TABLE_GEN[] = {
     // ADD:Q precedes ADD:G so a bare "ADD #1" selects the shorter quick form;
     // acceptMode rejects ADD:Q when the value is not +/-1/+/-2, falling to ADD:G.
     E2(0x08, CF_00, TEXT_ADD,    IC_Q, ISZ_DATA, SZ_DATA, M_IMM2,    M_EADST),    // ADD:Q.B/.W #1/2,<EAd>
@@ -93,7 +93,7 @@ constexpr Entry TABLE_GEN[] PROGMEM = {
     E2(0x68, CF_07, TEXT_XORC,   IC_N, ISZ_DATA, SZ_DATA, M_IMM8,    M_CR),       // XORC.B/.W #xx:8,<CR>
 };
 
-constexpr uint8_t INDEX_GEN[] PROGMEM = {
+constexpr uint8_t INDEX_GEN[] = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADD
@@ -151,40 +151,40 @@ constexpr uint8_t INDEX_GEN[] PROGMEM = {
 // It lives in its own one-entry table whose page (register EA, searched before
 // the shared TABLE_GEN page) claims 0x90 for a register EA; a memory EA at 0x90
 // is left to MOV:G.
-constexpr Entry TABLE_XCH[] PROGMEM = {
+constexpr Entry TABLE_XCH[] = {
     E2(0x90, CF_07, TEXT_XCH,    IC_N, ISZ_NONE, SZ_WORD, M_EAREG,   M_REG),      // XCH Rn,Rd
 };
 
-constexpr uint8_t INDEX_XCH[] PROGMEM = {
+constexpr uint8_t INDEX_XCH[] = {
       0,  // TEXT_XCH
 };
 
 // Extended format (PM_EXT): [EA byte][ext 0-2][00][OP byte]. DADD/DSUB are valid
 // on every variant; MOVFPE/MOVTPE need the E-clock pin, so they live in a
 // separate table that only the E-clock page lists include (no array slicing).
-constexpr Entry TABLE_EXT[] PROGMEM = {
+constexpr Entry TABLE_EXT[] = {
     E2(0xA0, CF_07, TEXT_DADD,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG,   M_REG),      // DADD Rn,Rd
     E2(0xB0, CF_07, TEXT_DSUB,   IC_N, ISZ_NONE, SZ_BYTE, M_EAREG,   M_REG),      // DSUB Rn,Rd
 };
 
-constexpr uint8_t INDEX_EXT[] PROGMEM = {
+constexpr uint8_t INDEX_EXT[] = {
       0,  // TEXT_DADD
       1,  // TEXT_DSUB
 };
 
 // E-clock peripheral transfer (H8/500 and H8/530 only).
-constexpr Entry TABLE_ECLK[] PROGMEM = {
+constexpr Entry TABLE_ECLK[] = {
     E2(0x80, CF_07, TEXT_MOVFPE, IC_N, ISZ_NONE, SZ_BYTE, M_EAMEM,   M_REG),      // MOVFPE <EA>,Rd
     E2(0x90, CF_07, TEXT_MOVTPE, IC_N, ISZ_NONE, SZ_BYTE, M_REG,     M_EAMEM),    // MOVTPE Rs,<EA>
 };
 
-constexpr uint8_t INDEX_ECLK[] PROGMEM = {
+constexpr uint8_t INDEX_ECLK[] = {
       0,  // TEXT_MOVFPE
       1,  // TEXT_MOVTPE
 };
 
 // Special format (PM_SPC): [OP byte][...]. No EA byte.
-constexpr Entry TABLE_SPC[] PROGMEM = {
+constexpr Entry TABLE_SPC[] = {
     E1(0x24, CF_00, TEXT_BCC,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BCC d:8
     E1(0x25, CF_00, TEXT_BCS,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BCS d:8
     E1(0x27, CF_00, TEXT_BEQ,    IC_N, ISZ_NONE, SZ_NONE, M_REL8),                // BEQ d:8
@@ -255,7 +255,7 @@ constexpr Entry TABLE_SPC[] PROGMEM = {
     E1(0x0F, CF_00, TEXT_UNLK,   IC_N, ISZ_NONE, SZ_NONE, M_FP),                  // UNLK FP
 };
 
-constexpr uint8_t INDEX_SPC[] PROGMEM = {
+constexpr uint8_t INDEX_SPC[] = {
       0,  // TEXT_BCC
      21,  // TEXT_BCC
       1,  // TEXT_BCS
@@ -327,7 +327,7 @@ constexpr uint8_t INDEX_SPC[] PROGMEM = {
 };
 
 // Secondary (0x11-prefix) instructions, all CPUs: JMP/JSR @Rn / @(d,Rn).
-constexpr Entry TABLE_SEC[] PROGMEM = {
+constexpr Entry TABLE_SEC[] = {
     E1(0xD0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IND),                 // JMP @Rn
     E1(0xE0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IDX8),                // JMP @(d:8,Rn)
     E1(0xF0, CF_07, TEXT_JMP,    IC_N, ISZ_NONE, SZ_NONE, M_IDX16),               // JMP @(d:16,Rn)
@@ -336,7 +336,7 @@ constexpr Entry TABLE_SEC[] PROGMEM = {
     E1(0xF8, CF_07, TEXT_JSR,    IC_N, ISZ_NONE, SZ_NONE, M_IDX16),               // JSR @(d:16,Rn)
 };
 
-constexpr uint8_t INDEX_SEC[] PROGMEM = {
+constexpr uint8_t INDEX_SEC[] = {
       0,  // TEXT_JMP
       1,  // TEXT_JMP
       2,  // TEXT_JMP
@@ -346,18 +346,18 @@ constexpr uint8_t INDEX_SEC[] PROGMEM = {
 };
 
 // Page-jump SPC instructions (maximum-mode, all variants): PJMP/PJSR @aa:24.
-constexpr Entry TABLE_SPC_PJ[] PROGMEM = {
+constexpr Entry TABLE_SPC_PJ[] = {
     E1(0x03, CF_00, TEXT_PJSR,   IC_N, ISZ_NONE, SZ_NONE, M_ABS24),               // PJSR @aa:24
     E1(0x13, CF_00, TEXT_PJMP,   IC_N, ISZ_NONE, SZ_NONE, M_ABS24),               // PJMP @aa:24
 };
 
-constexpr uint8_t INDEX_SPC_PJ[] PROGMEM = {
+constexpr uint8_t INDEX_SPC_PJ[] = {
       1,  // TEXT_PJMP
       0,  // TEXT_PJSR
 };
 
 // Page-jump SEC instructions (maximum-mode, all variants): PJMP/PJSR @Rn, PRTS, PRTD.
-constexpr Entry TABLE_SEC_PJ[] PROGMEM = {
+constexpr Entry TABLE_SEC_PJ[] = {
     E1(0xC0, CF_07, TEXT_PJMP,   IC_N, ISZ_NONE, SZ_NONE, M_INDP),                // PJMP @Rn
     E1(0xC8, CF_07, TEXT_PJSR,   IC_N, ISZ_NONE, SZ_NONE, M_INDP),                // PJSR @Rn
     E1(0x14, CF_00, TEXT_PRTD,   IC_N, ISZ_NONE, SZ_NONE, M_IMM8),                // PRTD #xx:8
@@ -365,7 +365,7 @@ constexpr Entry TABLE_SEC_PJ[] PROGMEM = {
     E0(0x19,                 TEXT_PRTS),                                          // PRTS
 };
 
-constexpr uint8_t INDEX_SEC_PJ[] PROGMEM = {
+constexpr uint8_t INDEX_SEC_PJ[] = {
       0,  // TEXT_PJMP
       1,  // TEXT_PJSR
       2,  // TEXT_PRTD
@@ -485,7 +485,7 @@ public:
 // MOV:G), XCH must precede GEN (claims OP 0x90 for a register EA), and within
 // TABLE_GEN the ADD:Q rows precede ADD:G. Disassembly is unaffected (pages are
 // filtered by prefix mode). Do not reorder these for tidiness.
-constexpr EntryPage H8500_PAGES[] PROGMEM = {
+constexpr EntryPage H8500_PAGES[] = {
         SPC_PAGE,
         XCH_PAGE,
         GEN_PAGES,
@@ -496,7 +496,7 @@ constexpr EntryPage H8500_PAGES[] PROGMEM = {
 };
 
 // H8/520: no E-clock, so no TABLE_ECLK pages.
-constexpr EntryPage H8520_PAGES[] PROGMEM = {
+constexpr EntryPage H8520_PAGES[] = {
         SPC_PAGE,
         XCH_PAGE,
         GEN_PAGES,
@@ -505,7 +505,7 @@ constexpr EntryPage H8520_PAGES[] PROGMEM = {
         MAXMODE_PAGES,
 };
 
-constexpr EntryPage H8530_PAGES[] PROGMEM = {
+constexpr EntryPage H8530_PAGES[] = {
         SPC_PAGE,
         XCH_PAGE,
         GEN_PAGES,
@@ -525,7 +525,7 @@ constexpr EntryPage H8530_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {H8_500, TEXT_CPU_H8500, ARRAY_RANGE(H8500_PAGES)},
         {H8_520, TEXT_CPU_H8520, ARRAY_RANGE(H8520_PAGES)},
         {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8530_PAGES)},
@@ -761,11 +761,11 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableH8500::listCpu_P() const {
+const char *TableH8500::listCpu_P() const {
     return text::h8500::TEXT_H8500_LIST;
 }
 
-const /*PROGMEM*/ char *TableH8500::cpuName_P(CpuType cpuType) const {
+const char *TableH8500::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

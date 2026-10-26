@@ -28,15 +28,15 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_INT_SETDP[]  PROGMEM = "setdp";
+constexpr char OPT_INT_SETDP[]  = "setdp";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_FCC, &Assembler::defineString       },
     { TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -576,7 +576,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
 
 Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
-    if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
+    if (strcasecmp(insn.name(), OPT_INT_SETDP) == 0) {
         const auto error = _opt_setdp.set(scan);
         return error ? insn.setError(at, error) : OK;
     }

@@ -31,21 +31,21 @@ using namespace text::tlcs900;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB,      &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DL,      &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_DS,      &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW,      &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
 
-constexpr AsmTlcs900::PseudoTlcs900 AsmTlcs900::PSEUDO_TLCS900_TABLE[] PROGMEM = {
+constexpr AsmTlcs900::PseudoTlcs900 AsmTlcs900::PSEUDO_TLCS900_TABLE[] = {
         {TEXT_MAXMODE, &AsmTlcs900::processMaxMode},
 };
-PROGMEM constexpr AsmTlcs900::PseudosTlcs900 AsmTlcs900::PSEUDOS_TLCS900{
+constexpr AsmTlcs900::PseudosTlcs900 AsmTlcs900::PSEUDOS_TLCS900{
         ARRAY_RANGE(PSEUDO_TLCS900_TABLE)};
 
 AsmTlcs900::AsmTlcs900(const ValueParser::Plugins &plugins)

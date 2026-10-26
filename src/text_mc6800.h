@@ -24,14 +24,14 @@ namespace text {
 namespace mc6800 {
 // clang-format off
 
-extern const char TEXT_MC6800_LIST[] PROGMEM;
-extern const char TEXT_CPU_6800[]    PROGMEM;
-extern const char TEXT_CPU_6801[]    PROGMEM;
-extern const char TEXT_CPU_6301[]    PROGMEM;
-extern const char TEXT_CPU_6811[]    PROGMEM;
-extern const char TEXT_CPU_68HC11[]  PROGMEM;
-extern const char TEXT_CPU_HD6301[]  PROGMEM;
-extern const char TEXT_CPU_MB8861[]  PROGMEM;
+extern const char TEXT_MC6800_LIST[];
+extern const char TEXT_CPU_6800[];
+extern const char TEXT_CPU_6801[];
+extern const char TEXT_CPU_6301[];
+extern const char TEXT_CPU_6811[];
+extern const char TEXT_CPU_68HC11[];
+extern const char TEXT_CPU_HD6301[];
+extern const char TEXT_CPU_MB8861[];
 
 // MC6800
 using common::TEXT_ABA;
@@ -119,10 +119,10 @@ using common::TEXT_NOP;
 using common::TEXT_ORA;
 using common::TEXT_ORAA;
 using common::TEXT_ORAB;
-extern const char TEXT_PSH[] PROGMEM;
+extern const char TEXT_PSH[];
 using common::TEXT_PSHA;
 using common::TEXT_PSHB;
-extern const char TEXT_PUL[] PROGMEM;
+extern const char TEXT_PUL[];
 using common::TEXT_PULA;
 using common::TEXT_PULB;
 using common::TEXT_ROL;
@@ -162,9 +162,9 @@ using common::TEXT_WAI;
 
 // MB8861
 using common::TEXT_ADX;
-extern const char TEXT_NIM[] PROGMEM;
-extern const char TEXT_TMM[] PROGMEM;
-extern const char TEXT_XIM[] PROGMEM;
+extern const char TEXT_NIM[];
+extern const char TEXT_TMM[];
+extern const char TEXT_XIM[];
 
 // MC6801
 using common::TEXT_ABX;
@@ -184,7 +184,7 @@ using common::TEXT_SUBD;
 using common::TEXT_AIM;
 using common::TEXT_BCLR;
 using common::TEXT_BSET;
-extern const char TEXT_BTGL[] PROGMEM;
+extern const char TEXT_BTGL[];
 using common::TEXT_BTST;
 using common::TEXT_EIM;
 using common::TEXT_OIM;

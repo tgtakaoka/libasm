@@ -452,15 +452,15 @@ const Operator *IntelOperatorParser::readPrefix(
     p.trimStart(isalnum);
     const StrScanner name(scan.str(), p.str());
     const Operator *opr = nullptr;
-    if (name.iequals_P(PSTR("NOT"))) {
+    if (name.iequals_P("NOT")) {
         opr = &INTEL_BITWISE_NOT;
-    } else if (name.iequals_P(PSTR("HIGH"))) {
+    } else if (name.iequals_P("HIGH")) {
         opr = &INTEL_HIGH;
-    } else if (name.iequals_P(PSTR("LOW"))) {
+    } else if (name.iequals_P("LOW")) {
         opr = &INTEL_LOW;
-    } else if (name.iequals_P(PSTR("MSW"))) {
+    } else if (name.iequals_P("MSW")) {
         opr = &INTEL_MSW;
-    } else if (name.iequals_P(PSTR("LSW"))) {
+    } else if (name.iequals_P("LSW")) {
         opr = &INTEL_LSW;
     }
     if (opr) {
@@ -477,29 +477,29 @@ const Operator *IntelOperatorParser::readInfix(
     p.trimStart(isalnum);
     const StrScanner name(scan.str(), p.str());
     const Operator *opr = nullptr;
-    if (name.iequals_P(PSTR("MOD"))) {
+    if (name.iequals_P("MOD")) {
         opr = &Operator::OP_MOD;
-    } else if (name.iequals_P(PSTR("AND"))) {
+    } else if (name.iequals_P("AND")) {
         opr = &INTEL_BITWISE_AND;
-    } else if (name.iequals_P(PSTR("OR"))) {
+    } else if (name.iequals_P("OR")) {
         opr = &INTEL_BITWISE_OR;
-    } else if (name.iequals_P(PSTR("XOR"))) {
+    } else if (name.iequals_P("XOR")) {
         opr = &INTEL_BITWISE_XOR;
-    } else if (name.iequals_P(PSTR("SHR"))) {
+    } else if (name.iequals_P("SHR")) {
         opr = &INTEL_SHIFT_RIGHT;
-    } else if (name.iequals_P(PSTR("SHL"))) {
+    } else if (name.iequals_P("SHL")) {
         opr = &INTEL_SHIFT_LEFT;
-    } else if (name.iequals_P(PSTR("EQ"))) {
+    } else if (name.iequals_P("EQ")) {
         opr = &INTEL_LOGICAL_EQ;
-    } else if (name.iequals_P(PSTR("NE"))) {
+    } else if (name.iequals_P("NE")) {
         opr = &INTEL_LOGICAL_NE;
-    } else if (name.iequals_P(PSTR("LT"))) {
+    } else if (name.iequals_P("LT")) {
         opr = &Operator::OP_LOGICAL_LT;
-    } else if (name.iequals_P(PSTR("LE"))) {
+    } else if (name.iequals_P("LE")) {
         opr = &Operator::OP_LOGICAL_LE;
-    } else if (name.iequals_P(PSTR("GE"))) {
+    } else if (name.iequals_P("GE")) {
         opr = &Operator::OP_LOGICAL_GE;
-    } else if (name.iequals_P(PSTR("GT"))) {
+    } else if (name.iequals_P("GT")) {
         opr = &Operator::OP_LOGICAL_GT;
     }
     if (opr) {
@@ -524,15 +524,15 @@ const Operator *ZilogOperatorParser::readPrefix(
     p.trimStart(isalnum);
     const StrScanner name(scan.str(), p.str());
     const Operator *opr = nullptr;
-    if (name.iequals_P(PSTR("LNOT"))) {
+    if (name.iequals_P("LNOT")) {
         opr = &Operator::OP_BITWISE_NOT;
-    } else if (name.iequals_P(PSTR("HIGH"))) {
+    } else if (name.iequals_P("HIGH")) {
         opr = &INTEL_HIGH;
-    } else if (name.iequals_P(PSTR("LOW"))) {
+    } else if (name.iequals_P("LOW")) {
         opr = &INTEL_LOW;
-    } else if (name.iequals_P(PSTR("HIGH16"))) {
+    } else if (name.iequals_P("HIGH16")) {
         opr = &INTEL_MSW;
-    } else if (name.iequals_P(PSTR("LOW16"))) {
+    } else if (name.iequals_P("LOW16")) {
         opr = &INTEL_LSW;
     }
     if (opr) {
@@ -549,17 +549,17 @@ const Operator *ZilogOperatorParser::readInfix(
     p.trimStart(isalnum);
     const StrScanner name(scan.str(), p.str());
     const Operator *opr = nullptr;
-    if (name.iequals_P(PSTR("MOD"))) {
+    if (name.iequals_P("MOD")) {
         opr = &Operator::OP_MOD;
-    } else if (name.iequals_P(PSTR("SHR"))) {
+    } else if (name.iequals_P("SHR")) {
         opr = &ZILOG_SHIFT_RIGHT;
-    } else if (name.iequals_P(PSTR("SHL"))) {
+    } else if (name.iequals_P("SHL")) {
         opr = &ZILOG_SHIFT_LEFT;
-    } else if (name.iequals_P(PSTR("LAND"))) {
+    } else if (name.iequals_P("LAND")) {
         opr = &ZILOG_BITWISE_AND;
-    } else if (name.iequals_P(PSTR("LOR"))) {
+    } else if (name.iequals_P("LOR")) {
         opr = &ZILOG_BITWISE_OR;
-    } else if (name.iequals_P(PSTR("LXOR"))) {
+    } else if (name.iequals_P("LXOR")) {
         opr = &ZILOG_BITWISE_XOR;
     }
     if (opr) {
@@ -588,15 +588,15 @@ const Operator *TexasOperatorParser::readPrefix(
 
 const Operator *TexasOperatorParser::readInfix(
         StrScanner &scan, ValueStack &stack, ParserContext &context) const {
-    if (scan.iexpectText_P(PSTR("++"))) {
+    if (scan.iexpectText_P("++")) {
         return &Operator::OP_BITWISE_OR;
-    } else if (scan.iexpectText_P(PSTR("&&"))) {
+    } else if (scan.iexpectText_P("&&")) {
         return &Operator::OP_BITWISE_XOR;
-    } else if (scan.iexpectText_P(PSTR("//"))) {
+    } else if (scan.iexpectText_P("//")) {
         return &MOTOROLA_SHIFT_RIGHT;
     } else if (scan.expect('=')) {
         return &Operator::OP_LOGICAL_EQ;
-    } else if (scan.iexpectText_P(PSTR("#="))) {
+    } else if (scan.iexpectText_P("#=")) {
         return &Operator::OP_LOGICAL_NE;
     }
     return CStyleOperatorParser::singleton().readInfix(scan, stack, context);
@@ -615,13 +615,13 @@ const Operator *HitachiOperatorParser::readPrefix(
     p.trimStart(isalnum);
     const StrScanner name(scan.str(), p.str());
     const Operator *opr = nullptr;
-    if (name.iequals_P(PSTR("HIGH"))) {
+    if (name.iequals_P("HIGH")) {
         opr = &INTEL_HIGH;
-    } else if (name.iequals_P(PSTR("LOW"))) {
+    } else if (name.iequals_P("LOW")) {
         opr = &INTEL_LOW;
-    } else if (name.iequals_P(PSTR("HWORD"))) {
+    } else if (name.iequals_P("HWORD")) {
         opr = &INTEL_MSW;
-    } else if (name.iequals_P(PSTR("LWORD"))) {
+    } else if (name.iequals_P("LWORD")) {
         opr = &INTEL_LSW;
     }
     if (opr) {
@@ -666,11 +666,11 @@ const struct : Functor {
 }  // namespace rca
 
 const Functor *RcaFunctionTable::lookupFunction(const StrScanner &name) const {
-    if (name.iequals_P(PSTR("A.0")))
+    if (name.iequals_P("A.0"))
         return &FN_LOW;
-    if (name.iequals_P(PSTR("A.1")))
+    if (name.iequals_P("A.1"))
         return &FN_HIGH;
-    if (name.iequals_P(PSTR("A")))
+    if (name.iequals_P("A"))
         return &rca::FN_A;
     return nullptr;
 }

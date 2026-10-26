@@ -26,7 +26,7 @@ using namespace reg;
 using namespace text::tms7000;
 
 namespace {
-const char TEXT_IDXB[] PROGMEM = "(B)";
+const char TEXT_IDXB[] = "(B)";
 }
 
 const ValueFormatter::Plugins &DisTms7000::defaultPlugins() {

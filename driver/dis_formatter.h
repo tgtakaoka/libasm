@@ -34,7 +34,7 @@ struct DisFormatter : ListFormatter::Provider {
     void setListRadix(Radix listRadix);
 
     void reset();
-    void set(const ErrorAt &error, const /*PROGMEM*/ char *mark_P = nullptr);
+    void set(const ErrorAt &error, const char *mark_P = nullptr);
     void setCpu(const char *cpu);
     void setOption(const char *name, const char *value);
     Error setOrigin(uint32_t origin);
@@ -53,7 +53,7 @@ protected:
     Insn _insn;
     StrBuffer _operands;
     ErrorAt _error;
-    const /*PROGMEM*/ char *_continueMark_P;
+    const char *_continueMark_P;
 
     bool _uppercase;
     bool _errorMessage;

@@ -29,7 +29,7 @@ namespace i8048 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_I8039[] PROGMEM = {
+constexpr Entry TABLE_I8039[] = {
     E2(0x68, CF_07, TEXT_ADD,  M_A,    M_R),
     E2(0x60, CF_01, TEXT_ADD,  M_A,    M_IR),
     E2(0x03, CF_00, TEXT_ADD,  M_A,    M_IMM8),
@@ -120,7 +120,7 @@ constexpr Entry TABLE_I8039[] PROGMEM = {
     E0(0x00, CF_00, TEXT_NOP),
 };
 
-constexpr uint8_t INDEX_I8039[] PROGMEM = {
+constexpr uint8_t INDEX_I8039[] = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADD
@@ -211,29 +211,29 @@ constexpr uint8_t INDEX_I8039[] PROGMEM = {
      14,  // TEXT_XRL
 };
 
-constexpr Entry TABLE_I8048[] PROGMEM = {
+constexpr Entry TABLE_I8048[] = {
     E2(0x08, CF_00, TEXT_INS,  M_A,    M_BUS),
     E2(0x02, CF_00, TEXT_OUTL, M_BUS,  M_A),
     E2(0x98, CF_00, TEXT_ANL,  M_BUS,  M_BIT8),
     E2(0x88, CF_00, TEXT_ORL,  M_BUS,  M_BIT8),
 };
 
-constexpr uint8_t INDEX_I8048[] PROGMEM = {
+constexpr uint8_t INDEX_I8048[] = {
       2,  // TEXT_ANL
       0,  // TEXT_INS
       3,  // TEXT_ORL
       1,  // TEXT_OUTL
 };
 
-constexpr Entry TABLE_I80C39[] PROGMEM = {
+constexpr Entry TABLE_I80C39[] = {
     E0(0x01, CF_00, TEXT_HALT),
 };
 
-constexpr uint8_t INDEX_I80C39[] PROGMEM = {
+constexpr uint8_t INDEX_I80C39[] = {
       0,  // TEXT_HALT
 };
 
-constexpr Entry TABLE_MSM80C39[] PROGMEM = {
+constexpr Entry TABLE_MSM80C39[] = {
     E2(0x63, CF_00, TEXT_MOV,   M_A,  M_P1),
     E2(0x73, CF_00, TEXT_MOV,   M_A,  M_P2),
     E1(0xC0, CF_01, TEXT_DEC,   M_IR),
@@ -246,7 +246,7 @@ constexpr Entry TABLE_MSM80C39[] PROGMEM = {
     E0(0xE2, CF_00, TEXT_FRES),
 };
 
-constexpr uint8_t INDEX_MSM80C39[] PROGMEM = {
+constexpr uint8_t INDEX_MSM80C39[] = {
       2,  // TEXT_DEC
       3,  // TEXT_DJNZ
       7,  // TEXT_FLT
@@ -262,7 +262,7 @@ constexpr uint8_t INDEX_MSM80C39[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage INST_PAGES[] PROGMEM = {
+constexpr EntryPage INST_PAGES[] = {
         {ARRAY_RANGE(TABLE_I8048), ARRAY_RANGE(INDEX_I8048)},        // 0
         {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},        // 1
         {ARRAY_RANGE(TABLE_I80C39), ARRAY_RANGE(INDEX_I80C39)},      // 2
@@ -271,7 +271,7 @@ constexpr EntryPage INST_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {I8039, TEXT_CPU_8039, &INST_PAGES[1], &INST_PAGES[2]},
         {I80C39, TEXT_CPU_80C39, &INST_PAGES[1], &INST_PAGES[3]},
         {MSM80C39, TEXT_CPU_MSM80C39, &INST_PAGES[1], &INST_PAGES[4]},
@@ -322,11 +322,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableI8048::listCpu_P() const {
+const char *TableI8048::listCpu_P() const {
     return TEXT_I8048_LIST;
 }
 
-const /*PROGMEM*/ char *TableI8048::cpuName_P(CpuType cpuType) const {
+const char *TableI8048::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

@@ -27,29 +27,20 @@ namespace entry {
  */
 template <typename OPCODE>
 struct Base {
-    constexpr Base(const /* PROGMEM */ char *name_P, OPCODE opCode)
+    constexpr Base(const char *name_P, OPCODE opCode)
         : _name_P(name_P), _opCode_P(opCode) {}
 
-    const /* PROGMEM */ char *name_P() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
+    const char *name_P() const {
+        return _name_P;
     }
 
-    OPCODE readOpCode() const {
-        if (sizeof(OPCODE) == 1) {
-            return pgm_read_byte(&_opCode_P);
-        } else if (sizeof(OPCODE) == 2) {
-            return pgm_read_word(&_opCode_P);
-        } else {
-            return pgm_read_dword(&_opCode_P);
-        }
-    }
+    constexpr OPCODE readOpCode() const { return _opCode_P; }
 
-    // Compile-time accessor used by static_asserts; mirrors readOpCode()
-    // without going through PROGMEM macros.
+    // Compile-time accessor used by static_asserts.
     constexpr OPCODE opCode() const { return _opCode_P; }
 
 private:
-    const /* PROGMEM */ char *const _name_P;
+    const char *const _name_P;
     const OPCODE _opCode_P;
 };
 

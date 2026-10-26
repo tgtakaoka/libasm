@@ -32,7 +32,7 @@ namespace mn1610 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_COMMON[] PROGMEM = {
+constexpr Entry TABLE_COMMON[] = {
         E0(0x2000, CF_0000, TEXT_H),
         E0(0x2003, CF_0000, TEXT_RET),
         E1(0x2001, CF_0700, TEXT_PUSH, M_RD),
@@ -40,7 +40,7 @@ constexpr Entry TABLE_COMMON[] PROGMEM = {
         E1(0x2004, CF_0003, TEXT_LPSW, M_ILVL),
 };
 
-constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+constexpr uint8_t INDEX_COMMON[] = {
       0,  // TEXT_H
       4,  // TEXT_LPSW
       3,  // TEXT_POP
@@ -48,7 +48,7 @@ constexpr uint8_t INDEX_COMMON[] PROGMEM = {
       1,  // TEXT_RET
 };
 
-constexpr Entry TABLE_MN1610[] PROGMEM = {
+constexpr Entry TABLE_MN1610[] = {
         E2(0x0800, CF_07FF, TEXT_MVI,  M_RD,   M_IM8),
         E2(0x1000, CF_07FF, TEXT_WT,   M_RD,   M_IOA),
         E2(0x1800, CF_07FF, TEXT_RD,   M_RD,   M_IOA),
@@ -83,7 +83,7 @@ constexpr Entry TABLE_MN1610[] PROGMEM = {
         E2(0x6008, CF_07F0, TEXT_TST,  M_RDS,  M_SKIP),
 };
 
-constexpr uint8_t INDEX_MN1610[] PROGMEM = {
+constexpr uint8_t INDEX_MN1610[] = {
      15,  // TEXT_A
      11,  // TEXT_AI
      19,  // TEXT_AND
@@ -118,7 +118,7 @@ constexpr uint8_t INDEX_MN1610[] PROGMEM = {
       1,  // TEXT_WT
 };
 
-constexpr Entry TABLE_MN1613[] PROGMEM = {
+constexpr Entry TABLE_MN1613[] = {
         E2(0x0F07, CF_0070, TEXT_LB,   M_RBW,  M_ABS),
         E2(0x0F00, CF_0077, TEXT_SETB, M_RS,   M_RBW),
         E2(0x0F0F, CF_0070, TEXT_LS,   M_RP,   M_ABS),
@@ -194,7 +194,7 @@ constexpr Entry TABLE_MN1613[] PROGMEM = {
         E3(0x780F, CF_07F0, TEXT_MVWI, M_RD,   M_IM16, M_SKIP),
 };
 
-constexpr uint8_t INDEX_MN1613[] PROGMEM = {
+constexpr uint8_t INDEX_MN1613[] = {
      40,  // TEXT_AD
      41,  // TEXT_AD
      65,  // TEXT_ANDI
@@ -273,12 +273,12 @@ constexpr uint8_t INDEX_MN1613[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage MN1610_PAGES[] PROGMEM = {
+constexpr EntryPage MN1610_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
-constexpr EntryPage MN1613_PAGES[] PROGMEM = {
+constexpr EntryPage MN1613_PAGES[] = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1613), ARRAY_RANGE(INDEX_MN1613)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
@@ -286,7 +286,7 @@ constexpr EntryPage MN1613_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
         {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
         {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
@@ -390,11 +390,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableMn1610::listCpu_P() const {
+const char *TableMn1610::listCpu_P() const {
     return TEXT_MN1610_LIST;
 }
 
-const /*PROGMEM*/ char *TableMn1610::cpuName_P(CpuType cpuType) const {
+const char *TableMn1610::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

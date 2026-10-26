@@ -29,7 +29,7 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_AORG, &Assembler::defineOrigin       },
     { TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE  },
     { TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE  },
@@ -37,7 +37,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_EVEN, &Assembler::alignOrigin,        Assembler::ALIGN_EVEN },
     { TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE  },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace

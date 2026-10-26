@@ -6,10 +6,3 @@ which platformio || {
     python3 get-platformio.py
     hash -r
     }
-platformio pkg install -g -l "tgtakaoka/libcli@1.4.2"
-
-echo '@@ You may want to install udev rules'
-echo '@@ See https://docs.platformio.org/en/stable/core/installation/udev-rules.html'
-echo '@@ Or run the following command'
-echo 'curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules'
-

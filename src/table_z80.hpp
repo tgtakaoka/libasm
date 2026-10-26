@@ -39,7 +39,7 @@ using namespace libasm::text::z80;
 #define D0(_opc, _mask, _name) D1(_opc, _mask, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_Z80[] PROGMEM = {
+constexpr Entry TABLE_Z80[] = {
     E0(0x00, 0000, TEXT_NOP),
     D2(0x01, 0060, TEXT_LD,   M_R16,  M_LM16),
     E2(0x09, 0060, TEXT_ADD,  R_HL,   M_R16),
@@ -121,7 +121,7 @@ constexpr Entry TABLE_Z80[] PROGMEM = {
     E0(0xD9, 0000, TEXT_EXX),
 };
 
-constexpr uint8_t INDEX_Z80[] PROGMEM = {
+constexpr uint8_t INDEX_Z80[] = {
      26,  // TEXT_ADC
      66,  // TEXT_ADC
       2,  // TEXT_ADD
@@ -204,7 +204,7 @@ constexpr uint8_t INDEX_Z80[] PROGMEM = {
 };
 
 // CB:xx
-constexpr Entry TABLE_Z80_BIT[] PROGMEM = {
+constexpr Entry TABLE_Z80_BIT[] = {
     E1(0x00, 0007, TEXT_RLC, M_SRC),
     E1(0x08, 0007, TEXT_RRC, M_SRC),
     E1(0x10, 0007, TEXT_RL,  M_SRC),
@@ -217,7 +217,7 @@ constexpr Entry TABLE_Z80_BIT[] PROGMEM = {
     E2(0xC0, 0077, TEXT_SET, M_BIT, M_SRC),
 };
 
-constexpr uint8_t INDEX_Z80_BIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z80_BIT[] = {
       7,  // TEXT_BIT
       8,  // TEXT_RES
       2,  // TEXT_RL
@@ -231,7 +231,7 @@ constexpr uint8_t INDEX_Z80_BIT[] PROGMEM = {
 };
 
 // ED:xx
-constexpr Entry TABLE_Z80_EXT[] PROGMEM = {
+constexpr Entry TABLE_Z80_EXT[] = {
     E2(0x40, 0070, TEXT_IN,   M_DR8,  I_C),
     E2(0x41, 0070, TEXT_OUT,  I_C,    M_DR8),
     E2(0x42, 0060, TEXT_SBC,  R_HL,   M_R16),
@@ -268,7 +268,7 @@ constexpr Entry TABLE_Z80_EXT[] PROGMEM = {
     E0(0xBB, 0000, TEXT_OTDR),
 };
 
-constexpr uint8_t INDEX_Z80_EXT[] PROGMEM = {
+constexpr uint8_t INDEX_Z80_EXT[] = {
       3,  // TEXT_ADC
      23,  // TEXT_CPD
      25,  // TEXT_CPDR
@@ -306,7 +306,7 @@ constexpr uint8_t INDEX_Z80_EXT[] PROGMEM = {
 };
 
 // Table for DD:xx, FD:xx
-constexpr Entry TABLE_Z80_IDX[] PROGMEM = {
+constexpr Entry TABLE_Z80_IDX[] = {
     E2(0x09, 0060, TEXT_ADD,  R_IDX,  M_R16X),
     D2(0x21, 0000, TEXT_LD,   R_IDX,  M_LM16),
     D2(0x22, 0000, TEXT_LD,   M_DABS, R_IDX),
@@ -339,7 +339,7 @@ constexpr Entry TABLE_Z80_IDX[] PROGMEM = {
     L1(0xE5, 0000, TEXT_PUSH, R_IDX),
 };
 
-constexpr uint8_t INDEX_Z80_IDX[] PROGMEM = {
+constexpr uint8_t INDEX_Z80_IDX[] = {
      12,  // TEXT_ADC
       0,  // TEXT_ADD
      11,  // TEXT_ADD
@@ -373,7 +373,7 @@ constexpr uint8_t INDEX_Z80_IDX[] PROGMEM = {
 };
 
 // DD:CB:dd:xx, FD:CB:dd:xx
-constexpr Entry TABLE_Z80_IDXBIT[] PROGMEM = {
+constexpr Entry TABLE_Z80_IDXBIT[] = {
     I1(0x06, 0000, TEXT_RLC, M_IDX),
     I1(0x0E, 0000, TEXT_RRC, M_IDX),
     I1(0x16, 0000, TEXT_RL,  M_IDX),
@@ -386,7 +386,7 @@ constexpr Entry TABLE_Z80_IDXBIT[] PROGMEM = {
     I2(0xC6, 0070, TEXT_SET, M_BIT, M_IDX),
 };
 
-constexpr uint8_t INDEX_Z80_IDXBIT[] PROGMEM = {
+constexpr uint8_t INDEX_Z80_IDXBIT[] = {
       7,  // TEXT_BIT
       8,  // TEXT_RES
       2,  // TEXT_RL
@@ -403,7 +403,7 @@ constexpr uint8_t INDEX_Z80_IDXBIT[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage Z80_PAGES[] PROGMEM = {
+constexpr EntryPage Z80_PAGES[] = {
         {0x0000, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {Entry::EXT, ARRAY_RANGE(TABLE_Z80_EXT), ARRAY_RANGE(INDEX_Z80_EXT)},
         {Entry::BIT, ARRAY_RANGE(TABLE_Z80_BIT), ARRAY_RANGE(INDEX_Z80_BIT)},

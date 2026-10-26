@@ -28,20 +28,20 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "optimize direct addressing";
+constexpr char OPT_BOOL_SHORT_DIRECT[] = "short-direct";
+constexpr char OPT_DESC_SHORT_DIRECT[] = "optimize direct addressing";
 
-constexpr char TEXT_LONG[]   PROGMEM = "long";
-constexpr char TEXT_STRING[] PROGMEM = "string";
-constexpr char TEXT_WORD[]   PROGMEM = "word";
+constexpr char TEXT_LONG[]   = "long";
+constexpr char TEXT_STRING[] = "string";
+constexpr char TEXT_WORD[]   = "word";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_BYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
     { TEXT_LONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG|Assembler::DATA_ALIGN2 },
     { TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
     { TEXT_WORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2 },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -497,13 +497,13 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
 void AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
     auto p = scan;
     const auto delim = p.expect('|');
-    if (p.skipSpaces().iexpectText_P(PSTR("<<"))) {
+    if (p.skipSpaces().iexpectText_P("<<")) {
         const auto segAt = p.skipSpaces();
         ErrorAt segError;
         auto seg = parseInteger(p, segError, '>');
         if (segError.hasError()) {
             op.setError(segError);
-        } else if (p.skipSpaces().iexpectText_P(PSTR(">>"))) {
+        } else if (p.skipSpaces().iexpectText_P(">>")) {
             const auto dispAt = p;
             constexpr auto UINT7_MAX = UINT8_C(0x7F);
             if (seg.overflow(UINT7_MAX)) {

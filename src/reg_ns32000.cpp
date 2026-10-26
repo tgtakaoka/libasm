@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_EXT, REG_EXT },
     { TEXT_REG_F0,  REG_F0  },
     { TEXT_REG_F1,  REG_F1  },
@@ -54,7 +54,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_TOS, REG_TOS },
 };
 
-constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry PREG_ENTRIES[] = {
     { TEXT_REG_FP,      PREG_FP      },
     { TEXT_REG_INTBASE, PREG_INTBASE },
     { TEXT_REG_MOD,     PREG_MOD     },
@@ -65,7 +65,7 @@ constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_US,      PREG_UPSR    },
 };
 
-constexpr NameEntry MREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry MREG_ENTRIES[] = {
     { TEXT_REG_BCNT, MREG_BCNT },
     { TEXT_REG_BPR0, MREG_BPR0 },
     { TEXT_REG_BPR1, MREG_BPR1 },
@@ -75,17 +75,17 @@ constexpr NameEntry MREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_PTB1, MREG_PTB1 },
 };
 
-constexpr NameEntry CONFIG_ENTRIES[] PROGMEM = {
+constexpr NameEntry CONFIG_ENTRIES[] = {
     { TEXT_CONFIG_C, CONFIG_C },
     { TEXT_CONFIG_F, CONFIG_F },
     { TEXT_CONFIG_I, CONFIG_I },
     { TEXT_CONFIG_M, CONFIG_M },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
-PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
-PROGMEM constexpr NameTable MREG_TABLE{ARRAY_RANGE(MREG_ENTRIES)};
-PROGMEM constexpr NameTable CONFIG_TABLE{ARRAY_RANGE(CONFIG_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
+constexpr NameTable MREG_TABLE{ARRAY_RANGE(MREG_ENTRIES)};
+constexpr NameTable CONFIG_TABLE{ARRAY_RANGE(CONFIG_ENTRIES)};
 
 // clang-format on
 }  // namespace

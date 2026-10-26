@@ -25,11 +25,11 @@ AsmZ80 asz80;
 Assembler &assembler(asz80);
 
 bool isZ80() {
-    return strcasecmp_P("Z80", assembler.config().cpu_P()) == 0;
+    return strcasecmp("Z80", assembler.config().cpu_P()) == 0;
 }
 
 bool z180() {
-    return strcasecmp_P("Z180", assembler.config().cpu_P()) == 0;
+    return strcasecmp("Z180", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

@@ -40,11 +40,11 @@ bool AsmDirective::setCpu(const char *cpu) {
     return _assembler.setCpu(cpu);
 }
 
-const /*PROGMEM*/ char *AsmDirective::cpu_P() const {
+const char *AsmDirective::cpu_P() const {
     return _assembler.config().cpu_P();
 }
 
-const /*PROGMEM*/ char *AsmDirective::listCpu_P() const {
+const char *AsmDirective::listCpu_P() const {
     return _assembler.config().listCpu_P();
 }
 

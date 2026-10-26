@@ -58,8 +58,8 @@ private:
 
     using PseudoH8500 = pseudo::__Pseudo<AsmH8500, Insn>;
     using PseudosH8500 = pseudo::__Pseudos<PseudoH8500>;
-    static const PseudoH8500 PSEUDO_H8500_TABLE[] PROGMEM;
-    static const PseudosH8500 PSEUDOS_H8500 PROGMEM;
+    static const PseudoH8500 PSEUDO_H8500_TABLE[];
+    static const PseudosH8500 PSEUDOS_H8500;
 };
 
 }  // namespace h8500

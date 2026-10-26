@@ -70,9 +70,9 @@ struct TestAsserter {
     void equals(const char *file, int line, const char *message, const char *expected,
             const Insn &actual);
 
-    /** assert const char with const PROGMEM char* */
+    /** assert const char with const char* */
     void equals_P(const char *file, int line, const char *message, const char *expected,
-            const /* PROGMEM */ char *actual_P);
+            const char *actual_P);
 
     /** assert ErrorReporter& */
     void equals(const char *file, int line, const char *message, Error expected,

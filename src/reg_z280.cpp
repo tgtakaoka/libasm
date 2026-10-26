@@ -30,7 +30,7 @@ using namespace libasm::reg;
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_A,    REG_A    },
     { TEXT_REG_AF,   REG_AF   },
     { TEXT_REG_B,    REG_B    },
@@ -55,7 +55,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_SP,   REG_SP   },
     { TEXT_REG_USP,  REG_USP  },
 };
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_C,  CC_C  },
     { TEXT_CC_M,  CC_M  },
     { TEXT_CC_NC, CC_NC },
@@ -70,8 +70,8 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_Z,  CC_Z  },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // clang-format on
 }  // namespace

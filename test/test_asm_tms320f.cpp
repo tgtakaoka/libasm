@@ -65,11 +65,11 @@ AsmTms320f asm320f;
 Assembler &assembler(asm320f);
 
 bool is320c32() {
-    return strcasecmp_P("320C32", assembler.config().cpu_P()) == 0;
+    return strcasecmp("320C32", assembler.config().cpu_P()) == 0;
 }
 
 bool is320c31() {
-    return strcasecmp_P("320C31", assembler.config().cpu_P()) == 0 || is320c32();
+    return strcasecmp("320C31", assembler.config().cpu_P()) == 0 || is320c32();
 }
 
 void set_up() {

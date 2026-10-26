@@ -28,16 +28,16 @@ using namespace text::i8086;
 using namespace text::option;
 
 namespace {
-const char OPT_BOOL_SEG_INSN[] PROGMEM = "segment-insn";
-const char OPT_DESC_SEG_INSN[] PROGMEM = "segment override as instruction";
-const char OPT_BOOL_REP_INSN[] PROGMEM = "repeat-insn";
-const char OPT_DESC_REP_INSN[] PROGMEM = "repeat prefix as instruction";
-const char OPT_BOOL_LOCK_INSN[] PROGMEM = "lock-insn";
-const char OPT_DESC_LOCK_INSN[] PROGMEM = "lock prefix as instruction";
-const char OPT_BOOL_FAR_INSN[] PROGMEM = "far-insn";
-const char OPT_DESC_FAR_INSN[] PROGMEM = "use callf/jmpf for far call/jump";
-const char OPT_BOOL_PTR_SUFFIX[] PROGMEM = "ptr-suffix";
-const char OPT_DESC_PTR_SUFFIX[] PROGMEM = "add ptr suffix for memory reference";
+const char OPT_BOOL_SEG_INSN[] = "segment-insn";
+const char OPT_DESC_SEG_INSN[] = "segment override as instruction";
+const char OPT_BOOL_REP_INSN[] = "repeat-insn";
+const char OPT_DESC_REP_INSN[] = "repeat prefix as instruction";
+const char OPT_BOOL_LOCK_INSN[] = "lock-insn";
+const char OPT_DESC_LOCK_INSN[] = "lock prefix as instruction";
+const char OPT_BOOL_FAR_INSN[] = "far-insn";
+const char OPT_DESC_FAR_INSN[] = "use callf/jmpf for far call/jump";
+const char OPT_BOOL_PTR_SUFFIX[] = "ptr-suffix";
+const char OPT_DESC_PTR_SUFFIX[] = "add ptr suffix for memory reference";
 }  // namespace
 
 const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
@@ -771,7 +771,7 @@ bool DisInsn::needData32() const {
     return data32() && prefix() == 0 && (opc == CALLF || opc == JMPF || opc == PUSHiw);
 }
 
-void DisInsn::addPrefix(const /*PROGMEM*/ char *prefix_P, StrBuffer &out) {
+void DisInsn::addPrefix(const char *prefix_P, StrBuffer &out) {
     char buffer[Insn::MAX_NAME + 1];
     strncpy(buffer, name(), Insn::MAX_NAME);
     buffer[Insn::MAX_NAME] = 0;

@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_AH,  REG_AH  },
     { TEXT_REG_AL,  REG_AL  },
     { TEXT_REG_AX,  REG_AX  },
@@ -63,9 +63,9 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_ST,  REG_ST  },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-constexpr NameEntry PRE_ENTRIES[] PROGMEM = {
+constexpr NameEntry PRE_ENTRIES[] = {
     { TEXT_PRE_ADDR16, PRE_ADDR16 },
     { TEXT_PRE_ADDR32, PRE_ADDR32 },
     { TEXT_PRE_BYTE,   PRE_BYTE   },
@@ -77,7 +77,7 @@ constexpr NameEntry PRE_ENTRIES[] PROGMEM = {
     { TEXT_PRE_WORD,   PRE_WORD   },
 };
 
-PROGMEM constexpr NameTable PREFIX_TABLE{ARRAY_RANGE(PRE_ENTRIES)};
+constexpr NameTable PREFIX_TABLE{ARRAY_RANGE(PRE_ENTRIES)};
 
 // clang-format on
 }  // namespace

@@ -21,50 +21,50 @@ namespace text {
 namespace ins8070 {
 // clang-format off
 
-constexpr char TEXT_CPU_INS8070[] PROGMEM = "INS8070";
-constexpr char TEXT_CPU_8070[]    PROGMEM = "8070";
+constexpr char TEXT_CPU_INS8070[] = "INS8070";
+constexpr char TEXT_CPU_8070[]    = "8070";
 
-// constexpr char TEXT_ADD[]  PROGMEM = "ADD";
-// constexpr char TEXT_AND[]  PROGMEM = "AND";
-// constexpr char TEXT_BND[]  PROGMEM = "BND";
-// constexpr char TEXT_BNZ[]  PROGMEM = "BNZ";
-// constexpr char TEXT_BP[]   PROGMEM = "BP";
-// constexpr char TEXT_BRA[]  PROGMEM = "BRA";
-// constexpr char TEXT_BZ[]   PROGMEM = "BZ";
-// constexpr char TEXT_CALL[] PROGMEM = "CALL";
-// constexpr char TEXT_DIV[]  PROGMEM = "DIV";
-// constexpr char TEXT_DLD[]  PROGMEM = "DLD";
-// constexpr char TEXT_ILD[]  PROGMEM = "ILD";
-// constexpr char TEXT_JMP[]  PROGMEM = "JMP";
-// constexpr char TEXT_JSR[]  PROGMEM = "JSR";
-// constexpr char TEXT_LD[]   PROGMEM = "LD";
-// constexpr char TEXT_MPY[]  PROGMEM = "MPY";
-// constexpr char TEXT_NOP[]  PROGMEM = "NOP";
-// constexpr char TEXT_OR[]   PROGMEM = "OR";
-constexpr char TEXT_PLI[] PROGMEM = "PLI";
-// constexpr char TEXT_POP[]  PROGMEM = "POP";
-// constexpr char TEXT_PUSH[] PROGMEM = "PUSH";
-// constexpr char TEXT_RET[]  PROGMEM = "RET";
-// constexpr char TEXT_RR[]   PROGMEM = "RR";
-// constexpr char TEXT_RRL[]  PROGMEM = "RRL";
-// constexpr char TEXT_SL[]   PROGMEM = "SL";
-// constexpr char TEXT_SR[]   PROGMEM = "SR";
-// constexpr char TEXT_SRL[]  PROGMEM = "SRL";
-constexpr char TEXT_SSM[] PROGMEM = "SSM";
-// constexpr char TEXT_ST[]   PROGMEM = "ST";
-// constexpr char TEXT_SUB[]  PROGMEM = "SUB";
-// constexpr char TEXT_XCH[]  PROGMEM = "XCH";
-// constexpr char TEXT_XOR[]  PROGMEM = "XOR";
+// constexpr char TEXT_ADD[]  = "ADD";
+// constexpr char TEXT_AND[]  = "AND";
+// constexpr char TEXT_BND[]  = "BND";
+// constexpr char TEXT_BNZ[]  = "BNZ";
+// constexpr char TEXT_BP[]   = "BP";
+// constexpr char TEXT_BRA[]  = "BRA";
+// constexpr char TEXT_BZ[]   = "BZ";
+// constexpr char TEXT_CALL[] = "CALL";
+// constexpr char TEXT_DIV[]  = "DIV";
+// constexpr char TEXT_DLD[]  = "DLD";
+// constexpr char TEXT_ILD[]  = "ILD";
+// constexpr char TEXT_JMP[]  = "JMP";
+// constexpr char TEXT_JSR[]  = "JSR";
+// constexpr char TEXT_LD[]   = "LD";
+// constexpr char TEXT_MPY[]  = "MPY";
+// constexpr char TEXT_NOP[]  = "NOP";
+// constexpr char TEXT_OR[]   = "OR";
+constexpr char TEXT_PLI[] = "PLI";
+// constexpr char TEXT_POP[]  = "POP";
+// constexpr char TEXT_PUSH[] = "PUSH";
+// constexpr char TEXT_RET[]  = "RET";
+// constexpr char TEXT_RR[]   = "RR";
+// constexpr char TEXT_RRL[]  = "RRL";
+// constexpr char TEXT_SL[]   = "SL";
+// constexpr char TEXT_SR[]   = "SR";
+// constexpr char TEXT_SRL[]  = "SRL";
+constexpr char TEXT_SSM[] = "SSM";
+// constexpr char TEXT_ST[]   = "ST";
+// constexpr char TEXT_SUB[]  = "SUB";
+// constexpr char TEXT_XCH[]  = "XCH";
+// constexpr char TEXT_XOR[]  = "XOR";
 
-// constexpr char TEXT_REG_A[]  PROGMEM = "A";
-// constexpr char TEXT_REG_E[]  PROGMEM = "E";
-constexpr char TEXT_REG_EA[] PROGMEM = "EA";
-// constexpr char TEXT_REG_P2[] PROGMEM = "P2";
-// constexpr char TEXT_REG_P3[] PROGMEM = "P3";
-// constexpr char TEXT_REG_PC[] PROGMEM = "PC";
-// constexpr char TEXT_REG_S[]  PROGMEM = "S";
-// constexpr char TEXT_REG_SP[] PROGMEM = "SP";
-// constexpr char TEXT_REG_T[]  PROGMEM = "T";
+// constexpr char TEXT_REG_A[]  = "A";
+// constexpr char TEXT_REG_E[]  = "E";
+constexpr char TEXT_REG_EA[] = "EA";
+// constexpr char TEXT_REG_P2[] = "P2";
+// constexpr char TEXT_REG_P3[] = "P3";
+// constexpr char TEXT_REG_PC[] = "PC";
+// constexpr char TEXT_REG_S[]  = "S";
+// constexpr char TEXT_REG_SP[] = "SP";
+// constexpr char TEXT_REG_T[]  = "T";
 
 // clang-format on
 }  // namespace ins8070

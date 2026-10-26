@@ -24,17 +24,17 @@ namespace text {
 namespace h8500 {
 // clang-format off
 
-extern const char TEXT_H8500_LIST[] PROGMEM;
-extern const char TEXT_CPU_H8500[]  PROGMEM;
-extern const char TEXT_CPU_H8520[]  PROGMEM;
-extern const char TEXT_CPU_H8530[]  PROGMEM;
+extern const char TEXT_H8500_LIST[];
+extern const char TEXT_CPU_H8500[];
+extern const char TEXT_CPU_H8520[];
+extern const char TEXT_CPU_H8530[];
 
-extern const char OPT_BOOL_MAX_MODE[] PROGMEM;
-extern const char OPT_DESC_MAX_MODE[] PROGMEM;
-extern const char OPT_BOOL_FP_ALIAS[] PROGMEM;
-extern const char OPT_DESC_FP_ALIAS[] PROGMEM;
-extern const char OPT_BOOL_SP_ALIAS[] PROGMEM;
-extern const char OPT_DESC_SP_ALIAS[] PROGMEM;
+extern const char OPT_BOOL_MAX_MODE[];
+extern const char OPT_DESC_MAX_MODE[];
+extern const char OPT_BOOL_FP_ALIAS[];
+extern const char OPT_DESC_FP_ALIAS[];
+extern const char OPT_BOOL_SP_ALIAS[];
+extern const char OPT_DESC_SP_ALIAS[];
 
 using common::TEXT_MAXMODE;
 
@@ -101,29 +101,29 @@ using common::TEXT_BNOT;
 using common::TEXT_CMP;
 using common::TEXT_DADD;
 using common::TEXT_DIVXU;
-extern const char TEXT_DSUB[]    PROGMEM;
+extern const char TEXT_DSUB[];
 using common::TEXT_EXTU;
 using common::TEXT_MOVFPE;
 using common::TEXT_MOVTPE;
 using common::TEXT_MULXU;
 using common::TEXT_ORC;
-extern const char TEXT_PJMP[]    PROGMEM;
-extern const char TEXT_PJSR[]    PROGMEM;
-extern const char TEXT_PRTD[]    PROGMEM;
-extern const char TEXT_PRTS[]    PROGMEM;
+extern const char TEXT_PJMP[];
+extern const char TEXT_PJSR[];
+extern const char TEXT_PRTD[];
+extern const char TEXT_PRTS[];
 using common::TEXT_ROTL;
 using common::TEXT_ROTR;
 using common::TEXT_ROTXL;
 using common::TEXT_ROTXR;
 using common::TEXT_RTD;
-extern const char TEXT_SCB_EQ[]  PROGMEM;  // "SCB/EQ"
-extern const char TEXT_SCB_F[]   PROGMEM;  // "SCB/F"
-extern const char TEXT_SCB_NE[]  PROGMEM;  // "SCB/NE"
+extern const char TEXT_SCB_EQ[];   // "SCB/EQ"
+extern const char TEXT_SCB_F[];    // "SCB/F"
+extern const char TEXT_SCB_NE[];   // "SCB/NE"
 using common::TEXT_SHAL;
 using common::TEXT_SHAR;
 using common::TEXT_SHLR;
 using common::TEXT_SLEEP;
-extern const char TEXT_TRAP_VS[] PROGMEM;  // "TRAP/VS"
+extern const char TEXT_TRAP_VS[];  // "TRAP/VS"
 using common::TEXT_TRAPA;
 using common::TEXT_XORC;
 
@@ -142,11 +142,11 @@ using common::TEXT_REG_SP;
 using common::TEXT_REG_SR;
 
 // H8/500-specific register names
-extern const char TEXT_REG_BR[] PROGMEM;
-extern const char TEXT_REG_CP[] PROGMEM;
-extern const char TEXT_REG_EP[] PROGMEM;
+extern const char TEXT_REG_BR[];
+extern const char TEXT_REG_CP[];
+extern const char TEXT_REG_EP[];
 using common::TEXT_REG_FP;
-extern const char TEXT_REG_TP[] PROGMEM;
+extern const char TEXT_REG_TP[];
 
 // clang-format on
 }  // namespace h8500

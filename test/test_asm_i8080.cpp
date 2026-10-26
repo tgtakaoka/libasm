@@ -25,11 +25,11 @@ AsmI8080 as8080;
 Assembler &assembler(as8080);
 
 bool is8085() {
-    return strcmp_P("8085", assembler.config().cpu_P()) == 0;
+    return strcmp("8085", assembler.config().cpu_P()) == 0;
 }
 
 bool v30emu() {
-    return strcasecmp_P("V30EMU", assembler.config().cpu_P()) == 0;
+    return strcasecmp("V30EMU", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

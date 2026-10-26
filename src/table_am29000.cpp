@@ -44,7 +44,7 @@ namespace am29000 {
 // An entry holds the whole 32-bit instruction with its operand fields zeroed.
 // Where the low bit of the operation code is the M or the A bit, the table
 // carries the M=0 / A=0 form and the operand encoder raises the bit.
-constexpr Entry TABLE_AM29000[] PROGMEM = {
+constexpr Entry TABLE_AM29000[] = {
     // Integer arithmetic
     E3(0x14000000, TEXT_ADD,     M_RC, M_RA, M_RBI),
     E3(0x10000000, TEXT_ADDS,    M_RC, M_RA, M_RBI),
@@ -177,7 +177,7 @@ constexpr Entry TABLE_AM29000[] PROGMEM = {
     E0(0x89000000, TEXT_HALT),
 };
 
-static constexpr uint8_t INDEX_AM29000[] PROGMEM = {
+static constexpr uint8_t INDEX_AM29000[] = {
       0,  // TEXT_ADD
       3,  // TEXT_ADDC
       4,  // TEXT_ADDCS
@@ -299,7 +299,7 @@ static constexpr uint8_t INDEX_AM29000[] PROGMEM = {
 
 // Instructions found only on the Am29050.  Every other family member reserves
 // these operation codes for instruction emulation.
-constexpr Entry TABLE_AM29050[] PROGMEM = {
+constexpr Entry TABLE_AM29050[] = {
     E2(0x05000000, TEXT_CONSTHZ, M_RA, M_IMH),
     E3(0xAA000000, TEXT_ORN,     M_RC, M_RA, M_RBI),
     X4(0xD8000000, TEXT_FMAC,    M_FUNC, M_ACNH, M_RA, M_RB, EXT_FPU),
@@ -310,7 +310,7 @@ constexpr Entry TABLE_AM29050[] PROGMEM = {
     X3(0xE9000100, TEXT_MFACC,   M_RC, M_TFMT, M_ACN, EXT_FPU),
 };
 
-static constexpr uint8_t INDEX_AM29050[] PROGMEM = {
+static constexpr uint8_t INDEX_AM29050[] = {
       0,  // TEXT_CONSTHZ
       3,  // TEXT_DMAC
       5,  // TEXT_DMSM
@@ -324,18 +324,18 @@ static constexpr uint8_t INDEX_AM29050[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage AM29000_PAGES[] PROGMEM = {
+constexpr EntryPage AM29000_PAGES[] = {
         {ARRAY_RANGE(TABLE_AM29000), ARRAY_RANGE(INDEX_AM29000)},
 };
 
-constexpr EntryPage AM29050_PAGES[] PROGMEM = {
+constexpr EntryPage AM29050_PAGES[] = {
         {ARRAY_RANGE(TABLE_AM29000), ARRAY_RANGE(INDEX_AM29000)},
         {ARRAY_RANGE(TABLE_AM29050), ARRAY_RANGE(INDEX_AM29050)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {AM29200, TEXT_CPU_AM29200, ARRAY_RANGE(AM29000_PAGES)},
         {AM29245, TEXT_CPU_AM29245, ARRAY_RANGE(AM29000_PAGES)},
         {AM29030, TEXT_CPU_AM29030, ARRAY_RANGE(AM29000_PAGES)},
@@ -479,11 +479,11 @@ Error searchOpCode(CpuType cpuType, bool fpu, bool intMul, DisInsn &insn, StrBuf
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableAm29000::listCpu_P() const {
+const char *TableAm29000::listCpu_P() const {
     return TEXT_AM29000_LIST;
 }
 
-const /*PROGMEM*/ char *TableAm29000::cpuName_P(CpuType cpuType) const {
+const char *TableAm29000::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

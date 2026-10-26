@@ -24,15 +24,15 @@ namespace text {
 namespace i8051 {
 // clang-format off
 
-extern const char TEXT_CPU_I8051[] PROGMEM;
-extern const char TEXT_CPU_8051[]  PROGMEM;
+extern const char TEXT_CPU_I8051[];
+extern const char TEXT_CPU_8051[];
 
-extern const char TEXT_ACALL[]    PROGMEM;
+extern const char TEXT_ACALL[];
 using common::TEXT_ADD;
 using common::TEXT_ADDC;
-extern const char TEXT_AJMP[]     PROGMEM;
+extern const char TEXT_AJMP[];
 using common::TEXT_ANL;
-extern const char TEXT_CJNE[]     PROGMEM;
+extern const char TEXT_CJNE[];
 using common::TEXT_CLR;
 using common::TEXT_CPL;
 using common::TEXT_CPU;
@@ -52,7 +52,7 @@ using common::TEXT_JZ;
 using common::TEXT_LCALL;
 using common::TEXT_LJMP;
 using common::TEXT_MOV;
-extern const char TEXT_MOVC[]     PROGMEM;
+extern const char TEXT_MOVC[];
 using common::TEXT_MOVX;
 using common::TEXT_MUL;
 using common::TEXT_NOP;
@@ -60,9 +60,9 @@ using common::TEXT_ORL;
 using common::TEXT_POP;
 using common::TEXT_PUSH;
 using common::TEXT_REG_A;
-extern const char TEXT_REG_AB[]   PROGMEM;
+extern const char TEXT_REG_AB[];
 using common::TEXT_REG_C;
-extern const char TEXT_REG_DPTR[] PROGMEM;
+extern const char TEXT_REG_DPTR[];
 using common::TEXT_REG_PC;
 using common::TEXT_REG_R0;
 using common::TEXT_REG_R1;

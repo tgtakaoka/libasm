@@ -62,7 +62,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
     private:
         static Config::opcode_t modeMask(AddrMode mode) {
-            static constexpr Config::opcode_t MASK[] PROGMEM = {
+            static constexpr Config::opcode_t MASK[] = {
                     00000,  // M_NONE
                     00007,  // M_DREG
                     00003,  // M_LREG
@@ -76,7 +76,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     00040,  // M_BDISP
                     00374,  // M_JADDR (word2 addr-high bits 7:2)
             };
-            return mode >= M_NOPP ? 0 : pgm_read_word(&MASK[mode]);
+            return mode >= M_NOPP ? 0 : MASK[mode];
         }
 
         static constexpr int src_gp = 0;
@@ -85,10 +85,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t dst_gm = 0x1F;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

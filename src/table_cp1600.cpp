@@ -29,7 +29,7 @@ namespace cp1600 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_CP1600[] PROGMEM = {
+constexpr Entry TABLE_CP1600[] = {
     E1(00200, TEXT_TSTR, M_XREG),
     E1(00700, TEXT_CLRR, M_XREG),
     E1(00207, TEXT_JR,   M_SREG),
@@ -122,7 +122,7 @@ constexpr Entry TABLE_CP1600[] PROGMEM = {
     E0(00007, TEXT_SETC),
 };
 
-static constexpr uint8_t INDEX_CP1600[] PROGMEM = {
+static constexpr uint8_t INDEX_CP1600[] = {
      13,  // TEXT_ADCR
      42,  // TEXT_ADD
      44,  // TEXT_ADDAT
@@ -224,7 +224,7 @@ constexpr Entry TABLE_JUMP[] = {
     E2(00002, TEXT_JSRD, M_BREG, M_JADDR),
 };
 
-static constexpr uint8_t INDEX_JUMP[] PROGMEM = {
+static constexpr uint8_t INDEX_JUMP[] = {
       0,  // TEXT_J
       2,  // TEXT_JD
       1,  // TEXT_JE
@@ -237,14 +237,14 @@ static constexpr uint8_t INDEX_JUMP[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage CP1600_PAGES[] PROGMEM = {
+constexpr EntryPage CP1600_PAGES[] = {
         {0x0000, ARRAY_RANGE(TABLE_CP1600), ARRAY_RANGE(INDEX_CP1600)},
         {0x0004, ARRAY_RANGE(TABLE_JUMP), ARRAY_RANGE(INDEX_JUMP)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {CP1600, TEXT_CPU_CP1600, ARRAY_RANGE(CP1600_PAGES)},
 };
 
@@ -298,11 +298,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableCp1600::listCpu_P() const {
+const char *TableCp1600::listCpu_P() const {
     return TEXT_CP1600_LIST;
 }
 
-const /*PROGMEM*/ char *TableCp1600::cpuName_P(CpuType cpuType) const {
+const char *TableCp1600::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

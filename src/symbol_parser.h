@@ -53,26 +53,26 @@ protected:
  * Simple symbol is '([:alpha:]|[extra])([:alnum:]|[extra])*'.
  */
 struct SimpleSymbolParser : SymbolParser {
-    SimpleSymbolParser(const /*PROGMEM*/ char *extra_P) : _extra_P(extra_P) {}
+    SimpleSymbolParser(const char *extra_P) : _extra_P(extra_P) {}
 
     bool symbolLetter(char c, bool headOfSymbol = false) const override;
 
 private:
-    const /*PROGMEMD*/ char *const _extra_P;
+    const char *const _extra_P;
 };
 
 /**
  * Prefix symbol is '([:alpha:]|[prefix])([:alnum:]|[extra])*'.
  */
 struct PrefixSymbolParser : SymbolParser {
-    PrefixSymbolParser(const /*PROGMEM*/ char *prefix_P, const /*PROGMEM*/ char *extra_P = nullptr)
+    PrefixSymbolParser(const char *prefix_P, const char *extra_P = nullptr)
         : _prefix_P(prefix_P), _extra_P(extra_P) {}
 
     bool symbolLetter(char c, bool headOfSymbol = false) const override;
 
 private:
-    const /*PROGMEMD*/ char *const _prefix_P;
-    const /*PROGMEMD*/ char *const _extra_P;
+    const char *const _prefix_P;
+    const char *const _extra_P;
 };
 
 struct IntelSymbolParser final : PrefixSymbolParser, Singleton<IntelSymbolParser> {

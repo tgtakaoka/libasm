@@ -25,16 +25,16 @@ DisTlcs900 dis900;
 Disassembler &disassembler(dis900);
 
 static bool is_tlcs900() {
-    return strcmp_P("TLCS900", disassembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900", disassembler.config().cpu_P()) == 0;
 }
 static bool is_tlcs900l() {
-    return strcmp_P("TLCS900L", disassembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900L", disassembler.config().cpu_P()) == 0;
 }
 static bool is_tlcs900h() {
-    return strcmp_P("TLCS900H", disassembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900H", disassembler.config().cpu_P()) == 0;
 }
 static bool is_tlcs900h2() {
-    return strcmp_P("TLCS900H2", disassembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900H2", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

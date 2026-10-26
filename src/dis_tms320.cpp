@@ -28,10 +28,10 @@ using namespace text::tms320;
 
 namespace {
 
-const char OPT_BOOL_USE_REG_NAME[] PROGMEM = "use-aux-name";
-const char OPT_DESC_USE_REG_NAME[] PROGMEM = "use aux register name ARn";
-const char OPT_BOOL_USE_PORT_NAME[] PROGMEM = "use-port-name";
-const char OPT_DESC_USE_PORT_NAME[] PROGMEM = "use port name PAn";
+const char OPT_BOOL_USE_REG_NAME[] = "use-aux-name";
+const char OPT_DESC_USE_REG_NAME[] = "use aux register name ARn";
+const char OPT_BOOL_USE_PORT_NAME[] = "use-port-name";
+const char OPT_DESC_USE_PORT_NAME[] = "use port name PAn";
 
 }  // namespace
 
@@ -39,7 +39,7 @@ const ValueFormatter::Plugins &DisTms320::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
         const SuffixHexFormatter _hex{'h'};
     } PLUGINS{};
     return PLUGINS;
@@ -83,7 +83,7 @@ StrBuffer &DisTms320::outIndirect(StrBuffer &out, uint8_t mam) const {
     const auto modify = (mam >> 4) & 7;
     out.letter('*');
     if (modify == 4 || modify == 7)
-        out.text_P(PSTR("BR0"));
+        out.text_P("BR0");
     if (modify == 5 || modify == 6)
         out.letter('0');
     if (modify == 1 || modify == 4 || modify == 5)

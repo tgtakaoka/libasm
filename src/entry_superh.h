@@ -226,7 +226,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         // Double-indexed lookup over the contiguous masked-mode range [M_RN..]:
         // each mode selects a bit-mask variation, and the variation maps to the
         // actual instruction-word mask. Modes below M_RN have no variable bits.
-        // Function-local PROGMEM tables keep the header ODR-clean.
+        // Function-local tables keep the header ODR-clean.
         static Config::opcode_t modeMask(AddrMode mode) {
             if (mode < M_RN)
                 return 0;
@@ -240,7 +240,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 V_DRN,   // 0x0E00  bits[11:9]
                 V_DRM,   // 0x00E0  bits[7:5]
             };
-            static constexpr uint8_t MODE_VAR[] PROGMEM = {  // indexed by mode - M_RN
+            static constexpr uint8_t MODE_VAR[] = {  // indexed by mode - M_RN
                 V_N, V_N, V_N, V_N, V_N, V_N, V_N,            // M_RN M_IRN M_INCN M_DECN M_IDXN M_FRN M_D12N
                 V_M, V_M, V_M, V_M, V_M, V_M, V_M,            // M_RM M_IRM M_INCM M_IDXM M_FRM M_D12M M_IMM20
                 V_D8, V_D8, V_D8, V_D8, V_D8,                 // M_D4M M_D8 M_PCREL M_IMM8 M_UIMM8
@@ -251,17 +251,17 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 V_DRN,                                        // M_DRN
                 V_DRM,                                        // M_DRM
             };
-            static constexpr Config::opcode_t VAR_MASK[] PROGMEM = {
+            static constexpr Config::opcode_t VAR_MASK[] = {
                 0x0F00, 0x00F0, 0x00FF, 0x0F0F, 0x0FFF, 0x0007, 0x0E00, 0x00E0,
             };
-            return pgm_read_word(&VAR_MASK[pgm_read_byte(&MODE_VAR[mode - M_RN])]);
+            return VAR_MASK[MODE_VAR[mode - M_RN]];
         }
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

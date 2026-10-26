@@ -74,7 +74,7 @@ void DisH8500::outAbs8(StrBuffer &out, uint8_t addr) const {
     out.letter('@');
     outAbsAddr(out, addr, 8);
     if (!_gnuAs)
-        out.text_P(PSTR(":8"));
+        out.text_P(":8");
 }
 
 void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
@@ -84,7 +84,7 @@ void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
     // zero-padded to the (24-bit) address width in maximum mode.
     outAbsAddr(out, insn.readUint16Be(), 16);
     if (!_gnuAs)
-        out.text_P(PSTR(":16"));
+        out.text_P(":16");
 }
 
 void DisH8500::outPcRel8(DisInsn &insn, StrBuffer &out) const {
@@ -120,7 +120,7 @@ void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
         outAddrReg(out, insn.eaReg);
         break;
     case M_PDEC:
-        out.text_P(PSTR("@-"));
+        out.text_P("@-");
         outAddrReg(out, insn.eaReg);
         break;
     case M_PINC:
@@ -149,7 +149,7 @@ void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
         out.letter('@');
         outAbsAddr(out, insn.eaVal, 16);  // 16-bit field; high byte is the DP page
         if (!_gnuAs)
-            out.text_P(PSTR(":16"));
+            out.text_P(":16");
         break;
     case M_IMM8:
         outImm8(out, static_cast<uint8_t>(insn.eaVal));
@@ -299,7 +299,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
             // a byte needs an explicit :16 to round-trip to this long form. The
             // :I forms (MOV:I/CMP:I) are unambiguous, so they take no suffix.
             if (insn.insnClass() == IC_N && val <= 0xFF)
-                out.text_P(PSTR(":16"));
+                out.text_P(":16");
         }
         break;
     case M_ABS8:
@@ -323,7 +323,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         // PJMP/PJSR have only the @aa:24 form; a page-0 (<=0xFFFF) address would
         // otherwise re-parse as @aa:16 (which they reject), so make it explicit.
         if (!_gnuAs)
-            out.text_P(PSTR(":24"));
+            out.text_P(":24");
         break;
     }
     case M_REGLIST:
@@ -333,7 +333,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         // Implicit stack operand: @SP+ when it is the source (LDM pop), @-SP
         // when the destination (STM push).
         if (insn.dst() == M_SP)
-            out.text_P(PSTR("@-"));
+            out.text_P("@-");
         else
             out.letter('@');
         outAddrReg(out, REG_SP);

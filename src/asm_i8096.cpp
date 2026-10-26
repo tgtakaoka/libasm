@@ -29,7 +29,7 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DCL, &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_DCW, &Assembler::defineDataConstant, Assembler::DATA_WORD },
@@ -37,11 +37,11 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DSL, &Assembler::allocateSpaces,     Assembler::DATA_LONG },
     { TEXT_DSW, &Assembler::allocateSpaces,     Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
-constexpr char OPT_BOOL_SIGNED_PREFIX[] PROGMEM = "signed-prefix";
-constexpr char OPT_DESC_SIGNED_PREFIX[] PROGMEM = "FE prefix for signed multiply and divide";
+constexpr char OPT_BOOL_SIGNED_PREFIX[] = "signed-prefix";
+constexpr char OPT_DESC_SIGNED_PREFIX[] = "FE prefix for signed multiply and divide";
 
 }  // namespace
 

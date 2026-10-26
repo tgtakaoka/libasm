@@ -25,11 +25,11 @@ AsmCdp1802 asm1802;
 Assembler &assembler(asm1802);
 
 bool cdp1804() {
-    return strcmp_P("1804", assembler.config().cpu_P()) == 0;
+    return strcmp("1804", assembler.config().cpu_P()) == 0;
 }
 
 bool cdp1804a() {
-    return strcmp_P("1804A", assembler.config().cpu_P()) == 0;
+    return strcmp("1804A", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

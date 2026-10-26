@@ -27,18 +27,18 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_INT_LIST_RADIX[]  PROGMEM = "list-radix";
-constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
-constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
-constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "optimize branch instruction";
+constexpr char OPT_INT_LIST_RADIX[]  = "list-radix";
+constexpr char OPT_DESC_LIST_RADIX[] = "set listing radix (8, 16)";
+constexpr char OPT_BOOL_SMART_BRANCH[] = "smart-branch";
+constexpr char OPT_DESC_SMART_BRANCH[] = "optimize branch instruction";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_ALIGN,  &Assembler::alignOrigin  },
     { TEXT_OPTION, &Assembler::setOption    },
     { TEXT_ORG,    &Assembler::defineOrigin },
 };
 // clang-format on
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 

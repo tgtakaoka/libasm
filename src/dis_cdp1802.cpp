@@ -27,8 +27,8 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+const char OPT_BOOL_USE_REGISTER[] = "use-register";
+const char OPT_DESC_USE_REGISTER[] = "use register name Rn";
 
 }  // namespace
 
@@ -36,7 +36,7 @@ const ValueFormatter::Plugins &DisCdp1802::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_DOT_DOT; }
+        const char *lineComment_P() const override { return PSTR_DOT_DOT; }
         const SurroundHexFormatter _hex{PSTR_X_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;

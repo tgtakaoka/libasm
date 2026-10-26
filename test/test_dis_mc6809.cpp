@@ -25,7 +25,7 @@ DisMc6809 dis6809;
 Disassembler &disassembler(dis6809);
 
 bool is6809() {
-    return strcmp_P("6809", disassembler.config().cpu_P()) == 0;
+    return strcmp("6809", disassembler.config().cpu_P()) == 0;
 }
 
 bool is6309() {

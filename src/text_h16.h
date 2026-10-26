@@ -24,8 +24,8 @@ namespace text {
 namespace h16 {
 // clang-format off
 
-extern const char TEXT_H16_LIST[] PROGMEM;
-extern const char TEXT_CPU_H16[]  PROGMEM;
+extern const char TEXT_H16_LIST[];
+extern const char TEXT_CPU_H16[];
 
 // Instructions reused from common
 using common::TEXT_ADD;
@@ -129,48 +129,48 @@ using common::TEXT_REG_USP;
 
 // H16-specific instructions.  Class-qualified mnemonics (ADD:G, MOV:RQ, BHI:G,
 // ...) are stored stem-only; the ":X" class is an Entry attribute (InsnClass).
-extern const char TEXT_BFEXT[]   PROGMEM;
-extern const char TEXT_BFINS[]   PROGMEM;
-extern const char TEXT_BFMOV[]   PROGMEM;
-extern const char TEXT_BFSCH[]   PROGMEM;
-extern const char TEXT_CGBN[]    PROGMEM;
-extern const char TEXT_DCBN[]    PROGMEM;
-extern const char TEXT_DIVXS[]   PROGMEM;
-extern const char TEXT_DNEG[]    PROGMEM;
-extern const char TEXT_DSUB[]    PROGMEM;
-extern const char TEXT_ICBN[]    PROGMEM;
-extern const char TEXT_MOVA[]    PROGMEM;
-extern const char TEXT_MOVF[]    PROGMEM;
-extern const char TEXT_MOVFP[]   PROGMEM;
-extern const char TEXT_MOVS[]    PROGMEM;
-extern const char TEXT_MOVTP[]   PROGMEM;
-extern const char TEXT_MULXS[]   PROGMEM;
-extern const char TEXT_PGBN[]    PROGMEM;
-extern const char TEXT_SCB[]     PROGMEM;
-extern const char TEXT_SCMP[]    PROGMEM;
-extern const char TEXT_SMOV[]    PROGMEM;
-extern const char TEXT_SSCH[]    PROGMEM;
-extern const char TEXT_SSTR[]    PROGMEM;
+extern const char TEXT_BFEXT[];
+extern const char TEXT_BFINS[];
+extern const char TEXT_BFMOV[];
+extern const char TEXT_BFSCH[];
+extern const char TEXT_CGBN[];
+extern const char TEXT_DCBN[];
+extern const char TEXT_DIVXS[];
+extern const char TEXT_DNEG[];
+extern const char TEXT_DSUB[];
+extern const char TEXT_ICBN[];
+extern const char TEXT_MOVA[];
+extern const char TEXT_MOVF[];
+extern const char TEXT_MOVFP[];
+extern const char TEXT_MOVS[];
+extern const char TEXT_MOVTP[];
+extern const char TEXT_MULXS[];
+extern const char TEXT_PGBN[];
+extern const char TEXT_SCB[];
+extern const char TEXT_SCMP[];
+extern const char TEXT_SMOV[];
+extern const char TEXT_SSCH[];
+extern const char TEXT_SSTR[];
 
 // Additional condition code names
-extern const char TEXT_CC_CC[]   PROGMEM;  // "CC"
-extern const char TEXT_CC_CS[]   PROGMEM;  // "CS"
-extern const char TEXT_CC_HI[]   PROGMEM;  // "HI"
-extern const char TEXT_CC_HS[]   PROGMEM;  // "HS" (alias for CC)
-extern const char TEXT_CC_LO[]   PROGMEM;  // "LO" (alias for CS)
-extern const char TEXT_CC_LS[]   PROGMEM;  // "LS"
-extern const char TEXT_CC_VC[]   PROGMEM;  // "VC"
-extern const char TEXT_CC_VS[]   PROGMEM;  // "VS"
+extern const char TEXT_CC_CC[];    // "CC"
+extern const char TEXT_CC_CS[];    // "CS"
+extern const char TEXT_CC_HI[];    // "HI"
+extern const char TEXT_CC_HS[];    // "HS" (alias for CC)
+extern const char TEXT_CC_LO[];    // "LO" (alias for CS)
+extern const char TEXT_CC_LS[];    // "LS"
+extern const char TEXT_CC_VC[];    // "VC"
+extern const char TEXT_CC_VS[];    // "VS"
 
 // Control register names
-extern const char TEXT_REG_BMR[]  PROGMEM;
-extern const char TEXT_REG_BSP[]  PROGMEM;
-extern const char TEXT_REG_CBNR[] PROGMEM;
-extern const char TEXT_REG_EBR[]  PROGMEM;
-extern const char TEXT_REG_GBNR[] PROGMEM;
-extern const char TEXT_REG_IBR[]  PROGMEM;
-extern const char TEXT_REG_RBR[]  PROGMEM;
-extern const char TEXT_REG_VBNR[] PROGMEM;
+extern const char TEXT_REG_BMR[];
+extern const char TEXT_REG_BSP[];
+extern const char TEXT_REG_CBNR[];
+extern const char TEXT_REG_EBR[];
+extern const char TEXT_REG_GBNR[];
+extern const char TEXT_REG_IBR[];
+extern const char TEXT_REG_RBR[];
+extern const char TEXT_REG_VBNR[];
 
 // clang-format on
 }  // namespace h16

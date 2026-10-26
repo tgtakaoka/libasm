@@ -25,11 +25,11 @@ DisZ280 disz280;
 Disassembler &disassembler(disz280);
 
 bool isZ80() {
-    return strcasecmp_P("Z80", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("Z80", disassembler.config().cpu_P()) == 0;
 }
 
 bool isZ280() {
-    return strcasecmp_P("Z280", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("Z280", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

@@ -31,7 +31,7 @@ Disassembler &disassembler(dispdp11);
 #endif
 
 bool dcj11() {
-    return strcmp_P("J11", disassembler.config().cpu_P()) == 0;
+    return strcmp("J11", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

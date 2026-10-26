@@ -143,14 +143,14 @@ struct StrScanner {
      * return true if this starts with |text_P| of |len| with ignore case, then dvance. Otherwise
      * return false.
      */
-    bool iexpectText_P(const /*PROGMEM*/ char *text_P);
-    bool iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len);
+    bool iexpectText_P(const char *text_P);
+    bool iexpectText_P(const char *text_P, size_t len);
 
     /**
      * return true if this starts with |text| with ignore case and must end with non-alphanumeric
      * (or '_').
      */
-    bool iexpectWord_P(const /*PROGMEM*/ char *text_P);
+    bool iexpectWord_P(const char *text_P);
 
     /**
      * return true if this starts with "true", "on", "enable", or "yes" with ignore case.
@@ -166,7 +166,7 @@ struct StrScanner {
     bool iequals(const StrScanner &text) const;
 
     /** return true if this equals to |text_P| with ignore case. */
-    bool iequals_P(const /*PROGMEM*/ char *text_P) const;
+    bool iequals_P(const char *text_P) const;
 
 private:
     /** |str| must not be greater than |_end|. */
