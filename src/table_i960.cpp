@@ -40,7 +40,7 @@ namespace i960 {
 // operation code and reads one, which is the form GNU as and the original
 // Intel assembler emit; an encoding which leaves such a bit zero does not
 // match, so a disassembled instruction assembles back to the same word.
-constexpr Entry TABLE_I960[] PROGMEM = {
+constexpr Entry TABLE_I960[] = {
     // REG format
     E3(0x58000000, TEXT_NOTBIT,  M_SRC1, M_SRC2, M_DST),
     E3(0x58000080, TEXT_AND,     M_SRC1, M_SRC2, M_DST),
@@ -232,7 +232,7 @@ constexpr Entry TABLE_I960[] PROGMEM = {
     F3(0x79000780, TEXT_ADDRL,   M_FSRC1L, M_FSRC2L, M_FDSTL),
 };
 
-static constexpr uint8_t INDEX_I960[] PROGMEM = {
+static constexpr uint8_t INDEX_I960[] = {
      35,  // TEXT_ADDC
      16,  // TEXT_ADDI
      15,  // TEXT_ADDO
@@ -423,13 +423,13 @@ static constexpr uint8_t INDEX_I960[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage I960_PAGES[] PROGMEM = {
+constexpr EntryPage I960_PAGES[] = {
         {ARRAY_RANGE(TABLE_I960), ARRAY_RANGE(INDEX_I960)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {I80960, TEXT_CPU_80960, ARRAY_RANGE(I960_PAGES)},
 };
 
@@ -567,11 +567,11 @@ Error searchOpCode(CpuType cpuType, ModeBits modeBits, bool fpu, DisInsn &insn, 
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableI960::listCpu_P() const {
+const char *TableI960::listCpu_P() const {
     return TEXT_I960_LIST;
 }
 
-const /*PROGMEM*/ char *TableI960::cpuName_P(CpuType cpuType) const {
+const char *TableI960::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

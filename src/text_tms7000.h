@@ -24,8 +24,8 @@ namespace text {
 namespace tms7000 {
 // clang-format off
 
-extern const char TEXT_CPU_TMS7000[] PROGMEM;
-extern const char TEXT_CPU_TMS70C[]  PROGMEM;
+extern const char TEXT_CPU_TMS7000[];
+extern const char TEXT_CPU_TMS70C[];
 
 // TMS7000
 using common::TEXT_ADC;
@@ -34,9 +34,9 @@ using common::TEXT_AND;
 using common::TEXT_ANDP;
 using common::TEXT_BR;
 using common::TEXT_BTJO;
-extern const char TEXT_BTJOP[] PROGMEM;
+extern const char TEXT_BTJOP[];
 using common::TEXT_BTJZ;
-extern const char TEXT_BTJZP[] PROGMEM;
+extern const char TEXT_BTJZP[];
 using common::TEXT_CALL;
 using common::TEXT_CLR;
 using common::TEXT_CLRC;
@@ -95,7 +95,7 @@ using common::TEXT_TSTA;
 using common::TEXT_TSTB;
 using common::TEXT_XCHB;
 using common::TEXT_XOR;
-extern const char TEXT_XORP[]  PROGMEM;
+extern const char TEXT_XORP[];
 
 using common::TEXT_REG_A;
 using common::TEXT_REG_B;

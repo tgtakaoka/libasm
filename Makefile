@@ -14,23 +14,11 @@
 
 help:
 	@echo '"make clean"       remove unnecessary files'
-	@echo '"make check"       run test, pio-ci, and arduino-ci'
+	@echo '"make check"       run test, gen, cli, and pio-run'
 	@echo '"make test"        run test'
-	@echo '"make pio-ci"      run PlatformIO CI for an example and a board'
-	@echo  "                    (default BOARD=$(BOARD)), EX=$(EX))"
-	@echo '"make arduino-ci"  run Arduino CLI for an example and a board'
-	@echo  "                    (default FQBN=$(FQBN)), EX=$(EX))"
+	@echo '"make pio-run"     build PlatformIO examples'
 
-EXS = $(shell $(MAKE) -s -C examples examples)
-EX ?= $(firstword $(EXS))
-
-BOARDS = $(shell $(MAKE) -s -C examples boards)
-BOARD = $(firstword $(BOARDS))
-
-FQBNS = $(shell $(MAKE) -s -C examples fqbns)
-FQBN = $(firstword $(FQBNS))
-
-check: test gen cli pio-ci arduino-ci
+check: test gen cli pio-run
 
 test:
 	$(MAKE) -C test test
@@ -41,11 +29,8 @@ gen:
 cli:
 	$(MAKE) -C cli cli
 
-pio-ci: examples
-	$(MAKE) -C examples pio-ci-all
-
-arduino-ci: examples
-	$(MAKE) -C examples arduino-ci-all
+pio-run:
+	$(MAKE) -C examples pio-run-all
 
 clean: 
 	$(MAKE) -s -C cli clean
@@ -54,7 +39,7 @@ clean:
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_*')
 
-.PHONY: help clean check test gen cli pio-ci arduino-ci
+.PHONY: help clean check test gen cli pio-run
 
 # Local Variables:
 # mode: makefile-gmake

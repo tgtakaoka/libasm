@@ -132,7 +132,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         CodeFormat codeFormat() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
 
         Config::opcode_t postVal() const {
-            static constexpr Config::opcode_t POSTFIXES[] PROGMEM = {
+            static constexpr Config::opcode_t POSTFIXES[] = {
                     0x0000,  // PF_NONE
                     0x0000,  // PF_0XX0
                     0x0008,  // PF_0XX8
@@ -141,11 +141,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x0000,  // PF_0X00
                     0x0000,  // PF_0XXX
             };
-            return pgm_read_word(POSTFIXES + postFormat());
+            return POSTFIXES[postFormat()];
         }
 
         Config::opcode_t postMask() const {
-            static constexpr Config::opcode_t POSTMASKS[] PROGMEM = {
+            static constexpr Config::opcode_t POSTMASKS[] = {
                     0x0000,  // PF_NONE
                     0xF00F,  // PF_0XX0
                     0xF00F,  // PF_0XX8
@@ -154,11 +154,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xF0FF,  // PF_0X00
                     0xF000,  // PF_0XXX
             };
-            return pgm_read_word(POSTMASKS + postFormat());
+            return POSTMASKS[postFormat()];
         }
 
         Config::opcode_t codeMask() const {
-            static constexpr Config::opcode_t CODEMASKS[] PROGMEM = {
+            static constexpr Config::opcode_t CODEMASKS[] = {
                     0x0000,  // CF_0000
                     0x0003,  // CF_0003
                     0x000F,  // CF_000F
@@ -172,7 +172,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xC0FF,  // CF_C0FF
                     0xC0FF,  // CF_X0FF
             };
-            return pgm_read_word(CODEMASKS + codeFormat());
+            return CODEMASKS[codeFormat()];
         }
 
     private:
@@ -208,11 +208,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto pf_gm = UINT16_C(0x7);
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
+        return Flags{_flags_P._mode, _flags_P._attr};
     }
 
 private:

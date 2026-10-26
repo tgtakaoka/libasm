@@ -89,9 +89,9 @@ struct Config
     void setIpMode(IpMode ipMode) { _ipMode = ipMode; }
 
     Error setIpOperand(StrScanner &scan) {
-        if (scan.iequals_P(PSTR("offset"))) {
+        if (scan.iequals_P("offset")) {
             _ipMode = IP_OFFSET;
-        } else if (scan.iequals_P(PSTR("target"))) {
+        } else if (scan.iequals_P("target")) {
             _ipMode = IP_TARGET;
         } else {
             return UNKNOWN_OPERAND;

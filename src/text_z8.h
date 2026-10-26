@@ -24,12 +24,12 @@ namespace text {
 namespace z8 {
 // clang-format off
 
-extern const char TEXT_Z8_LIST[]    PROGMEM;
-extern const char TEXT_CPU_Z8[]     PROGMEM;
-extern const char TEXT_CPU_Z86[]    PROGMEM;
-extern const char TEXT_CPU_Z86C[]   PROGMEM;
-extern const char TEXT_CPU_Z88[]    PROGMEM;
-extern const char TEXT_CPU_SUPER8[] PROGMEM;
+extern const char TEXT_Z8_LIST[];
+extern const char TEXT_CPU_Z8[];
+extern const char TEXT_CPU_Z86[];
+extern const char TEXT_CPU_Z86C[];
+extern const char TEXT_CPU_Z88[];
+extern const char TEXT_CPU_SUPER8[];
 
 // Z8
 using common::TEXT_ADC;
@@ -53,9 +53,9 @@ using common::TEXT_JP;
 using common::TEXT_JR;
 using common::TEXT_LD;
 using common::TEXT_LDC;
-extern const char TEXT_LDCI[] PROGMEM;
+extern const char TEXT_LDCI[];
 using common::TEXT_LDE;
-extern const char TEXT_LDEI[] PROGMEM;
+extern const char TEXT_LDEI[];
 using common::TEXT_NOP;
 using common::TEXT_OR;
 using common::TEXT_POP;
@@ -69,11 +69,11 @@ using common::TEXT_RRC;
 using common::TEXT_SBC;
 using common::TEXT_SCF;
 using common::TEXT_SRA;
-extern const char TEXT_SRP[]  PROGMEM;
+extern const char TEXT_SRP[];
 using common::TEXT_SUB;
 using common::TEXT_SWAP;
-extern const char TEXT_TCM[]  PROGMEM;
-extern const char TEXT_TM[]   PROGMEM;
+extern const char TEXT_TCM[];
+extern const char TEXT_TM[];
 using common::TEXT_XOR;
 
 // Z86C
@@ -82,38 +82,38 @@ using common::TEXT_STOP;
 
 // SUPER8
 using common::TEXT_BAND;
-extern const char TEXT_BCP[]    PROGMEM;
-extern const char TEXT_BITC[]   PROGMEM;
-extern const char TEXT_BITR[]   PROGMEM;
-extern const char TEXT_BITS[]   PROGMEM;
+extern const char TEXT_BCP[];
+extern const char TEXT_BITC[];
+extern const char TEXT_BITR[];
+extern const char TEXT_BITS[];
 using common::TEXT_BOR;
-extern const char TEXT_BTJRF[]  PROGMEM;
-extern const char TEXT_BTJRT[]  PROGMEM;
+extern const char TEXT_BTJRF[];
+extern const char TEXT_BTJRT[];
 using common::TEXT_BXOR;
-extern const char TEXT_CPIJE[]  PROGMEM;
-extern const char TEXT_CPIJNE[] PROGMEM;
+extern const char TEXT_CPIJE[];
+extern const char TEXT_CPIJNE[];
 using common::TEXT_DIV;
 using common::TEXT_ENTER;
 using common::TEXT_EXIT;
 using common::TEXT_LDB;
-extern const char TEXT_LDCD[]   PROGMEM;
-extern const char TEXT_LDCPD[]  PROGMEM;
-extern const char TEXT_LDCPI[]  PROGMEM;
+extern const char TEXT_LDCD[];
+extern const char TEXT_LDCPD[];
+extern const char TEXT_LDCPI[];
 using common::TEXT_LDED;
-extern const char TEXT_LDEPD[]  PROGMEM;
-extern const char TEXT_LDEPI[]  PROGMEM;
+extern const char TEXT_LDEPD[];
+extern const char TEXT_LDEPI[];
 using common::TEXT_LDW;
 using common::TEXT_MULT;
-extern const char TEXT_NEXT[]   PROGMEM;
-extern const char TEXT_POPUD[]  PROGMEM;
-extern const char TEXT_POPUI[]  PROGMEM;
-extern const char TEXT_PUSHUD[] PROGMEM;
-extern const char TEXT_PUSHUI[] PROGMEM;
-extern const char TEXT_SB0[]    PROGMEM;
-extern const char TEXT_SB1[]    PROGMEM;
-extern const char TEXT_SRP0[]   PROGMEM;
-extern const char TEXT_SRP1[]   PROGMEM;
-extern const char TEXT_WFI[]    PROGMEM;
+extern const char TEXT_NEXT[];
+extern const char TEXT_POPUD[];
+extern const char TEXT_POPUI[];
+extern const char TEXT_PUSHUD[];
+extern const char TEXT_PUSHUI[];
+extern const char TEXT_SB0[];
+extern const char TEXT_SB1[];
+extern const char TEXT_SRP0[];
+extern const char TEXT_SRP1[];
+extern const char TEXT_WFI[];
 
 using common::TEXT_CC_C;
 using common::TEXT_CC_EQ;

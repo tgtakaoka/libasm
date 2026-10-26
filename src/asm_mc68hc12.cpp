@@ -31,27 +31,27 @@ using namespace text::mc68hc12;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_FCC, &Assembler::defineString       },
     { TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr char TEXT_DIRECT[] PROGMEM = "DIRECT";
-constexpr char TEXT_DPAGE[] PROGMEM = "DPAGE";
-constexpr char TEXT_EPAGE[] PROGMEM = "EPAGE";
-constexpr char TEXT_GPAGE[] PROGMEM = "GPAGE";
-constexpr char TEXT_PPAGE[] PROGMEM = "PPAGE";
-constexpr char TEXT_RPAGE[] PROGMEM = "RPAGE";
+constexpr char TEXT_DIRECT[] = "DIRECT";
+constexpr char TEXT_DPAGE[] = "DPAGE";
+constexpr char TEXT_EPAGE[] = "EPAGE";
+constexpr char TEXT_GPAGE[] = "GPAGE";
+constexpr char TEXT_PPAGE[] = "PPAGE";
+constexpr char TEXT_RPAGE[] = "RPAGE";
 
 struct PageDirective {
-    const /* PROGMEM */ char *name_P;
+    const char *name_P;
     PageReg reg;
 };
 
-constexpr PageDirective PAGE_DIRECTIVES[] PROGMEM = {
+constexpr PageDirective PAGE_DIRECTIVES[] = {
     { TEXT_DIRECT, PAGE_DIRECT },
     { TEXT_DPAGE,  PAGE_DPAGE  },
     { TEXT_EPAGE,  PAGE_EPAGE  },
@@ -88,9 +88,9 @@ void AsmMc68HC12::reset() {
 
 Error AsmMc68HC12::processPseudo(StrScanner &scan, Insn &insn) {
     for (const auto &d : PAGE_DIRECTIVES) {
-        const auto reg = PageReg(pgm_read_byte(&d.reg));
-        const auto *name_P = reinterpret_cast<const char *>(pgm_read_ptr(&d.name_P));
-        if (strcasecmp_P(insn.name(), name_P) == 0 && pageRegisterBits(cpuType(), reg))
+        const auto reg = PageReg(d.reg);
+        const auto *name_P = d.name_P;
+        if (strcasecmp(insn.name(), name_P) == 0 && pageRegisterBits(cpuType(), reg))
             return processPage(scan, insn, reg);
     }
     return Assembler::processPseudo(scan, insn);
@@ -272,7 +272,7 @@ void AsmMc68HC12::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
 }
 
 uint_fast8_t encodeBaseHigh(AsmInsn &insn, const Operand &op) {
-    static constexpr uint8_t BASE_HIGH[] PROGMEM = {
+    static constexpr uint8_t BASE_HIGH[] = {
             0xE0,  // REG_X
             0xE8,  // REG_Y
             0xF0,  // REG_SP
@@ -282,7 +282,7 @@ uint_fast8_t encodeBaseHigh(AsmInsn &insn, const Operand &op) {
         insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
         return 0xE0;
     }
-    return pgm_read_byte(BASE_HIGH + op.base - REG_X);
+    return BASE_HIGH[op.base - REG_X];
 }
 
 void emitPostByte(AsmInsn &insn, Config::opcode_t post, AddrMode mode) {
@@ -318,7 +318,7 @@ void AsmMc68HC12::encodeAccumIndexed(AsmInsn &insn, const Operand &op, AddrMode 
 }
 
 uint_fast8_t encodeBaseLow(AsmInsn &insn, const Operand &op) {
-    static constexpr uint8_t BASE_LOW[] PROGMEM = {
+    static constexpr uint8_t BASE_LOW[] = {
             0x00,  // REG_X
             0x40,  // REG_Y
             0x80,  // REG_SP
@@ -328,7 +328,7 @@ uint_fast8_t encodeBaseLow(AsmInsn &insn, const Operand &op) {
         insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
         return 0x00;
     }
-    return pgm_read_byte(BASE_LOW + op.base - REG_X);
+    return BASE_LOW[op.base - REG_X];
 }
 
 void AsmMc68HC12::encodePcRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {

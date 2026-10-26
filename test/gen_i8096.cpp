@@ -34,8 +34,8 @@ int main(int argc, const char **argv) {
     // displacement, so only one byte combination in eight decodes and the drop
     // heuristic never reaches its threshold; bound the search by how long it
     // has gone without finding anything new instead.
-    if (strcasecmp_P("80196N", dis8096.cpu_P()) == 0 ||
-            strcasecmp_P("80296", dis8096.cpu_P()) == 0)
+    if (strcasecmp("80196N", dis8096.cpu_P()) == 0 ||
+            strcasecmp("80296", dis8096.cpu_P()) == 0)
         generator.maxBarren(12 << 20);
     generator.generate();
 

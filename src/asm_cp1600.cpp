@@ -31,16 +31,16 @@ using namespace text::cp1600;
 
 namespace {
 
-constexpr char TEXT_WORD[] PROGMEM = "WORD";
-constexpr char TEXT_ZERO[] PROGMEM = "ZERO";
+constexpr char TEXT_WORD[] = "WORD";
+constexpr char TEXT_ZERO[] = "ZERO";
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_ORG,  &Assembler::defineOrigin                                                   },
     { TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_WORD                       },
     { TEXT_WORD, &Assembler::defineDataConstant, Assembler::DATA_WORD                       },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 // CP1600 number literals:
@@ -66,7 +66,7 @@ struct Cp1600NumberParser final : IbmNumberParser, Singleton<Cp1600NumberParser>
 //   symbolLetter:      alphanumeric + '_' + '$' + '?' + '&'   (no '@')
 //   instructionLetter: symbolLetter + '@'                     (MVO@, MVI@, ...)
 //   locationSymbol:    '!', '*' (fallback), '$' (fallback)
-constexpr char EXTRA_SYMBOL_LETTERS[] PROGMEM = "$?&";
+constexpr char EXTRA_SYMBOL_LETTERS[] = "$?&";
 struct Cp1600SymbolParser final : SimpleSymbolParser, Singleton<Cp1600SymbolParser> {
     Cp1600SymbolParser() : SimpleSymbolParser(EXTRA_SYMBOL_LETTERS) {}
     bool instructionLetter(char c) const override {
@@ -102,7 +102,7 @@ void AsmCp1600::reset() {
 }
 
 namespace {
-constexpr char TEXT_RADIX[] PROGMEM = "RADIX";
+constexpr char TEXT_RADIX[] = "RADIX";
 }  // namespace
 
 // RADIX n -- set the assembler's input radix.  The argument is parsed with
@@ -124,13 +124,13 @@ Error AsmCp1600::setRadix(StrScanner &scan, Insn &, uint16_t) {
     return error;
 }
 
-constexpr AsmCp1600::PseudoCp1600 AsmCp1600::PSEUDO_CP1600_TABLE[] PROGMEM = {
+constexpr AsmCp1600::PseudoCp1600 AsmCp1600::PSEUDO_CP1600_TABLE[] = {
         {TEXT_BYTE, &AsmCp1600::defineByte},
         {TEXT_RADIX, &AsmCp1600::setRadix},
         {TEXT_TEXT, &AsmCp1600::defineText},
         {TEXT_ZERO, &AsmCp1600::defineZero},
 };
-PROGMEM constexpr AsmCp1600::PseudosCp1600 AsmCp1600::PSEUDOS_CP1600{
+constexpr AsmCp1600::PseudosCp1600 AsmCp1600::PSEUDOS_CP1600{
         ARRAY_RANGE(PSEUDO_CP1600_TABLE)};
 
 Error AsmCp1600::processPseudo(StrScanner &scan, Insn &insn) {

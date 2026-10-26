@@ -114,7 +114,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode mode2() const { return AddrMode((_modes >> mode2_gp) & mode2_gm); }
         AddrMode mode3() const { return AddrMode((_modes >> mode3_gp) & mode3_gm); }
         uint16_t mask() const {
-            static constexpr uint16_t MASK[] PROGMEM = {
+            static constexpr uint16_t MASK[] = {
                     0x0000,  // CF_0000 = 0
                     0x0001,  // CF_0001 = 1
                     0x0003,  // CF_0003 = 2
@@ -133,7 +133,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x13FF,  // CF_13FF = 15
                     0x1FFF,  // CF_1FFF = 16
             };
-            return pgm_read_word(&MASK[(_attr >> cf_gp) & cf_gm]);
+            return MASK[(_attr >> cf_gp) & cf_gm];
         }
 
     private:
@@ -149,11 +149,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t cf_gm = 0x01F;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._modes), pgm_read_byte(&_flags_P._attr)};
+        return Flags{_flags_P._modes, _flags_P._attr};
     }
 
 private:

@@ -25,11 +25,11 @@ AsmTms320 asm320;
 Assembler &assembler(asm320);
 
 bool is32010() {
-    return strcasecmp_P("32010", assembler.config().cpu_P()) == 0;
+    return strcasecmp("32010", assembler.config().cpu_P()) == 0;
 }
 
 bool is32015() {
-    return strcasecmp_P("32015", assembler.config().cpu_P()) == 0;
+    return strcasecmp("32015", assembler.config().cpu_P()) == 0;
 }
 
 bool is3201x() {
@@ -37,15 +37,15 @@ bool is3201x() {
 }
 
 bool is32020() {
-    return strcasecmp_P("32020", assembler.config().cpu_P()) == 0;
+    return strcasecmp("32020", assembler.config().cpu_P()) == 0;
 }
 
 bool is320C25() {
-    return strcasecmp_P("320C25", assembler.config().cpu_P()) == 0;
+    return strcasecmp("320C25", assembler.config().cpu_P()) == 0;
 }
 
 bool is320C26() {
-    return strcasecmp_P("320C26", assembler.config().cpu_P()) == 0;
+    return strcasecmp("320C26", assembler.config().cpu_P()) == 0;
 }
 
 bool is3202x() {
@@ -57,11 +57,11 @@ bool is320C2x() {
 }
 
 bool is320C20x() {
-    return strcasecmp_P("320C20x", assembler.config().cpu_P()) == 0;
+    return strcasecmp("320C20x", assembler.config().cpu_P()) == 0;
 }
 
 bool is320C5x() {
-    return strcasecmp_P("320C5x", assembler.config().cpu_P()) == 0;
+    return strcasecmp("320C5x", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

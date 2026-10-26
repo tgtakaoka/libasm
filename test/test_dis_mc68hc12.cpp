@@ -40,15 +40,15 @@ Disassembler &disassembler(dis6812);
     } while (0)
 
 bool m68hcs12x() {
-    return strcmp_P("68HCS12X", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HCS12X", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hcs12() {
-    return strcmp_P("68HCS12", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HCS12", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hc12() {
-    return strcmp_P("68HC12", disassembler.config().cpu_P()) == 0;
+    return strcmp("68HC12", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

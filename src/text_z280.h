@@ -25,8 +25,8 @@ namespace text {
 namespace z280 {
 // clang-format off
 
-extern const char TEXT_Z280_LIST[] PROGMEM;
-extern const char TEXT_CPU_Z280[]  PROGMEM;
+extern const char TEXT_Z280_LIST[];
+extern const char TEXT_CPU_Z280[];
 using common::TEXT_CPU_Z80;
 
 // Z80
@@ -108,9 +108,9 @@ using common::TEXT_DIVU;
 using common::TEXT_DIVUW;
 using common::TEXT_DIVW;
 #if defined(LIBASM_Z280_EPU)
-extern const char TEXT_EPUF[]   PROGMEM;
-extern const char TEXT_EPUI[]   PROGMEM;
-extern const char TEXT_EPUM[]   PROGMEM;
+extern const char TEXT_EPUF[];
+extern const char TEXT_EPUI[];
+extern const char TEXT_EPUM[];
 #endif
 using common::TEXT_EXTS;
 using common::TEXT_INCW;
@@ -119,18 +119,18 @@ using common::TEXT_INDW;
 using common::TEXT_INIRW;
 using common::TEXT_INIW;
 using common::TEXT_INW;
-extern const char TEXT_JAF[]    PROGMEM;
-extern const char TEXT_JAR[]    PROGMEM;
+extern const char TEXT_JAF[];
+extern const char TEXT_JAR[];
 using common::TEXT_LDA;
 using common::TEXT_LDCTL;
-extern const char TEXT_LDUD[]   PROGMEM;
-extern const char TEXT_LDUP[]   PROGMEM;
+extern const char TEXT_LDUD[];
+extern const char TEXT_LDUP[];
 using common::TEXT_LDW;
 #if defined(LIBASM_Z280_EPU)
-extern const char TEXT_MEPU[]   PROGMEM;
+extern const char TEXT_MEPU[];
 #endif
 using common::TEXT_MULT;
-extern const char TEXT_MULTU[]  PROGMEM;
+extern const char TEXT_MULTU[];
 using common::TEXT_MULTUW;
 using common::TEXT_MULTW;
 using common::TEXT_OTDRW;
@@ -138,12 +138,12 @@ using common::TEXT_OTIRW;
 using common::TEXT_OUTDW;
 using common::TEXT_OUTIW;
 using common::TEXT_OUTW;
-extern const char TEXT_PCACHE[] PROGMEM;
-extern const char TEXT_RETIL[]  PROGMEM;
+extern const char TEXT_PCACHE[];
+extern const char TEXT_RETIL[];
 using common::TEXT_SC;
 using common::TEXT_SUBW;
 using common::TEXT_TSET;
-extern const char TEXT_TSTI[]   PROGMEM;
+extern const char TEXT_TSTI[];
 
 // Z80
 using common::TEXT_REG_A;
@@ -164,7 +164,7 @@ using common::TEXT_REG_R;
 using common::TEXT_REG_SP;
 
 // Z280
-extern const char TEXT_REG_DEHL[] PROGMEM;
+extern const char TEXT_REG_DEHL[];
 using common::TEXT_REG_IXH;
 using common::TEXT_REG_IXL;
 using common::TEXT_REG_IYH;

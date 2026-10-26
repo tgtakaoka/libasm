@@ -27,23 +27,23 @@ DisI8096 dis8096;
 Disassembler &disassembler(dis8096);
 
 bool is8096() {
-    return strcasecmp_P("8096", dis8096.cpu_P()) == 0;
+    return strcasecmp("8096", dis8096.cpu_P()) == 0;
 }
 
 bool is80196kb() {
-    return strcasecmp_P("80196KB", dis8096.cpu_P()) == 0;
+    return strcasecmp("80196KB", dis8096.cpu_P()) == 0;
 }
 
 bool is80196() {
-    return strcasecmp_P("80196", dis8096.cpu_P()) == 0;
+    return strcasecmp("80196", dis8096.cpu_P()) == 0;
 }
 
 bool is80196n() {
-    return strcasecmp_P("80196N", dis8096.cpu_P()) == 0;
+    return strcasecmp("80196N", dis8096.cpu_P()) == 0;
 }
 
 bool is80296() {
-    return strcasecmp_P("80296", dis8096.cpu_P()) == 0;
+    return strcasecmp("80296", dis8096.cpu_P()) == 0;
 }
 
 // The KB additions are on every CPU but the 8096; the KC additions are on the

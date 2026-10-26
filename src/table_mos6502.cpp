@@ -31,7 +31,7 @@ namespace mos6502 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-constexpr Entry MOS6502_TABLE[] PROGMEM = {
+constexpr Entry MOS6502_TABLE[] = {
     E0(0x00, TEXT_BRK),
     E0(0x40, TEXT_RTI),
     E0(0x60, TEXT_RTS),
@@ -185,7 +185,7 @@ constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E1(0xF0, TEXT_BEQ, M_REL),
 };
 
-constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
+constexpr uint8_t MOS6502_INDEX[] = {
      36,  // TEXT_ADC
      44,  // TEXT_ADC
      64,  // TEXT_ADC
@@ -339,7 +339,7 @@ constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
      12,  // TEXT_TYA
 };
 
-constexpr Entry G65SC02_TABLE[] PROGMEM = {
+constexpr Entry G65SC02_TABLE[] = {
     E0(0x5A, TEXT_PHY),
     E0(0x7A, TEXT_PLY),
     E0(0xDA, TEXT_PHX),
@@ -369,7 +369,7 @@ constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E1(0x80, TEXT_BRA, M_REL),
 };
 
-constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
+constexpr uint8_t G65SC02_INDEX[] = {
      21,  // TEXT_ADC
      19,  // TEXT_AND
       6,  // TEXT_BIT
@@ -399,7 +399,7 @@ constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
      12,  // TEXT_TSB
 };
 
-constexpr Entry R65C02_TABLE[] PROGMEM = {
+constexpr Entry R65C02_TABLE[] = {
     E2(0x0F, TEXT_BBR0, M_DPG, M_REL),
     E2(0x1F, TEXT_BBR1, M_DPG, M_REL),
     E2(0x2F, TEXT_BBR2, M_DPG, M_REL),
@@ -434,7 +434,7 @@ constexpr Entry R65C02_TABLE[] PROGMEM = {
     E1(0xF7, TEXT_SMB7, M_DPG),
 };
 
-constexpr uint8_t R65C02_INDEX[] PROGMEM = {
+constexpr uint8_t R65C02_INDEX[] = {
       0,  // TEXT_BBR0
       1,  // TEXT_BBR1
       2,  // TEXT_BBR2
@@ -469,17 +469,17 @@ constexpr uint8_t R65C02_INDEX[] PROGMEM = {
      31,  // TEXT_SMB7
 };
 
-constexpr Entry W65C02S_TABLE[] PROGMEM = {
+constexpr Entry W65C02S_TABLE[] = {
     E0(0xCB, TEXT_WAI),
     E0(0xDB, TEXT_STP),
 };
 
-constexpr uint8_t W65C02S_INDEX[] PROGMEM = {
+constexpr uint8_t W65C02S_INDEX[] = {
       1,  // TEXT_STP
       0,  // TEXT_WAI
 };
 
-constexpr Entry W65C816_TABLE[] PROGMEM = {
+constexpr Entry W65C816_TABLE[] = {
     E0(0x0B, TEXT_PHD),
     E0(0x1B, TEXT_TCS),
     E0(0x2B, TEXT_PLD),
@@ -575,7 +575,7 @@ constexpr Entry W65C816_TABLE[] PROGMEM = {
     E2(0xF7, TEXT_SBCL, I_DPG, M_REGY),
 };
 
-constexpr uint8_t W65C816_INDEX[] PROGMEM = {
+constexpr uint8_t W65C816_INDEX[] = {
      46,  // TEXT_ADC
      47,  // TEXT_ADC
      48,  // TEXT_ADC
@@ -674,25 +674,25 @@ constexpr uint8_t W65C816_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage MOS6502_PAGES[] PROGMEM = {
+constexpr EntryPage MOS6502_PAGES[] = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
 };
-constexpr EntryPage G65SC02_PAGES[] PROGMEM = {
+constexpr EntryPage G65SC02_PAGES[] = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
 };
-constexpr EntryPage R65C02_PAGES[] PROGMEM = {
+constexpr EntryPage R65C02_PAGES[] = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
 };
-constexpr EntryPage W65C02S_PAGES[] PROGMEM = {
+constexpr EntryPage W65C02S_PAGES[] = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
 };
-constexpr EntryPage W65C816_PAGES[] PROGMEM = {
+constexpr EntryPage W65C816_PAGES[] = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
@@ -701,7 +701,7 @@ constexpr EntryPage W65C816_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MOS6502, TEXT_CPU_6502, ARRAY_RANGE(MOS6502_PAGES)},
         {G65SC02, TEXT_CPU_65SC02, ARRAY_RANGE(G65SC02_PAGES)},
         {R65C02, TEXT_CPU_65C02, ARRAY_RANGE(R65C02_PAGES)},
@@ -763,11 +763,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableMos6502::listCpu_P() const {
+const char *TableMos6502::listCpu_P() const {
     return TEXT_MOS6502_LIST;
 }
 
-const /*PROGMEM*/ char *TableMos6502::cpuName_P(CpuType cpuType) const {
+const char *TableMos6502::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

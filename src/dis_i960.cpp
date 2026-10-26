@@ -170,9 +170,9 @@ Error DisI960::decodeFloat(DisInsn &insn, StrBuffer &out, uint8_t field, bool li
     if (field < FLOAT_REGS) {
         outFloatRegName(out, field);
     } else if (field == FLOAT_ZERO) {
-        out.rtext_P(PSTR("0.0"));
+        out.rtext_P("0.0");
     } else if (field == FLOAT_ONE) {
-        out.rtext_P(PSTR("1.0"));
+        out.rtext_P("1.0");
     } else {
         return insn.setError(out, ILLEGAL_REGISTER);
     }

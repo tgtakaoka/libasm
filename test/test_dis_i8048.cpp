@@ -25,20 +25,20 @@ DisI8048 dis8048;
 Disassembler &disassembler(dis8048);
 
 bool isCmos() {
-    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
-    return strcmp_P("80C39", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
-           strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
+    const auto cpu_P = disassembler.config().cpu_P();
+    return strcmp("80C39", cpu_P) == 0 || strcmp("80C48", cpu_P) == 0 ||
+           strcmp("MSM80C39", cpu_P) == 0 || strcmp("MSM80C48", cpu_P) == 0;
 }
 
 bool is8048() {
-    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
-    return strcmp_P("8048", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
-           strcmp_P("MSM80C48", cpu_P) == 0;
+    const auto cpu_P = disassembler.config().cpu_P();
+    return strcmp("8048", cpu_P) == 0 || strcmp("80C48", cpu_P) == 0 ||
+           strcmp("MSM80C48", cpu_P) == 0;
 }
 
 bool isOki() {
-    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
-    return strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
+    const auto cpu_P = disassembler.config().cpu_P();
+    return strcmp("MSM80C39", cpu_P) == 0 || strcmp("MSM80C48", cpu_P) == 0;
 }
 
 void set_up() {

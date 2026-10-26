@@ -70,12 +70,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint8_t mode_gm = 0x07;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._attr), pgm_read_byte(&_flags_P._selector),
-                pgm_read_word(&_flags_P._bits)};
+        return Flags{_flags_P._attr, _flags_P._selector,
+                _flags_P._bits};
     }
 
 private:

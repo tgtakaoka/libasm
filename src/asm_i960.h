@@ -57,8 +57,8 @@ private:
 
     using PseudoI960 = pseudo::__Pseudo<AsmI960, Insn>;
     using PseudosI960 = pseudo::__Pseudos<PseudoI960>;
-    static const PseudoI960 PSEUDO_I960_TABLE[] PROGMEM;
-    static const PseudosI960 PSEUDOS_I960 PROGMEM;
+    static const PseudoI960 PSEUDO_I960_TABLE[];
+    static const PseudosI960 PSEUDOS_I960;
     Error processModeBits(StrScanner &scan, Insn &insn, uint16_t extra);
     Error processIpOperand(StrScanner &scan, Insn &insn, uint16_t extra);
     Error processFpu(StrScanner &scan, Insn &insn, uint16_t extra);

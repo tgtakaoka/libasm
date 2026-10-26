@@ -28,13 +28,13 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_FCC, &Assembler::defineString       },
     { TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE           },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -156,7 +156,7 @@ void AsmMc68HC16::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode
 }
 
 uint_fast8_t registerMask(RegName reg, bool push) {
-    static constexpr RegName MASK[] PROGMEM = {
+    static constexpr RegName MASK[] = {
             REG_D,    // PSHM push D first.
             REG_E,    //
             REG_X,    //
@@ -166,7 +166,7 @@ uint_fast8_t registerMask(RegName reg, bool push) {
             REG_CCR,  // PULM pull D first
     };
     for (uint_fast8_t i = 0; i < 7; ++i) {
-        if (RegName(pgm_read_byte(MASK + i)) == reg) {
+        if (RegName(MASK[i]) == reg) {
             return push ? (1 << i) : (0x40 >> i);
         }
     }

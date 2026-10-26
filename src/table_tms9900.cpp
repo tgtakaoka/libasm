@@ -30,7 +30,7 @@ namespace tms9900 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_TMS9900[] PROGMEM = {
+constexpr Entry TABLE_TMS9900[] = {
     E2(0x0200, CF_000F, TEXT_LI,   M_REG,  M_IMM),
     E2(0x0220, CF_000F, TEXT_AI,   M_REG,  M_IMM),
     E2(0x0240, CF_000F, TEXT_ANDI, M_REG,  M_IMM),
@@ -104,7 +104,7 @@ constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E0(0x1000, CF_0000, TEXT_NOP),
 };
 
-constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
+constexpr uint8_t INDEX_TMS9900[] = {
      63,  // TEXT_A
      64,  // TEXT_AB
      28,  // TEXT_ABS
@@ -178,21 +178,21 @@ constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
      51,  // TEXT_XOR
 };
 
-constexpr Entry TABLE_TMS9995[] PROGMEM = {
+constexpr Entry TABLE_TMS9995[] = {
     E1(0x0080, CF_000F, TEXT_LST,  M_REG),
     E1(0x0090, CF_000F, TEXT_LWP,  M_REG),
     E1(0x0180, CF_003F, TEXT_DIVS, M_SRC),
     E1(0x01C0, CF_003F, TEXT_MPYS, M_SRC),
 };
 
-constexpr uint8_t INDEX_TMS9995[] PROGMEM = {
+constexpr uint8_t INDEX_TMS9995[] = {
       2,  // TEXT_DIVS
       0,  // TEXT_LST
       1,  // TEXT_LWP
       3,  // TEXT_MPYS
 };
 
-constexpr Entry TABLE_TMS99105[] PROGMEM = {
+constexpr Entry TABLE_TMS99105[] = {
     E2(0x001C, CF_0000, TEXT_SRAM, M_SRC2, M_CNT4),
     E2(0x001D, CF_0000, TEXT_SLAM, M_SRC2, M_CNT4),
     E2(0x0029, CF_0000, TEXT_SM,   M_SRC2, M_DST4),
@@ -211,7 +211,7 @@ constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E1(0x0384, CF_0000, TEXT_RTWP, M_RTWP),
 };
 
-constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
+constexpr uint8_t INDEX_TMS99105[] = {
       3,  // TEXT_AM
       6,  // TEXT_BIND
       4,  // TEXT_BLSK
@@ -226,7 +226,7 @@ constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
       9,  // TEXT_TSMB
 };
 
-constexpr Entry TABLE_TMS99110[] PROGMEM = {
+constexpr Entry TABLE_TMS99110[] = {
     E0(0x0780, CF_0000, TEXT_LDS),
     E0(0x07C0, CF_0000, TEXT_LDD),
     E0(0x0C00, CF_0000, TEXT_CRI),
@@ -244,7 +244,7 @@ constexpr Entry TABLE_TMS99110[] PROGMEM = {
     E2(0x0302, CF_0000, TEXT_MM,  M_SRC2, M_DST0),
 };
 
-constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
+constexpr uint8_t INDEX_TMS99110[] = {
       6,  // TEXT_AR
       5,  // TEXT_CER
       7,  // TEXT_CIR
@@ -266,22 +266,22 @@ constexpr uint8_t INDEX_TMS99110[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage TMS9900_PAGES[] PROGMEM = {
+constexpr EntryPage TMS9900_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
 };
 
-constexpr EntryPage TMS9995_PAGES[] PROGMEM = {
+constexpr EntryPage TMS9995_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
-constexpr EntryPage TMS99105_PAGES[] PROGMEM = {
+constexpr EntryPage TMS99105_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
-constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
+constexpr EntryPage TMS99110_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
@@ -290,7 +290,7 @@ constexpr EntryPage TMS99110_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {TMS9900, TEXT_CPU_9900, ARRAY_RANGE(TMS9900_PAGES)},
         {TMS9980, TEXT_CPU_9980, ARRAY_RANGE(TMS9900_PAGES)},
         {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
@@ -343,11 +343,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableTms9900::listCpu_P() const {
+const char *TableTms9900::listCpu_P() const {
     return TEXT_TMS9900_LIST;
 }
 
-const /*PROGMEM*/ char *TableTms9900::cpuName_P(CpuType cpuType) const {
+const char *TableTms9900::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

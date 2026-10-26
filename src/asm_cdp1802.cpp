@@ -29,13 +29,13 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-constexpr char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
+constexpr char OPT_BOOL_USE_REGISTER[] = "use-register";
+constexpr char OPT_DESC_USE_REGISTER[] = "enable register name Rn";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace

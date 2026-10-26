@@ -25,15 +25,15 @@ AsmZ8 asmz8;
 Assembler &assembler(asmz8);
 
 bool z86c() {
-    return strcmp_P("Z86C", assembler.config().cpu_P()) == 0;
+    return strcmp("Z86C", assembler.config().cpu_P()) == 0;
 }
 
 bool z86() {
-    return strcmp_P("Z8", assembler.config().cpu_P()) == 0 || z86c();
+    return strcmp("Z8", assembler.config().cpu_P()) == 0 || z86c();
 }
 
 bool z88() {
-    return strcmp_P("Z88", assembler.config().cpu_P()) == 0;
+    return strcmp("Z88", assembler.config().cpu_P()) == 0;
 }
 
 #define TZ86(src, ...) \

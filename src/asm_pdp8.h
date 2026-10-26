@@ -54,12 +54,12 @@ private:
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
-    static const pseudo::Pseudo PSEUDOS[] PROGMEM;
+    static const pseudo::Pseudo PSEUDOS[];
 
     using PseudoPdp8 = pseudo::__Pseudo<AsmPdp8, Insn>;
     using PseudosPdp8 = pseudo::__Pseudos<PseudoPdp8>;
-    static const PseudoPdp8 PSEUDO_PDP8_TABLE[] PROGMEM;
-    static const PseudosPdp8 PSEUDOS_PDP8 PROGMEM;
+    static const PseudoPdp8 PSEUDO_PDP8_TABLE[];
+    static const PseudosPdp8 PSEUDOS_PDP8;
 };
 
 }  // namespace pdp8

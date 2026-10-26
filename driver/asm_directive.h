@@ -39,8 +39,8 @@ struct CpuSwitcher {
 
 struct AsmDirective : ErrorAt {
     bool setCpu(const char *cpu);
-    const /*PROGMEM*/ char *cpu_P() const;
-    const /*PROGMEM*/ char *listCpu_P() const;
+    const char *cpu_P() const;
+    const char *listCpu_P() const;
     const ConfigBase &config() const;
     const Options &commonOptions() const;
     const Options &options() const;

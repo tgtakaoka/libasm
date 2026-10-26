@@ -25,14 +25,14 @@ using namespace reg;
 
 namespace {
 
-constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "use |addr| for short direct notation";
-constexpr char OPT_BOOL_SEGMENTED_ADDR[] PROGMEM = "segmented-addr";
-constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
-constexpr char OPT_BOOL_EXTERN_SYMBOL[] PROGMEM = "extern-symbol";
-constexpr char OPT_DESC_EXTERN_SYMBOL[] PROGMEM = "emit direct address as seg_SS_off_XXXX symbol";
-constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for R15 or RR14";
+constexpr char OPT_BOOL_SHORT_DIRECT[] = "short-direct";
+constexpr char OPT_DESC_SHORT_DIRECT[] = "use |addr| for short direct notation";
+constexpr char OPT_BOOL_SEGMENTED_ADDR[] = "segmented-addr";
+constexpr char OPT_DESC_SEGMENTED_ADDR[] = "use <<segment>> notation";
+constexpr char OPT_BOOL_EXTERN_SYMBOL[] = "extern-symbol";
+constexpr char OPT_DESC_EXTERN_SYMBOL[] = "emit direct address as seg_SS_off_XXXX symbol";
+constexpr char OPT_BOOL_SP_ALIAS[] = "sp-alias";
+constexpr char OPT_DESC_SP_ALIAS[] = "use SP for R15 or RR14";
 
 }  // namespace
 
@@ -223,11 +223,11 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
         const auto addr = (static_cast<Config::uintptr_t>(seg) << 16) | disp;
         insn.setErrorIf(out, checkAddr(addr, align));
         if (_externSymbol) {
-            out.rtext_P(PSTR("seg_"));
+            out.rtext_P("seg_");
             StrCaseBuffer lower(out, false);
             lower.hex(static_cast<uint8_t>(seg), 2);
             lower.over(out);
-            out.rtext_P(PSTR("_off_"));
+            out.rtext_P("_off_");
             StrCaseBuffer lower2(out, false);
             lower2.hex(static_cast<uint16_t>(disp), 4);
             lower2.over(out);
@@ -236,7 +236,7 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
         if (shortDirect)
             out.letter('|');
         if (_segmentedAddr && !_gnuAs) {
-            outHex(out.rtext_P(PSTR("<<")), seg, 7).rtext_P(PSTR(">>"));
+            outHex(out.rtext_P("<<"), seg, 7).rtext_P(">>");
             outAbsAddr(out, disp, ADDRESS_16BIT);
         } else {
             outAbsAddr(out, addr);

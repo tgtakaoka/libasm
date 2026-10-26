@@ -24,9 +24,9 @@ namespace text {
 namespace z380 {
 // clang-format off
 
-extern const char TEXT_Z380_LIST[] PROGMEM;
+extern const char TEXT_Z380_LIST[];
 using common::TEXT_CPU_Z180;
-extern const char TEXT_CPU_Z380[]  PROGMEM;
+extern const char TEXT_CPU_Z380[];
 using common::TEXT_CPU_Z80;
 
 // Z80
@@ -112,24 +112,24 @@ using common::TEXT_TST;
 using common::TEXT_TSTIO;
 
 // Z380
-extern const char TEXT_ADCW[]  PROGMEM;
+extern const char TEXT_ADCW[];
 using common::TEXT_ADDW;
 using common::TEXT_ANDW;
-extern const char TEXT_BTEST[] PROGMEM;
+extern const char TEXT_BTEST[];
 using common::TEXT_CALR;
-extern const char TEXT_CPLW[]  PROGMEM;
+extern const char TEXT_CPLW[];
 using common::TEXT_CPW;
-extern const char TEXT_DDIR[]  PROGMEM;
+extern const char TEXT_DDIR[];
 using common::TEXT_DECW;
 using common::TEXT_DIVUW;
 using common::TEXT_DIVW;
-extern const char TEXT_EXALL[] PROGMEM;
+extern const char TEXT_EXALL[];
 using common::TEXT_EXTS;
 using common::TEXT_EXTSW;
-extern const char TEXT_EXXX[]  PROGMEM;
-extern const char TEXT_EXXY[]  PROGMEM;
-extern const char TEXT_INA[]   PROGMEM;
-extern const char TEXT_INAW[]  PROGMEM;
+extern const char TEXT_EXXX[];
+extern const char TEXT_EXXY[];
+extern const char TEXT_INA[];
+extern const char TEXT_INAW[];
 using common::TEXT_INCW;
 using common::TEXT_INDRW;
 using common::TEXT_INDW;
@@ -137,34 +137,34 @@ using common::TEXT_INIRW;
 using common::TEXT_INIW;
 using common::TEXT_INW;
 using common::TEXT_LDCTL;
-extern const char TEXT_LDDRW[] PROGMEM;
-extern const char TEXT_LDDW[]  PROGMEM;
-extern const char TEXT_LDIRW[] PROGMEM;
-extern const char TEXT_LDIW[]  PROGMEM;
+extern const char TEXT_LDDRW[];
+extern const char TEXT_LDDW[];
+extern const char TEXT_LDIRW[];
+extern const char TEXT_LDIW[];
 using common::TEXT_LDW;
-extern const char TEXT_MTEST[] PROGMEM;
+extern const char TEXT_MTEST[];
 using common::TEXT_MULTUW;
 using common::TEXT_MULTW;
 using common::TEXT_NEGW;
 using common::TEXT_ORW;
 using common::TEXT_OTDRW;
 using common::TEXT_OTIRW;
-extern const char TEXT_OUTA[]  PROGMEM;
-extern const char TEXT_OUTAW[] PROGMEM;
+extern const char TEXT_OUTA[];
+extern const char TEXT_OUTAW[];
 using common::TEXT_OUTDW;
 using common::TEXT_OUTIW;
 using common::TEXT_OUTW;
-extern const char TEXT_RESC[]  PROGMEM;
-extern const char TEXT_RETB[]  PROGMEM;
-extern const char TEXT_RLCW[]  PROGMEM;
-extern const char TEXT_RLW[]   PROGMEM;
-extern const char TEXT_RRCW[]  PROGMEM;
-extern const char TEXT_RRW[]   PROGMEM;
-extern const char TEXT_SBCW[]  PROGMEM;
+extern const char TEXT_RESC[];
+extern const char TEXT_RETB[];
+extern const char TEXT_RLCW[];
+extern const char TEXT_RLW[];
+extern const char TEXT_RRCW[];
+extern const char TEXT_RRW[];
+extern const char TEXT_SBCW[];
 using common::TEXT_SETC;
-extern const char TEXT_SLAW[]  PROGMEM;
-extern const char TEXT_SRAW[]  PROGMEM;
-extern const char TEXT_SRLW[]  PROGMEM;
+extern const char TEXT_SLAW[];
+extern const char TEXT_SRAW[];
+extern const char TEXT_SRLW[];
 using common::TEXT_SUBW;
 using common::TEXT_SWAP;
 using common::TEXT_XORW;
@@ -190,12 +190,12 @@ using common::TEXT_REG_SP;
 // Z380
 using common::TEXT_REG_DSR;
 using common::TEXT_REG_IXL;
-extern const char TEXT_REG_IXU[] PROGMEM;
+extern const char TEXT_REG_IXU[];
 using common::TEXT_REG_IYL;
-extern const char TEXT_REG_IYU[] PROGMEM;
+extern const char TEXT_REG_IYU[];
 using common::TEXT_REG_SR;
-extern const char TEXT_REG_XSR[] PROGMEM;
-extern const char TEXT_REG_YSR[] PROGMEM;
+extern const char TEXT_REG_XSR[];
+extern const char TEXT_REG_YSR[];
 
 // Z80, Z180
 using common::TEXT_CC_C;
@@ -213,12 +213,12 @@ using common::TEXT_CC_NV;
 using common::TEXT_CC_S;
 using common::TEXT_CC_V;
 
-extern const char PSTR_IB[]  PROGMEM;
-extern const char PSTR_IW[]  PROGMEM;
-extern const char PSTR_LCK[] PROGMEM;
-extern const char PSTR_LW[]  PROGMEM;
-extern const char PSTR_W[]   PROGMEM;
-extern const char PSTR_XM[]  PROGMEM;
+extern const char PSTR_IB[];
+extern const char PSTR_IW[];
+extern const char PSTR_LCK[];
+extern const char PSTR_LW[];
+extern const char PSTR_W[];
+extern const char PSTR_XM[];
 
 // clang-format on
 }  // namespace z380

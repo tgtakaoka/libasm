@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry INTEL_ENTRIES[] PROGMEM = {
+constexpr NameEntry INTEL_ENTRIES[] = {
     { TEXT_REG_A,   REG_A   },
     { TEXT_REG_B,   REG_B   },
     { TEXT_REG_C,   REG_C   },
@@ -42,7 +42,7 @@ constexpr NameEntry INTEL_ENTRIES[] PROGMEM = {
     { TEXT_REG_SP,  REG_SP  },
 };
 
-constexpr NameEntry ZILOG_ENTRIES[] PROGMEM = {
+constexpr NameEntry ZILOG_ENTRIES[] = {
     { TEXT_REG_A,   REG_A   },
     { TEXT_REG_AF,  REG_AF  },
     { TEXT_REG_B,   REG_B   },
@@ -60,7 +60,7 @@ constexpr NameEntry ZILOG_ENTRIES[] PROGMEM = {
     { TEXT_REG_SP,  REG_SP  },
 };
 
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_C,  CC_C  },
     { TEXT_CC_M,  CC_M  },
     { TEXT_CC_NC, CC_NC },
@@ -71,9 +71,9 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_Z,  CC_Z  },
 };
 
-PROGMEM constexpr NameTable INTEL_TABLE{ARRAY_RANGE(INTEL_ENTRIES)};
-PROGMEM constexpr NameTable ZILOG_TABLE{ARRAY_RANGE(ZILOG_ENTRIES)};
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable INTEL_TABLE{ARRAY_RANGE(INTEL_ENTRIES)};
+constexpr NameTable ZILOG_TABLE{ARRAY_RANGE(ZILOG_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // clang-format on
 }  // namespace

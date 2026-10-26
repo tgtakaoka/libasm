@@ -78,10 +78,10 @@ private:
 
     using PseudoI8086 = pseudo::__Pseudo<AsmI8086, AsmInsn>;
     using PseudosI8086 = pseudo::__Pseudos<PseudoI8086>;
-    static const PseudoI8086 PSEUDO_I8086_TABLE[] PROGMEM;
-    static const PseudosI8086 PSEUDOS_I8086 PROGMEM;
-    static const PseudoI8086 PREFIX_TABLE[] PROGMEM;
-    static const PseudosI8086 PREFIXES PROGMEM;
+    static const PseudoI8086 PSEUDO_I8086_TABLE[];
+    static const PseudosI8086 PSEUDOS_I8086;
+    static const PseudoI8086 PREFIX_TABLE[];
+    static const PseudosI8086 PREFIXES;
 };
 
 }  // namespace i8086

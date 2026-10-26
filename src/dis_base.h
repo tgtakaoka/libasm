@@ -44,7 +44,7 @@ struct Disassembler {
     virtual void reset();
 
     const ValueFormatter &formatter() const;
-    const /*PROGMEM*/ char *lineComment_P() const { return _formatter.lineComment_P(); }
+    const char *lineComment_P() const { return _formatter.lineComment_P(); }
 
     bool setCpu(const char *name) { return configSetter().setCpu(name); }
 

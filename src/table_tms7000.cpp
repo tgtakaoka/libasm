@@ -31,7 +31,7 @@ namespace tms7000 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TMS7000_TABLE[] PROGMEM = {
+constexpr Entry TMS7000_TABLE[] = {
 	E0(0x00, TEXT_NOP),
 	E0(0x01, TEXT_IDLE),
 	E0(0x05, TEXT_EINT),
@@ -245,7 +245,7 @@ constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E1(0xE8, TEXT_TRAP,  M_TRAP),
 };
 
-constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
+constexpr uint8_t TMS7000_INDEX[] = {
      21,  // TEXT_ADC
      35,  // TEXT_ADC
      49,  // TEXT_ADC
@@ -463,13 +463,13 @@ constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage TMS7000_PAGES[] PROGMEM = {
+constexpr EntryPage TMS7000_PAGES[] = {
         {ARRAY_RANGE(TMS7000_TABLE), ARRAY_RANGE(TMS7000_INDEX)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {TMS7000, TEXT_CPU_TMS7000, ARRAY_RANGE(TMS7000_PAGES)},
 };
 
@@ -521,16 +521,16 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableTms7000::listCpu_P() const {
+const char *TableTms7000::listCpu_P() const {
     return TEXT_CPU_TMS7000;
 }
 
-const /*PROGMEM*/ char *TableTms7000::cpuName_P(CpuType cpuType) const {
+const char *TableTms7000::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
 Error TableTms7000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.iequals(TEXT_CPU_TMS7000) || strncasecmp_P(TEXT_CPU_TMS70C, name.str(), 6) == 0) {
+    if (name.iequals(TEXT_CPU_TMS7000) || strncasecmp(TEXT_CPU_TMS70C, name.str(), 6) == 0) {
         cpuType = TMS7000;
         return OK;
     }

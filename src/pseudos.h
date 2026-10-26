@@ -32,35 +32,28 @@ template <typename APP, typename INSN>
 struct __Pseudo {
     using Handler = Error (APP::*)(StrScanner &scan, INSN &insn, uint16_t extra);
 
-    constexpr __Pseudo(const /*PROGMEM*/ char *name_P, Handler handler, uint16_t extra = 0)
+    constexpr __Pseudo(const char *name_P, Handler handler, uint16_t extra = 0)
         : _name_P(name_P), _handler_P(handler), _extra_P(extra) {}
 
-    const /*PROGMEM*/ char *name_P() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
+    const char *name_P() const {
+        return _name_P;
     }
 
     Error invoke(APP *app, StrScanner &scan, INSN &insn) const {
-        const auto h = readHandler();
-        return (app->*h)(scan, insn, readExtra());
+        return (app->*_handler_P)(scan, insn, readExtra());
     }
 
-    uint16_t readExtra() const { return pgm_read_word(&_extra_P); }
+    uint16_t readExtra() const { return _extra_P; }
 
 private:
-    const /*PROGMEM*/ char *const _name_P;
+    const char *const _name_P;
     const Handler _handler_P;
     const uint16_t _extra_P;
-
-    Handler readHandler() const {
-        Handler h;
-        memcpy_P(&h, &_handler_P, sizeof(Handler));
-        return h;
-    }
 };
 
 template <typename PSEUDO>
 struct __Pseudos {
-    constexpr __Pseudos(const /*PROGMEM*/ PSEUDO *table_P, const /*PROGMEM*/ PSEUDO *end_P)
+    constexpr __Pseudos(const PSEUDO *table_P, const PSEUDO *end_P)
         : _table(table_P, end_P) {}
 
     const PSEUDO *search(const char *name) const { return _table.binarySearch(name, comparator); }
@@ -68,8 +61,8 @@ struct __Pseudos {
 private:
     const table::Table<PSEUDO> _table;
 
-    static int comparator(const char *name, const /*PROGMEM*/ PSEUDO *item) {
-        return strcasecmp_P(name, item->name_P());
+    static int comparator(const char *name, const PSEUDO *item) {
+        return strcasecmp(name, item->name_P());
     }
 };
 

@@ -36,7 +36,7 @@ namespace z8000 {
 #define E0(_opc, _name, _cf) E1(_opc, _name, _cf, SZ_NONE, M_NONE, OP_NO)
 
 // clang-format off
-constexpr Entry TABLE_Z8000[] PROGMEM = {
+constexpr Entry TABLE_Z8000[] = {
     E2(0xC000, TEXT_LDB,    CF_0FFF, SZ_BYTE, M_R,    M_IM8,  OP_C8, OP_C0),
     E1(0xD000, TEXT_CALR,   CF_0FFF, SZ_NONE, M_RA12,         OP_C0),
     E2(0xE000, TEXT_JR,     CF_0FFF, SZ_NONE, M_CC,   M_RA8,  OP_C8, OP_C0),
@@ -271,7 +271,7 @@ constexpr Entry TABLE_Z8000[] PROGMEM = {
     X4(0xBB0E, TEXT_CPSDR,  CF_00F0, SZ_WORD, M_IR,   M_IR,   OP_P4, OP_C4, M_WR, M_CC, PF_0XXX),
 };
 
-constexpr uint8_t INDEX_Z8000[] PROGMEM = {
+constexpr uint8_t INDEX_Z8000[] = {
      88,  // TEXT_ADC
      87,  // TEXT_ADCB
      95,  // TEXT_ADD
@@ -509,13 +509,13 @@ constexpr uint8_t INDEX_Z8000[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage Z8000_PAGES[] PROGMEM = {
+constexpr EntryPage Z8000_PAGES[] = {
         {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {Z8001, TEXT_CPU_Z8001, ARRAY_RANGE(Z8000_PAGES)},
         {Z8002, TEXT_CPU_Z8002, ARRAY_RANGE(Z8000_PAGES)},
 };
@@ -593,11 +593,11 @@ Error searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableZ8000::listCpu_P() const {
+const char *TableZ8000::listCpu_P() const {
     return TEXT_Z8000_LIST;
 }
 
-const /*PROGMEM*/ char *TableZ8000::cpuName_P(CpuType cpuType) const {
+const char *TableZ8000::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

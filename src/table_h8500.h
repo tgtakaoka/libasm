@@ -24,8 +24,8 @@ namespace libasm {
 namespace h8500 {
 
 struct TableH8500 final : InsnTable<CpuType> {
-    const /*PROGMEM*/ char *listCpu_P() const override;
-    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    const char *listCpu_P() const override;
+    const char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 };
 

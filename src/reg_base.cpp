@@ -31,11 +31,11 @@ bool nameMatcher(int8_t &name, const NameEntry *item, int) {
 
 int textMatcher(StrScanner &symbol, const NameEntry *item) {
     const auto text_P = item->text_P();
-    const auto res = strncasecmp_P(symbol.str(), text_P, symbol.size());
+    const auto res = strncasecmp(symbol.str(), text_P, symbol.size());
     if (res)
         return res;
     // |item| may be longer than |symbol|.
-    return pgm_read_byte(text_P + symbol.size()) ? -1 : 0;
+    return text_P[symbol.size()] ? -1 : 0;
 }
 
 }  // namespace

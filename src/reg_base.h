@@ -36,18 +36,18 @@ static inline bool isIdLetter(char c) {
  * Entry of register, condition codes, and flags table.
  */
 struct NameEntry {
-    constexpr NameEntry(const /*PROGMEM*/ char *text_P, int8_t name)
+    constexpr NameEntry(const char *text_P, int8_t name)
         : _text_P(text_P), _name_P(name) {}
 
-    const /*PROGMEM*/ char *text_P() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&_text_P));
+    const char *text_P() const {
+        return _text_P;
     }
-    int8_t name() const { return pgm_read_byte(&_name_P); }
+    int8_t name() const { return _name_P; }
 
     StrBuffer &outText(StrBuffer &out) const;
 
 private:
-    const /*PROGMEM*/ char *const _text_P;
+    const char *const _text_P;
     const int8_t _name_P;
 };
 
@@ -58,7 +58,7 @@ struct NameTable {
     /**
      * NameEntry array |table|~|end| must be sorted by NameEntry::text_P.
      */
-    constexpr NameTable(const /*PROGMEM*/ NameEntry *table_P, const /*PROGMEM*/ NameEntry *end_P)
+    constexpr NameTable(const NameEntry *table_P, const NameEntry *end_P)
         : _table(table_P, end_P) {}
 
     /**

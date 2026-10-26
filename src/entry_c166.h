@@ -129,7 +129,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t sub() const { return _attr >> sub_gp; }
         uint8_t opCodeMask() const { return cf() == CF_OP ? 0xF0 : 0; }
         uint8_t postMask() const {
-            static constexpr uint8_t MASK[] PROGMEM = {
+            static constexpr uint8_t MASK[] = {
                     0x00,  // CF_00
                     0xFF,  // CF_FF
                     0xF0,  // CF_F0
@@ -145,7 +145,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xFA,  // CF_FA
                     0xF8,  // CF_F8
             };
-            return pgm_read_byte(&MASK[cf()]);
+            return MASK[cf()];
         }
         bool word2() const {
             return dst() >= M_WORD2 || src() >= M_WORD2 || cf() == CF_PD || rrr();
@@ -164,11 +164,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
     };
 
     constexpr Entry(Config::opcode_t opc, Config::opcode_t post, Flags flags,
-            const /* PROGMEM */ char *name_P)
+            const char *name_P)
         : Base(name_P, opc), _flags_P(flags), _post_P(post) {}
 
-    Flags readFlags() const { return Flags{pgm_read_dword(&_flags_P._attr)}; }
-    Config::opcode_t readPost() const { return pgm_read_byte(&_post_P); }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
+    Config::opcode_t readPost() const { return _post_P; }
 
 private:
     const Flags _flags_P;

@@ -99,26 +99,26 @@ void test_text_P() {
     StrCaseBuffer lower(out, false);
     StrCaseBuffer upper(out, true);
 
-    out.text_P(PSTR("aB"))
+    out.text_P("aB")
             .over(lower)
-            .text_P(PSTR("cD"))
+            .text_P("cD")
             .over(upper)
-            .text_P(PSTR("eF"))
+            .text_P("eF")
             .over(out)
-            .text_P(PSTR("gH"));
+            .text_P("gH");
 
     EQ("text alpha", "aBcdEFgH", out.str());
     EQ("text alpha", 8, out.len());
     EQ("text alpha", 6, upper.len());
     EQ("text alpha", 4, lower.len());
 
-    static const char xY[] PROGMEM = "xY";
+    static const char xY[] = "xY";
     out.text_P(xY);
     EQ("text xY", BUFFER_OVERFLOW, out.getError());
     EQ("text xY", "aBcdEFgHx", out.str());
     EQ("text alpha", 0, out.capacity());
 
-    static const char zW[] PROGMEM = "zW";
+    static const char zW[] = "zW";
     out.text_P(zW);
     EQ("text zW", BUFFER_OVERFLOW, out.getError());
     EQ("text zW", "aBcdEFgHx", out.str());
@@ -214,15 +214,15 @@ void test_rtext() {
 
     // rtext_P(const StrScanner &)
     {
-        static const char xY[] PROGMEM = "xY";
-        static const char zW[] PROGMEM = "zW";
-        out.rtext_P(PSTR("aB"))
+        static const char xY[] = "xY";
+        static const char zW[] = "zW";
+        out.rtext_P("aB")
                 .over(lower)
-                .rtext_P(PSTR("cD"))
+                .rtext_P("cD")
                 .over(upper)
-                .rtext_P(PSTR("eF"))
+                .rtext_P("eF")
                 .over(out)
-                .rtext_P(PSTR("gH"));
+                .rtext_P("gH");
 
         EQ("rtext alpha", "aBcDeFgH", out.str());
         EQ("rtext alpha", 8, out.len());

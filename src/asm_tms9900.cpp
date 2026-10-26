@@ -30,7 +30,7 @@ using namespace text::tms9900;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_AORG, &Assembler::defineOrigin       },
     { TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE                        },
     { TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
@@ -38,7 +38,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_EVEN, &Assembler::alignOrigin,        Assembler::ALIGN_EVEN                       },
     { TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE                        },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -275,7 +275,7 @@ Error AsmTms9900::defineFloatConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &
 
 Error AsmTms9900::processPseudo(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    if (strcasecmp_P(insn.name(), TEXT_SINGLE) == 0)
+    if (strcasecmp(insn.name(), TEXT_SINGLE) == 0)
         return defineFloatConstant(scan, insn, _insn);
     return Assembler::processPseudo(scan, _insn);
 }

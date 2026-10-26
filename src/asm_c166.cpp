@@ -32,16 +32,16 @@ using namespace text::c166;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr const char *DPP_DIRECTIVES[] PROGMEM = {
+constexpr const char *DPP_DIRECTIVES[] = {
     TEXT_REG_DPP0,
     TEXT_REG_DPP1,
     TEXT_REG_DPP2,
@@ -121,10 +121,10 @@ const Operator OP_PAG(3, Operator::RIGHT, 1, pageOf);
 const Operator OP_SOF(3, Operator::RIGHT, 1, segmentOffsetOf);
 const Operator OP_POF(3, Operator::RIGHT, 1, pageOffsetOf);
 
-constexpr char TEXT_SEG[] PROGMEM = "SEG";
-constexpr char TEXT_PAG[] PROGMEM = "PAG";
-constexpr char TEXT_SOF[] PROGMEM = "SOF";
-constexpr char TEXT_POF[] PROGMEM = "POF";
+constexpr char TEXT_SEG[] = "SEG";
+constexpr char TEXT_PAG[] = "PAG";
+constexpr char TEXT_SOF[] = "SOF";
+constexpr char TEXT_POF[] = "POF";
 // clang-format on
 
 // The segment, page, segment offset and page offset of an address.
@@ -195,8 +195,8 @@ void AsmC166::reset() {
 
 Error AsmC166::processPseudo(StrScanner &scan, Insn &insn) {
     for (auto i = 0; i < 4; i++) {
-        const auto *name_P = reinterpret_cast<const char *>(pgm_read_ptr(&DPP_DIRECTIVES[i]));
-        if (strcasecmp_P(insn.name(), name_P) == 0)
+        const auto *name_P = DPP_DIRECTIVES[i];
+        if (strcasecmp(insn.name(), name_P) == 0)
             return processDpp(scan, insn, i);
     }
     return Assembler::processPseudo(scan, insn);

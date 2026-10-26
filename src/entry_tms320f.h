@@ -121,7 +121,7 @@ struct Entry final : private entry::Base<uint16_t> {
         bool maybeUnary() const { return (_modes & (1 << unary_bp)) != 0; }
         bool isParallel() const { return codeFormat() >= CF_P4; }
         uint32_t mask() const {
-            static constexpr uint16_t CF_VAR[] PROGMEM = {
+            static constexpr uint16_t CF_VAR[] = {
                     0x0000,  // CF_00: |________op_________|_______?_______|
                     0x007F,  // CF_GG: |0x0|__op__|GG|_dst_|______src______|
                     0x0060,  // CF_0G: |0x0|__op__|GG|00000|______src______|; NOP/RPTS
@@ -137,7 +137,7 @@ struct Entry final : private entry::Base<uint16_t> {
                     0x01FF,  // CF_P5: |10__op_|ds1|sr1|sr3|__dst2_|__src2_|;
                     0x00FF,  // CF_P6: |10_op_|PPdd|sr1|sr2|__src3_|__src4_|:
             };
-            static constexpr uint16_t LF_VAR[] PROGMEM = {
+            static constexpr uint16_t LF_VAR[] = {
                     0x0000,  // LF_00
                     0x0000,  // LF_01
                     0x0000,  // LF_FF
@@ -145,20 +145,20 @@ struct Entry final : private entry::Base<uint16_t> {
             };
             const auto cf = codeFormat();
             const auto lf = lswFormat();
-            uint32_t var = pgm_read_word(CF_VAR + cf);
+            uint32_t var = CF_VAR[cf];
             var <<= 16;
-            var |= pgm_read_word(LF_VAR + lf);
+            var |= LF_VAR[lf];
             return ~var;
         }
         uint16_t lower16() const {
-            static constexpr uint16_t LF_VAL[] PROGMEM = {
+            static constexpr uint16_t LF_VAL[] = {
                     0x0000,  // LF_00
                     0x0001,  // LF_01
                     0xFFFF,  // LF_FF
                     0x0000,  // LF_XX
             };
             const auto lf = lswFormat();
-            return pgm_read_word(LF_VAL + lf);
+            return LF_VAL[lf];
         }
 
     private:
@@ -182,15 +182,15 @@ struct Entry final : private entry::Base<uint16_t> {
         static constexpr uint_fast8_t lf_gm = 0x03;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._modes), pgm_read_word(&_flags_P._pos),
-                pgm_read_byte(&_flags_P._attr)};
+        return Flags{_flags_P._modes, _flags_P._pos,
+                _flags_P._attr};
     }
 
-    const /* PROGMEM */ char *name_P() const { return Base::name_P(); }
+    const char *name_P() const { return Base::name_P(); }
 
     Config::opcode_t readOpCode() const {
         Config::opcode_t opc = Base::readOpCode();

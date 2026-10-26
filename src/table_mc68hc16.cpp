@@ -32,7 +32,7 @@ namespace mc68hc16 {
 #define P0(_opc, _post, _name) {_opc, Entry::Flags::postbyte(_post), _name}
 
 // clang-format off
-constexpr Entry MC68HC16_TABLE[] PROGMEM = {
+constexpr Entry MC68HC16_TABLE[] = {
     E1(0x00, CF_30, TEXT_COM,   M_IX8),
     E1(0x01, CF_30, TEXT_DEC,   M_IX8),
     E1(0x02, CF_30, TEXT_NEG,   M_IX8),
@@ -158,7 +158,7 @@ constexpr Entry MC68HC16_TABLE[] PROGMEM = {
     E1(0xFC, CF_00, TEXT_ADDD,  M_SIM8),
 };
 
-constexpr uint8_t MC68HC16_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC16_INDEX[] = {
      34,  // TEXT_ADCA
      50,  // TEXT_ADCA
      97,  // TEXT_ADCB
@@ -284,7 +284,7 @@ constexpr uint8_t MC68HC16_INDEX[] PROGMEM = {
       7,  // TEXT_TST
 };
 
-constexpr Entry MC68HC16_P17[] PROGMEM = {
+constexpr Entry MC68HC16_P17[] = {
     E1(0x00, CF_30, TEXT_COM,   M_IX16),
     E1(0x01, CF_30, TEXT_DEC,   M_IX16),
     E1(0x02, CF_30, TEXT_NEG,   M_IX16),
@@ -381,7 +381,7 @@ constexpr Entry MC68HC16_P17[] PROGMEM = {
     E1(0xFF, CF_00, TEXT_LDS,   M_EX16),
 };
 
-constexpr uint8_t MC68HC16_I17[] PROGMEM = {
+constexpr uint8_t MC68HC16_I17[] = {
      29,  // TEXT_ADCA
      44,  // TEXT_ADCA
      67,  // TEXT_ADCB
@@ -478,7 +478,7 @@ constexpr uint8_t MC68HC16_I17[] PROGMEM = {
      21,  // TEXT_TST
 };
 
-constexpr Entry MC68HC16_P27[] PROGMEM = {
+constexpr Entry MC68HC16_P27[] = {
     E1(0x00, CF_30, TEXT_COMW,  M_IX16),
     E1(0x01, CF_30, TEXT_DECW,  M_IX16),
     E1(0x02, CF_30, TEXT_NEGW,  M_IX16),
@@ -597,7 +597,7 @@ constexpr Entry MC68HC16_P27[] PROGMEM = {
     E0(0xFF, CF_00, TEXT_LSRD),
 };
 
-constexpr uint8_t MC68HC16_I27[] PROGMEM = {
+constexpr uint8_t MC68HC16_I27[] = {
      31,  // TEXT_ADCA
      91,  // TEXT_ADCB
      69,  // TEXT_ADCD
@@ -716,7 +716,7 @@ constexpr uint8_t MC68HC16_I27[] PROGMEM = {
      60,  // TEXT_XGDE
 };
 
-constexpr Entry MC68HC16_P37[] PROGMEM = {
+constexpr Entry MC68HC16_P37[] = {
     E0(0x00, CF_00, TEXT_COMA),
     E0(0x01, CF_00, TEXT_DECA),
     E0(0x02, CF_00, TEXT_NEGA),
@@ -891,7 +891,7 @@ constexpr Entry MC68HC16_P37[] PROGMEM = {
     E2(0xFF, CF_00, TEXT_MOVW,  M_EX16, M_EX16),
 };
 
-constexpr uint8_t MC68HC16_I37[] PROGMEM = {
+constexpr uint8_t MC68HC16_I37[] = {
      12,  // TEXT_ABA
      77,  // TEXT_ABX
      81,  // TEXT_ABY
@@ -1066,93 +1066,93 @@ constexpr uint8_t MC68HC16_I37[] PROGMEM = {
      82,  // TEXT_XGEZ
 };
 
-constexpr Entry MC68HC16_IX16_TABLE[] PROGMEM = {
+constexpr Entry MC68HC16_IX16_TABLE[] = {
     E2(0x08, CF_30, TEXT_BCLR,  M_IX16, M_IM8),
     E2(0x09, CF_30, TEXT_BSET,  M_IX16, M_IM8),
     E3(0x0A, CF_30, TEXT_BRCLR, M_IX16, M_IM8, M_RL16),
     E3(0x0B, CF_30, TEXT_BRSET, M_IX16, M_IM8, M_RL16),
 };
 
-constexpr uint8_t MC68HC16_IX16_INDEX[] PROGMEM = {
+constexpr uint8_t MC68HC16_IX16_INDEX[] = {
       0,  // TEXT_BCLR
       2,  // TEXT_BRCLR
       3,  // TEXT_BRSET
       1,  // TEXT_BSET
 };
 
-constexpr Entry MC68HC16_PSHM_P34[] PROGMEM = {
+constexpr Entry MC68HC16_PSHM_P34[] = {
     E0(0x01, CF_00, TEXT_PSHD),
     E0(0x04, CF_00, TEXT_PSHX),
     E0(0x08, CF_00, TEXT_PSHY),
 };
 
-constexpr uint8_t MC68HC16_PSHM_I34[] PROGMEM = {
+constexpr uint8_t MC68HC16_PSHM_I34[] = {
       0,  // TEXT_PSHD
       1,  // TEXT_PSHX
       2,  // TEXT_PSHY
 };
 
-constexpr Entry MC68HC16_PULM_P35[] PROGMEM = {
+constexpr Entry MC68HC16_PULM_P35[] = {
     E0(0x40, CF_00, TEXT_PULD),
     E0(0x10, CF_00, TEXT_PULX),
     E0(0x08, CF_00, TEXT_PULY),
 };
 
-constexpr uint8_t MC68HC16_PULM_I35[] PROGMEM = {
+constexpr uint8_t MC68HC16_PULM_I35[] = {
       0,  // TEXT_PULD
       1,  // TEXT_PULX
       2,  // TEXT_PULY
 };
 
-constexpr Entry MC68HC16_AIX_P3C[] PROGMEM = {
+constexpr Entry MC68HC16_AIX_P3C[] = {
     E0(0xFF, CF_00, TEXT_DEX),
     E0(0x01, CF_00, TEXT_INX),
 };
 
-constexpr uint8_t MC68HC16_AIX_I3C[] PROGMEM = {
+constexpr uint8_t MC68HC16_AIX_I3C[] = {
       0,  // TEXT_DEX
       1,  // TEXT_INX
 };
 
-constexpr Entry MC68HC16_AIY_P3D[] PROGMEM = {
+constexpr Entry MC68HC16_AIY_P3D[] = {
     E0(0xFF, CF_00, TEXT_DEY),
     E0(0x01, CF_00, TEXT_INY),
 };
 
-constexpr uint8_t MC68HC16_AIY_I3D[] PROGMEM = {
+constexpr uint8_t MC68HC16_AIY_I3D[] = {
       0,  // TEXT_DEY
       1,  // TEXT_INY
 };
 
-constexpr Entry MC68HC16_AIS_P3F[] PROGMEM = {
+constexpr Entry MC68HC16_AIS_P3F[] = {
     E0(0xFF, CF_00, TEXT_DES),
     E0(0x01, CF_00, TEXT_INS),
 };
 
-constexpr uint8_t MC68HC16_AIS_I3F[] PROGMEM = {
+constexpr uint8_t MC68HC16_AIS_I3F[] = {
       0,  // TEXT_DES
       1,  // TEXT_INS
 };
 
-constexpr Entry MC68HC16_ANDCC_P373A[] PROGMEM = {
+constexpr Entry MC68HC16_ANDCC_P373A[] = {
     P0(0xFE, 0xFF, TEXT_CLC),
     P0(0xFF, 0x1F, TEXT_CLI),
     P0(0xFD, 0xFF, TEXT_CLV),
 };
 
-constexpr uint8_t MC68HC16_ANDCC_I373A[] PROGMEM = {
+constexpr uint8_t MC68HC16_ANDCC_I373A[] = {
       0,  // TEXT_CLC
       1,  // TEXT_CLI
       2,  // TEXT_CLV
 };
 
-constexpr Entry MC68HC16_ORCC_P373B[] PROGMEM = {
+constexpr Entry MC68HC16_ORCC_P373B[] = {
     P0(0x01, 0x00, TEXT_SEC),
     P0(0x00, 0xE0, TEXT_SEI),
     P0(0x02, 0x00, TEXT_SEV),
 };
 
-constexpr uint8_t MC68HC16_ORCC_I373B[] PROGMEM = {
+constexpr uint8_t MC68HC16_ORCC_I373B[] = {
       0,  // TEXT_SEC
       1,  // TEXT_SEI
       2,  // TEXT_SEV
@@ -1162,7 +1162,7 @@ constexpr uint8_t MC68HC16_ORCC_I373B[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage MC68HC16_PAGES[] PROGMEM = {
+constexpr EntryPage MC68HC16_PAGES[] = {
         {0x00, ARRAY_RANGE(MC68HC16_TABLE), ARRAY_RANGE(MC68HC16_INDEX)},
         {0x17, ARRAY_RANGE(MC68HC16_P17), ARRAY_RANGE(MC68HC16_I17)},
         {0x00, ARRAY_RANGE(MC68HC16_IX16_TABLE), ARRAY_RANGE(MC68HC16_IX16_INDEX)},
@@ -1179,7 +1179,7 @@ constexpr EntryPage MC68HC16_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MC68HC16, TEXT_CPU_68HC16, ARRAY_RANGE(MC68HC16_PAGES)},
 };
 
@@ -1252,11 +1252,11 @@ bool isPrefix(CpuType, Config::opcode_t code) {
     return code == 0x17 || code == 0x27 || code == 0x37;
 }
 
-const /*PROGMEM*/ char *TableMc68HC16::listCpu_P() const {
+const char *TableMc68HC16::listCpu_P() const {
     return TEXT_CPU_MC68HC16;
 }
 
-const /*PROGMEM*/ char *TableMc68HC16::cpuName_P(CpuType cpuType) const {
+const char *TableMc68HC16::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

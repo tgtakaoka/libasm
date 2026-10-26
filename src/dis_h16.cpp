@@ -146,7 +146,7 @@ uint8_t naturalLen(int32_t value) {
 
 // Append the ":8"/":16"/":32" length suffix for an EA field of |bits| width.
 void outLen(StrBuffer &out, uint8_t bits) {
-    out.text_P(bits == 8 ? PSTR(":8") : bits == 16 ? PSTR(":16") : PSTR(":32"));
+    out.text_P(bits == 8 ? ":8" : bits == 16 ? ":16" : ":32");
 }
 
 // Append a length suffix only when the encoded field is wider than the value's
@@ -374,12 +374,12 @@ void DisH16::decodeEa(
             out.letter('@').letter('(');
             outHex(out, disp2, s2 == 1 ? -8 : -32);
             outDsLen(out, disp2, s2);
-            out.text_P(PSTR(",@("));
+            out.text_P(",@(");
             outHex(out, disp1, s1 == 1 ? -8 : -32);
             outDsLen(out, disp1, s1);
             out.letter(',');
             outRegName(out, decodeReg(base, bank));
-            out.text_P(PSTR("))"));
+            out.text_P("))");
             return;
         }
         default:
@@ -394,7 +394,7 @@ void DisH16::outIndex(DisInsn &insn, StrBuffer &out, uint8_t ext, bool longIdx) 
     const auto sf = (ext >> 4) & 0x03;
     const auto xm = ext & 0x0F;
     outRegName(out, decodeReg(xm));  // Xm always global
-    out.text_P(longIdx ? PSTR(".L") : PSTR(".W"));
+    out.text_P(longIdx ? ".L" : ".W");
     if (sf != 0) {
         out.letter('*');
         outHex(out, static_cast<uint8_t>(1u << sf), 4);

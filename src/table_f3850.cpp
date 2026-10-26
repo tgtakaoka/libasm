@@ -30,7 +30,7 @@ namespace f3850 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_3850[] PROGMEM = {
+constexpr Entry TABLE_3850[] = {
     E2(0x00, CF_00, TEXT_LR,  M_A,    M_KU),
     E2(0x01, CF_00, TEXT_LR,  M_A,    M_KL),
     E2(0x02, CF_00, TEXT_LR,  M_A,    M_QU),
@@ -109,7 +109,7 @@ constexpr Entry TABLE_3850[] PROGMEM = {
     E1(0xF0, CF_0F, TEXT_NS,   M_REG),
 };
 
-constexpr uint8_t INDEX_3850[] PROGMEM = {
+constexpr uint8_t INDEX_3850[] = {
      61,  // TEXT_ADC
      36,  // TEXT_AI
      55,  // TEXT_AM
@@ -192,13 +192,13 @@ constexpr uint8_t INDEX_3850[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage F3850_PAGES[] PROGMEM = {
+constexpr EntryPage F3850_PAGES[] = {
         {ARRAY_RANGE(TABLE_3850), ARRAY_RANGE(INDEX_3850)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {F3850, TEXT_CPU_3850, ARRAY_RANGE(F3850_PAGES)},
 };
 
@@ -244,11 +244,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableF3850::listCpu_P() const {
+const char *TableF3850::listCpu_P() const {
     return TEXT_CPU_F3850;
 }
 
-const /*PROGMEM*/ char *TableF3850::cpuName_P(CpuType cpuType) const {
+const char *TableF3850::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

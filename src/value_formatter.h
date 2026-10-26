@@ -31,7 +31,7 @@ struct ValueFormatter final {
         virtual const OctFormatter &oct() const;
         virtual const HexFormatter &hex() const;
         virtual char locationSymbol() const;
-        virtual const /*PROGMEM*/ char *lineComment_P() const;
+        virtual const char *lineComment_P() const;
 
         static const Plugins &singleton();
         static const Plugins &cstyle();
@@ -83,7 +83,7 @@ struct ValueFormatter final {
     static bool absolute(uint32_t &val, int8_t bits);
 
     char locationSymbol() const { return _locationSymbol; }
-    const /*PROGMEM*/ char *lineComment_P() const { return _lineComment_P; }
+    const char *lineComment_P() const { return _lineComment_P; }
 
 private:
     const DecFormatter &_dec;
@@ -91,7 +91,7 @@ private:
     const OctFormatter &_oct;
     const HexFormatter &_hex;
     const char _locationSymbol;
-    const /*PROGMEM*/ char *_lineComment_P;
+    const char *_lineComment_P;
 
     static uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits);
 };

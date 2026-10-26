@@ -98,15 +98,15 @@ private:
 };
 
 template <typename FORMATTER>
-struct PrefixFormatter<FORMATTER, const /*PROGMEM*/ char *const> : FORMATTER {
-    PrefixFormatter(const /*PROGMEM*/ char *const prefix_P) : FORMATTER(), _prefix_P(prefix_P) {}
+struct PrefixFormatter<FORMATTER, const char *const> : FORMATTER {
+    PrefixFormatter(const char *const prefix_P) : FORMATTER(), _prefix_P(prefix_P) {}
 
     StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits) const override {
         return FORMATTER::format(out.text_P(_prefix_P), val, bits);
     }
 
 protected:
-    const /*PROGMEM*/ char *const _prefix_P;
+    const char *const _prefix_P;
 };
 
 /**
@@ -134,8 +134,8 @@ template <typename FORMATTER, typename PREFIX, typename SUFFIX>
 struct SurroundFormatter {};
 
 template <typename FORMATTER>
-struct SurroundFormatter<FORMATTER, const /*PROGMEM*/ char *const, char> : FORMATTER {
-    SurroundFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+struct SurroundFormatter<FORMATTER, const char *const, char> : FORMATTER {
+    SurroundFormatter(const char *const prefix_P, char suffix)
         : FORMATTER(), _prefix_P(prefix_P), _suffix(suffix) {}
 
     StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits) const override final {
@@ -143,7 +143,7 @@ struct SurroundFormatter<FORMATTER, const /*PROGMEM*/ char *const, char> : FORMA
     }
 
 private:
-    const /*PROGMEM*/ char *const _prefix_P;
+    const char *const _prefix_P;
     const char _suffix;
 };
 
@@ -155,7 +155,7 @@ struct PrefixBinFormatter : PrefixFormatter<BinFormatter, char> {
 };
 
 struct PrefixStrBinFormatter : PrefixFormatter<BinFormatter, const char *const> {
-    PrefixStrBinFormatter(const /*PROGMEM*/ char *const prefix_P) : PrefixFormatter(prefix_P) {}
+    PrefixStrBinFormatter(const char *const prefix_P) : PrefixFormatter(prefix_P) {}
 };
 
 /**
@@ -166,7 +166,7 @@ struct PrefixOctFormatter : PrefixFormatter<OctFormatter, char> {
 };
 
 struct PrefixStrOctFormatter : PrefixFormatter<OctFormatter, const char *const> {
-    PrefixStrOctFormatter(const /*PROGMEM*/ char *prefix_P) : PrefixFormatter(prefix_P) {}
+    PrefixStrOctFormatter(const char *prefix_P) : PrefixFormatter(prefix_P) {}
 };
 
 /**
@@ -177,7 +177,7 @@ struct PrefixDecFormatter : PrefixFormatter<DecFormatter, char> {
 };
 
 struct PrefixStrDecFormatter : PrefixFormatter<DecFormatter, const char *const> {
-    PrefixStrDecFormatter(const /*PROGMEM*/ char *prefix_P) : PrefixFormatter(prefix_P) {}
+    PrefixStrDecFormatter(const char *prefix_P) : PrefixFormatter(prefix_P) {}
 };
 
 /**
@@ -188,7 +188,7 @@ struct PrefixHexFormatter : PrefixFormatter<HexFormatter, char> {
 };
 
 struct PrefixStrHexFormatter : PrefixFormatter<HexFormatter, const char *const> {
-    PrefixStrHexFormatter(const /*PROGMEM*/ char *prefix_P) : PrefixFormatter(prefix_P) {}
+    PrefixStrHexFormatter(const char *prefix_P) : PrefixFormatter(prefix_P) {}
 };
 
 /**
@@ -227,7 +227,7 @@ struct SuffixHexFormatter : SuffixFormatter<HexFormatter, char> {
  * Binary number is surrounded by |prefix| and |suffix|.
  */
 struct SurroundBinFormatter : SurroundFormatter<BinFormatter, const char *const, char> {
-    SurroundBinFormatter(const /*PROGMEM*/ char *const prefix_P, const char suffix)
+    SurroundBinFormatter(const char *const prefix_P, const char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 
@@ -235,7 +235,7 @@ struct SurroundBinFormatter : SurroundFormatter<BinFormatter, const char *const,
  * Octal number is surrounded by |prefix| and |suffix|.
  */
 struct SurroundOctFormatter : SurroundFormatter<OctFormatter, const char *const, char> {
-    SurroundOctFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+    SurroundOctFormatter(const char *const prefix_P, char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 
@@ -243,7 +243,7 @@ struct SurroundOctFormatter : SurroundFormatter<OctFormatter, const char *const,
  * Decimal number is surrounded by |prefix| and |suffix|.
  */
 struct SurroundDecFormatter : SurroundFormatter<DecFormatter, const char *const, char> {
-    SurroundDecFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+    SurroundDecFormatter(const char *const prefix_P, char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 
@@ -251,7 +251,7 @@ struct SurroundDecFormatter : SurroundFormatter<DecFormatter, const char *const,
  * Hexadecimal number is surrounded by |prefix| and |suffix|.
  */
 struct SurroundHexFormatter : SurroundFormatter<HexFormatter, const char *const, char> {
-    SurroundHexFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+    SurroundHexFormatter(const char *const prefix_P, char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 
@@ -259,7 +259,7 @@ struct SurroundHexFormatter : SurroundFormatter<HexFormatter, const char *const,
  * C-Style binary number is "0b11"
  */
 struct CStyleBinFormatter : PrefixStrBinFormatter, Singleton<CStyleBinFormatter> {
-    CStyleBinFormatter() : PrefixStrBinFormatter(PSTR("0b")) {}
+    CStyleBinFormatter() : PrefixStrBinFormatter("0b") {}
     StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits) const override {
         return BinFormatter::format(out.rtext_P(_prefix_P), val, bits);
     }
@@ -276,7 +276,7 @@ struct CStyleOctFormatter final : PrefixOctFormatter, Singleton<CStyleOctFormatt
  * C-Style hexadecimal number is "0xFF"
  */
 struct CStyleHexFormatter final : PrefixStrHexFormatter, Singleton<CStyleHexFormatter> {
-    CStyleHexFormatter() : PrefixStrHexFormatter(PSTR("0x")) {}
+    CStyleHexFormatter() : PrefixStrHexFormatter("0x") {}
     StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits) const override {
         return HexFormatter::format(out.rtext_P(_prefix_P), val, bits);
     }

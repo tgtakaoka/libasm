@@ -28,17 +28,17 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char TEXT_ACON[] PROGMEM = "acon";
-constexpr char TEXT_ALIT[] PROGMEM = "alit";
-constexpr char TEXT_RES[]  PROGMEM = "res";
+constexpr char TEXT_ACON[] = "acon";
+constexpr char TEXT_ALIT[] = "alit";
+constexpr char TEXT_RES[]  = "res";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD },
     { TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace

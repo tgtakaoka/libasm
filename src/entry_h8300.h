@@ -138,12 +138,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t pos_gm = 0x7;
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
-                pgm_read_byte(&_flags_P._pos)};
+        return Flags{_flags_P._src, _flags_P._dst,
+                _flags_P._pos};
     }
 
     static Config::opcode_t decodeOperand(Config::opcode_t opc, OprPos pos) {
@@ -151,7 +151,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     }
 
     static Config::opcode_t posMask(OprPos pos) {
-        static constexpr Config::opcode_t MASK[] PROGMEM = {
+        static constexpr Config::opcode_t MASK[] = {
                 0x0000,  // POS____
                 0x0F00,  // POS_F__
                 0x00FF,  // POS__FF
@@ -161,11 +161,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 0x0007,  // POS___7
                 0x0000,  // POS_PRX
         };
-        return pgm_read_word(&MASK[pos]);
+        return MASK[pos];
     }
 
     static uint_fast8_t bitGroupPos(OprPos pos) {
-        static constexpr uint8_t GPOS[] PROGMEM = {
+        static constexpr uint8_t GPOS[] = {
                 0,  // POS____
                 8,  // POS_F__
                 0,  // POS__FF
@@ -175,7 +175,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 0,  // POS___7
                 0,  // POS_PRX
         };
-        return pgm_read_word(&GPOS[pos]);
+        return GPOS[pos];
     }
 
 private:

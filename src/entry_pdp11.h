@@ -111,16 +111,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint8_t pos_gm = 0x7;
     };
 
-    constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._src), pgm_read_byte(&_flags_P._dst),
-                pgm_read_byte(&_flags_P._attr)};
+        return Flags{_flags_P._src, _flags_P._dst,
+                _flags_P._attr};
     }
 
     static Config::opcode_t insnMask(OprPos pos) {
-        static constexpr Config::opcode_t MASKS[] PROGMEM = {
+        static constexpr Config::opcode_t MASKS[] = {
                 00000,  // P_NONE
                 00077,  // P_0077
                 07700,  // P_7700
@@ -129,7 +129,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                 00377,  // P_0377
                 00300,  // P_0300
         };
-        return pgm_read_word(&MASKS[uint8_t(pos)]);
+        return MASKS[uint8_t(pos)];
     }
 
 private:

@@ -47,7 +47,7 @@ namespace tms320f {
     {_opc, Entry::Flags::create(_cf, LF_XX, _opr1, _opr2, M_NONE, true, _pos1, _pos2, _pos3), _name}
 
 // clang-format off
-constexpr Entry TABLE_TMS320C30[] PROGMEM = {
+constexpr Entry TABLE_TMS320C30[] = {
     U2(0x0000, CF_GG, TEXT_ABSF,  M_FGEN, M_FREG),
     U1(0x0000, CF_GG, TEXT_ABSF,  M_FREG),
     U2(0x0080, CF_GG, TEXT_ABSI,  M_IGEN, M_IREG),
@@ -156,7 +156,7 @@ constexpr Entry TABLE_TMS320C30[] PROGMEM = {
     X0(0x6600, CF_00, TEXT_SWI,  LF_00),
 };
 
-constexpr uint8_t INDEX_TMS320C30[] PROGMEM = {
+constexpr uint8_t INDEX_TMS320C30[] = {
       0,  // TEXT_ABSF
       1,  // TEXT_ABSF
       2,  // TEXT_ABSI
@@ -265,25 +265,25 @@ constexpr uint8_t INDEX_TMS320C30[] PROGMEM = {
      99,  // TEXT_XOR3
 };
 
-constexpr Entry TABLE_IDLE2[] PROGMEM = {
+constexpr Entry TABLE_IDLE2[] = {
     X0(0x0600, CF_00, TEXT_IDLE2, LF_01),
 };
 
-constexpr uint8_t INDEX_IDLE2[] PROGMEM = {
+constexpr uint8_t INDEX_IDLE2[] = {
       0,  // TEXT_IDLE2
 };
 
-constexpr Entry TABLE_LOPOWER[] PROGMEM = {
+constexpr Entry TABLE_LOPOWER[] = {
     X0(0x1080, CF_00, TEXT_LOPOWER,  LF_01),
     X0(0x1080, CF_00, TEXT_MAXSPEED, LF_00),
 };
 
-constexpr uint8_t INDEX_LOPOWER[] PROGMEM = {
+constexpr uint8_t INDEX_LOPOWER[] = {
       0,  // TEXT_LOPOWER
       1,  // TEXT_MAXSPEED
 };
 
-constexpr Entry TABLE_LDCOND[] PROGMEM =  {
+constexpr Entry TABLE_LDCOND[] =  {
     E2(0x4000, CF_GG, TEXT_LDFU,    M_FGEN, M_FREG),
     E2(0x4080, CF_GG, TEXT_LDFLO,   M_FGEN, M_FREG),
     E2(0x4080, CF_GG, TEXT_LDFC,    M_FGEN, M_FREG),
@@ -340,7 +340,7 @@ constexpr Entry TABLE_LDCOND[] PROGMEM =  {
     E2(0x5A00, CF_GG, TEXT_LDIZUF,  M_IGEN, M_IREG),
 };
 
-constexpr uint8_t INDEX_LDCOND[] PROGMEM = {
+constexpr uint8_t INDEX_LDCOND[] = {
       2,  // TEXT_LDFC
       7,  // TEXT_LDFEQ
      16,  // TEXT_LDFGE
@@ -397,7 +397,7 @@ constexpr uint8_t INDEX_LDCOND[] PROGMEM = {
      53,  // TEXT_LDIZUF
 };
 
-constexpr Entry TABLE_BRCOND[] PROGMEM = {
+constexpr Entry TABLE_BRCOND[] = {
     E1(0x6800, CF_BB, TEXT_BU,    M_IREL),
     E1(0x6800, CF_BB, TEXT_B,     M_IREL),
     E1(0x6801, CF_BB, TEXT_BLO,   M_IREL),
@@ -512,7 +512,7 @@ constexpr Entry TABLE_BRCOND[] PROGMEM = {
     E2(0x6C34, CF_DB, TEXT_DBZUFD,  R_ARN, M_DREL),
 };
 
-constexpr uint8_t INDEX_BRCOND[] PROGMEM =  {
+constexpr uint8_t INDEX_BRCOND[] =  {
       1,  // TEXT_B
       3,  // TEXT_BC
      31,  // TEXT_BCD
@@ -627,7 +627,7 @@ constexpr uint8_t INDEX_BRCOND[] PROGMEM =  {
     111,  // TEXT_DBZUFD
 };
 
-constexpr Entry TABLE_CALLCOND[] PROGMEM = {
+constexpr Entry TABLE_CALLCOND[] = {
     E1(0x7000, CF_BB, TEXT_CALLU,    M_IREL),
     E1(0x7001, CF_BB, TEXT_CALLLO,   M_IREL),
     E1(0x7001, CF_BB, TEXT_CALLC,    M_IREL),
@@ -741,7 +741,7 @@ constexpr Entry TABLE_CALLCOND[] PROGMEM = {
     X0(0x7894, CF_00, TEXT_RETSZUF,  LF_00),
 };
 
-constexpr uint8_t INDEX_CALLCOND[] PROGMEM = {
+constexpr uint8_t INDEX_CALLCOND[] = {
       2,  // TEXT_CALLC
       7,  // TEXT_CALLEQ
      16,  // TEXT_CALLGE
@@ -855,7 +855,7 @@ constexpr uint8_t INDEX_CALLCOND[] PROGMEM = {
      54,  // TEXT_TRAPZUF
 };
 
-constexpr Entry TABLE_TMS320C30_PARA1ST[] PROGMEM = {
+constexpr Entry TABLE_TMS320C30_PARA1ST[] = {
     P2(0xC800, CF_P4, TEXT_ABSF,  M_IDIR, M_FREG, P_00FF, P_01C0), // ABSF||STF
     P2(0xCA00, CF_P4, TEXT_ABSI,  M_IDIR, M_FREG, P_00FF, P_01C0), // ABSI||STI
     P3(0xCC00, CF_P5, TEXT_ADDF3, M_IDIR, M_FREG, M_FREG, P_00FF, P_0038, P_01C0), // ADDF3||STF
@@ -982,7 +982,7 @@ constexpr Entry TABLE_TMS320C30_PARA1ST[] PROGMEM = {
     P3(0x8F00, CF_P6, TEXT_MPYI, M_FREG, M_IDIR, R_R01, P_0038, P_FF00, P_0080), // MPYI||SUBI; P=3
 };
 
-constexpr uint8_t INDEX_TMS320C30_PARA1ST[] PROGMEM = {
+constexpr uint8_t INDEX_TMS320C30_PARA1ST[] = {
       0,  // TEXT_ABSF
       1,  // TEXT_ABSI
      51,  // TEXT_ADDF
@@ -1109,7 +1109,7 @@ constexpr uint8_t INDEX_TMS320C30_PARA1ST[] PROGMEM = {
      30,  // TEXT_XOR3
 };
 
-constexpr Entry TABLE_TMS320C30_PARA2ND[] PROGMEM = {
+constexpr Entry TABLE_TMS320C30_PARA2ND[] = {
     P2(0xC800, CF_P4, TEXT_STF, M_FREG, M_IDIR, P_0007, P_FF00), // ABSF||STF
     P2(0xCA00, CF_P4, TEXT_STI, M_FREG, M_IDIR, P_0007, P_FF00), // ABSI||STI
     P2(0xCC00, CF_P5, TEXT_STF, M_FREG, M_IDIR, P_0007, P_FF00), // ADDF3||STF
@@ -1236,7 +1236,7 @@ constexpr Entry TABLE_TMS320C30_PARA2ND[] PROGMEM = {
     Q2(0x8F00, CF_P5, TEXT_SUBI, M_IDIR, R_R23, P_00FF, P_0007, P_0040),         // MPYI||SUBI; P=3
 };
 
-constexpr Entry TABLE_TMS320C32_PARA1ST[] PROGMEM = {
+constexpr Entry TABLE_TMS320C32_PARA1ST[] = {
     P2(0xC800, CF_P4, TEXT_ABSF,  M_FIDR, M_FREG, P_00FF, P_01C0), // ABSF||STF
     P2(0xCA00, CF_P4, TEXT_ABSI,  M_IIDR, M_FREG, P_00FF, P_01C0), // ABSI||STI
     P3(0xCC00, CF_P5, TEXT_ADDF3, M_FIDR, M_FREG, M_FREG, P_00FF, P_0038, P_01C0), // ADDF3||STF
@@ -1363,7 +1363,7 @@ constexpr Entry TABLE_TMS320C32_PARA1ST[] PROGMEM = {
     P3(0x8F00, CF_P6, TEXT_MPYI, M_FREG, M_IIDR, R_R01, P_0038, P_FF00, P_0080), // MPYI||SUBI; P=3
 };
 
-constexpr Entry TABLE_TMS320C32_PARA2ND[] PROGMEM = {
+constexpr Entry TABLE_TMS320C32_PARA2ND[] = {
     P2(0xC800, CF_P4, TEXT_STF, M_FREG, M_IDIR, P_0007, P_FF00), // ABSF||STF
     P2(0xCA00, CF_P4, TEXT_STI, M_FREG, M_IDIR, P_0007, P_FF00), // ABSI||STI
     P2(0xCC00, CF_P5, TEXT_STF, M_FREG, M_IDIR, P_0007, P_FF00), // ADDF3||STF
@@ -1490,7 +1490,7 @@ constexpr Entry TABLE_TMS320C32_PARA2ND[] PROGMEM = {
     Q2(0x8F00, CF_P5, TEXT_SUBI, M_IIDR, R_R23, P_00FF, P_0007, P_0040),         // MPYI||SUBI; P=3
 };
 
-constexpr uint8_t INDEX_TMS320C30_PARA2ND[] PROGMEM = {
+constexpr uint8_t INDEX_TMS320C30_PARA2ND[] = {
      76,  // TEXT_ADDF
      77,  // TEXT_ADDF
      78,  // TEXT_ADDF
@@ -1630,27 +1630,27 @@ static_assert(sizeof(TABLE_TMS320C32_PARA2ND) == sizeof(TABLE_TMS320C30_PARA2ND)
 
 // Every 'C3x shares one instruction set; the power-down modes and the
 // augmented parallel operands are selected by capability, not by CPU.
-constexpr EntryPage TMS320C3X_PAGES[] PROGMEM = {
+constexpr EntryPage TMS320C3X_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS320C30), ARRAY_RANGE(INDEX_TMS320C30)},
         {ARRAY_RANGE(TABLE_LDCOND), ARRAY_RANGE(INDEX_LDCOND)},
         {ARRAY_RANGE(TABLE_BRCOND), ARRAY_RANGE(INDEX_BRCOND)},
         {ARRAY_RANGE(TABLE_CALLCOND), ARRAY_RANGE(INDEX_CALLCOND)},
 };
 
-constexpr EntryPage IDLE2_PAGES[] PROGMEM = {
+constexpr EntryPage IDLE2_PAGES[] = {
         {ARRAY_RANGE(TABLE_IDLE2), ARRAY_RANGE(INDEX_IDLE2)},
 };
 
-constexpr EntryPage LOPOWER_PAGES[] PROGMEM = {
+constexpr EntryPage LOPOWER_PAGES[] = {
         {ARRAY_RANGE(TABLE_LOPOWER), ARRAY_RANGE(INDEX_LOPOWER)},
 };
 
-constexpr EntryPage BASE_PARA_PAGES[] PROGMEM = {
+constexpr EntryPage BASE_PARA_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS320C30_PARA1ST), ARRAY_RANGE(INDEX_TMS320C30_PARA1ST)},
         {ARRAY_RANGE(TABLE_TMS320C30_PARA2ND), ARRAY_RANGE(INDEX_TMS320C30_PARA2ND)},
 };
 
-constexpr EntryPage ENHANCED_PARA_PAGES[] PROGMEM = {
+constexpr EntryPage ENHANCED_PARA_PAGES[] = {
         {ARRAY_RANGE(TABLE_TMS320C32_PARA1ST), ARRAY_RANGE(INDEX_TMS320C30_PARA1ST)},
         {ARRAY_RANGE(TABLE_TMS320C32_PARA2ND), ARRAY_RANGE(INDEX_TMS320C30_PARA2ND)},
 };
@@ -1667,7 +1667,7 @@ const Entry *parallelInsn(const Entry *first) {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {TMS320C30, TEXT_CPU_320C30, ARRAY_RANGE(TMS320C3X_PAGES)},
         {TMS320C31, TEXT_CPU_320C31, ARRAY_RANGE(TMS320C3X_PAGES)},
         {TMS320C32, TEXT_CPU_320C32, ARRAY_RANGE(TMS320C3X_PAGES)},
@@ -1675,7 +1675,7 @@ constexpr Cpu CPU_TABLE[] PROGMEM = {
 
 using Idle2 = entry::CpuBase<Idle2Type, EntryPage>;
 
-constexpr Idle2 IDLE2_TABLE[] PROGMEM = {
+constexpr Idle2 IDLE2_TABLE[] = {
         {IDLE2_ON, TEXT_IDLE2, ARRAY_RANGE(IDLE2_PAGES)},
         {IDLE2_NONE, TEXT_none, EMPTY_RANGE(IDLE2_PAGES)},
 };
@@ -1686,7 +1686,7 @@ const Idle2 *idle2(Idle2Type idle2Type) {
 
 using LoPower = entry::CpuBase<LoPowerType, EntryPage>;
 
-constexpr LoPower LOPOWER_TABLE[] PROGMEM = {
+constexpr LoPower LOPOWER_TABLE[] = {
         {LOPOWER_ON, TEXT_LOPOWER, ARRAY_RANGE(LOPOWER_PAGES)},
         {LOPOWER_NONE, TEXT_none, EMPTY_RANGE(LOPOWER_PAGES)},
 };
@@ -1697,7 +1697,7 @@ const LoPower *lopower(LoPowerType lopowerType) {
 
 using Para = entry::CpuBase<EnhancedType, EntryPage>;
 
-constexpr Para PARA_TABLE[] PROGMEM = {
+constexpr Para PARA_TABLE[] = {
         {ENHANCED_ON, TEXT_none, ARRAY_RANGE(ENHANCED_PARA_PAGES)},
         {ENHANCED_NONE, TEXT_none, ARRAY_RANGE(BASE_PARA_PAGES)},
 };
@@ -1747,7 +1747,7 @@ bool acceptParallels(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->readFlags();
     if (table.isParallel()) {
         const auto parallel = parallelInsn(entry);
-        return strcasecmp_P(insn.para->name(), parallel->name_P()) == 0 &&
+        return strcasecmp(insn.para->name(), parallel->name_P()) == 0 &&
                acceptModes(insn, entry) && acceptModes(*insn.para, parallel);
     }
     return false;
@@ -1877,11 +1877,11 @@ void Config::deriveCapabilities() {
     setEnhanced(enhanced);
 }
 
-const /*PROGMEM*/ char *TableTms320f::listCpu_P() const {
+const char *TableTms320f::listCpu_P() const {
     return TEXT_TMS320F_LIST;
 }
 
-const /*PROGMEM*/ char *TableTms320f::cpuName_P(CpuType cpuType) const {
+const char *TableTms320f::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

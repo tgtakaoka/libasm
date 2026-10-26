@@ -31,15 +31,15 @@ using namespace text::c166;
 
 namespace {
 
-constexpr char OPT_BOOL_CC_PREFIX[] PROGMEM = "cc-prefix";
-constexpr char OPT_DESC_CC_PREFIX[] PROGMEM = "use cc_ prefix for condition code";
-constexpr char OPT_BOOL_INDEX_SHARP[] PROGMEM = "index-sharp";
-constexpr char OPT_DESC_INDEX_SHARP[] PROGMEM = "use # for [Rw+#data16]";
-constexpr char OPT_BOOL_CANONICAL_MEM[] PROGMEM = "canonical-mem";
-constexpr char OPT_BOOL_EXT_PREFIX[] PROGMEM = "ext-prefix";
-constexpr char OPT_BOOL_REPEAT_PREFIX[] PROGMEM = "repeat-prefix";
-constexpr char OPT_BOOL_SFR_NAME[] PROGMEM = "sfr-name";
-constexpr char OPT_DESC_SFR_NAME[] PROGMEM = "use name for core SFR";
+constexpr char OPT_BOOL_CC_PREFIX[] = "cc-prefix";
+constexpr char OPT_DESC_CC_PREFIX[] = "use cc_ prefix for condition code";
+constexpr char OPT_BOOL_INDEX_SHARP[] = "index-sharp";
+constexpr char OPT_DESC_INDEX_SHARP[] = "use # for [Rw+#data16]";
+constexpr char OPT_BOOL_CANONICAL_MEM[] = "canonical-mem";
+constexpr char OPT_BOOL_EXT_PREFIX[] = "ext-prefix";
+constexpr char OPT_BOOL_REPEAT_PREFIX[] = "repeat-prefix";
+constexpr char OPT_BOOL_SFR_NAME[] = "sfr-name";
+constexpr char OPT_DESC_SFR_NAME[] = "use name for core SFR";
 
 // Flag ILLEGAL_OPERAND_MODE if any bit set in |zeroMask| is non-zero.
 void requireZero(DisInsn &insn, StrBuffer &out, uint8_t byte, uint8_t zeroMask) {

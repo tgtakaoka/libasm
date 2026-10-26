@@ -46,7 +46,7 @@ char ValueFormatter::Plugins::locationSymbol() const {
     return '$';
 }
 
-const /*PROGMEM*/ char *ValueFormatter::Plugins::lineComment_P() const {
+const char *ValueFormatter::Plugins::lineComment_P() const {
     return PSTR_SEMI;
 }
 
@@ -79,7 +79,7 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::motorola() {
         const OctFormatter &oct() const override { return MotorolaOctFormatter::singleton(); }
         const HexFormatter &hex() const override { return MotorolaHexFormatter::singleton(); }
         char locationSymbol() const override { return '*'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -98,7 +98,7 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::fairchild() {
         const BinFormatter &bin() const override { return FairchildBinFormatter::singleton(); }
         const OctFormatter &oct() const override { return FairchildOctFormatter::singleton(); }
         const HexFormatter &hex() const override { return FairchildHexFormatter::singleton(); }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -116,7 +116,7 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::texas() {
     static const struct fianl : Plugins {
         const BinFormatter &bin() const override { return TexasBinFormatter::singleton(); }
         const HexFormatter &hex() const override { return TexasHexFormatter::singleton(); }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const char *lineComment_P() const override { return PSTR_STAR; }
     } PLUGINS{};
     return PLUGINS;
 }
@@ -157,7 +157,7 @@ bool ValueFormatter::absolute(uint32_t &val, int8_t bits) {
             val = ~val + 1;
         }
     }
-    // |bw| can be 32; 1<<32 is UB where long is 32-bit (e.g. AVR).
+    // |bw| can be 32; 1<<32 is UB.
     const uint32_t mask = bw >= 32 ? UINT32_MAX : ((UINT32_C(1) << bw) - 1);
     val &= mask;
     return negative;

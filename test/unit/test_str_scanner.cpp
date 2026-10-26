@@ -168,37 +168,37 @@ void test_expect() {
 
 void test_expectText() {
     StrScanner scan1("text1");
-    TRUE("scan1", scan1.iexpectText_P(PSTR("TEXT")));
+    TRUE("scan1", scan1.iexpectText_P("TEXT"));
     EQ("scan1", "1", scan1.str());
 
     StrScanner scan2("text2");
-    TRUE("scan2", scan2.iexpectText_P(PSTR("TEXT1"), 4));
+    TRUE("scan2", scan2.iexpectText_P("TEXT1", 4));
     EQ("scan2", "2", scan2.str());
 
     StrScanner scan3("text3");
-    FALSE("scan3", scan3.iexpectText_P(PSTR("TEXT345")));
+    FALSE("scan3", scan3.iexpectText_P("TEXT345"));
     EQ("scan3", "text3", scan3.str());
 }
 
 void test_expectWord() {
     StrScanner scan1("text1.text2");
-    TRUE("scan1", scan1.iexpectWord_P(PSTR("TEXT1")));
+    TRUE("scan1", scan1.iexpectWord_P("TEXT1"));
     EQ("scan1", ".text2", scan1.str());
 
     StrScanner scan3("text2");
-    TRUE("scan3", scan3.iexpectWord_P(PSTR("TEXT2")));
+    TRUE("scan3", scan3.iexpectWord_P("TEXT2"));
     EQ("scan3", "", scan3.str());
 
     StrScanner scan2("text345");
-    FALSE("scan2", scan2.iexpectWord_P(PSTR("TEXT3")));
+    FALSE("scan2", scan2.iexpectWord_P("TEXT3"));
     EQ("scan2", "text345", scan2.str());
 
     StrScanner scan4("text4text5");
-    FALSE("scan4", scan4.iexpectWord_P(PSTR("TEXT4")));
+    FALSE("scan4", scan4.iexpectWord_P("TEXT4"));
     EQ("scan4", "text4text5", scan4.str());
 
     StrScanner scan5("text5_text6");
-    FALSE("scan5", scan5.iexpectWord_P(PSTR("TEXT3")));
+    FALSE("scan5", scan5.iexpectWord_P("TEXT3"));
     EQ("scan5", "text5_text6", scan5.str());
 }
 

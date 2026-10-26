@@ -28,7 +28,7 @@ namespace cdp1802 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_CDP1802[] PROGMEM = {
+constexpr Entry TABLE_CDP1802[] = {
     E0(0x00, CF_00, TEXT_IDL),
     E1(0x00, CF_0F, TEXT_LDN,  M_REG1),
     E1(0x10, CF_0F, TEXT_INC,  M_REGN),
@@ -122,7 +122,7 @@ constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E1(0xFF, CF_00, TEXT_SMI,  M_IMM8),
 };
 
-constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1802[] = {
      34,  // TEXT_ADC
      43,  // TEXT_ADCI
      79,  // TEXT_ADD
@@ -216,7 +216,7 @@ constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
      86,  // TEXT_XRI
 };
 
-constexpr Entry TABLE_CDP1804[] PROGMEM = {
+constexpr Entry TABLE_CDP1804[] = {
     E0(0x00, CF_00, TEXT_STPC),
     E0(0x01, CF_00, TEXT_DTC),
     E0(0x02, CF_00, TEXT_SPM2),
@@ -241,7 +241,7 @@ constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E1(0xC0, CF_0F, TEXT_RLDI, M_REGN_ADDR),
 };
 
-constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1804[] = {
      14,  // TEXT_BCI
      15,  // TEXT_BXI
      13,  // TEXT_CID
@@ -266,7 +266,7 @@ constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
      10,  // TEXT_XIE
 };
 
-constexpr Entry TABLE_CDP1804A[] PROGMEM = {
+constexpr Entry TABLE_CDP1804A[] = {
     E1(0x20, CF_0F, TEXT_DBNZ, M_REGN_ADDR),
     E0(0x74, CF_00, TEXT_DADC),
     E0(0x76, CF_00, TEXT_DSAV),
@@ -279,7 +279,7 @@ constexpr Entry TABLE_CDP1804A[] PROGMEM = {
     E1(0xFF, CF_00, TEXT_DSMI, M_IMM8),
 };
 
-constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
+constexpr uint8_t INDEX_CDP1804A[] = {
       4,  // TEXT_DACI
       1,  // TEXT_DADC
       6,  // TEXT_DADD
@@ -295,16 +295,16 @@ constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage CDP1802_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1802_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
 };
 
-constexpr EntryPage CDP1804_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1804_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
 };
 
-constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
+constexpr EntryPage CDP1804A_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
@@ -312,7 +312,7 @@ constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
         {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
         {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
@@ -361,11 +361,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableCdp1802::listCpu_P() const {
+const char *TableCdp1802::listCpu_P() const {
     return TEXT_CDP1802_LIST;
 }
 
-const /*PROGMEM*/ char *TableCdp1802::cpuName_P(CpuType cpuType) const {
+const char *TableCdp1802::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

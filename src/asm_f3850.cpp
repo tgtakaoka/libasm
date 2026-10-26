@@ -29,14 +29,14 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char TEXT_RS[] PROGMEM = "rs";
+constexpr char TEXT_RS[] = "rs";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DA, &Assembler::defineDataConstant, Assembler::DATA_WORD         },
     { TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD },
     { TEXT_RS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE         },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace

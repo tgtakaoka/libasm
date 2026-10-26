@@ -25,19 +25,19 @@ AsmI8086 asm8086;
 Assembler &assembler(asm8086);
 
 bool is8086() {
-    return strcmp_P("8086", assembler.config().cpu_P()) == 0;
+    return strcmp("8086", assembler.config().cpu_P()) == 0;
 }
 
 bool v30() {
-    return strcmp_P("V30", assembler.config().cpu_P()) == 0;
+    return strcmp("V30", assembler.config().cpu_P()) == 0;
 }
 
 bool v33() {
-    return strcmp_P("V33", assembler.config().cpu_P()) == 0;
+    return strcmp("V33", assembler.config().cpu_P()) == 0;
 }
 
 bool v35() {
-    return strcmp_P("V35", assembler.config().cpu_P()) == 0;
+    return strcmp("V35", assembler.config().cpu_P()) == 0;
 }
 
 // The V series shares the 80186 instruction set plus its own additions.
@@ -46,27 +46,27 @@ bool vseries() {
 }
 
 bool is80186() {
-    return strcmp_P("80186", assembler.config().cpu_P()) == 0 || vseries();
+    return strcmp("80186", assembler.config().cpu_P()) == 0 || vseries();
 }
 
 bool is80286() {
-    return strcmp_P("80286", assembler.config().cpu_P()) == 0;
+    return strcmp("80286", assembler.config().cpu_P()) == 0;
 }
 
 bool is80386() {
-    return strcmp_P("80386", assembler.config().cpu_P()) == 0;
+    return strcmp("80386", assembler.config().cpu_P()) == 0;
 }
 
 bool is80486() {
-    return strcmp_P("80486", assembler.config().cpu_P()) == 0;
+    return strcmp("80486", assembler.config().cpu_P()) == 0;
 }
 
 bool is80287() {
-    return strcmp_P("80287", asm8086.fpu_P()) == 0;
+    return strcmp("80287", asm8086.fpu_P()) == 0;
 }
 
 bool is80C187() {
-    return strcasecmp_P("80C187", asm8086.fpu_P()) == 0;
+    return strcasecmp("80C187", asm8086.fpu_P()) == 0;
 }
 
 bool fpu_on() {

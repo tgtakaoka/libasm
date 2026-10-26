@@ -164,12 +164,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint8_t lm_bm = 0x80;
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._dst), pgm_read_byte(&_flags_P._src),
-                pgm_read_byte(&_flags_P._mask)};
+        return Flags{_flags_P._dst, _flags_P._src,
+                _flags_P._mask};
     }
 
     static bool ixBit(Config::prefix_t prefix) { return prefix == IXBIT || prefix == IYBIT; }

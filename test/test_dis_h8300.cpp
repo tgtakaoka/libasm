@@ -28,15 +28,15 @@ Disassembler &disassembler(dis8300);
 // True for any CPU in the H8S family (H8S/2000 and H8S/2600).
 bool is_h8s() {
     const auto *cpu_P = disassembler.config().cpu_P();
-    return strcmp_P("H8S/2000", cpu_P) == 0 || strcmp_P("H8S/2600", cpu_P) == 0;
+    return strcmp("H8S/2000", cpu_P) == 0 || strcmp("H8S/2600", cpu_P) == 0;
 }
 
 bool is_h8s2600() {
-    return strcmp_P("H8S/2600", disassembler.config().cpu_P()) == 0;
+    return strcmp("H8S/2600", disassembler.config().cpu_P()) == 0;
 }
 
 bool is_h8300h() {
-    return strcmp_P("H8/300H", disassembler.config().cpu_P()) == 0;
+    return strcmp("H8/300H", disassembler.config().cpu_P()) == 0;
 }
 
 // Pick the H8/300 (r16) or H8/300H (r32) form of an address-register-bearing

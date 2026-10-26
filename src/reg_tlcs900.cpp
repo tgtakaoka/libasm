@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_A,    REG_A    },
     { TEXT_REG_B,    REG_B    },
     { TEXT_REG_BC,   REG_BC   },
@@ -59,7 +59,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_XWA,  REG_XWA  },
 };
 
-constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+constexpr NameEntry CC_ENTRIES[] = {
     { TEXT_CC_C,   CC_C   },
     { TEXT_CC_EQ,  CC_EQ  },
     { TEXT_CC_F,   CC_F   },
@@ -86,8 +86,8 @@ constexpr NameEntry CC_ENTRIES[] PROGMEM = {
     { TEXT_CC_Z,   CC_Z   },
 };
 
-PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
-PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 
 // Absolute-bank register tables. FIXED tables hold the byte-halves and the
 // Q-variants of IX/IY/IZ/SP whose encoded code is 0xF0-0xFF and which never
@@ -96,7 +96,7 @@ PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 // composes the final byte by OR-ing in (bank<<4), 0xD0 (prev), or 0xE0
 // (current). Sorted by text for binary search.
 
-constexpr NameEntry ABREG8_FIXED_ENTRIES[] PROGMEM = {
+constexpr NameEntry ABREG8_FIXED_ENTRIES[] = {
     { TEXT_REG_IXH,  int8_t(0xF1) },
     { TEXT_REG_IXL,  int8_t(0xF0) },
     { TEXT_REG_IYH,  int8_t(0xF5) },
@@ -114,7 +114,7 @@ constexpr NameEntry ABREG8_FIXED_ENTRIES[] PROGMEM = {
     { TEXT_REG_SPH,  int8_t(0xFD) },
     { TEXT_REG_SPL,  int8_t(0xFC) },
 };
-constexpr NameEntry ABREG8_REL_ENTRIES[] PROGMEM = {
+constexpr NameEntry ABREG8_REL_ENTRIES[] = {
     // In-bank layout: A=0,W=1,QA=2,QW=3,C=4,B=5,QC=6,QB=7,E=8,D=9,QE=A,QD=B,L=C,H=D,QL=E,QH=F
     { TEXT_REG_A,  0x0 },
     { TEXT_REG_B,  0x5 },
@@ -136,13 +136,13 @@ constexpr NameEntry ABREG8_REL_ENTRIES[] PROGMEM = {
 // 16/32-bit FIXED hold only Q-variants. Plain IX/IY/IZ/SP and
 // XIX/XIY/XIZ/XSP stay as M_REG16/M_REG32 on input; outAbsReg falls back
 // to outRegName for their codes (0xF0/0xF4/0xF8/0xFC).
-constexpr NameEntry ABREG16_FIXED_ENTRIES[] PROGMEM = {
+constexpr NameEntry ABREG16_FIXED_ENTRIES[] = {
     { TEXT_REG_QIX, int8_t(0xF2) },
     { TEXT_REG_QIY, int8_t(0xF6) },
     { TEXT_REG_QIZ, int8_t(0xFA) },
     { TEXT_REG_QSP, int8_t(0xFE) },
 };
-constexpr NameEntry ABREG16_REL_ENTRIES[] PROGMEM = {
+constexpr NameEntry ABREG16_REL_ENTRIES[] = {
     { TEXT_REG_BC,  0x4 },
     { TEXT_REG_DE,  0x8 },
     { TEXT_REG_HL,  0xC },
@@ -154,17 +154,17 @@ constexpr NameEntry ABREG16_REL_ENTRIES[] PROGMEM = {
 };
 // 32-bit FIXED has no parse-eligible entries (no Q-variants exist for 32-bit).
 // Decoding codes 0xF0/0xF4/0xF8/0xFC at size 2 falls back to outRegName.
-constexpr NameEntry ABREG32_REL_ENTRIES[] PROGMEM = {
+constexpr NameEntry ABREG32_REL_ENTRIES[] = {
     { TEXT_REG_XBC, 0x4 },
     { TEXT_REG_XDE, 0x8 },
     { TEXT_REG_XHL, 0xC },
     { TEXT_REG_XWA, 0x0 },
 };
-PROGMEM constexpr NameTable ABREG8_FIXED_TABLE{ARRAY_RANGE(ABREG8_FIXED_ENTRIES)};
-PROGMEM constexpr NameTable ABREG8_REL_TABLE{ARRAY_RANGE(ABREG8_REL_ENTRIES)};
-PROGMEM constexpr NameTable ABREG16_FIXED_TABLE{ARRAY_RANGE(ABREG16_FIXED_ENTRIES)};
-PROGMEM constexpr NameTable ABREG16_REL_TABLE{ARRAY_RANGE(ABREG16_REL_ENTRIES)};
-PROGMEM constexpr NameTable ABREG32_REL_TABLE{ARRAY_RANGE(ABREG32_REL_ENTRIES)};
+constexpr NameTable ABREG8_FIXED_TABLE{ARRAY_RANGE(ABREG8_FIXED_ENTRIES)};
+constexpr NameTable ABREG8_REL_TABLE{ARRAY_RANGE(ABREG8_REL_ENTRIES)};
+constexpr NameTable ABREG16_FIXED_TABLE{ARRAY_RANGE(ABREG16_FIXED_ENTRIES)};
+constexpr NameTable ABREG16_REL_TABLE{ARRAY_RANGE(ABREG16_REL_ENTRIES)};
+constexpr NameTable ABREG32_REL_TABLE{ARRAY_RANGE(ABREG32_REL_ENTRIES)};
 
 // clang-format on
 }  // namespace

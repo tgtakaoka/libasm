@@ -43,8 +43,8 @@ struct Insn final : ErrorAt {
     void reset(uint32_t addr, uint8_t length = 0);
     uint32_t align(uint8_t step);
     bool hasContinue() const { return _continueMark_P != nullptr; }
-    const /*PROGMEM*/ char *continueMark_P() const { return _continueMark_P; }
-    void setContinueMark_P(const /*PROGMEM*/ char *mark_P) { _continueMark_P = mark_P; }
+    const char *continueMark_P() const { return _continueMark_P; }
+    void setContinueMark_P(const char *mark_P) { _continueMark_P = mark_P; }
     // Byte offset where a sequential continuation segment begins (e.g. the
     // CP1600 follower after the 1-word SDBD prefix).  0 means the continuation
     // re-displays the same bytes/address (e.g. a TMS320 parallel pair).
@@ -185,7 +185,7 @@ private:
     uint32_t _address;
     uint8_t _length;
     uint8_t _continueOffset;
-    const /*PROGMEM*/ char *_continueMark_P;
+    const char *_continueMark_P;
 
     char _name[MAX_NAME + 1];
     StrBuffer _buffer{_name, sizeof(_name)};

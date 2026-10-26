@@ -24,8 +24,8 @@ namespace text {
 namespace tms370 {
 // clang-format off
 
-extern const char TEXT_CPU_TMS370[]  PROGMEM;
-extern const char TEXT_CPU_TMS370C[] PROGMEM;
+extern const char TEXT_CPU_TMS370[];
+extern const char TEXT_CPU_TMS370C[];
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -38,7 +38,7 @@ using common::TEXT_CALLR;
 using common::TEXT_CLR;
 using common::TEXT_CLRC;
 using common::TEXT_CMP;
-extern const char TEXT_COMPL[] PROGMEM;
+extern const char TEXT_COMPL[];
 using common::TEXT_DAC;
 using common::TEXT_DEC;
 using common::TEXT_DINT;
@@ -46,8 +46,8 @@ using common::TEXT_DIV;
 using common::TEXT_DJNZ;
 using common::TEXT_DSB;
 using common::TEXT_EINT;
-extern const char TEXT_EINTH[] PROGMEM;
-extern const char TEXT_EINTL[] PROGMEM;
+extern const char TEXT_EINTH[];
+extern const char TEXT_EINTL[];
 using common::TEXT_IDLE;
 using common::TEXT_INC;
 using common::TEXT_INCW;
@@ -60,7 +60,7 @@ using common::TEXT_JGT;
 using common::TEXT_JHS;
 using common::TEXT_JL;
 using common::TEXT_JLE;
-extern const char TEXT_JLO[]   PROGMEM;
+extern const char TEXT_JLO[];
 using common::TEXT_JLT;
 using common::TEXT_JMP;
 using common::TEXT_JMPL;
@@ -74,7 +74,7 @@ using common::TEXT_JPZ;
 using common::TEXT_JV;
 using common::TEXT_JZ;
 using common::TEXT_LDSP;
-extern const char TEXT_LDST[]  PROGMEM;
+extern const char TEXT_LDST[];
 using common::TEXT_MOV;
 using common::TEXT_MOVW;
 using common::TEXT_MPY;

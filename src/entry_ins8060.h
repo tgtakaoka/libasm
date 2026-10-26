@@ -52,12 +52,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
         AddrMode mode() const { return AddrMode((_attr >> mode_gp) & mode_gm); }
         uint8_t mask() const {
-            static constexpr uint8_t MASK[] PROGMEM = {
+            static constexpr uint8_t MASK[] = {
                     0x00,  // CF_00 = 0
                     0x03,  // CF_03 = 1
                     0x07,  // CF_07 = 2
             };
-            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+            return MASK[(_attr >> cf_gp) & cf_gm];
         }
 
     private:
@@ -67,10 +67,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t cf_gm = 0x03;
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_byte(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

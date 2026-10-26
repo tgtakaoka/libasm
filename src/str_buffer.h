@@ -66,12 +66,12 @@ struct StrBuffer : ErrorReporter {
     /** Output |text| via |letter(char)|. */
     StrBuffer &text(const char *text);
     StrBuffer &text(const StrScanner &scan);
-    StrBuffer &text_P(const /*PROGMEM*/ char *text_P);
+    StrBuffer &text_P(const char *text_P);
 
     /** Output |text| via |rletter(char)| as is. */
     StrBuffer &rtext(const char *text);
     StrBuffer &rtext(const StrScanner &scan);
-    StrBuffer &rtext_P(const /*PROGMEM*/ char *text_P);
+    StrBuffer &rtext_P(const char *text_P);
 
     /** Output |v| in hexadecimal. */
     template <typename T>

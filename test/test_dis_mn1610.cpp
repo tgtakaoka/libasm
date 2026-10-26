@@ -26,12 +26,12 @@ DisMn1610 dis1610;
 Disassembler &disassembler(dis1610);
 
 bool is1610() {
-    return strcmp_P("MN1610", disassembler.config().cpu_P()) == 0;
+    return strcmp("MN1610", disassembler.config().cpu_P()) == 0;
 }
 
 bool is1613() {
-    return strcmp_P("MN1613", disassembler.config().cpu_P()) == 0 ||
-           strcmp_P("MN1613A", disassembler.config().cpu_P()) == 0;
+    return strcmp("MN1613", disassembler.config().cpu_P()) == 0 ||
+           strcmp("MN1613A", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

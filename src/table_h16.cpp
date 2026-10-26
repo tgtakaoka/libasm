@@ -39,7 +39,7 @@ namespace h16 {
 // Main page: single-byte opcodes.  Sized entries have Sz in the low 2 bits of
 // the opcode; matchOpCode masks those bits.
 // ============================================================================
-constexpr Entry TABLE_MAIN[] PROGMEM = {
+constexpr Entry TABLE_MAIN[] = {
     // ADD/SUB/CMP/MOV families: same stem, class disambiguates.  Listed per
     // stem in optimal-preference order RQ > R > Q > G (smallest first) so a
     // class-less mnemonic picks the smallest fitting form.
@@ -135,7 +135,7 @@ constexpr Entry TABLE_MAIN[] PROGMEM = {
 // SFT (shift/rotate) dynamic.  Prefix 0x60/0x61/0x62 = .B/.W/.L (Sz in prefix
 // low 2 bits).  Opcode [MODE(3)|*|Rn(4)]: MODE bits 7-5 select the mnemonic.
 // ============================================================================
-constexpr Entry TABLE_SFT_DYN[] PROGMEM = {
+constexpr Entry TABLE_SFT_DYN[] = {
     E2(0x00, TEXT_SHAR,   IC_N,  ISZ_PRSZ,  M_SCNTR, M_EADST),  // MODE=000 SHAR
     E2(0x20, TEXT_SHLR,   IC_N,  ISZ_PRSZ,  M_SCNTR, M_EADST),  // MODE=001 SHLR
     E2(0x40, TEXT_ROTR,   IC_N,  ISZ_PRSZ,  M_SCNTR, M_EADST),  // MODE=010 ROTR
@@ -147,7 +147,7 @@ constexpr Entry TABLE_SFT_DYN[] PROGMEM = {
 };
 
 // SFT static.  Prefix 0x64/0x65/0x66.  Opcode is [MODE(3)|Imm5(5)].
-constexpr Entry TABLE_SFT_STAT[] PROGMEM = {
+constexpr Entry TABLE_SFT_STAT[] = {
     E2(0x00, TEXT_SHAR,   IC_N,  ISZ_PRSZ,  M_SCNTI, M_EADST),
     E2(0x20, TEXT_SHLR,   IC_N,  ISZ_PRSZ,  M_SCNTI, M_EADST),
     E2(0x40, TEXT_ROTR,   IC_N,  ISZ_PRSZ,  M_SCNTI, M_EADST),
@@ -159,7 +159,7 @@ constexpr Entry TABLE_SFT_STAT[] PROGMEM = {
 };
 
 // BIT dynamic.  Prefix 0x68/0x69/0x6A.  Opcode is [*|MODE(2)|*|Rn(4)].
-constexpr Entry TABLE_BIT_DYN[] PROGMEM = {
+constexpr Entry TABLE_BIT_DYN[] = {
     E2(0x00, TEXT_BSET,   IC_N,  ISZ_PRSZ,  M_BNUMR, M_EADST),  // MODE=00 BSET
     E2(0x20, TEXT_BNOT,   IC_N,  ISZ_PRSZ,  M_BNUMR, M_EADST),  // MODE=01 BNOT
     E2(0x40, TEXT_BCLR,   IC_N,  ISZ_PRSZ,  M_BNUMR, M_EADST),  // MODE=10 BCLR
@@ -167,7 +167,7 @@ constexpr Entry TABLE_BIT_DYN[] PROGMEM = {
 };
 
 // BIT static.  Prefix 0x6C/0x6D/0x6E.  Opcode is [*|MODE(2)|Imm5(5)].
-constexpr Entry TABLE_BIT_STAT[] PROGMEM = {
+constexpr Entry TABLE_BIT_STAT[] = {
     E2(0x00, TEXT_BSET,   IC_N,  ISZ_PRSZ,  M_BNUMI, M_EADST),
     E2(0x20, TEXT_BNOT,   IC_N,  ISZ_PRSZ,  M_BNUMI, M_EADST),
     E2(0x40, TEXT_BCLR,   IC_N,  ISZ_PRSZ,  M_BNUMI, M_EADST),
@@ -176,20 +176,20 @@ constexpr Entry TABLE_BIT_STAT[] PROGMEM = {
 
 // MUL.  Prefix 0xEE.  Opcode (second byte) is [MODE(4)|*4]: bit 6 = signed(0)
 // or unsigned(1); bit 4 = byte(0) or word(1).
-constexpr Entry TABLE_MUL[] PROGMEM = {
+constexpr Entry TABLE_MUL[] = {
     E2(0x00, TEXT_MULXS,  IC_N,  ISZ_OBIT4, M_EASRC, M_EADST),  // MULXS (bit 6 = 0)
     E2(0x40, TEXT_MULXU,  IC_N,  ISZ_OBIT4, M_EASRC, M_EADST),  // MULXU (bit 6 = 1)
 };
 
 // DIV.  Prefix 0xEF.  Same MODE layout as MUL.
-constexpr Entry TABLE_DIV[] PROGMEM = {
+constexpr Entry TABLE_DIV[] = {
     E2(0x00, TEXT_DIVXS,  IC_N,  ISZ_OBIT4, M_EASRC, M_EADST),
     E2(0x40, TEXT_DIVXU,  IC_N,  ISZ_OBIT4, M_EASRC, M_EADST),
 };
 
 // Bcc:G.  Prefix 0xA4/0xA5/0xA6.  Opcode [*4|cc(4)]: low 4 bits select the
 // condition.  All class IC_G; the disassembler reconstructs the ":G" suffix.
-constexpr Entry TABLE_BCC_G[] PROGMEM = {
+constexpr Entry TABLE_BCC_G[] = {
     E1(0x00, TEXT_BT,     IC_G,  ISZ_PRSZ,  M_DISP),            // cc=0 T
     E1(0x01, TEXT_BF,     IC_G,  ISZ_PRSZ,  M_DISP),            // cc=1 F
     E1(0x02, TEXT_BHI,    IC_G,  ISZ_PRSZ,  M_DISP),            // cc=2 HI
@@ -215,7 +215,7 @@ constexpr Entry TABLE_BCC_G[] PROGMEM = {
 // STRING family.  Prefix 0x94/0x95 = .B/.W (Sz in prefix low bit).  Second
 // byte is [flag|TYP(3)|Rnc(4)]: flag (bit 7) = 4-register form (SCMP/SSCH),
 // bit 6 = direction (0=F, 1=B).  Opcode here is selector<<4 (Rnc page-masked).
-constexpr Entry TABLE_STRING[] PROGMEM = {
+constexpr Entry TABLE_STRING[] = {
     E1(0x00, TEXT_SSTR, IC_N, ISZ_PRSZ, M_STROP),               // SSTR/F (TYP=000)
     E1(0x40, TEXT_SSTR, IC_N, ISZ_PRSZ, M_STROP),               // SSTR/B (TYP=100)
     E1(0x20, TEXT_SMOV, IC_N, ISZ_PRSZ, M_STROP),               // SMOV/F (TYP=010)
@@ -228,7 +228,7 @@ constexpr Entry TABLE_STRING[] PROGMEM = {
 
 // Sorted name -> entry-index arrays, used by searchName's binary search.
 // Generated literally by scripts/make-index-array.sh.
-constexpr uint8_t INDEX_MAIN[] PROGMEM = {
+constexpr uint8_t INDEX_MAIN[] = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADD
@@ -314,7 +314,7 @@ constexpr uint8_t INDEX_MAIN[] PROGMEM = {
      29,  // TEXT_XOR
      78,  // TEXT_XORC
 };
-constexpr uint8_t INDEX_SFT[] PROGMEM = {
+constexpr uint8_t INDEX_SFT[] = {
       6,  // TEXT_ROTL
       2,  // TEXT_ROTR
       7,  // TEXT_ROTXL
@@ -324,17 +324,17 @@ constexpr uint8_t INDEX_SFT[] PROGMEM = {
       5,  // TEXT_SHLL
       1,  // TEXT_SHLR
 };
-constexpr uint8_t INDEX_BIT[] PROGMEM = {
+constexpr uint8_t INDEX_BIT[] = {
       2,  // TEXT_BCLR
       1,  // TEXT_BNOT
       0,  // TEXT_BSET
       3,  // TEXT_BTST
 };
-constexpr uint8_t INDEX_MUL_DIV[] PROGMEM = {
+constexpr uint8_t INDEX_MUL_DIV[] = {
       0,  // TEXT_MULXS
       1,  // TEXT_MULXU
 };
-constexpr uint8_t INDEX_BCC_G[] PROGMEM = {
+constexpr uint8_t INDEX_BCC_G[] = {
       4,  // TEXT_BCC
       5,  // TEXT_BCS
       7,  // TEXT_BEQ
@@ -354,7 +354,7 @@ constexpr uint8_t INDEX_BCC_G[] PROGMEM = {
       8,  // TEXT_BVC
       9,  // TEXT_BVS
 };
-constexpr uint8_t INDEX_STRING[] PROGMEM = {
+constexpr uint8_t INDEX_STRING[] = {
     6,  // TEXT_SCMP
     7,  // TEXT_SCMP
     2,  // TEXT_SMOV
@@ -396,7 +396,7 @@ struct PageMask {
     uint8_t zeroMask;
 };
 
-constexpr PageMask PAGE_MASKS[] PROGMEM = {
+constexpr PageMask PAGE_MASKS[] = {
     {0x00, 0x00, 0x00},  // PF_MAIN
     {0x03, 0x1F, 0x10},  // PF_SFT_DYN
     {0x03, 0x1F, 0x00},  // PF_SFT_STAT
@@ -413,16 +413,16 @@ struct EntryPage : entry::PrefixTableBase<Entry> {
         : PrefixTableBase(prefix, head_P, tail_P, index_P, itail_P),
           _format(format) {}
 
-    uint8_t prefixMask() const { return pgm_read_byte(&PAGE_MASKS[fmt()].prefixMask); }
-    uint8_t opMask() const { return pgm_read_byte(&PAGE_MASKS[fmt()].opMask); }
-    uint8_t zeroMask() const { return pgm_read_byte(&PAGE_MASKS[fmt()].zeroMask); }
+    uint8_t prefixMask() const { return PAGE_MASKS[fmt()].prefixMask; }
+    uint8_t opMask() const { return PAGE_MASKS[fmt()].opMask; }
+    uint8_t zeroMask() const { return PAGE_MASKS[fmt()].zeroMask; }
 
 private:
-    uint8_t fmt() const { return pgm_read_byte(&_format); }
+    uint8_t fmt() const { return _format; }
     const uint8_t _format;
 };
 
-constexpr EntryPage H16_PAGES[] PROGMEM = {
+constexpr EntryPage H16_PAGES[] = {
     // main page: no prefix; entry-level mask applies; no zero-required bits
     {0x0000, PF_MAIN,     ARRAY_RANGE(TABLE_MAIN),     ARRAY_RANGE(INDEX_MAIN)},
     // SFT dynamic 0x60-0x62; opcode [MODE(3)|*|Rn(4)]
@@ -445,7 +445,7 @@ constexpr EntryPage H16_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
     {H16, TEXT_CPU_H16, ARRAY_RANGE(H16_PAGES)},
 };
 
@@ -658,11 +658,11 @@ Error searchName(CpuType cpuType, AsmInsn &insn) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableH16::listCpu_P() const {
+const char *TableH16::listCpu_P() const {
     return TEXT_H16_LIST;
 }
 
-const /*PROGMEM*/ char *TableH16::cpuName_P(CpuType cpuType) const {
+const char *TableH16::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

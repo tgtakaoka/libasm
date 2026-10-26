@@ -14,13 +14,9 @@
 
 help:
 	@echo '"make clean"       remove unnecessary files'
-	@echo '"make pio-ci"      run PlatformIO CI for an example and a board'
-	@echo  "                    (default BOARD=$(BOARD), EX=$(EX))"
 	@echo '"make pio-run"     build an example for an environment'
 	@echo  "                    (default ENV=$(ENV), EX=$(EX))"
-	@echo '"make arduino-ci"  run Arduino CLI for an example and a board'
-	@echo  "                    (default FQBN=$(FQBN), EX=$(EX))"
-	@echo '"make update"      propagate common files to sketches'
+	@echo '"make update"      propagate common files to examples'
 
 EXS = \
 	am29000  \
@@ -76,20 +72,8 @@ ENV ?= $(firstword $(ENVS))
 environments:
 	@echo $(ENVS)
 
-BOARDS = $(shell $(MAKE) -s -C $(EX) boards)
-BOARD ?= $(firstword $(BOARDS))
-
-FQBNS = $(shell $(MAKE) -s -C $(EX) fqbns)
-FQBN ?= $(firstword $(FQBNS))
-
-boards:
-	@echo $(BOARDS)
-
 envs:
 	@echo $(ENVS)
-
-fqbns:
-	@echo $(FQBNS)
 
 define update # example
 	cp -f Makefile.common $(1)/Makefile
@@ -100,17 +84,6 @@ endef
 update: Makefile.common platformio.common
 	$(foreach ex,$(EXS),$(call update,$(ex)))
 
-define pio-ci # example, board
-	$(MAKE) -C $(1) pio-ci BOARD=$(2)
-
-endef
-
-pio-ci:
-	$(call pio-ci,$(EX),$(BOARD))
-
-pio-ci-all:
-	$(foreach ex,$(EXS),$(foreach board,$(BOARDS),$(call pio-ci,$(ex),$(board))))
-
 define pio-run # example, env
 	$(MAKE) -C $(1) pio-run ENV=$(2)
 
@@ -120,18 +93,7 @@ pio-run:
 	$(call pio-run,$(EX),$(ENV))
 
 pio-run-all:
-	$(foreach ex,$(EXS),$(foreach env,$(ENVS),$(call pio-run,$(ex),$(env))))
-
-define arduino-ci # example, fqbn
-	$(MAKE) -C $(1) arduino-ci FQBN=$(2)
-
-endef
-
-arduino-ci:
-	$(call arduino-ci,$(EX),$(FQBN))
-
-arduino-ci-all:
-	$(foreach ex,$(EXS),$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(ex),$(fqbn))))
+	$(foreach ex,$(EXS),$(call pio-run,$(ex),$(ENV)))
 
 define clean-ex # ex
 	$(MAKE) -s -C $(1) clean
@@ -141,8 +103,7 @@ endef
 clean: $(EXS)
 	$(foreach ex,$(EXS),$(call clean-ex,$(ex)))
 
-.PHONY: all clean update pio-ci pio-ci-all pio-run pio-run-all
-.PHONY: arduino-ci arduino-ci-all
+.PHONY: all clean update pio-run pio-run-all
 
 # Local Variables:
 # mode: makefile-gmake

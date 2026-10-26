@@ -87,9 +87,9 @@ StrBuffer &StrBuffer::rtext(const StrScanner &scan) {
     return *this;
 }
 
-StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P) {
+StrBuffer &StrBuffer::text_P(const char *text_P) {
     while (true) {
-        const char c = pgm_read_byte(text_P++);
+        const char c = *(text_P++);
         if (c == 0)
             break;
         letter(c);
@@ -97,9 +97,9 @@ StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
-StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
+StrBuffer &StrBuffer::rtext_P(const char *text_P) {
     while (true) {
-        const char c = pgm_read_byte(text_P++);
+        const char c = *(text_P++);
         if (c == 0)
             break;
         rletter(c);

@@ -264,7 +264,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         void setInsnSize(InsnSize size) { _attr = attr(oprSize(), size, hasPostVal()); }
 
         Config::opcode_t insnMask() const {
-            static constexpr Config::opcode_t CMASK[] PROGMEM = {
+            static constexpr Config::opcode_t CMASK[] = {
                     00000,  // CF_0000 = 0
                     00007,  // CF_0007 = 1
                     00017,  // CF_0017 = 2
@@ -286,11 +286,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     07477,  // CF_7477 = 18
                     07777,  // CF_7777 = 19
             };
-            return pgm_read_word(CMASK + codeFormat());
+            return CMASK[codeFormat()];
         }
 
         Config::opcode_t postMask() const {
-            static constexpr Config::opcode_t PMASK[] PROGMEM = {
+            static constexpr Config::opcode_t PMASK[] = {
                     0x0000,  // PF_0000 = 0
                     0x0070,  // PF_0070 = 1
                     0x00FF,  // PF_00FF = 2
@@ -319,7 +319,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0x000F,  // PF_000F = 25,
                     0x0007,  // PF_0007 = 26,
             };
-            return pgm_read_word(PMASK + postFormat());
+            return PMASK[postFormat()];
         }
 
     private:
@@ -368,13 +368,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
         }
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._src), pgm_read_word(&_flags_P._dst),
-                pgm_read_word(&_flags_P._ext), pgm_read_word(&_flags_P._attr),
-                pgm_read_word(&_flags_P._post)};
+        return Flags{_flags_P._src, _flags_P._dst,
+                _flags_P._ext, _flags_P._attr,
+                _flags_P._post};
     }
 
 private:

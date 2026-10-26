@@ -24,7 +24,7 @@ namespace text {
 namespace tlcs90 {
 // clang-format off
 
-extern const char TEXT_CPU_TLCS90[] PROGMEM;
+extern const char TEXT_CPU_TLCS90[];
 
 using common::TEXT_ADC;
 using common::TEXT_ADD;
@@ -88,13 +88,13 @@ using common::TEXT_SBC;
 using common::TEXT_SCF;
 using common::TEXT_SET;
 using common::TEXT_SLA;
-extern const char TEXT_SLAA[] PROGMEM;
+extern const char TEXT_SLAA[];
 using common::TEXT_SLL;
-extern const char TEXT_SLLA[] PROGMEM;
+extern const char TEXT_SLLA[];
 using common::TEXT_SRA;
-extern const char TEXT_SRAA[] PROGMEM;
+extern const char TEXT_SRAA[];
 using common::TEXT_SRL;
-extern const char TEXT_SRLA[] PROGMEM;
+extern const char TEXT_SRLA[];
 using common::TEXT_SUB;
 using common::TEXT_SWI;
 using common::TEXT_TSET;

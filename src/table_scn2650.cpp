@@ -30,7 +30,7 @@ namespace scn2650 {
 #define E0(_opc, _cf, _name) E1(_opc, _cf, _name, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_2650[] PROGMEM = {
+constexpr Entry TABLE_2650[] = {
     E1(0x00, CF_03, TEXT_LODZ, M_R123),
     E2(0x04, CF_03, TEXT_LODI, M_REGN, M_IMM8),
     E2(0x08, CF_03, TEXT_LODR, M_REGN, M_REL7),
@@ -117,7 +117,7 @@ constexpr Entry TABLE_2650[] PROGMEM = {
     E2(0xFC, CF_03, TEXT_BDRA, M_REGN, M_AB15),
 };
 
-constexpr uint8_t INDEX_2650[] PROGMEM = {
+constexpr uint8_t INDEX_2650[] = {
      45,  // TEXT_ADDA
      46,  // TEXT_ADDA
      43,  // TEXT_ADDI
@@ -208,13 +208,13 @@ constexpr uint8_t INDEX_2650[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
+constexpr EntryPage SCN2650_PAGES[] = {
         {ARRAY_RANGE(TABLE_2650), ARRAY_RANGE(INDEX_2650)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
 };
 
@@ -279,11 +279,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableScn2650::listCpu_P() const {
+const char *TableScn2650::listCpu_P() const {
     return TEXT_CPU_SCN2650;
 }
 
-const /*PROGMEM*/ char *TableScn2650::cpuName_P(CpuType cpuType) const {
+const char *TableScn2650::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

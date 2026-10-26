@@ -28,8 +28,8 @@ using namespace text::am29000;
 
 namespace {
 
-constexpr char OPT_BOOL_EXTERN_SYMBOL[] PROGMEM = "extern-symbol";
-constexpr char OPT_DESC_EXTERN_SYMBOL[] PROGMEM = "emit absolute branch target as A_XXXXXXXX symbol";
+constexpr char OPT_BOOL_EXTERN_SYMBOL[] = "extern-symbol";
+constexpr char OPT_DESC_EXTERN_SYMBOL[] = "emit absolute branch target as A_XXXXXXXX symbol";
 
 }  // namespace
 
@@ -119,7 +119,7 @@ void DisAm29000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
             // whole range.  The name has to read the same whichever case the
             // rest of the listing is in, so spell it in lower case throughout.
             if (_externSymbol) {
-                out.rtext_P(PSTR("A_"));
+                out.rtext_P("A_");
                 StrCaseBuffer lower(out, false);
                 lower.hex(target, 8);
                 lower.over(out);

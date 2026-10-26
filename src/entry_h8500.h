@@ -118,8 +118,8 @@ constexpr uint8_t CODE_MASK[] = {0x00, 0x07, 0x08, 0x0F};
 
 struct Entry final : entry::Base<uint8_t> {
     struct Flags final {
-        // Three bytes (read with pgm_read_byte, no 32-bit PROGMEM math) hold the
-        // 18 attribute bits. The 29-value AddrMode forces src/dst to 5 bits each,
+        // Three bytes (no 32-bit math) hold the 18 attribute bits.
+        // The 29-value AddrMode forces src/dst to 5 bits each,
         // so the total cannot fit a single 16-bit word; 3x uint8 beats a uint32.
         //   _a: [7]=isz(1) [6:5]=cf(2) [4:0]=dst(5)
         //   _b:           [6:5]=osz(2) [4:0]=src(5)
@@ -159,12 +159,12 @@ struct Entry final : entry::Base<uint8_t> {
         static constexpr uint_fast8_t cls_gm = 0x7;
     };
 
-    constexpr Entry(uint8_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(uint8_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_byte(&_flags_P._a), pgm_read_byte(&_flags_P._b),
-                pgm_read_byte(&_flags_P._c)};
+        return Flags{_flags_P._a, _flags_P._b,
+                _flags_P._c};
     }
 
 private:

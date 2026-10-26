@@ -25,15 +25,15 @@ DisZ8 disz8;
 Disassembler &disassembler(disz8);
 
 bool z86c() {
-    return strcmp_P("Z86C", disassembler.config().cpu_P()) == 0;
+    return strcmp("Z86C", disassembler.config().cpu_P()) == 0;
 }
 
 bool z86() {
-    return strcmp_P("Z8", disassembler.config().cpu_P()) == 0 || z86c();
+    return strcmp("Z8", disassembler.config().cpu_P()) == 0 || z86c();
 }
 
 bool z88() {
-    return strcmp_P("Z88", disassembler.config().cpu_P()) == 0;
+    return strcmp("Z88", disassembler.config().cpu_P()) == 0;
 }
 
 uint8_t R(uint8_t n) {

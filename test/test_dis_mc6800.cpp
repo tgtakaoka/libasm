@@ -26,23 +26,23 @@ DisMc6800 dis6800;
 Disassembler &disassembler(dis6800);
 
 bool mb8861() {
-    return strcasecmp_P("MB8861", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("MB8861", disassembler.config().cpu_P()) == 0;
 }
 
 bool m6800() {
-    return strcmp_P("6800", disassembler.config().cpu_P()) == 0 || mb8861();
+    return strcmp("6800", disassembler.config().cpu_P()) == 0 || mb8861();
 }
 
 bool hd6301() {
-    return strcmp_P("6301", disassembler.config().cpu_P()) == 0;
+    return strcmp("6301", disassembler.config().cpu_P()) == 0;
 }
 
 bool m68hc11() {
-    return strcmp_P("6811", disassembler.config().cpu_P()) == 0;
+    return strcmp("6811", disassembler.config().cpu_P()) == 0;
 }
 
 bool m6801() {
-    return strcmp_P("6801", disassembler.config().cpu_P()) == 0 || hd6301() || m68hc11();
+    return strcmp("6801", disassembler.config().cpu_P()) == 0 || hd6301() || m68hc11();
 }
 
 void set_up() {

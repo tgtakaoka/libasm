@@ -28,7 +28,7 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dALIGN,  &Assembler::alignOrigin        },
     { TEXT_dBSS,    &Assembler::allocateSpaces,     Assembler::DATA_WORD         },
     { TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD },
@@ -38,7 +38,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD         },
     { TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD         },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -59,7 +59,7 @@ AsmTms320::AsmTms320(const ValueParser::Plugins &plugins)
 }
 
 void AsmTms320::encodeIndirect(AsmInsn &insn, const Operand &op) const {
-    static constexpr uint8_t MAR[] PROGMEM = {
+    static constexpr uint8_t MAR[] = {
             0x80,  // M_ARP: *
             0xA0,  // M_INC: *+
             0x90,  // M_DEC: *-
@@ -69,7 +69,7 @@ void AsmTms320::encodeIndirect(AsmInsn &insn, const Operand &op) const {
             0xC0,  // M_DBR0: *BR0-
     };
     if (op.mode >= M_ARP)
-        insn.embed(pgm_read_byte(&MAR[op.mode - M_ARP]));
+        insn.embed(MAR[op.mode - M_ARP]);
 }
 
 void AsmTms320::encodeDirect(AsmInsn &insn, const Operand &op) const {
@@ -235,7 +235,7 @@ void AsmTms320::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
 
 void AsmTms320::encodeConditionCode(AsmInsn &insn, const Operand &op) const {
     if (is320C2x()) {
-        static constexpr uint8_t CC[] PROGMEM = {
+        static constexpr uint8_t CC[] = {
                 0xFF,  // CC_UNC = 0,   Unconditional
                 0xF9,  // CC_TC = 1,    TC=1:   BBNZ
                 0xF8,  // CC_NTC = 2,   TC=0:   BBZ
@@ -251,12 +251,12 @@ void AsmTms320::encodeConditionCode(AsmInsn &insn, const Operand &op) const {
                 0xF2,  // CC_LEQ = 12,  ACC<=0: BLEZ
                 0xF1,  // CC_GT = 13,   ACC>0:  BGZ
         };
-        insn.embed(pgm_read_byte(CC + op.cc) << 8);
+        insn.embed(CC[op.cc] << 8);
         return;
     }
     constexpr auto TP = 0x300;
     constexpr auto MASK = 0x00F;
-    static constexpr Config::opcode_t TABLE[] PROGMEM = {
+    static constexpr Config::opcode_t TABLE[] = {
             0x000,  // CC_UNC = 0   uncondition
             0x100,  // CC_TC = 1    TC=1
             0x200,  // CC_NTC = 2   TC=0
@@ -278,7 +278,7 @@ void AsmTms320::encodeConditionCode(AsmInsn &insn, const Operand &op) const {
     do {
         const auto at = p.skipSpaces();
         const auto cc = parseCcName(p, parser());
-        const auto item = pgm_read_word(TABLE + cc);
+        const auto item = TABLE[cc];
         if (cc == CC_UNC)
             uncondition = true;
         if (uncondition && item)

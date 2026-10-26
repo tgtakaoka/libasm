@@ -25,24 +25,24 @@ bool StrScanner::iequals(const StrScanner &text) const {
     return size() == len && strncasecmp(str(), text.str(), len) == 0;
 }
 
-bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
-    const auto len = strlen_P(text_P);
-    return size() == len && strncasecmp_P(_str, text_P, len) == 0;
+bool StrScanner::iequals_P(const char *text_P) const {
+    const auto len = strlen(text_P);
+    return size() == len && strncasecmp(_str, text_P, len) == 0;
 }
 
-bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P) {
-    return iexpectText_P(text_P, strlen_P(text_P));
+bool StrScanner::iexpectText_P(const char *text_P) {
+    return iexpectText_P(text_P, strlen(text_P));
 }
 
-bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len) {
-    if (strncasecmp_P(_str, text_P, len) == 0) {
+bool StrScanner::iexpectText_P(const char *text_P, size_t len) {
+    if (strncasecmp(_str, text_P, len) == 0) {
         _str += len;
         return true;
     }
     return false;
 }
 
-bool StrScanner::iexpectWord_P(const /*PROGMEM*/ char *text_P) {
+bool StrScanner::iexpectWord_P(const char *text_P) {
     const auto p = _str;
     if (iexpectText_P(text_P) && !(isalnum(*_str) || *_str == '_'))
         return true;
@@ -51,13 +51,13 @@ bool StrScanner::iexpectWord_P(const /*PROGMEM*/ char *text_P) {
 }
 
 bool StrScanner::expectTrue() {
-    return iexpectWord_P(PSTR("enable")) || iexpectWord_P(PSTR("true")) ||
-           iexpectWord_P(PSTR("yes")) || iexpectWord_P(PSTR("on"));
+    return iexpectWord_P("enable") || iexpectWord_P("true") ||
+           iexpectWord_P("yes") || iexpectWord_P("on");
 }
 
 bool StrScanner::expectFalse() {
-    return iexpectWord_P(PSTR("disable")) || iexpectWord_P(PSTR("false")) ||
-           iexpectWord_P(PSTR("no")) || iexpectWord_P(PSTR("off")) || iexpectWord_P(PSTR("none"));
+    return iexpectWord_P("disable") || iexpectWord_P("false") ||
+           iexpectWord_P("no") || iexpectWord_P("off") || iexpectWord_P("none");
 }
 
 }  // namespace libasm

@@ -34,31 +34,31 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char TEXT_dHWORD[] PROGMEM = ".hword";
-constexpr char TEXT_dSPACE[] PROGMEM = ".space";
-constexpr char TEXT_FPU[]     PROGMEM = "fpu";
-constexpr char TEXT_INTMULT[] PROGMEM = "intmult";
+constexpr char TEXT_dHWORD[] = ".hword";
+constexpr char TEXT_dSPACE[] = ".space";
+constexpr char TEXT_FPU[]     = "fpu";
+constexpr char TEXT_INTMULT[] = "intmult";
 
 // The GNU assembler for this target defines a word as 32 bits and a half-word
 // as 16, so the data directives follow that rather than the 16-bit "word" of
 // the older families.
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_dHWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD },
     { TEXT_dSPACE, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_LONG },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
 
-const AsmAm29000::PseudoAm29000 AsmAm29000::PSEUDO_AM29000_TABLE[] PROGMEM = {
+const AsmAm29000::PseudoAm29000 AsmAm29000::PSEUDO_AM29000_TABLE[] = {
         {TEXT_FPU, &AsmAm29000::processFpu},
         {TEXT_INTMULT, &AsmAm29000::processIntMul},
 };
-PROGMEM constexpr AsmAm29000::PseudosAm29000 AsmAm29000::PSEUDOS_AM29000{
+constexpr AsmAm29000::PseudosAm29000 AsmAm29000::PSEUDOS_AM29000{
         ARRAY_RANGE(PSEUDO_AM29000_TABLE)};
 
 const ValueParser::Plugins &AsmAm29000::defaultPlugins() {

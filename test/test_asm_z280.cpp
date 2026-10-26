@@ -25,7 +25,7 @@ AsmZ280 asz280;
 Assembler &assembler(asz280);
 
 bool isZ280() {
-    return strcasecmp_P("Z280", assembler.config().cpu_P()) == 0;
+    return strcasecmp("Z280", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

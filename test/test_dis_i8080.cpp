@@ -25,15 +25,15 @@ DisI8080 dis8080;
 Disassembler &disassembler(dis8080);
 
 bool is8080() {
-    return strcmp_P("8080", disassembler.config().cpu_P()) == 0;
+    return strcmp("8080", disassembler.config().cpu_P()) == 0;
 }
 
 bool is8085() {
-    return strcmp_P("8085", disassembler.config().cpu_P()) == 0;
+    return strcmp("8085", disassembler.config().cpu_P()) == 0;
 }
 
 bool v30emu() {
-    return strcasecmp_P("V30EMU", disassembler.config().cpu_P()) == 0;
+    return strcasecmp("V30EMU", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

@@ -56,7 +56,7 @@ using namespace libasm::text::mc68000;
 #define P0(_opc, _name, _pval) P1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE, CF_0000, _pval)
 
 // clang-format off
-constexpr Entry MC68000_TABLE[] PROGMEM = {
+constexpr Entry MC68000_TABLE[] = {
     E2(0000074, TEXT_ORI,   ISZ_NONE, M_IMDAT, M_CCR,   OP___, OP___, SZ_BYTE, CF_0000),
     E2(0000174, TEXT_ORI,   ISZ_NONE, M_IMDAT, M_SR,    OP___, OP___, SZ_WORD, CF_0000),
     E2(0000000, TEXT_ORI,   ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA, CF_0377),
@@ -247,7 +247,7 @@ constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0160470, TEXT_ROL,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA, CF_7307),
 };
 
-constexpr uint8_t MC68000_INDEX[] PROGMEM = {
+constexpr uint8_t MC68000_INDEX[] = {
     152,  // TEXT_ABCD
     153,  // TEXT_ABCD
     161,  // TEXT_ADD
@@ -438,7 +438,7 @@ constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      60,  // TEXT_UNLK
 };
 
-constexpr Entry MC68010_TABLE[] PROGMEM = {
+constexpr Entry MC68010_TABLE[] = {
     E1(0044110, TEXT_BKPT,  ISZ_NONE, M_IM3,   OP__0, SZ_NONE, CF_0007),
     E2(0041300, TEXT_MOVE,  ISZ_FIXD, M_CCR,   M_WDATA, OP___, OP_10, SZ_WORD, CF_0077),
     E1(0047164, TEXT_RTD,   ISZ_NONE, M_IMDAT, OP___, SZ_WORD, CF_0000),
@@ -448,7 +448,7 @@ constexpr Entry MC68010_TABLE[] PROGMEM = {
     X2(0007000, TEXT_MOVES, ISZ_DATA, M_GREG,  M_WMEM,  EX_GR, OP_10, SZ_DATA, CF_0377, 0x0800, PF_F000),
 };
 
-constexpr uint8_t MC68010_INDEX[] PROGMEM = {
+constexpr uint8_t MC68010_INDEX[] = {
       0,  // TEXT_BKPT
       1,  // TEXT_MOVE
       3,  // TEXT_MOVEC
@@ -458,7 +458,7 @@ constexpr uint8_t MC68010_INDEX[] PROGMEM = {
       2,  // TEXT_RTD
 };
 
-constexpr Entry MC68020_TABLE[] PROGMEM = {
+constexpr Entry MC68020_TABLE[] = {
     X2(0164300, TEXT_BFTST,  ISZ_NONE, M_BITFR, M_BITOW, OP_10, EX_OW, SZ_NONE, CF_0077, 0x0000, PF_0FFF),
     X2(0165300, TEXT_BFCHG,  ISZ_NONE, M_BITFW, M_BITOW, OP_10, EX_OW, SZ_NONE, CF_0077, 0x0000, PF_0FFF),
     X2(0166300, TEXT_BFCLR,  ISZ_NONE, M_BITFW, M_BITOW, OP_10, EX_OW, SZ_NONE, CF_0077, 0x0000, PF_0FFF),
@@ -543,7 +543,7 @@ constexpr Entry MC68020_TABLE[] PROGMEM = {
     E3(0100610, TEXT_UNPK,   ISZ_NONE, M_PDEC,  M_PDEC,  M_IMDAT, OP__0, OP__3, OP___, SZ_WORD, CF_7007),
 };
 
-constexpr uint8_t MC68020_INDEX[] PROGMEM = {
+constexpr uint8_t MC68020_INDEX[] = {
       1,  // TEXT_BFCHG
       2,  // TEXT_BFCLR
       5,  // TEXT_BFEXTS
@@ -628,19 +628,19 @@ constexpr uint8_t MC68020_INDEX[] PROGMEM = {
      81,  // TEXT_UNPK
 };
 
-constexpr Entry MC68020_MODULE[] PROGMEM = {
+constexpr Entry MC68020_MODULE[] = {
     E2(0003300, TEXT_CALLM,  ISZ_NONE, M_IMDAT, M_JADDR, OP___, OP_10, SZ_BYTE, CF_0077),
     E1(0003310, TEXT_RTM,    ISZ_NONE, M_AREG,  OP__0, SZ_NONE, CF_0007),
     E1(0003300, TEXT_RTM,    ISZ_NONE, M_DREG,  OP__0, SZ_NONE, CF_0007),
 };
 
-constexpr uint8_t MC68020_MODULE_INDEX[] PROGMEM = {
+constexpr uint8_t MC68020_MODULE_INDEX[] = {
       0,  // TEXT_CALLM
       1,  // TEXT_RTM
       2,  // TEXT_RTM
 };
 
-constexpr Entry MC68040_TABLE[] PROGMEM = {
+constexpr Entry MC68040_TABLE[] = {
     X2(0173040, TEXT_MOVE16, ISZ_NONE, M_PINC,  M_PINC,  OP__0, EX_GR, SZ_NONE, CF_0007, 0x0000, PF_F000),
     E2(0173000, TEXT_MOVE16, ISZ_NONE, M_PINC,  M_ALONG, OP__0, OP___, SZ_NONE, CF_0007),
     E2(0173010, TEXT_MOVE16, ISZ_NONE, M_ALONG, M_PINC,  OP___, OP__0, SZ_NONE, CF_0007),
@@ -654,7 +654,7 @@ constexpr Entry MC68040_TABLE[] PROGMEM = {
     E1(0172070, TEXT_CPUSHA, ISZ_NONE, M_CACHE, OP___,   SZ_NONE, CF_0300),
 };
 
-constexpr uint8_t MC68040_INDEX[] PROGMEM = {
+constexpr uint8_t MC68040_INDEX[] = {
       7,  // TEXT_CINVA
       5,  // TEXT_CINVL
       6,  // TEXT_CINVP
@@ -670,7 +670,7 @@ constexpr uint8_t MC68040_INDEX[] PROGMEM = {
 
 #if !defined(LIBASM_MC68000_NOFPU)
 
-constexpr Entry FPU_COMMON[] PROGMEM = {
+constexpr Entry FPU_COMMON[] = {
     X2(0xF200, TEXT_FMOVE,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0000, PF_1F80),
     X2(0xF200, TEXT_FSQRT,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0004, PF_1F80),
     X2(0xF200, TEXT_FABS,    ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0018, PF_1F80),
@@ -729,7 +729,7 @@ constexpr Entry FPU_COMMON[] PROGMEM = {
     E1(0xF340, TEXT_FRESTORE, ISZ_NONE, M_IADDR, OP_10, SZ_NONE, CF_0077),
 };
 
-constexpr uint8_t FPU_COMMON_INDEX[] PROGMEM = {
+constexpr uint8_t FPU_COMMON_INDEX[] = {
       2,  // TEXT_FABS
      14,  // TEXT_FABS
      52,  // TEXT_FABS
@@ -788,7 +788,7 @@ constexpr uint8_t FPU_COMMON_INDEX[] PROGMEM = {
      23,  // TEXT_FTST
 };
 
-constexpr Entry MC68881_TABLE[] PROGMEM = {
+constexpr Entry MC68881_TABLE[] = {
     X2(0xF200, TEXT_FINT,    ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0001, PF_1F80),
     X2(0xF200, TEXT_FSINH,   ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0002, PF_1F80),
     X2(0xF200, TEXT_FINTRZ,  ISZ_FIXD, M_FPREG, M_FPREG, EX_RX, EX_RY, SZ_XTND, CF_0000, 0x0003, PF_1F80),
@@ -867,7 +867,7 @@ constexpr Entry MC68881_TABLE[] PROGMEM = {
     X2(0xF200, TEXT_FMOVECR, ISZ_FIXD, M_IMROM, M_FPREG, EX_SK, EX_RY, SZ_XTND, CF_0000, 0x5C00, PF_03FF),
 };
 
-constexpr uint8_t MC68881_INDEX[] PROGMEM = {
+constexpr uint8_t MC68881_INDEX[] = {
      19,  // TEXT_FACOS
      45,  // TEXT_FACOS
      71,  // TEXT_FACOS
@@ -946,7 +946,7 @@ constexpr uint8_t MC68881_INDEX[] PROGMEM = {
      65,  // TEXT_FTWOTOX
 };
 
-constexpr Entry FPU_BRANCH[] PROGMEM = {
+constexpr Entry FPU_BRANCH[] = {
     E1(0xF280, TEXT_FBF,      ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
     X0(0xF280, TEXT_FNOP,     CF_0000,  0x0000,  PF_0000),
     E1(0xF281, TEXT_FBEQ,     ISZ_NONE, M_REL32, OP___, SZ_LONG, CF_0100),
@@ -1014,7 +1014,7 @@ constexpr Entry FPU_BRANCH[] PROGMEM = {
     P2(0xF248, TEXT_FDBST,    ISZ_NONE, M_DREG,  M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x001F),
 };
 
-constexpr uint8_t FPU_BRANCH_INDEX[] PROGMEM = {
+constexpr uint8_t FPU_BRANCH_INDEX[] = {
       2,  // TEXT_FBEQ
       0,  // TEXT_FBF
      20,  // TEXT_FBGE
@@ -1213,7 +1213,7 @@ constexpr Entry FPU_TRAP[] = {
     P0(0xF27C, TEXT_FTRAPST,   0x001F),
 };
 
-constexpr uint8_t FPU_TRAP_INDEX[] PROGMEM = {
+constexpr uint8_t FPU_TRAP_INDEX[] = {
       1,  // TEXT_FSEQ
       0,  // TEXT_FSF
      19,  // TEXT_FSGE
@@ -1430,7 +1430,7 @@ constexpr uint8_t MC68040_FPU_INDEX[] = {
 
 #if !defined(LIBASM_MC68000_NOPMMU)
 
-constexpr Entry MC68851_TABLE[] PROGMEM = {
+constexpr Entry MC68851_TABLE[] = {
     X0(0xF000, TEXT_PFLUSHA,  CF_0077, 0x2400, PF_0000),
     X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3010, PF_01EF),
     X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, EX_DC,   EX_PFM, SZ_NONE, CF_0077, 0x3008, PF_01E7),
@@ -1471,7 +1471,7 @@ constexpr Entry MC68851_TABLE[] PROGMEM = {
     E1(0xF100, TEXT_PSAVE,    ISZ_NONE, M_DADDR, OP_10,  SZ_NONE, CF_0077),
 };
 
-constexpr uint8_t MC68851_INDEX[] PROGMEM = {
+constexpr uint8_t MC68851_INDEX[] = {
       1,  // TEXT_PFLUSH
       2,  // TEXT_PFLUSH
       3,  // TEXT_PFLUSH
@@ -1512,7 +1512,7 @@ constexpr uint8_t MC68851_INDEX[] PROGMEM = {
      35,  // TEXT_PVALID
 };
 
-constexpr Entry MC68851_BRANCH[] PROGMEM = {
+constexpr Entry MC68851_BRANCH[] = {
     E1(0xF080, TEXT_PBBS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
     E1(0xF081, TEXT_PBBC,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
     E1(0xF082, TEXT_PBLS,  ISZ_NONE, M_REL32, OP___ ,SZ_LONG, CF_0100),
@@ -1547,7 +1547,7 @@ constexpr Entry MC68851_BRANCH[] PROGMEM = {
     P2(0xF048, TEXT_PDBCC, ISZ_NONE, M_DREG, M_REL16, OP__0, OP___, SZ_WORD, CF_0007, 0x000F),
 };
 
-constexpr uint8_t MC68851_BRANCH_INDEX[] PROGMEM = {
+constexpr uint8_t MC68851_BRANCH_INDEX[] = {
       7,  // TEXT_PBAC
       6,  // TEXT_PBAS
       1,  // TEXT_PBBC
@@ -1582,7 +1582,7 @@ constexpr uint8_t MC68851_BRANCH_INDEX[] PROGMEM = {
      24,  // TEXT_PDBWS
 };
 
-constexpr Entry MC68851_TRAP[] PROGMEM = {
+constexpr Entry MC68851_TRAP[] = {
     P1(0xF040, TEXT_PSBS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0000),
     P1(0xF040, TEXT_PSBC, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0001),
     P1(0xF040, TEXT_PSLS, ISZ_NONE, M_WDATA, OP_10, SZ_BYTE, CF_0077, 0x0002),
@@ -1649,7 +1649,7 @@ constexpr Entry MC68851_TRAP[] PROGMEM = {
     P0(0xF07C, TEXT_PTRAPCC, 0x000F),
 };
 
-constexpr uint8_t MC68851_TRAP_INDEX[] PROGMEM = {
+constexpr uint8_t MC68851_TRAP_INDEX[] = {
       7,  // TEXT_PSAC
       6,  // TEXT_PSAS
       1,  // TEXT_PSBC
@@ -1716,7 +1716,7 @@ constexpr uint8_t MC68851_TRAP_INDEX[] PROGMEM = {
      56,  // TEXT_PTRAPWS
 };
 
-constexpr Entry MC68030_PMMU_TABLE[] PROGMEM = {
+constexpr Entry MC68030_PMMU_TABLE[] = {
     X0(0xF000, TEXT_PFLUSHA,  CF_0077,  0x2400,  PF_0000),
     X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_IMFC,  M_IMFM, EX_PFC,  EX_PFM, SZ_NONE, CF_0077, 0x3010, PF_01EF),
     X2(0xF000, TEXT_PFLUSH,   ISZ_NONE, M_DREG,  M_IMFM, EX_DC,   EX_PFM, SZ_NONE, CF_0077, 0x3008, PF_01E7),
@@ -1752,7 +1752,7 @@ constexpr Entry MC68030_PMMU_TABLE[] PROGMEM = {
     X4(0xF000, TEXT_PTESTW,   ISZ_NONE, M_PFC,   M_PADDR, M_IMLV, M_AREG, EX_PFC, OP_10, EX_RX, SZ_NONE, CF_0077, 0x8100, PF_1CE7),
 };
 
-constexpr uint8_t MC68030_PMMU_INDEX[] PROGMEM = {
+constexpr uint8_t MC68030_PMMU_INDEX[] = {
       1,  // TEXT_PFLUSH
       2,  // TEXT_PFLUSH
       3,  // TEXT_PFLUSH
@@ -1788,7 +1788,7 @@ constexpr uint8_t MC68030_PMMU_INDEX[] PROGMEM = {
      32,  // TEXT_PTESTW
 };
 
-constexpr Entry MC68EC030_PMMU_TABLE[] PROGMEM = {
+constexpr Entry MC68EC030_PMMU_TABLE[] = {
     X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x0000, PF_1C00),
     X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PADDR, M_PREG,  OP_10,  EX_PR, SZ_PMMU, CF_0077, 0x6000, PF_1C00),
     X2(0xF000, TEXT_PMOVE,  ISZ_FIXD, M_PREG,  M_PADDR, EX_PR,  OP_10, SZ_PMMU, CF_0077, 0x0200, PF_1C00),
@@ -1801,7 +1801,7 @@ constexpr Entry MC68EC030_PMMU_TABLE[] PROGMEM = {
     X2(0xF000, TEXT_PTESTW, ISZ_NONE, M_PFC,   M_PADDR, EX_PFC, OP_10, SZ_NONE, CF_0077, 0x8000, PF_0007),
 };
 
-constexpr uint8_t MC68EC030_PMMU_INDEX[] PROGMEM = {
+constexpr uint8_t MC68EC030_PMMU_INDEX[] = {
       0,  // TEXT_PMOVE
       1,  // TEXT_PMOVE
       2,  // TEXT_PMOVE
@@ -1814,7 +1814,7 @@ constexpr uint8_t MC68EC030_PMMU_INDEX[] PROGMEM = {
       9,  // TEXT_PTESTW
 };
 
-constexpr Entry MC68040_PMMU_TABLE[] PROGMEM = {
+constexpr Entry MC68040_PMMU_TABLE[] = {
     E1(0172400, TEXT_PFLUSHN,  ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
     E1(0172410, TEXT_PFLUSH,   ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
     E0(0172420, TEXT_PFLUSHAN),
@@ -1823,7 +1823,7 @@ constexpr Entry MC68040_PMMU_TABLE[] PROGMEM = {
     E1(0172550, TEXT_PTESTR,   ISZ_NONE, M_AIND,  OP__0,  SZ_NONE, CF_0007),
 };
 
-constexpr uint8_t MC68040_PMMU_INDEX[] PROGMEM = {
+constexpr uint8_t MC68040_PMMU_INDEX[] = {
       1,  // TEXT_PFLUSH
       3,  // TEXT_PFLUSHA
       2,  // TEXT_PFLUSHAN
@@ -1837,29 +1837,29 @@ constexpr uint8_t MC68040_PMMU_INDEX[] PROGMEM = {
 
 using EntryPage = entry::TableBase<Entry>;
 
-constexpr EntryPage MC68000_PAGES[] PROGMEM = {
+constexpr EntryPage MC68000_PAGES[] = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-constexpr EntryPage MC68010_PAGES[] PROGMEM = {
+constexpr EntryPage MC68010_PAGES[] = {
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-constexpr EntryPage MC68020_PAGES[] PROGMEM = {
+constexpr EntryPage MC68020_PAGES[] = {
         {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
         {ARRAY_RANGE(MC68020_MODULE), ARRAY_RANGE(MC68020_MODULE_INDEX)},
 };
 
-constexpr EntryPage MC68030_PAGES[] PROGMEM = {
+constexpr EntryPage MC68030_PAGES[] = {
         {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-constexpr EntryPage MC68040_PAGES[] PROGMEM = {
+constexpr EntryPage MC68040_PAGES[] = {
         {ARRAY_RANGE(MC68040_TABLE), ARRAY_RANGE(MC68040_INDEX)},
         {ARRAY_RANGE(MC68020_TABLE), ARRAY_RANGE(MC68020_INDEX)},
         {ARRAY_RANGE(MC68010_TABLE), ARRAY_RANGE(MC68010_INDEX)},
@@ -1867,14 +1867,14 @@ constexpr EntryPage MC68040_PAGES[] PROGMEM = {
 };
 
 #if !defined(LIBASM_MC68000_NOFPU)
-constexpr EntryPage MC68881_PAGES[] PROGMEM = {
+constexpr EntryPage MC68881_PAGES[] = {
         {ARRAY_RANGE(FPU_COMMON), ARRAY_RANGE(FPU_COMMON_INDEX)},
         {ARRAY_RANGE(MC68881_TABLE), ARRAY_RANGE(MC68881_INDEX)},
         {ARRAY_RANGE(FPU_BRANCH), ARRAY_RANGE(FPU_BRANCH_INDEX)},
         {ARRAY_RANGE(FPU_TRAP), ARRAY_RANGE(FPU_TRAP_INDEX)},
 };
 
-constexpr EntryPage MC68040_FPU_PAGES[] PROGMEM = {
+constexpr EntryPage MC68040_FPU_PAGES[] = {
         {ARRAY_RANGE(FPU_COMMON), ARRAY_RANGE(FPU_COMMON_INDEX)},
         {ARRAY_RANGE(MC68040_FPU_TABLE), ARRAY_RANGE(MC68040_FPU_INDEX)},
         {ARRAY_RANGE(FPU_BRANCH), ARRAY_RANGE(FPU_BRANCH_INDEX)},
@@ -1883,28 +1883,28 @@ constexpr EntryPage MC68040_FPU_PAGES[] PROGMEM = {
 #endif
 
 #if !defined(LIBASM_MC68000_NOPMMU)
-constexpr EntryPage MC68851_PAGES[] PROGMEM = {
+constexpr EntryPage MC68851_PAGES[] = {
         {ARRAY_RANGE(MC68851_TABLE), ARRAY_RANGE(MC68851_INDEX)},
         {ARRAY_RANGE(MC68851_BRANCH), ARRAY_RANGE(MC68851_BRANCH_INDEX)},
         {ARRAY_RANGE(MC68851_TRAP), ARRAY_RANGE(MC68851_TRAP_INDEX)},
 };
 
-constexpr EntryPage MC68EC030_PMMU_PAGES[] PROGMEM = {
+constexpr EntryPage MC68EC030_PMMU_PAGES[] = {
         {ARRAY_RANGE(MC68EC030_PMMU_TABLE), ARRAY_RANGE(MC68EC030_PMMU_INDEX)},
 };
 
-constexpr EntryPage MC68030_PMMU_PAGES[] PROGMEM = {
+constexpr EntryPage MC68030_PMMU_PAGES[] = {
         {ARRAY_RANGE(MC68030_PMMU_TABLE), ARRAY_RANGE(MC68030_PMMU_INDEX)},
 };
 
-constexpr EntryPage MC68040_PMMU_PAGES[] PROGMEM = {
+constexpr EntryPage MC68040_PMMU_PAGES[] = {
         {ARRAY_RANGE(MC68040_PMMU_TABLE), ARRAY_RANGE(MC68040_PMMU_INDEX)},
 };
 #endif
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68010, TEXT_CPU_68010, ARRAY_RANGE(MC68010_PAGES)},
         {MC68020, TEXT_CPU_68020, ARRAY_RANGE(MC68020_PAGES)},
@@ -1921,7 +1921,7 @@ const Cpu *cpu(CpuType cpuType) {
 #if !defined(LIBASM_MC68000_NOFPU)
 using Fpu = entry::CpuBase<FpuType, EntryPage>;
 
-constexpr Fpu FPU_TABLE[] PROGMEM = {
+constexpr Fpu FPU_TABLE[] = {
         {FPU_MC68881, TEXT_FPU_68881, ARRAY_RANGE(MC68881_PAGES)},
         {FPU_MC68040, TEXT_CPU_68040, ARRAY_RANGE(MC68040_FPU_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(MC68881_PAGES)},
@@ -1935,7 +1935,7 @@ const Fpu *fpu(FpuType fpuType) {
 #if !defined(LIBASM_MC68000_NOPMMU)
 using Pmmu = entry::CpuBase<PmmuType, EntryPage>;
 
-constexpr Pmmu PMMU_TABLE[] PROGMEM = {
+constexpr Pmmu PMMU_TABLE[] = {
         {PMMU_MC68EC030, TEXT_PMMU_68EC030, ARRAY_RANGE(MC68EC030_PMMU_PAGES)},
         {PMMU_MC68EC040, TEXT_PMMU_68EC040, EMPTY_RANGE(MC68040_PMMU_PAGES)},
         {PMMU_MC68851, TEXT_PMMU_68851, ARRAY_RANGE(MC68851_PAGES)},
@@ -2223,11 +2223,11 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableMc68000::listCpu_P() const {
+const char *TableMc68000::listCpu_P() const {
     return TEXT_MC68000_LIST;
 }
 
-const /*PROGMEM*/ char *TableMc68000::cpuName_P(CpuType cpuType) const {
+const char *TableMc68000::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
@@ -2257,7 +2257,7 @@ void Config::setCpuType(CpuType cpuType) {
     setPmmuType(mc68030() || mc68040() || _cpuSpec.pmmu != PMMU_NONE ? PMMU_ON : PMMU_NONE);
 }
 
-const /*PROGMEM*/ char *Config::fpu_P() const {
+const char *Config::fpu_P() const {
     return fpu(_cpuSpec.fpu)->name_P();
 }
 
@@ -2298,7 +2298,7 @@ Error Config::setFpuName(StrScanner &scan) {
     return UNKNOWN_OPERAND;
 }
 
-const /*PROGMEM*/ char *Config::pmmu_P() const {
+const char *Config::pmmu_P() const {
     return pmmu(_cpuSpec.pmmu)->name_P();
 }
 

@@ -84,8 +84,8 @@ struct ConfigBase {
     virtual Endian endian() const = 0;
     virtual uint8_t codeMax() const = 0;
     virtual uint8_t nameMax() const = 0;
-    virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
-    virtual const /*PROGMEM*/ char *cpu_P() const = 0;
+    virtual const char *listCpu_P() const = 0;
+    virtual const char *cpu_P() const = 0;
 
     /**
      * Check |addr| is in the range of |addressWidth()|.  This also
@@ -174,8 +174,8 @@ struct ConfigSetter {
 /** Base for instruction table fo |CPUTYPE|. */
 template <typename CPUTYPE>
 struct InsnTable {
-    virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
-    virtual const /*PROGMEM*/ char *cpuName_P(CPUTYPE cpuType) const = 0;
+    virtual const char *listCpu_P() const = 0;
+    virtual const char *cpuName_P(CPUTYPE cpuType) const = 0;
     virtual Error searchCpuName(StrScanner &scan, CPUTYPE &cpuType) const = 0;
 };
 
@@ -196,8 +196,8 @@ struct ConfigImpl : ConfigBase, ConfigSetter {
     Endian endian() const override { return EndianE; }
     uint8_t codeMax() const override { return MaxCode; }
     uint8_t nameMax() const override { return MaxName; }
-    const /*PROGMEM*/ char *listCpu_P() const override { return _table.listCpu_P(); }
-    const /*PROGMEM*/ char *cpu_P() const override { return _table.cpuName_P(_cpuType); }
+    const char *listCpu_P() const override { return _table.listCpu_P(); }
+    const char *cpu_P() const override { return _table.cpuName_P(_cpuType); }
 
     CPUTYPE cpuType() const { return _cpuType; }
     virtual void setCpuType(CPUTYPE cpuType) { _cpuType = cpuType; }

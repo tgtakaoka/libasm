@@ -180,7 +180,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
           _hasUnusedAddr32(o._hasUnusedAddr32),
           _farMode(o._farMode) {}
 
-    void addPrefix(const /*PROGMEM*/ char *prefix_P, StrBuffer &out);
+    void addPrefix(const char *prefix_P, StrBuffer &out);
 
     Config::opcode_t readPrefixCodes(Config::opcode_t opc, const CpuSpec &cpuSpec, bool segInsn,
             bool repInsn, bool lockInsn);

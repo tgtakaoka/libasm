@@ -26,11 +26,11 @@ AsmMc68HC12 asm6812;
 Assembler &assembler(asm6812);
 
 bool m68hcs12x() {
-    return strcmp_P("68HCS12X", assembler.config().cpu_P()) == 0;
+    return strcmp("68HCS12X", assembler.config().cpu_P()) == 0;
 }
 
 bool m68hc12() {
-    return strcmp_P("68HC12", assembler.config().cpu_P()) == 0;
+    return strcmp("68HC12", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

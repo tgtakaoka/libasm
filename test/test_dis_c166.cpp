@@ -99,11 +99,11 @@ void prefix_assert(const char *file, int line, Error error, const Config::opcode
 
 // The 80C167 and the XC16X.
 static bool c167() {
-    return strcmp_P("80C166", disassembler.config().cpu_P()) != 0;
+    return strcmp("80C166", disassembler.config().cpu_P()) != 0;
 }
 
 static bool xc16x() {
-    return strcmp_P("XC16X", disassembler.config().cpu_P()) == 0;
+    return strcmp("XC16X", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

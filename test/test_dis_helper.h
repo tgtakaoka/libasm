@@ -40,7 +40,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace libasm
 
 #define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
-#define EQUALS_P(msg, expected, /* PROGMEM */ actual_P) \
+#define EQUALS_P(msg, expected, actual_P) \
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)

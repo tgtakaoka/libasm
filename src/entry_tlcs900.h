@@ -135,13 +135,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return sz == SM_ANY ? SM_BWL : sz;
         }
         uint8_t mask() const {
-            static constexpr uint8_t MASK[] PROGMEM = {
+            static constexpr uint8_t MASK[] = {
                     0x00,  // CF_00
                     0x07,  // CF_07
                     0x0F,  // CF_0F
                     0x0F,  // CF_07L (0x0F but low nibble split as 8|reg)
             };
-            return pgm_read_byte(&MASK[format()]);
+            return MASK[format()];
         }
 
     private:
@@ -157,10 +157,10 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast8_t sz_gm = 0x7;
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
-    Flags readFlags() const { return Flags{pgm_read_word(&_flags_P._attr)}; }
+    Flags readFlags() const { return Flags{_flags_P._attr}; }
 
 private:
     const Flags _flags_P;

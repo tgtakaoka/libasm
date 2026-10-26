@@ -26,23 +26,23 @@ DisTms9900 dis9900;
 Disassembler &disassembler(dis9900);
 
 bool is99110() {
-    return strcmp_P("99110", disassembler.config().cpu_P()) == 0;
+    return strcmp("99110", disassembler.config().cpu_P()) == 0;
 }
 
 bool is99105() {
-    return strcmp_P("99105", disassembler.config().cpu_P()) == 0;
+    return strcmp("99105", disassembler.config().cpu_P()) == 0;
 }
 
 bool is9980() {
-    return strcmp_P("9980", disassembler.config().cpu_P()) == 0;
+    return strcmp("9980", disassembler.config().cpu_P()) == 0;
 }
 
 bool is9900() {
-    return strcmp_P("9900", disassembler.config().cpu_P()) == 0 || is9980();
+    return strcmp("9900", disassembler.config().cpu_P()) == 0 || is9980();
 }
 
 bool is9995() {
-    return strcmp_P("9995", disassembler.config().cpu_P()) == 0;
+    return strcmp("9995", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

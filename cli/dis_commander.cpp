@@ -341,7 +341,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
         auto valid = false;
         for (const auto *dis : _driver) {
             for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                if (strcmp(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;
                 }
@@ -349,7 +349,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
             if (valid)
                 continue;
             for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                if (strcmp(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;
                 }

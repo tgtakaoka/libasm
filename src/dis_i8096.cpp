@@ -25,8 +25,8 @@ using namespace reg;
 
 namespace {
 
-const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
-const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
+const char OPT_BOOL_ABSOLUTE[] = "use-absolute";
+const char OPT_DESC_ABSOLUTE[] = "zero register indexing as absolute addressing";
 
 }  // namespace
 

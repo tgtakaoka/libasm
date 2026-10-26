@@ -26,7 +26,7 @@ using namespace reg;
 using namespace text::tms370;
 
 namespace {
-const char PSTR_BIDX[] PROGMEM = "(B)";
+const char PSTR_BIDX[] = "(B)";
 }
 
 const ValueFormatter::Plugins &DisTms370::defaultPlugins() {

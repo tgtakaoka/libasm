@@ -163,12 +163,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         bool needSize() const { return _attr & needSize_bm; }
         bool noData32() const { return _mode & noData32_bm; }
         uint8_t mask() const {
-            static constexpr uint8_t MASK[] PROGMEM = {
+            static constexpr uint8_t MASK[] = {
                     0000,  // CF_00 = 0
                     0007,  // CF_07 = 1
                     0030,  // CF_30 = 2
             };
-            return pgm_read_byte(&MASK[(_attr >> cf_gp) & cf_gm]);
+            return MASK[(_attr >> cf_gp) & cf_gm];
         }
 
     private:
@@ -213,11 +213,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr uint_fast16_t needSize_bm = (1 << needSize_bp);
     };
 
-    constexpr Entry(Config::opcode_t opc, Flags flags, const /* PROGMEM */ char *name_P)
+    constexpr Entry(Config::opcode_t opc, Flags flags, const char *name_P)
         : Base(name_P, opc), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
+        return Flags{_flags_P._mode, _flags_P._attr};
     }
 
 private:

@@ -32,8 +32,8 @@ namespace entry {
  */
 template <typename ENTRY>
 struct TableBase {
-    constexpr TableBase(const /* PROGMEM */ ENTRY *head_P, const /* PROGMEM */ ENTRY *tail_P,
-            const /* PROGMEM */ uint8_t *index_P, const /* PROGMEM */ uint8_t *itail_P)
+    constexpr TableBase(const ENTRY *head_P, const ENTRY *tail_P,
+            const uint8_t *index_P, const uint8_t *itail_P)
         : _entries(head_P, tail_P, index_P, itail_P) {}
 
     template <typename DATA, typename EXTRA>
@@ -66,15 +66,15 @@ protected:
  */
 template <typename ENTRY>
 struct PrefixTableBase : TableBase<ENTRY> {
-    constexpr PrefixTableBase(uint16_t prefix, const /* PROGMEM */ ENTRY *head_P,
-            const /* PROGMEM */ ENTRY *tail_P, const /* PROGMEM */ uint8_t *index_P,
-            const /* PROGMEM */ uint8_t *itail_P)
+    constexpr PrefixTableBase(uint16_t prefix, const ENTRY *head_P,
+            const ENTRY *tail_P, const uint8_t *index_P,
+            const uint8_t *itail_P)
         : TableBase<ENTRY>(head_P, tail_P, index_P, itail_P), _prefix_P(prefix) {}
 
-    uint16_t readPrefix() const { return pgm_read_word(&_prefix_P); }
+    uint16_t readPrefix() const { return _prefix_P; }
 
 private:
-    const /* PROGMEM */ uint16_t _prefix_P;
+    const uint16_t _prefix_P;
 };
 
 /**
@@ -82,9 +82,9 @@ private:
  */
 template <typename CPUTYPE, typename ENTRY_PAGE>
 struct CpuBase {
-    CPUTYPE readCpuType() const { return static_cast<CPUTYPE>(pgm_read_byte(&_cpuType_P)); }
-    const /* PROGMEM */ char *name_P() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
+    CPUTYPE readCpuType() const { return static_cast<CPUTYPE>(_cpuType_P); }
+    const char *name_P() const {
+        return _name_P;
     }
 
     template <typename CPU_T>
@@ -105,8 +105,8 @@ struct CpuBase {
         return nullptr;
     }
 
-    constexpr CpuBase(CPUTYPE cpuType, const /*PROGMEM*/ char *name_P,
-            const /* PROGMEM */ ENTRY_PAGE *head_P, const /* PROGMEM */ ENTRY_PAGE *tail_P)
+    constexpr CpuBase(CPUTYPE cpuType, const char *name_P,
+            const ENTRY_PAGE *head_P, const ENTRY_PAGE *tail_P)
         : _pages(head_P, tail_P), _cpuType_P(cpuType), _name_P(name_P) {}
 
     const ENTRY_PAGE *pagesBegin() const { return _pages.readHead(); }
@@ -130,7 +130,7 @@ struct CpuBase {
 
     template <typename INSN, typename ENTRY>
     static int nameComparator(INSN &insn, const ENTRY *entry_P) {
-        return strcasecmp_P(insn.name(), entry_P->name_P());
+        return strcasecmp(insn.name(), entry_P->name_P());
     }
 
     template <typename INSN, typename ENTRY>
@@ -243,7 +243,7 @@ struct CpuBase {
 protected:
     const table::Table<ENTRY_PAGE> _pages;
     CPUTYPE _cpuType_P;
-    const /* PROGMEM */ char *_name_P;
+    const char *_name_P;
 };
 
 }  // namespace entry

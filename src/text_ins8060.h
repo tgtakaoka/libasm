@@ -24,30 +24,30 @@ namespace text {
 namespace ins8060 {
 // clang-format off
 
-extern const char TEXT_CPU_SCMP[]    PROGMEM;
-extern const char TEXT_CPU_INS8060[] PROGMEM;
+extern const char TEXT_CPU_SCMP[];
+extern const char TEXT_CPU_INS8060[];
 
 using common::TEXT_ADD;
 using common::TEXT_ADE;
 using common::TEXT_ADI;
 using common::TEXT_AND;
-extern const char TEXT_ANE[]  PROGMEM;
+extern const char TEXT_ANE[];
 using common::TEXT_ANI;
-extern const char TEXT_CAD[]  PROGMEM;
-extern const char TEXT_CAE[]  PROGMEM;
-extern const char TEXT_CAI[]  PROGMEM;
+extern const char TEXT_CAD[];
+extern const char TEXT_CAE[];
+extern const char TEXT_CAI[];
 using common::TEXT_CAS;
-extern const char TEXT_CCL[]  PROGMEM;
-extern const char TEXT_CSA[]  PROGMEM;
+extern const char TEXT_CCL[];
+extern const char TEXT_CSA[];
 using common::TEXT_DAD;
-extern const char TEXT_DAE[]  PROGMEM;
-extern const char TEXT_DAI[]  PROGMEM;
+extern const char TEXT_DAE[];
+extern const char TEXT_DAI[];
 using common::TEXT_DINT;
 using common::TEXT_DLD;
-extern const char TEXT_DLY[]  PROGMEM;
+extern const char TEXT_DLY[];
 using common::TEXT_HALT;
 using common::TEXT_IDL;
-extern const char TEXT_IEN[]  PROGMEM;
+extern const char TEXT_IEN[];
 using common::TEXT_ILD;
 using common::TEXT_JMP;
 using common::TEXT_JNZ;
@@ -62,17 +62,17 @@ using common::TEXT_ORE;
 using common::TEXT_ORI;
 using common::TEXT_RR;
 using common::TEXT_RRL;
-extern const char TEXT_SCL[]  PROGMEM;
-extern const char TEXT_SIO[]  PROGMEM;
+extern const char TEXT_SCL[];
+extern const char TEXT_SIO[];
 using common::TEXT_SR;
 using common::TEXT_SRL;
 using common::TEXT_ST;
-extern const char TEXT_XAE[]  PROGMEM;
+extern const char TEXT_XAE[];
 using common::TEXT_XOR;
-extern const char TEXT_XPAH[] PROGMEM;
-extern const char TEXT_XPAL[] PROGMEM;
-extern const char TEXT_XPPC[] PROGMEM;
-extern const char TEXT_XRE[]  PROGMEM;
+extern const char TEXT_XPAH[];
+extern const char TEXT_XPAL[];
+extern const char TEXT_XPPC[];
+extern const char TEXT_XRE[];
 using common::TEXT_XRI;
 
 using common::TEXT_REG_E;

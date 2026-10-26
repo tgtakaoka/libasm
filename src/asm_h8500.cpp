@@ -35,23 +35,23 @@ namespace {
 // H8/500 shares H8/300's data/space directives. The dotted names are not in
 // text_common, so (as in asm_h8300.cpp) they are defined locally; the "d"
 // prefix marks the dotted spelling (".DATA", distinct from common "data").
-constexpr char TEXT_dDATA[]   PROGMEM = ".DATA";
-constexpr char TEXT_dDATA_B[] PROGMEM = ".DATA.B";
-constexpr char TEXT_dDATA_W[] PROGMEM = ".DATA.W";
-constexpr char TEXT_dDATA_L[] PROGMEM = ".DATA.L";
-constexpr char TEXT_dSDATA[]  PROGMEM = ".SDATA";
-constexpr char TEXT_dRES[]    PROGMEM = ".RES";
-constexpr char TEXT_dRES_B[]  PROGMEM = ".RES.B";
-constexpr char TEXT_dRES_W[]  PROGMEM = ".RES.W";
-constexpr char TEXT_dRES_L[]  PROGMEM = ".RES.L";
+constexpr char TEXT_dDATA[]   = ".DATA";
+constexpr char TEXT_dDATA_B[] = ".DATA.B";
+constexpr char TEXT_dDATA_W[] = ".DATA.W";
+constexpr char TEXT_dDATA_L[] = ".DATA.L";
+constexpr char TEXT_dSDATA[]  = ".SDATA";
+constexpr char TEXT_dRES[]    = ".RES";
+constexpr char TEXT_dRES_B[]  = ".RES.B";
+constexpr char TEXT_dRES_W[]  = ".RES.W";
+constexpr char TEXT_dRES_L[]  = ".RES.L";
 
 // H8/500-specific directives, dotted to match libasm's other directives. The
 // common TEXT_SET / TEXT_MAXMODE are the unrelated bare "SET" / "MAXMODE", so
 // the dotted spellings are defined locally with the "d" prefix.
-constexpr char TEXT_dSET[]     PROGMEM = ".set";
-constexpr char TEXT_dMAXMODE[] PROGMEM = ".maxmode";
+constexpr char TEXT_dSET[]     = ".set";
+constexpr char TEXT_dMAXMODE[] = ".maxmode";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dDATA,   &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_dDATA_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_dDATA_L, &Assembler::defineDataConstant, Assembler::DATA_LONG           },
@@ -62,7 +62,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dRES_W,  &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
     { TEXT_dSDATA,  &Assembler::defineString,       0                              },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 // Reuse the Hitachi location symbols ('$', '*', '.'); H8/500 mnemonics also
@@ -94,11 +94,11 @@ const ValueParser::Plugins &AsmH8500::defaultPlugins() {
     return PLUGINS;
 }
 
-constexpr AsmH8500::PseudoH8500 AsmH8500::PSEUDO_H8500_TABLE[] PROGMEM = {
+constexpr AsmH8500::PseudoH8500 AsmH8500::PSEUDO_H8500_TABLE[] = {
         {TEXT_dMAXMODE, &AsmH8500::processMaxMode},  // ".maxmode"
         {TEXT_dSET, &AsmH8500::processSet},          // ".set"
 };
-PROGMEM constexpr AsmH8500::PseudosH8500 AsmH8500::PSEUDOS_H8500{ARRAY_RANGE(PSEUDO_H8500_TABLE)};
+constexpr AsmH8500::PseudosH8500 AsmH8500::PSEUDOS_H8500{ARRAY_RANGE(PSEUDO_H8500_TABLE)};
 
 AsmH8500::AsmH8500(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_maxMode),

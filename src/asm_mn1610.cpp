@@ -29,13 +29,13 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char TEXT_LOC[] PROGMEM = "loc";
+constexpr char TEXT_LOC[] = "loc";
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DS,  &Assembler::allocateSpaces, Assembler::DATA_WORD },
     { TEXT_LOC, &Assembler::defineOrigin   },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -395,7 +395,7 @@ Error AsmMn1610::defineDataConstant(StrScanner &scan, AsmInsn &insn, ErrorAt &_e
 
 Error AsmMn1610::processPseudo(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    if (strcasecmp_P(insn.name(), TEXT_DC) == 0)
+    if (strcasecmp(insn.name(), TEXT_DC) == 0)
         return defineDataConstant(scan, insn, _insn);
     return Assembler::processPseudo(scan, _insn);
 }

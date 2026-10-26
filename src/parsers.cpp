@@ -407,16 +407,16 @@ bool SymbolParser::locationSymbol(StrScanner &scan, char location) const {
 }
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return SymbolParser::symbolLetter(c, headOfSymbol) || (c && strchr_P(_extra_P, c));
+    return SymbolParser::symbolLetter(c, headOfSymbol) || (c && strchr(_extra_P, c));
 }
 
 bool PrefixSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     if (SymbolParser::symbolLetter(c, headOfSymbol))
         return true;
     if (headOfSymbol && _prefix_P)
-        return c && strchr_P(_prefix_P, c);
+        return c && strchr(_prefix_P, c);
     if (_extra_P)
-        return c && strchr_P(_extra_P, c);
+        return c && strchr(_extra_P, c);
     return false;
 }
 
@@ -768,7 +768,7 @@ bool StarCommentParser::endOfLine(StrScanner &scan) const {
 }
 
 bool RcaCommentParser::commentLine(StrScanner &scan) const {
-    return scan.iexpectText_P(PSTR("..")) || endOfLine(scan);
+    return scan.iexpectText_P("..") || endOfLine(scan);
 }
 
 bool Pdp8CommentParser::endOfLine(StrScanner &scan) const {

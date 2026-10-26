@@ -29,19 +29,19 @@ using namespace text::option;
 
 // clang-format off
 namespace {
-constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
-constexpr char TEXT_DUBL[]    PROGMEM = "DUBL";
-constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";
-constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
-constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
+constexpr char TEXT_DECIMAL[] = "DECIMAL";
+constexpr char TEXT_DUBL[]    = "DUBL";
+constexpr char TEXT_FIELD[]   = "FIELD";
+constexpr char TEXT_OCTAL[]   = "OCTAL";
+constexpr char TEXT_PAGE[]    = "PAGE";
 }  // namespace
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { PSTR_STAR, &Assembler::defineOrigin },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr AsmPdp8::PseudoPdp8 AsmPdp8::PSEUDO_PDP8_TABLE[] PROGMEM = {
+constexpr AsmPdp8::PseudoPdp8 AsmPdp8::PSEUDO_PDP8_TABLE[] = {
     { TEXT_DECIMAL, &AsmPdp8::setRadix,            RADIX_10 },
     { TEXT_DUBL,    &AsmPdp8::defineDoubleDecimal },
     { TEXT_FIELD,   &AsmPdp8::defineField         },
@@ -49,7 +49,7 @@ constexpr AsmPdp8::PseudoPdp8 AsmPdp8::PSEUDO_PDP8_TABLE[] PROGMEM = {
     { TEXT_PAGE,    &AsmPdp8::alignOnPage         },
     { TEXT_TEXT,    &AsmPdp8::defineDec6String    },
 };
-PROGMEM constexpr AsmPdp8::PseudosPdp8 AsmPdp8::PSEUDOS_PDP8{ARRAY_RANGE(PSEUDO_PDP8_TABLE)};
+constexpr AsmPdp8::PseudosPdp8 AsmPdp8::PSEUDOS_PDP8{ARRAY_RANGE(PSEUDO_PDP8_TABLE)};
 // clang-format on
 
 const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
@@ -148,10 +148,10 @@ Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint16_t) {
 
 Error AsmPdp8::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    const auto indir = p.iexpectWord_P(PSTR("i"));
+    const auto indir = p.iexpectWord_P("i");
     if (indir)
         p.skipSpaces();
-    const auto zerop = p.iexpectWord_P(PSTR("z"));  // optional
+    const auto zerop = p.iexpectWord_P("z");  // optional
     if (zerop)
         p.skipSpaces();
 

@@ -36,7 +36,7 @@ namespace i8096 {
 #define U1(_opc, _cf, _name, _dst) U2(_opc, _cf, _name, _dst, M_NONE)
 
 // clang-format off
-constexpr Entry TABLE_00[] PROGMEM = {
+constexpr Entry TABLE_00[] = {
     E2(0x64, CF_03, TEXT_ADD,   M_WREG,  M_WAOP),
     E3(0x44, CF_03, TEXT_ADD,   M_WREG,  M_WREG,  M_WAOP),
     E2(0x74, CF_03, TEXT_ADDB,  M_BREG,  M_BAOP),
@@ -136,7 +136,7 @@ constexpr Entry TABLE_00[] PROGMEM = {
     E2(0x94, CF_03, TEXT_XORB,  M_BREG,  M_BAOP),
 };
 
-constexpr uint8_t INDEX_00[] PROGMEM = {
+constexpr uint8_t INDEX_00[] = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADDB
@@ -236,7 +236,7 @@ constexpr uint8_t INDEX_00[] PROGMEM = {
      96,  // TEXT_XORB
 };
 
-constexpr Entry TABLE_FE[] PROGMEM = {
+constexpr Entry TABLE_FE[] = {
     E2(0x8C, CF_03, TEXT_DIV,   M_LREG,  M_WAOP),
     E2(0x9C, CF_03, TEXT_DIVB,  M_WREG,  M_BAOP),
     E2(0x6C, CF_03, TEXT_MUL,   M_LREG,  M_WAOP),
@@ -245,7 +245,7 @@ constexpr Entry TABLE_FE[] PROGMEM = {
     E3(0x5C, CF_03, TEXT_MULB,  M_WREG,  M_BREG,  M_BAOP),
 };
 
-constexpr uint8_t INDEX_FE[] PROGMEM = {
+constexpr uint8_t INDEX_FE[] = {
       0,  // TEXT_DIV
       1,  // TEXT_DIVB
       2,  // TEXT_MUL
@@ -254,7 +254,7 @@ constexpr uint8_t INDEX_FE[] PROGMEM = {
       5,  // TEXT_MULB
 };
 
-constexpr Entry I80196KB_TABLE[] PROGMEM = {
+constexpr Entry I80196KB_TABLE[] = {
     E2(0xC1, CF_00, TEXT_BMOV,  M_LREG, M_WREG),
     E2(0xC5, CF_00, TEXT_CMPL,  M_LREG, M_LREG),
     E2(0xE1, CF_00, TEXT_DJNZW, M_WREG, M_REL8),
@@ -263,7 +263,7 @@ constexpr Entry I80196KB_TABLE[] PROGMEM = {
     E1(0xF6, CF_00, TEXT_IDLPD, M_IMM8),
 };
 
-constexpr uint8_t I80196KB_INDEX[] PROGMEM = {
+constexpr uint8_t I80196KB_INDEX[] = {
       0,  // TEXT_BMOV
       1,  // TEXT_BMOV
       2,  // TEXT_DJNZW
@@ -272,7 +272,7 @@ constexpr uint8_t I80196KB_INDEX[] PROGMEM = {
       3,  // TEXT_PUSHA
 };
 
-constexpr Entry I80196KC_TABLE[] PROGMEM = {
+constexpr Entry I80196KC_TABLE[] = {
     E2(0x04, CF_00, TEXT_XCH,   M_WREG, M_WREG),
     E2(0x0B, CF_00, TEXT_XCH,   M_WREG, M_WIDX),
     E2(0x14, CF_00, TEXT_XCHB,  M_BREG, M_BREG),
@@ -281,7 +281,7 @@ constexpr Entry I80196KC_TABLE[] PROGMEM = {
     E3(0xE2, CF_00, TEXT_TIJMP, M_WREG, M_WREG, M_IMM8),
 };
 
-constexpr uint8_t I80196KC_INDEX[] PROGMEM = {
+constexpr uint8_t I80196KC_INDEX[] = {
       4,  // TEXT_BMOVI
       5,  // TEXT_TIJMP
       0,  // TEXT_XCH
@@ -292,12 +292,12 @@ constexpr uint8_t I80196KC_INDEX[] PROGMEM = {
 
 // The PTS instructions are a page of their own because the 80296 has no
 // peripheral transaction server and drops them.
-constexpr Entry PTS_TABLE[] PROGMEM = {
+constexpr Entry PTS_TABLE[] = {
     E0(0xEC, CF_00, TEXT_DPTS),
     E0(0xED, CF_00, TEXT_EPTS),
 };
 
-constexpr uint8_t PTS_INDEX[] PROGMEM = {
+constexpr uint8_t PTS_INDEX[] = {
       0,  // TEXT_DPTS
       1,  // TEXT_EPTS
 };
@@ -307,7 +307,7 @@ constexpr uint8_t PTS_INDEX[] PROGMEM = {
 // instructions has an opcode of its own; each shares one with MUL/MULU, AND or
 // SHLL and carries a selector, which is why they are the only entries with a
 // |_post| (manual 3.3.2, 3.3.4, A-6).
-constexpr Entry I80296_TABLE[] PROGMEM = {
+constexpr Entry I80296_TABLE[] = {
     E0(0xE5, CF_00, TEXT_RETI),
     D3(0x0D, CF_00, TEXT_MVAC,    M_ACCSEL, M_POINTR, M_PACC, 0x01),
     D3(0x0D, CF_00, TEXT_MSAC,    M_ACCSEL, M_POINTR, M_PACC, 0x03),
@@ -371,7 +371,7 @@ constexpr Entry I80296_TABLE[] PROGMEM = {
     E3(0x5C, CF_03, TEXT_MULB,    M_SWREG, M_BREG,  M_BAOP),
 };
 
-constexpr uint8_t I80296_INDEX[] PROGMEM = {
+constexpr uint8_t I80296_INDEX[] = {
      53,  // TEXT_DIV
      54,  // TEXT_DIVB
      37,  // TEXT_MAC
@@ -437,14 +437,14 @@ constexpr uint8_t I80296_INDEX[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage I8096_PAGES[] PROGMEM = {
+constexpr EntryPage I8096_PAGES[] = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
 // 80196N: the 1-Mbyte parts.  EBR shares opcode E3 with BR and is told apart
 // by the least-significant bit of the second byte (manual A-7, EBR).
-constexpr Entry I80196N_TABLE[] PROGMEM = {
+constexpr Entry I80196N_TABLE[] = {
     E2(0x1C, CF_00, TEXT_EST,    M_WREG, M_EINDIR),
     E2(0x1D, CF_00, TEXT_EST,    M_WREG, M_EIDX),
     E2(0x1E, CF_00, TEXT_ESTB,   M_BREG, M_EINDIR),
@@ -459,7 +459,7 @@ constexpr Entry I80196N_TABLE[] PROGMEM = {
     E1(0xF1, CF_00, TEXT_ECALL,  M_REL24),
 };
 
-constexpr uint8_t I80196N_INDEX[] PROGMEM = {
+constexpr uint8_t I80196N_INDEX[] = {
       5,  // TEXT_EBMOVI
       4,  // TEXT_EBR
      11,  // TEXT_ECALL
@@ -474,13 +474,13 @@ constexpr uint8_t I80196N_INDEX[] PROGMEM = {
       3,  // TEXT_ESTB
 };
 
-constexpr EntryPage I80196KB_PAGES[] PROGMEM = {
+constexpr EntryPage I80196KB_PAGES[] = {
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
-constexpr EntryPage I80196N_PAGES[] PROGMEM = {
+constexpr EntryPage I80196N_PAGES[] = {
         {0x00, ARRAY_RANGE(I80196N_TABLE), ARRAY_RANGE(I80196N_INDEX)},
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
         {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
@@ -489,7 +489,7 @@ constexpr EntryPage I80196N_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
-constexpr EntryPage I80196_PAGES[] PROGMEM = {
+constexpr EntryPage I80196_PAGES[] = {
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
         {0x00, ARRAY_RANGE(I80196KC_TABLE), ARRAY_RANGE(I80196KC_INDEX)},
         {0x00, ARRAY_RANGE(PTS_TABLE), ARRAY_RANGE(PTS_INDEX)},
@@ -499,7 +499,7 @@ constexpr EntryPage I80196_PAGES[] PROGMEM = {
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr EntryPage I80296_PAGES[] PROGMEM = {
+constexpr EntryPage I80296_PAGES[] = {
         {0x00, ARRAY_RANGE(I80296_TABLE), ARRAY_RANGE(I80296_INDEX)},
         {0x00, ARRAY_RANGE(I80196N_TABLE), ARRAY_RANGE(I80196N_INDEX)},
         {0x00, ARRAY_RANGE(I80196KB_TABLE), ARRAY_RANGE(I80196KB_INDEX)},
@@ -508,7 +508,7 @@ constexpr EntryPage I80296_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
         {I80196, TEXT_CPU_80196, ARRAY_RANGE(I80196_PAGES)},
         {I80196KB, TEXT_CPU_80196KB, ARRAY_RANGE(I80196KB_PAGES)},
@@ -679,11 +679,11 @@ bool isPrefix(CpuType cpuType, Config::opcode_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableI8096::listCpu_P() const {
+const char *TableI8096::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /*PROGMEM*/ char *TableI8096::cpuName_P(CpuType cpuType) const {
+const char *TableI8096::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

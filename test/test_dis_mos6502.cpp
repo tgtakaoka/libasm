@@ -25,23 +25,23 @@ DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
 bool m6502() {
-    return strcmp_P("6502", disassembler.config().cpu_P()) == 0;
+    return strcmp("6502", disassembler.config().cpu_P()) == 0;
 }
 
 bool g65sc02() {
-    return strcmp_P("65SC02", disassembler.config().cpu_P()) == 0;
+    return strcmp("65SC02", disassembler.config().cpu_P()) == 0;
 }
 
 bool r65c02() {
-    return strcmp_P("65C02", disassembler.config().cpu_P()) == 0;
+    return strcmp("65C02", disassembler.config().cpu_P()) == 0;
 }
 
 bool w65c02s() {
-    return strcmp_P("W65C02S", disassembler.config().cpu_P()) == 0;
+    return strcmp("W65C02S", disassembler.config().cpu_P()) == 0;
 }
 
 bool w65c816() {
-    return strcmp_P("65816", disassembler.config().cpu_P()) == 0;
+    return strcmp("65816", disassembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

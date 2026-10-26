@@ -34,7 +34,7 @@ namespace tlcs900 {
 
 // clang-format off
 
-constexpr Entry TABLE_OPC[] PROGMEM = {
+constexpr Entry TABLE_OPC[] = {
     E0(0x00,  CF_00, TEXT_NOP,   SM_ANY),                       // NOP
     E1(0x02,  CF_00, TEXT_PUSH,  SM_ANY, R_SR),                 // PUSH SR
     E1(0x03,  CF_00, TEXT_POP,   SM_ANY, R_SR),                 // POP SR
@@ -83,7 +83,7 @@ constexpr Entry TABLE_OPC[] PROGMEM = {
     E1(0x06,  CF_00, TEXT_EI,    SM_ANY, M_ZERO),               // EI
     E1(0x06,  CF_00, TEXT_DI,    SM_ANY, M_DISUF),              // DI
 };
-constexpr uint8_t INDEX_OPC[] PROGMEM = {
+constexpr uint8_t INDEX_OPC[] = {
      27,  // TEXT_CALL
      28,  // TEXT_CALL
      31,  // TEXT_CALL
@@ -133,19 +133,19 @@ constexpr uint8_t INDEX_OPC[] PROGMEM = {
      18,  // TEXT_ZCF
 };
 
-constexpr Entry TABLE_OPC_TLCS900[] PROGMEM = {
+constexpr Entry TABLE_OPC_TLCS900[] = {
         E0(0x01,  CF_00, TEXT_NORMAL, SM_ANY),                  // NORMAL
         E0(0x04,  CF_00, TEXT_MAX,   SM_ANY),                   // MAX
 };
-constexpr uint8_t INDEX_OPC_TLCS900[] PROGMEM = {
+constexpr uint8_t INDEX_OPC_TLCS900[] = {
         1,  // TEXT_MAX
         0,  // TEXT_NORMAL
 };
 
-constexpr Entry TABLE_OPC_TLCS900L[] PROGMEM = {
+constexpr Entry TABLE_OPC_TLCS900L[] = {
     E0(0x04,  CF_00, TEXT_MIN,   SM_ANY),                       // MIN
 };
-constexpr uint8_t INDEX_OPC_TLCS900L[] PROGMEM = {
+constexpr uint8_t INDEX_OPC_TLCS900L[] = {
       0,  // TEXT_MIN
 };
 
@@ -155,17 +155,17 @@ constexpr uint8_t INDEX_OPC_TLCS900L[] PROGMEM = {
 // immediate.  Giving only these two entries that precedence makes the encoder
 // pick the short form whenever the value fits, as ASL does, without promoting
 // the whole prefix page over the one-byte opcodes of the unprefixed one.
-constexpr Entry TABLE_SRC_REG_SHORT[] PROGMEM = {
+constexpr Entry TABLE_SRC_REG_SHORT[] = {
     E2(0xA8,  CF_07, TEXT_LD,    SM_ANY, M_SRC,    M_IMM3),     // LD r,#3
     E2(0xD8,  CF_07, TEXT_CP,    SM_BW,  M_SRC,    M_IMM3),     // CP r,#3
 };
 
-constexpr uint8_t INDEX_SRC_REG_SHORT[] PROGMEM = {
+constexpr uint8_t INDEX_SRC_REG_SHORT[] = {
       1,  // TEXT_CP
       0,  // TEXT_LD
 };
 
-constexpr Entry TABLE_SRC_REG[] PROGMEM = {
+constexpr Entry TABLE_SRC_REG[] = {
     E1(0x04,  CF_00, TEXT_PUSH,  SM_ANY, M_SRC),                // PUSH r
     E1(0x05,  CF_00, TEXT_POP,   SM_ANY, M_SRC),                // POP r
     E1(0x06,  CF_00, TEXT_CPL,   SM_BW,  M_SRC),                // CPL (mem)
@@ -261,7 +261,7 @@ constexpr Entry TABLE_SRC_REG[] PROGMEM = {
     E2(0x3D,  CF_00, TEXT_MDEC2, SM_W,   M_BUF,    M_SRC),      // MDEC2 #buf,(mem)
     E2(0x3E,  CF_00, TEXT_MDEC4, SM_W,   M_BUF,    M_SRC),      // MDEC4 #buf,(mem)
 };
-constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
+constexpr uint8_t INDEX_SRC_REG[] = {
      47,  // TEXT_ADC
      53,  // TEXT_ADC
      45,  // TEXT_ADD
@@ -357,16 +357,16 @@ constexpr uint8_t INDEX_SRC_REG[] PROGMEM = {
      26,  // TEXT_XORCF
 };
 
-constexpr Entry TABLE_SRC_ABREG[] PROGMEM = {
+constexpr Entry TABLE_SRC_ABREG[] = {
     E2(0x03,  CF_00, TEXT_LD,    SM_ANY, M_ABSDST, M_IMMX),     // LD (R),#
     E2(0x98,  CF_07, TEXT_LD,    SM_ANY, M_ABSDST, M_DST),      // LD (R),R
 };
-constexpr uint8_t INDEX_SRC_ABREG[] PROGMEM = {
+constexpr uint8_t INDEX_SRC_ABREG[] = {
       0,  // TEXT_LD
       1,  // TEXT_LD
 };
 
-constexpr Entry TABLE_SRC_MEM[] PROGMEM = {
+constexpr Entry TABLE_SRC_MEM[] = {
     E1(0x04,  CF_00, TEXT_PUSH,  SM_B,   M_SRC),                // PUSH (mem)
     E1(0x04,  CF_00, TEXT_PUSHW, SM_W,   M_SRC),                // PUSHW (mem)
     E2(0x06,  CF_00, TEXT_RLD,   SM_ANY, R_A,      M_SRC),      // RLD A,(mem)
@@ -438,7 +438,7 @@ constexpr Entry TABLE_SRC_MEM[] PROGMEM = {
     E1(0x7F,  CF_00, TEXT_SRLW,  SM_W,   M_SRC),                // SRLW (mem)
     E2(0xF0,  CF_07, TEXT_CP,    SM_ANY, M_DST,    M_SRC),      // CP R,(mem)
 };
-constexpr uint8_t INDEX_SRC_MEM[] PROGMEM = {
+constexpr uint8_t INDEX_SRC_MEM[] = {
      22,  // TEXT_ADC
      27,  // TEXT_ADC
      37,  // TEXT_ADC
@@ -512,7 +512,7 @@ constexpr uint8_t INDEX_SRC_MEM[] PROGMEM = {
 };
 
 
-constexpr Entry TABLE_DST_MEM[] PROGMEM = {
+constexpr Entry TABLE_DST_MEM[] = {
     E2(0x00,  CF_00, TEXT_LD,    SM_B,   M_DST,    M_IMM8),     // LD R,#
     E2(0x02,  CF_00, TEXT_LDW,   SM_W,   M_DST,    M_IMM16),    // LDW R,#
     E1(0x04,  CF_00, TEXT_POP,   SM_ANY, M_DST),                // POP R
@@ -542,7 +542,7 @@ constexpr Entry TABLE_DST_MEM[] PROGMEM = {
     E2(0xD0,  CF_0F, TEXT_JP,    SM_ANY, M_CC,     M_DST),      // JP cc,R
     E2(0xE0,  CF_0F, TEXT_CALL,  SM_ANY, M_CC,     M_DST),      // CALL cc,R
 };
-constexpr uint8_t INDEX_DST_MEM[] PROGMEM = {
+constexpr uint8_t INDEX_DST_MEM[] = {
      11,  // TEXT_ANDCF
      16,  // TEXT_ANDCF
      25,  // TEXT_BIT
@@ -573,15 +573,15 @@ constexpr uint8_t INDEX_DST_MEM[] PROGMEM = {
      18,  // TEXT_XORCF
 };
 
-constexpr Entry TABLE_LDX[] PROGMEM = {
+constexpr Entry TABLE_LDX[] = {
     E2(0xF7,  CF_00, TEXT_LDX,   SM_ANY, M_LDXDST, M_IMM16),    // LDX (nn),#
 };
-constexpr uint8_t INDEX_LDX[] PROGMEM = {
+constexpr uint8_t INDEX_LDX[] = {
       0,  // TEXT_LDX
 };
 
 
-constexpr Entry TABLE_BLOCK[] PROGMEM = {
+constexpr Entry TABLE_BLOCK[] = {
     // Explicit-operand forms first so the disassembler emits them; the bare
     // aliases follow so the assembler still accepts the operand-less spelling.
     E2(0x10,  CF_00, TEXT_LDI,   SM_B,   M_BLKDST, M_BLKSRC),    // LDI (XDE+),(XHL+)
@@ -615,7 +615,7 @@ constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E0(0x17,  CF_00, TEXT_CPDR,  SM_B),                         // CPDR
 };
 
-constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
+constexpr uint8_t INDEX_BLOCK[] = {
      10,  // TEXT_CPD
      14,  // TEXT_CPD
      26,  // TEXT_CPD
@@ -646,21 +646,21 @@ constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
      17,  // TEXT_LDIW
 };
 
-constexpr Entry TABLE_RETCC[] PROGMEM = {
+constexpr Entry TABLE_RETCC[] = {
     E1(0xF0,  CF_0F, TEXT_RET,   SM_ANY, M_CC),                 // RET cc
 };
 
-constexpr uint8_t INDEX_RETCC[] PROGMEM = {
+constexpr uint8_t INDEX_RETCC[] = {
       0,  // TEXT_RET
 };
 
 // LDAR layout: F3 13 rel16 reg_byte (rel16 between prefix and opcode).
-constexpr Entry TABLE_LDAR[] PROGMEM = {
+constexpr Entry TABLE_LDAR[] = {
     E2(0x20,  CF_07, TEXT_LDAR,  SM_ANY, M_REG16,  M_LDARREL),  // LDAR r,$
     E2(0x30,  CF_07, TEXT_LDAR,  SM_ANY, M_REG32,  M_LDARREL),  // LDAR r,$
 };
 
-constexpr uint8_t INDEX_LDAR[] PROGMEM = {
+constexpr uint8_t INDEX_LDAR[] = {
       0,  // TEXT_LDAR
       1,  // TEXT_LDAR
 };
@@ -679,7 +679,7 @@ static constexpr uint16_t PM_BITS_MEM = PM_BIT(PM_MEM8) | PM_BIT(PM_MEM16) | PM_
 // PMs (e.g. PM_REG8/16/32 share the same table) and inherits PrefixTableBase
 // for an optional fixed prefix byte.
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    uint16_t readPmMask() const { return pgm_read_word(&_pm_mask_P); }
+    uint16_t readPmMask() const { return _pm_mask_P; }
     bool prefixMatcher(PrefixMode pm) const { return readPmMask() & PM_BIT(pm); }
     constexpr EntryPage(uint16_t pm_mask, uint16_t prefix, const Entry *head_P, const Entry *tail_P,
             const uint8_t *index_P, const uint8_t *itail_P)
@@ -690,7 +690,7 @@ private:
 };
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
-    constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *head_P,
+    constexpr Cpu(CpuType cpuType, const char *name_P, const EntryPage *head_P,
             const EntryPage *tail_P)
         : CpuBase(cpuType, name_P, head_P, tail_P) {}
     const EntryPage *pagesBegin() const { return _pages.readHead(); }
@@ -698,7 +698,7 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
 };
 
 // clang-format off
-constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS900_PAGES[] = {
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900), ARRAY_RANGE(INDEX_OPC_TLCS900)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),         ARRAY_RANGE(INDEX_LDX)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
@@ -716,7 +716,7 @@ constexpr EntryPage TLCS900_PAGES[] PROGMEM = {
     {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),      ARRAY_RANGE(INDEX_LDAR)},
 };
 
-constexpr EntryPage TLCS900L_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS900L_PAGES[] = {
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_OPC_TLCS900L), ARRAY_RANGE(INDEX_OPC_TLCS900L)},
     {PM_BIT(PM_NONE),  0,    ARRAY_RANGE(TABLE_LDX),          ARRAY_RANGE(INDEX_LDX)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
@@ -732,7 +732,7 @@ constexpr EntryPage TLCS900L_PAGES[] PROGMEM = {
     {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),       ARRAY_RANGE(INDEX_LDAR)},
 };
 
-constexpr EntryPage TLCS900H_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS900H_PAGES[] = {
     {PM_BIT(PM_NONE),  0,      ARRAY_RANGE(TABLE_LDX),       ARRAY_RANGE(INDEX_LDX)},
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                              ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
@@ -748,7 +748,7 @@ constexpr EntryPage TLCS900H_PAGES[] PROGMEM = {
 };
 
 // TLCS900/H2 is TLCS900/H minus LDX.
-constexpr EntryPage TLCS900H2_PAGES[] PROGMEM = {
+constexpr EntryPage TLCS900H2_PAGES[] = {
     {PM_BITS_REG | PM_BITS_ABREG, 0,
                              ARRAY_RANGE(TABLE_SRC_REG_SHORT), ARRAY_RANGE(INDEX_SRC_REG_SHORT)},
     {PM_BIT(PM_NONE),  0,      ARRAY_RANGE(TABLE_OPC),       ARRAY_RANGE(INDEX_OPC)},
@@ -762,7 +762,7 @@ constexpr EntryPage TLCS900H2_PAGES[] PROGMEM = {
     {PM_BIT(PM_LDAR),  0xF313, ARRAY_RANGE(TABLE_LDAR),      ARRAY_RANGE(INDEX_LDAR)},
 };
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
     {TLCS900,   TEXT_CPU_TLCS900,   ARRAY_RANGE(TLCS900_PAGES)},
     {TLCS900L,  TEXT_CPU_TLCS900L,  ARRAY_RANGE(TLCS900L_PAGES)},
     {TLCS900H,  TEXT_CPU_TLCS900H,  ARRAY_RANGE(TLCS900H_PAGES)},
@@ -780,15 +780,15 @@ struct PrefixPage {
     PrefixMode pm_P;
 
     bool contains(Config::opcode_t code) const {
-        return pgm_read_byte(&lo_P) <= code && code <= pgm_read_byte(&hi_P);
+        return lo_P <= code && code <= hi_P;
     }
-    PrefixMode readPm() const { return static_cast<PrefixMode>(pgm_read_byte(&pm_P)); }
+    PrefixMode readPm() const { return static_cast<PrefixMode>(pm_P); }
 };
 
 // clang-format off
 // Maps prefix byte ranges to PrefixMode. Single-byte specials (0x83, 0xB0)
 // must precede the ranges that contain them (0x80-0x8F, 0xB1-0xBF).
-constexpr PrefixPage PREFIX_PAGES[] PROGMEM = {
+constexpr PrefixPage PREFIX_PAGES[] = {
     // 0x83 ((XHL) byte) and 0xB0 ((XWA) dest) are ordinary memory prefixes;
     // they double as the block-transfer / conditional-return prefixes, which
     // the block/retcc pages claim by matching their fixed page prefix byte.
@@ -1123,11 +1123,11 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableTlcs900::listCpu_P() const {
+const char *TableTlcs900::listCpu_P() const {
     return TEXT_TLCS900_LIST;
 }
 
-const /*PROGMEM*/ char *TableTlcs900::cpuName_P(CpuType cpuType) const {
+const char *TableTlcs900::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

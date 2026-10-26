@@ -24,7 +24,7 @@ namespace text {
 namespace z80 {
 // clang-format off
 
-extern const char TEXT_Z80_LIST[] PROGMEM;
+extern const char TEXT_Z80_LIST[];
 using common::TEXT_CPU_Z80;
 using common::TEXT_CPU_Z180;
 

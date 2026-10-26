@@ -196,18 +196,18 @@ int GenDriver::parseOption(int argc, const char **argv) {
         }
     }
     if (_cpu.empty()) {
-        const /* PROGMEM */ auto cpu_P = _disassembler.config().cpu_P();
-        char cpu[strlen_P(cpu_P) + 1];
-        strcpy_P(cpu, cpu_P);
+        const auto cpu_P = _disassembler.config().cpu_P();
+        char cpu[strlen(cpu_P) + 1];
+        strcpy(cpu, cpu_P);
         _cpu = cpu;
     }
     return 0;
 }
 
 int GenDriver::usage() const {
-    const /* PROGMEM */ auto list_P = _disassembler.config().listCpu_P();
-    char listCpu[strlen_P(list_P) + 1];
-    strcpy_P(listCpu, list_P);
+    const auto list_P = _disassembler.config().listCpu_P();
+    char listCpu[strlen(list_P) + 1];
+    strcpy(listCpu, list_P);
     fprintf(stderr, R"(usage: %s [-o <output>] [-l <list>]
 options:
   -o <output> : output file

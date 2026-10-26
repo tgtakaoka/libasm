@@ -28,13 +28,13 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG },
     { TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -160,7 +160,7 @@ void AsmTlcs90::encodeOperand(
 }
 
 AddrMode reg2mode(RegName reg) {
-    static constexpr AddrMode MODE[] PROGMEM = {
+    static constexpr AddrMode MODE[] = {
             R_BC,     // REG_BC=0
             R_DE,     // REG_DE=1
             R_HL,     // REG_HL=2
@@ -178,7 +178,7 @@ AddrMode reg2mode(RegName reg) {
             R_A,      // REG_A=14
             R_AFP,    // REG_AFP=15
     };
-    return AddrMode(pgm_read_byte(&MODE[reg]));
+    return AddrMode(MODE[reg]);
 }
 
 Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {

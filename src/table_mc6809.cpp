@@ -29,7 +29,7 @@ namespace mc6809 {
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
-constexpr Entry MC6809_P00[] PROGMEM = {
+constexpr Entry MC6809_P00[] = {
     E1(0x00, TEXT_NEG,   M_DIR),
     E1(0x03, TEXT_COM,   M_DIR),
     E1(0x04, TEXT_LSR,   M_DIR),
@@ -167,7 +167,7 @@ constexpr Entry MC6809_P00[] PROGMEM = {
     E1(0xFF, TEXT_STU,   M_EXT),
 };
 
-constexpr uint8_t MC6809_I00[] PROGMEM = {
+constexpr uint8_t MC6809_I00[] = {
      50,  // TEXT_ABX
     103,  // TEXT_ADCA
     124,  // TEXT_ADCB
@@ -305,7 +305,7 @@ constexpr uint8_t MC6809_I00[] PROGMEM = {
      77,  // TEXT_TSTB
 };
 
-constexpr Entry MC6809_P10[] PROGMEM = {
+constexpr Entry MC6809_P10[] = {
     E1(0x21, TEXT_LBRN,  M_LREL),
     E1(0x22, TEXT_LBHI,  M_LREL),
     E1(0x23, TEXT_LBLS,  M_LREL),
@@ -336,7 +336,7 @@ constexpr Entry MC6809_P10[] PROGMEM = {
     E1(0xFF, TEXT_STS,   M_EXT),
 };
 
-constexpr uint8_t MC6809_I10[] PROGMEM = {
+constexpr uint8_t MC6809_I10[] = {
      18,  // TEXT_CMPD
      19,  // TEXT_CMPY
       4,  // TEXT_LBCC
@@ -367,19 +367,19 @@ constexpr uint8_t MC6809_I10[] PROGMEM = {
      17,  // TEXT_SWI2
 };
 
-constexpr Entry MC6809_P11[] PROGMEM = {
+constexpr Entry MC6809_P11[] = {
     E0(0x3F, TEXT_SWI3),
     E1(0x83, TEXT_CMPU,  M_GEN16),
     E1(0x8C, TEXT_CMPS,  M_GEN16),
 };
 
-constexpr uint8_t MC6809_I11[] PROGMEM = {
+constexpr uint8_t MC6809_I11[] = {
       2,  // TEXT_CMPS
       1,  // TEXT_CMPU
       0,  // TEXT_SWI3
 };
 
-constexpr Entry HD6309_P00[] PROGMEM = {
+constexpr Entry HD6309_P00[] = {
     E2(0x01, TEXT_OIM,   M_IM8,  M_DIR),
     E2(0x02, TEXT_AIM,   M_IM8,  M_DIR),
     E2(0x05, TEXT_EIM,   M_IM8,  M_DIR),
@@ -392,7 +392,7 @@ constexpr Entry HD6309_P00[] PROGMEM = {
     E1(0xCD, TEXT_LDQ,   M_IM32),
 };
 
-constexpr uint8_t HD6309_I00[] PROGMEM = {
+constexpr uint8_t HD6309_I00[] = {
       1,  // TEXT_AIM
       6,  // TEXT_AIM
       2,  // TEXT_EIM
@@ -405,7 +405,7 @@ constexpr uint8_t HD6309_I00[] PROGMEM = {
       8,  // TEXT_TIM
 };
 
-constexpr Entry HD6309_P10[] PROGMEM = {
+constexpr Entry HD6309_P10[] = {
     E1(0x30, TEXT_ADDR,  M_PAIR),
     E1(0x31, TEXT_ADCR,  M_PAIR),
     E1(0x32, TEXT_SUBR,  M_PAIR),
@@ -459,7 +459,7 @@ constexpr Entry HD6309_P10[] PROGMEM = {
     E1(0xFD, TEXT_STQ,   M_EXT),
 };
 
-constexpr uint8_t HD6309_I10[] PROGMEM = {
+constexpr uint8_t HD6309_I10[] = {
      42,  // TEXT_ADCD
       1,  // TEXT_ADCR
       0,  // TEXT_ADDR
@@ -513,7 +513,7 @@ constexpr uint8_t HD6309_I10[] PROGMEM = {
      30,  // TEXT_TSTW
 };
 
-constexpr Entry HD6309_P11[] PROGMEM = {
+constexpr Entry HD6309_P11[] = {
     E2(0x30, TEXT_BAND,  M_RBIT, M_DBIT),
     E2(0x31, TEXT_BIAND, M_RBIT, M_DBIT),
     E2(0x32, TEXT_BOR,   M_RBIT, M_DBIT),
@@ -557,7 +557,7 @@ constexpr Entry HD6309_P11[] PROGMEM = {
     E1(0xCB, TEXT_ADDF,  M_GEN8),
 };
 
-constexpr uint8_t HD6309_I11[] PROGMEM = {
+constexpr uint8_t HD6309_I11[] = {
      30,  // TEXT_ADDE
      40,  // TEXT_ADDF
       0,  // TEXT_BAND
@@ -604,13 +604,13 @@ constexpr uint8_t HD6309_I11[] PROGMEM = {
 
 using EntryPage = entry::PrefixTableBase<Entry>;
 
-constexpr EntryPage MC6809_PAGES[] PROGMEM = {
+constexpr EntryPage MC6809_PAGES[] = {
         {0x00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
         {0x10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
         {0x11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
 };
 
-constexpr EntryPage HD6309_PAGES[] PROGMEM = {
+constexpr EntryPage HD6309_PAGES[] = {
         {0x00, ARRAY_RANGE(HD6309_P00), ARRAY_RANGE(HD6309_I00)},
         {0x00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
         {0x10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
@@ -620,12 +620,12 @@ constexpr EntryPage HD6309_PAGES[] PROGMEM = {
 };
 
 struct PostEntry : private PostSpec {
-    RegName readIndex() const { return RegName(pgm_read_byte(&index)); }
-    RegName readBase() const { return RegName(pgm_read_byte(&base)); }
-    int8_t readSize() const { return static_cast<int8_t>(pgm_read_byte(&size)); }
-    bool readIndir() const { return static_cast<bool>(pgm_read_byte(&indir)); }
-    uint8_t readMask() const { return pgm_read_byte(&mask_P); }
-    uint8_t readByte() const { return pgm_read_byte(&byte_P); }
+    RegName readIndex() const { return RegName(index); }
+    RegName readBase() const { return RegName(base); }
+    int8_t readSize() const { return static_cast<int8_t>(size); }
+    bool readIndir() const { return static_cast<bool>(indir); }
+    uint8_t readMask() const { return mask_P; }
+    uint8_t readByte() const { return byte_P; }
 
     constexpr PostEntry(
             RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t mask, uint8_t byte)
@@ -636,7 +636,7 @@ private:
     const uint8_t byte_P;
 };
 
-constexpr PostEntry MC6809_POSTBYTE[] PROGMEM = {
+constexpr PostEntry MC6809_POSTBYTE[] = {
         {REG_UNDEF, REG_X, 0, true, 0x8F, 0x84},       // ,X [,X]
         {REG_UNDEF, REG_X, 5, false, 0x80, 0x00},      // n5,X
         {REG_UNDEF, REG_X, 8, true, 0x8F, 0x88},       // n8,X [n8,X]
@@ -653,7 +653,7 @@ constexpr PostEntry MC6809_POSTBYTE[] PROGMEM = {
         {REG_UNDEF, REG_UNDEF, 16, true, 0xFF, 0x9F},  // [n16]
 };
 
-constexpr PostEntry HD6309_POSTBYTE[] PROGMEM = {
+constexpr PostEntry HD6309_POSTBYTE[] = {
         {REG_E, REG_X, 0, true, 0x8F, 0x87},        // E,X [E,X]
         {REG_F, REG_X, 0, true, 0x8F, 0x8A},        // F,X [F,X]
         {REG_W, REG_X, 0, true, 0x8F, 0x8E},        // W,X [W,X]
@@ -669,18 +669,18 @@ constexpr PostEntry HD6309_POSTBYTE[] PROGMEM = {
 
 using PostPage = table::Table<PostEntry>;
 
-constexpr PostPage MC6809_POSTS[] PROGMEM = {
+constexpr PostPage MC6809_POSTS[] = {
         {ARRAY_RANGE(MC6809_POSTBYTE)},
 };
 
-constexpr PostPage HD6309_POSTS[] PROGMEM = {
+constexpr PostPage HD6309_POSTS[] = {
         {ARRAY_RANGE(MC6809_POSTBYTE)},
         {ARRAY_RANGE(HD6309_POSTBYTE)},
 };
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES)},
         {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES)},
 };
@@ -830,11 +830,11 @@ Error searchPostSpec(CpuType cpuType, PostSpec &spec) {
                              : searchSpec(ARRAY_RANGE(HD6309_POSTS), spec);
 }
 
-const /*PROGMEM*/ char *TableMc6809::listCpu_P() const {
+const char *TableMc6809::listCpu_P() const {
     return TEXT_MC6809_LIST;
 }
 
-const /*PROGMEM*/ char *TableMc6809::cpuName_P(CpuType cpuType) const {
+const char *TableMc6809::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

@@ -25,7 +25,7 @@ using namespace libasm::z80::common;
 
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
-constexpr Cpu CPU_TABLE[] PROGMEM = {
+constexpr Cpu CPU_TABLE[] = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {Z180, TEXT_CPU_Z180, ARRAY_RANGE(Z180_PAGES)},
 };
@@ -105,11 +105,11 @@ bool isPrefix(CpuType cpuType, Config::prefix_t code) {
     return cpu(cpuType)->isPrefix(code);
 }
 
-const /*PROGMEM*/ char *TableZ80::listCpu_P() const {
+const char *TableZ80::listCpu_P() const {
     return TEXT_Z80_LIST;
 }
 
-const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {
+const char *TableZ80::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 

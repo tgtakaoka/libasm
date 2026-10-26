@@ -32,18 +32,18 @@ using namespace reg;
 namespace {
 
 // "d" prefix marks the leading-dot mnemonics (avoids colliding with TEXT_DATA).
-constexpr char TEXT_dDATA[]   PROGMEM = ".DATA";
-constexpr char TEXT_dDATA_B[] PROGMEM = ".DATA.B";
-constexpr char TEXT_dDATA_W[] PROGMEM = ".DATA.W";
-constexpr char TEXT_dDATA_L[] PROGMEM = ".DATA.L";
-constexpr char TEXT_dSDATA[]  PROGMEM = ".SDATA";
-constexpr char TEXT_dRES[]    PROGMEM = ".RES";
-constexpr char TEXT_dRES_B[]  PROGMEM = ".RES.B";
-constexpr char TEXT_dRES_W[]  PROGMEM = ".RES.W";
-constexpr char TEXT_dRES_L[]  PROGMEM = ".RES.L";
+constexpr char TEXT_dDATA[]   = ".DATA";
+constexpr char TEXT_dDATA_B[] = ".DATA.B";
+constexpr char TEXT_dDATA_W[] = ".DATA.W";
+constexpr char TEXT_dDATA_L[] = ".DATA.L";
+constexpr char TEXT_dSDATA[]  = ".SDATA";
+constexpr char TEXT_dRES[]    = ".RES";
+constexpr char TEXT_dRES_B[]  = ".RES.B";
+constexpr char TEXT_dRES_W[]  = ".RES.W";
+constexpr char TEXT_dRES_L[]  = ".RES.L";
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dDATA,   &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING },
     { TEXT_dDATA_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING },
     { TEXT_dDATA_L, &Assembler::defineDataConstant, Assembler::DATA_LONG           },
@@ -54,7 +54,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dRES_W,  &Assembler::allocateSpaces,     Assembler::DATA_WORD           },
     { TEXT_dSDATA,  &Assembler::defineString,       0                              },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 // Parse an explicit size qualifier ":N" where N is the field width 8/16/32.
@@ -320,10 +320,10 @@ void AsmInsn::parseClassAndSize(const ValueParser &parser) {
         // Match the class as a whole token, so ADD:GX is rejected, not matched
         // as a prefix.
         const auto cls = parser.readRegName(p);
-        if (cls.iequals_P(PSTR("G")))       classSuffix = IC_G;
-        else if (cls.iequals_P(PSTR("Q")))  classSuffix = IC_Q;
-        else if (cls.iequals_P(PSTR("R")))  classSuffix = IC_R;
-        else if (cls.iequals_P(PSTR("RQ"))) classSuffix = IC_RQ;
+        if (cls.iequals_P("G"))       classSuffix = IC_G;
+        else if (cls.iequals_P("Q"))  classSuffix = IC_Q;
+        else if (cls.iequals_P("R"))  classSuffix = IC_R;
+        else if (cls.iequals_P("RQ")) classSuffix = IC_RQ;
         else {
             setErrorIf(p, UNKNOWN_INSTRUCTION);
             return;

@@ -33,7 +33,7 @@ namespace {
 // Special (non-numbered) registers, sorted alphabetically for binary search.
 // The numbered families R0-R15, FR0-FR15 and DR0-DR14 are parsed/emitted as a
 // prefix plus number instead of being enumerated here.
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_A0,    REG_A0    },
     { TEXT_REG_DSR,   REG_DSR   },
     { TEXT_REG_FPSCR, REG_FPSCR },
@@ -56,7 +56,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 };
 // clang-format on
 
-PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
 // Parse 0..15.  Returns -1 on failure (no digit, or value > 15).
 int8_t parseRegNum(StrScanner &p) {

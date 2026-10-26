@@ -137,26 +137,26 @@ const char *Options::nameof(OptionBase::OptionSpec spec) {
 namespace text {
 namespace option {
 
-constexpr char OPT_TEXT_FPU[] PROGMEM = "fpu";
-constexpr char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
-constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
-constexpr char OPT_BOOL_LONGA[] PROGMEM = "longa";
-constexpr char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-constexpr char OPT_BOOL_LONGI[] PROGMEM = "longi";
-constexpr char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
-constexpr char OPT_BOOL_IMPLICIT_WORD[] PROGMEM = "implicit-word";
-constexpr char OPT_DESC_IMPLICIT_WORD[] PROGMEM = "unknown instruction defines word";
-constexpr char OPT_BOOL_ZILOG_SYNTAX[] PROGMEM = "zilog-syntax";
-constexpr char OPT_DESC_ZILOG_SYNTAX[] PROGMEM = "Use Zilog syntax";
-constexpr char OPT_BOOL_EXTMODE[] PROGMEM = "extmode";
-constexpr char OPT_DESC_EXTMODE[] PROGMEM = "Extended mode";
-constexpr char OPT_BOOL_LWORDMODE[] PROGMEM = "lwordmode";
-constexpr char OPT_DESC_LWORDMODE[] PROGMEM = "Long word mode";
-constexpr char OPT_BOOL_USE16[] PROGMEM = "use16";
-constexpr char OPT_DESC_USE16[] PROGMEM = "16-bit program model";
-constexpr char OPT_BOOL_USE32[] PROGMEM = "use32";
-constexpr char OPT_DESC_USE32[] PROGMEM = "32-bit program model";
+constexpr char OPT_TEXT_FPU[] = "fpu";
+constexpr char OPT_DESC_FPU[] = "floating point co-processor";
+constexpr char OPT_TEXT_PMMU[] = "pmmu";
+constexpr char OPT_DESC_PMMU[] = "memory management unit";
+constexpr char OPT_BOOL_LONGA[] = "longa";
+constexpr char OPT_DESC_LONGA[] = "enable 16-bit accumulator";
+constexpr char OPT_BOOL_LONGI[] = "longi";
+constexpr char OPT_DESC_LONGI[] = "enable 16-bit index registers";
+constexpr char OPT_BOOL_IMPLICIT_WORD[] = "implicit-word";
+constexpr char OPT_DESC_IMPLICIT_WORD[] = "unknown instruction defines word";
+constexpr char OPT_BOOL_ZILOG_SYNTAX[] = "zilog-syntax";
+constexpr char OPT_DESC_ZILOG_SYNTAX[] = "Use Zilog syntax";
+constexpr char OPT_BOOL_EXTMODE[] = "extmode";
+constexpr char OPT_DESC_EXTMODE[] = "Extended mode";
+constexpr char OPT_BOOL_LWORDMODE[] = "lwordmode";
+constexpr char OPT_DESC_LWORDMODE[] = "Long word mode";
+constexpr char OPT_BOOL_USE16[] = "use16";
+constexpr char OPT_DESC_USE16[] = "16-bit program model";
+constexpr char OPT_BOOL_USE32[] = "use32";
+constexpr char OPT_DESC_USE32[] = "32-bit program model";
 
 }  // namespace option
 }  // namespace text

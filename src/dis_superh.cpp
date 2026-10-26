@@ -138,23 +138,23 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         out.letter('+');
         break;
     case M_DECN:
-        out.text_P(PSTR("@-"));
+        out.text_P("@-");
         outRn(out, opc);
         break;
     case M_IDXN:
-        out.text_P(PSTR("@(R0,"));
+        out.text_P("@(R0,");
         outRn(out, opc);
         out.letter(')');
         break;
     case M_IDXM:
-        out.text_P(PSTR("@(R0,"));
+        out.text_P("@(R0,");
         outRm(out, opc);
         out.letter(')');
         break;
     case M_D4N: {
         // Always MOV.L Rm,@(disp,Rn); disp scaled by 4.
         const auto d = opc & 0xF;
-        out.text_P(PSTR("@("));
+        out.text_P("@(");
         outHex(out, d * 4, 8);
         out.letter(',');
         outRn(out, opc);
@@ -166,7 +166,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         // print the scaled byte offset to match assembler input.
         const auto d = opc & 0xF;
         const auto scale = dispScale(insn.effectiveSize());
-        out.text_P(PSTR("@("));
+        out.text_P("@(");
         outHex(out, d * scale, 8);
         out.letter(',');
         outRm(out, opc);
@@ -176,7 +176,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_D8: {
         const auto d = opc & 0xFF;
         const auto scale = dispScale(insn.effectiveSize());
-        out.text_P(PSTR("@("));
+        out.text_P("@(");
         outHex(out, d * scale, 16);
         out.letter(',');
         outRegName(out, REG_GBR);
@@ -326,7 +326,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         // 12-bit displacement is in opc2[11:0]; scaled 1/2/4 by the access size.
         const auto scale = dispScale(insn.effectiveSize());
         const auto d = insn.opCode2() & 0xFFFu;
-        out.text_P(PSTR("@("));
+        out.text_P("@(");
         outHex(out, d * scale, 16);
         out.letter(',');
         outRegName(out, (mode == M_D12N) ? decodeRn(opc) : decodeRm(opc));
@@ -337,7 +337,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         outRegName(out, REG_R0);
         break;
     case M_PUSH:
-        out.text_P(PSTR("@-"));
+        out.text_P("@-");
         outRegName(out, REG_R15);
         break;
     case M_PULL:
@@ -346,7 +346,7 @@ void DisSuperH::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
         out.letter('+');
         break;
     case M_IGBR:
-        out.text_P(PSTR("@(R0,"));
+        out.text_P("@(R0,");
         outRegName(out, REG_GBR);
         out.letter(')');
         break;

@@ -146,10 +146,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals_P(const char *file, const int line, const char *message,
-        const char *expected, const /* PROGMEM */ char *actual_P) {
-    char buffer[strlen_P(actual_P) + 1];
-    strcpy_P(buffer, actual_P);
-    return equals(file, line, message, expected, buffer);
+        const char *expected, const char *actual_P) {
+    return equals(file, line, message, expected, actual_P);
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message, Error expected,

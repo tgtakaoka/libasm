@@ -97,9 +97,5 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install --upgrade platformio
-      - name: Install library dependency
-        run: pio pkg install --global --library "tgtakaoka/libcli@1.4.2"
       - name: Run PlatformIO
-        run: pio ci --lib="." --board=ATmega1284P --board=AVR128DA48 --board=teensy41
-        env:
-          PLATFORMIO_CI_SRC: ./examples/${{matrix.example}}/${{matrix.example}}.ino
+        run: pio run -d examples/${{matrix.example}}

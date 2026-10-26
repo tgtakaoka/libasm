@@ -29,7 +29,7 @@ using namespace text::option;
 namespace {
 
 // clang-format off
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
     { TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE },
@@ -39,7 +39,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE },
     { TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 // clang-format on
 
 }  // namespace
@@ -676,11 +676,11 @@ uint_fast8_t AsmInsn::operandPos() const {
 Error AsmZ380::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
     if (z380()) {
-        if (strcasecmp_P(insn.name(), OPT_BOOL_EXTMODE) == 0) {
+        if (strcasecmp(insn.name(), OPT_BOOL_EXTMODE) == 0) {
             const auto error = _opt_extmode.set(scan);
             return error ? insn.setErrorIf(at, error) : OK;
         }
-        if (strcasecmp_P(insn.name(), OPT_BOOL_LWORDMODE) == 0) {
+        if (strcasecmp(insn.name(), OPT_BOOL_LWORDMODE) == 0) {
             const auto error = _opt_lwordmode.set(scan);
             return error ? insn.setErrorIf(at, error) : OK;
         }

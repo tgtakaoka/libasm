@@ -30,14 +30,14 @@ using namespace text::option;
 
 // clang-format off
 namespace {
-constexpr char TEXT_dEVEN[]  PROGMEM = ".EVEN";
-constexpr char TEXT_dFLT2[]  PROGMEM = ".FLT2";
-constexpr char TEXT_dFLT4[]  PROGMEM = ".FLT4";
-constexpr char TEXT_dODD[]   PROGMEM = ".ODD";
-constexpr char TEXT_dRADIX[] PROGMEM = ".RADIX";
+constexpr char TEXT_dEVEN[]  = ".EVEN";
+constexpr char TEXT_dFLT2[]  = ".FLT2";
+constexpr char TEXT_dFLT4[]  = ".FLT4";
+constexpr char TEXT_dODD[]   = ".ODD";
+constexpr char TEXT_dRADIX[] = ".RADIX";
 }  // namespace
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dequal, &Assembler::defineOrigin       },
     { TEXT_dBLKB,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE                                  },
     { TEXT_dBLKW,  &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2           },
@@ -46,15 +46,15 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_dODD,   &Assembler::alignOrigin,        Assembler::ALIGN_ODD                                  },
     { TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING|Assembler::DATA_ALIGN2 },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr AsmPdp11::PseudoPdp11 AsmPdp11::PSEUDO_PDP11_TABLE[] PROGMEM = {
+constexpr AsmPdp11::PseudoPdp11 AsmPdp11::PSEUDO_PDP11_TABLE[] = {
     { TEXT_dASCII, &AsmPdp11::defineAscii    },
     { TEXT_dFLT2,  &AsmPdp11::defineDecFloat, DATA_FLT2 },
     { TEXT_dFLT4,  &AsmPdp11::defineDecFloat, DATA_FLT4 },
     { TEXT_dRADIX, &AsmPdp11::setRadix       },
 };
-PROGMEM constexpr AsmPdp11::PseudosPdp11 AsmPdp11::PSEUDOS_PDP11{ARRAY_RANGE(PSEUDO_PDP11_TABLE)};
+constexpr AsmPdp11::PseudosPdp11 AsmPdp11::PSEUDOS_PDP11{ARRAY_RANGE(PSEUDO_PDP11_TABLE)};
 // clang-format on
 
 const ValueParser::Plugins &AsmPdp11::defaultPlugins() {

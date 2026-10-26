@@ -49,8 +49,8 @@ private:
 
     using PseudoTlcs900 = pseudo::__Pseudo<AsmTlcs900, Insn>;
     using PseudosTlcs900 = pseudo::__Pseudos<PseudoTlcs900>;
-    static const PseudoTlcs900 PSEUDO_TLCS900_TABLE[] PROGMEM;
-    static const PseudosTlcs900 PSEUDOS_TLCS900 PROGMEM;
+    static const PseudoTlcs900 PSEUDO_TLCS900_TABLE[];
+    static const PseudosTlcs900 PSEUDOS_TLCS900;
 };
 
 }  // namespace tlcs900

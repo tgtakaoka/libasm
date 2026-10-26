@@ -57,7 +57,7 @@ void DisFormatter::reset() {
     _continueMark_P = nullptr;
 }
 
-void DisFormatter::set(const ErrorAt &error, const /*PROGMEM*/ char *mark_P) {
+void DisFormatter::set(const ErrorAt &error, const char *mark_P) {
     _error.setError(error);
     _errorMessage = _errorContent = _errorLine = _error.getError();
     if (mark_P) {
@@ -69,7 +69,7 @@ void DisFormatter::set(const ErrorAt &error, const /*PROGMEM*/ char *mark_P) {
 void DisFormatter::setCpu(const char *cpu) {
     reset();
     StrCaseBuffer name{_insn.nameBuffer(), _uppercase};
-    name.text_P(PSTR("CPU"));
+    name.text_P("CPU");
     StrCaseBuffer opr{_operands, _uppercase};
     opr.text(cpu).over(_operands);
 }
@@ -80,7 +80,7 @@ void DisFormatter::setCpu(const char *cpu) {
 void DisFormatter::setOption(const char *name, const char *value) {
     reset();
     StrCaseBuffer name_out{_insn.nameBuffer(), _uppercase};
-    name_out.text_P(PSTR("OPTION"));
+    name_out.text_P("OPTION");
     _operands.letter('"').text(name).letter('"').comma().letter('"').text(value).letter('"');
 }
 
@@ -91,7 +91,7 @@ Error DisFormatter::setOrigin(uint32_t origin) {
         return error;
     _insn.reset(origin);
     StrCaseBuffer name{_insn.nameBuffer(), _uppercase};
-    name.text_P(PSTR("ORG"));
+    name.text_P("ORG");
     _disassembler.outAbsAddr(_operands, origin).over(_operands);
     return OK;
 }
@@ -109,9 +109,9 @@ void DisFormatter::formatComment(StrBuffer &out) {
 }
 
 void DisFormatter::formatError(StrBuffer &out) {
-    out.rtext(_inputName).rtext_P(PSTR(": error: ")).rtext_P(_error.errorText_P());
+    out.rtext(_inputName).rtext_P(": error: ").rtext_P(_error.errorText_P());
     if (*_error.errorAt())
-        out.rtext_P(PSTR(R"(: ")")).rtext(_error.errorAt()).rletter('"');
+        out.rtext_P(R"(: ")").rtext(_error.errorAt()).rletter('"');
 }
 
 void DisFormatter::formatLine(StrBuffer &out, int &next) {

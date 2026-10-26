@@ -25,13 +25,13 @@ AsmTlcs900 asm900;
 Assembler &assembler(asm900);
 
 static bool is_tlcs900() {
-    return strcmp_P("TLCS900", assembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900", assembler.config().cpu_P()) == 0;
 }
 static bool is_tlcs900l() {
-    return strcmp_P("TLCS900L", assembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900L", assembler.config().cpu_P()) == 0;
 }
 static bool is_tlcs900h2() {
-    return strcmp_P("TLCS900H2", assembler.config().cpu_P()) == 0;
+    return strcmp("TLCS900H2", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

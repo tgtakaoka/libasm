@@ -28,19 +28,19 @@ using namespace text::option;
 
 // clang-format off
 namespace {
-constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
-constexpr char TEXT_DC_D[] PROGMEM = "dc.d";
-constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
-constexpr char TEXT_DC_P[] PROGMEM = "dc.p";
-constexpr char TEXT_DC_S[] PROGMEM = "dc.s";
-constexpr char TEXT_DC_W[] PROGMEM = "dc.w";
-constexpr char TEXT_DC_X[] PROGMEM = "dc.x";
-constexpr char TEXT_DS_B[] PROGMEM = "ds.b";
-constexpr char TEXT_DS_L[] PROGMEM = "ds.l";
-constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
+constexpr char TEXT_DC_B[] = "dc.b";
+constexpr char TEXT_DC_D[] = "dc.d";
+constexpr char TEXT_DC_L[] = "dc.l";
+constexpr char TEXT_DC_P[] = "dc.p";
+constexpr char TEXT_DC_S[] = "dc.s";
+constexpr char TEXT_DC_W[] = "dc.w";
+constexpr char TEXT_DC_X[] = "dc.x";
+constexpr char TEXT_DS_B[] = "ds.b";
+constexpr char TEXT_DS_L[] = "ds.l";
+constexpr char TEXT_DS_W[] = "ds.w";
 }
 
-constexpr Pseudo PSEUDOS[] PROGMEM = {
+constexpr Pseudo PSEUDOS[] = {
     { TEXT_dALIGN, &Assembler::alignOrigin        },
     { TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2    },
     { TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE                           },
@@ -57,9 +57,9 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     { TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG|Assembler::DATA_ALIGN2    },
     { TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD|Assembler::DATA_ALIGN2    },
 };
-PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-constexpr AsmMc68000::PseudoMc68000 AsmMc68000::PSEUDO_MC68000_TABLE[] PROGMEM = {
+constexpr AsmMc68000::PseudoMc68000 AsmMc68000::PSEUDO_MC68000_TABLE[] = {
 #if !defined(LIBASM_MC68000_NOFPU)
     { TEXT_DC_P, &AsmMc68000::defineConstant, DATA_DCP   },
     { TEXT_DC_X, &AsmMc68000::defineConstant, DATA_DCX   },
@@ -67,7 +67,7 @@ constexpr AsmMc68000::PseudoMc68000 AsmMc68000::PSEUDO_MC68000_TABLE[] PROGMEM =
     { TEXT_FPU,  &AsmMc68000::setCoprocessor, COPRO_FPU  },
     { TEXT_PMMU, &AsmMc68000::setCoprocessor, COPRO_PMMU },
 };
-PROGMEM constexpr AsmMc68000::PseudosMc68000 AsmMc68000::PSEUDOS_MC68000{
+constexpr AsmMc68000::PseudosMc68000 AsmMc68000::PSEUDOS_MC68000{
         ARRAY_RANGE(PSEUDO_MC68000_TABLE)};
 // clang-format on
 
@@ -100,31 +100,31 @@ void AsmMc68000::reset() {
 namespace {
 
 int8_t modePos(OprPos pos) {
-    static constexpr int8_t BITNO[] PROGMEM = {
+    static constexpr int8_t BITNO[] = {
             3,   // OP_10 = 0: __|___|___|mmm|rrr
             6,   // OP_23 = 1: __|rrr|mmm|___|___
             -1,  // OP__0 = 2: __|___|___|___|rrr
             -1,  // OP__3 = 3: __|rrr|___|___|___
     };
     if (pos < OP___)
-        return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+        return static_cast<int8_t>(BITNO[pos]);
     return -1;
 }
 
 int8_t regPos(OprPos pos) {
-    static constexpr int8_t BITNO[] PROGMEM = {
+    static constexpr int8_t BITNO[] = {
             0,  // OP_10 = 0: __|___|___|mmm|rrr
             9,  // OP_23 = 1: __|rrr|mmm|___|___
             0,  // OP__0 = 2: __|___|___|___|rrr
             9,  // OP__3 = 3: __|rrr|___|___|___
     };
     if (pos < OP___)
-        return static_cast<int8_t>(pgm_read_byte(&BITNO[pos]));
+        return static_cast<int8_t>(BITNO[pos]);
     return -1;
 }
 
 int8_t postPos(OprPos pos) {
-    static constexpr int8_t BITNO[] PROGMEM = {
+    static constexpr int8_t BITNO[] = {
             10,  // EX_RX = 5:   __|xxx|___|_______ : format or source
             7,   // EX_RY = 6:   __|___|yyy|_______ : destination regi
             7,   // EX_SC = 7:   __|___|sss|____ccc : FPSINCOS
@@ -149,7 +149,7 @@ int8_t postPos(OprPos pos) {
     };
     if (pos < EX_RX)
         return -1;
-    return static_cast<int8_t>(pgm_read_byte(&BITNO[pos - EX_RX]));
+    return static_cast<int8_t>(BITNO[pos - EX_RX]);
 }
 
 #if !defined(LIBASM_MC68000_NOFPU)
@@ -194,12 +194,12 @@ void emitOprSize(AsmInsn &insn, InsnSize isize) {
 #if !defined(LIBASM_MC68000_NOFPU)
     if (osize == SZ_FDAT) {
         // clang-format off
-        static constexpr uint8_t FSIZES[] PROGMEM = {
+        static constexpr uint8_t FSIZES[] = {
             // B  W  L  _  _  _  _  S  D  X  P  _
             0, 6, 4, 0, 0, 0, 0, 0, 1, 5, 2, 3, 0,
         };
         // clang-format on
-        const auto fsize = pgm_read_byte(&FSIZES[isize]);
+        const auto fsize = FSIZES[isize];
         insn.embedPostfix(fsize << 10);
         return;
     }

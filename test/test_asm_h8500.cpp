@@ -25,7 +25,7 @@ AsmH8500 asmh8500;
 Assembler &assembler(asmh8500);
 
 bool isH8520() {
-    return strcasecmp_P("H8/520", assembler.config().cpu_P()) == 0;
+    return strcasecmp("H8/520", assembler.config().cpu_P()) == 0;
 }
 
 void set_up() {

@@ -31,7 +31,7 @@ namespace reg {
 namespace {
 // clang-format off
 
-constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+constexpr NameEntry REG_ENTRIES[] = {
     { TEXT_REG_A0,    REG_A0    },
     { TEXT_REG_A1,    REG_A1    },
     { TEXT_REG_A2,    REG_A2    },
@@ -64,9 +64,9 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_SR,    REG_SR    },
 };
 
-PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-constexpr NameEntry CREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry CREG_ENTRIES[] = {
     { TEXT_REG_CAAR,  CREG_CAAR  },
     { TEXT_REG_CACR,  CREG_CACR  },
     { TEXT_REG_DACR0, CREG_DACR0 },
@@ -89,10 +89,10 @@ constexpr NameEntry CREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_VBR,   CREG_VBR   },
 };
 
-PROGMEM constexpr NameTable CREG_TABLE{ARRAY_RANGE(CREG_ENTRIES)};
+constexpr NameTable CREG_TABLE{ARRAY_RANGE(CREG_ENTRIES)};
 
 #if !defined(LIBASM_MC68000_NOPMMU)
-constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry PREG_ENTRIES[] = {
     { TEXT_REG_AC,    PREG_AC    },
     { TEXT_REG_AC0,   PREG_AC0   },
     { TEXT_REG_AC1,   PREG_AC1   },
@@ -110,17 +110,17 @@ constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
     { TEXT_REG_VAL,   PREG_VAL   },
 };
 
-PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
+constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
 #endif
 
-constexpr NameEntry CACHE_ENTRIES[] PROGMEM = {
+constexpr NameEntry CACHE_ENTRIES[] = {
     { TEXT_BC, CACHE_BOTH },
     { TEXT_DC, CACHE_DATA },
     { TEXT_IC, CACHE_INST },
     { TEXT_NC, CACHE_NONE },
 };
 
-PROGMEM constexpr NameTable CACHE_TABLE{ARRAY_RANGE(CACHE_ENTRIES)};
+constexpr NameTable CACHE_TABLE{ARRAY_RANGE(CACHE_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -247,13 +247,13 @@ Config::opcode_t encodeCntlRegNo(CntlReg name) {
             0x006,  // CREG_DACR0 = 18,  // MC68EC040
             0x007,  // CREG_DACR1 = 19,  // MC68EC040
     };
-    return pgm_read_word(CREGNO + name);
+    return CREGNO[name];
 }
 
 CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
     regno &= 0xFFF;
     if (regno < 8) {
-        static constexpr CntlReg CREG_0xx[] PROGMEM = {
+        static constexpr CntlReg CREG_0xx[] = {
                 CREG_SFC,   // 0x000
                 CREG_DFC,   // 0x001
                 CREG_CACR,  // 0x002
@@ -269,10 +269,10 @@ CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
             return CREG_UNDEF;
         if (regno >= 4 && cpuSpec.pmmu == PMMU_MC68EC040)
             return CntlReg(CREG_IACR0 + (regno - 4));
-        return CntlReg(pgm_read_byte(CREG_0xx + regno));
+        return CntlReg(CREG_0xx[regno]);
     }
     if (regno >= 0x800 && regno < 0x808) {
-        static constexpr CntlReg CREG_8xx[] PROGMEM = {
+        static constexpr CntlReg CREG_8xx[] = {
                 CREG_USP,    // 0x800
                 CREG_VBR,    // 0x801
                 CREG_CAAR,   // 0x802
@@ -290,7 +290,7 @@ CntlReg decodeCntlRegNo(Config::opcode_t regno, const CpuSpec &cpuSpec) {
             return CREG_UNDEF;
         if (regno >= 0x805 && cpuSpec.pmmu == PMMU_MC68EC040)
             return CREG_UNDEF;
-        return CntlReg(pgm_read_byte(CREG_8xx + (regno - 0x800)));
+        return CntlReg(CREG_8xx[(regno - 0x800)]);
     }
     return CREG_UNDEF;
 }
@@ -387,7 +387,7 @@ OprSize pmmuRegSize(PmmuReg name, PmmuType pmmu) {
             return SZ_NONE;
         if (name >= PREG_BAD0)
             return SZ_WORD;
-        static constexpr OprSize SIZE[] PROGMEM = {
+        static constexpr OprSize SIZE[] = {
                 SZ_LONG,  // PREG_TC = 0
                 SZ_QUAD,  // PREG_DRP = 1
                 SZ_QUAD,  // PREG_SRP = 2
@@ -399,7 +399,7 @@ OprSize pmmuRegSize(PmmuReg name, PmmuType pmmu) {
                 SZ_WORD,  // PREG_PSR = 8
                 SZ_WORD,  // PREG_PCSR = 9
         };
-        return OprSize(pgm_read_byte(SIZE + name));
+        return OprSize(SIZE[name]);
     } else if (pmmu == PMMU_MC68030) {
         if (name == PREG_TT0 || name == PREG_TT1 || name == PREG_TC)
             return SZ_LONG;

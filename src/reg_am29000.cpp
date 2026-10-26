@@ -29,7 +29,7 @@ namespace reg {
 namespace {
 
 // clang-format off
-constexpr NameEntry SPREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry SPREG_ENTRIES[] = {
     { TEXT_REG_ALU,  REG_ALU  },
     { TEXT_REG_BP,   REG_BP   },
     { TEXT_REG_CFG,  REG_CFG  },
@@ -58,14 +58,14 @@ constexpr NameEntry SPREG_ENTRIES[] PROGMEM = {
 
 // The memory management unit; the Am29200 and Am29205 do not implement these
 // register numbers.
-constexpr NameEntry MMU_SPREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry MMU_SPREG_ENTRIES[] = {
     { TEXT_REG_LRU,  REG_LRU  },
     { TEXT_REG_MMU,  REG_MMU  },
 };
 
 // Region mapping, shadow program counters, instruction breakpoints and the
 // exception opcode, which the Am29050 alone implements.
-constexpr NameEntry AM29050_SPREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry AM29050_SPREG_ENTRIES[] = {
     { TEXT_REG_EXOP, REG_EXOP },
     { TEXT_REG_IBA0, REG_IBA0 },
     { TEXT_REG_IBA1, REG_IBA1 },
@@ -83,13 +83,13 @@ constexpr NameEntry AM29050_SPREG_ENTRIES[] PROGMEM = {
 
 // The cache interface.  The Am29200 has no cache, and the Am29050 does not
 // expose one through a special-purpose register.
-constexpr NameEntry CACHE_SPREG_ENTRIES[] PROGMEM = {
+constexpr NameEntry CACHE_SPREG_ENTRIES[] = {
     { TEXT_REG_CDR,  REG_CDR  },
     { TEXT_REG_CIR,  REG_CIR  },
 };
 
 // Special-purpose register numbers, indexed by RegName.
-constexpr uint8_t SPREG_NUMBERS[] PROGMEM = {
+constexpr uint8_t SPREG_NUMBERS[] = {
       0,   1,   2,   3,   4,   5,   6,   7,     // VAB  OPS  CPS  CFG  CHA  CHD  CHC  RBP
       8,   9,  10,  11,  12,  13,  14,  15,     // TMC  TMR  PC0  PC1  PC2  MMU  LRU  RSN
      16,  17,  18,  19,  20,  21,  22,  23,     // RMA0 RMC0 RMA1 RMC1 SPC0 SPC1 SPC2 IBA0
@@ -99,10 +99,10 @@ constexpr uint8_t SPREG_NUMBERS[] PROGMEM = {
 };
 // clang-format on
 
-PROGMEM constexpr NameTable SPREGS{ARRAY_RANGE(SPREG_ENTRIES)};
-PROGMEM constexpr NameTable MMU_SPREGS{ARRAY_RANGE(MMU_SPREG_ENTRIES)};
-PROGMEM constexpr NameTable AM29050_SPREGS{ARRAY_RANGE(AM29050_SPREG_ENTRIES)};
-PROGMEM constexpr NameTable CACHE_SPREGS{ARRAY_RANGE(CACHE_SPREG_ENTRIES)};
+constexpr NameTable SPREGS{ARRAY_RANGE(SPREG_ENTRIES)};
+constexpr NameTable MMU_SPREGS{ARRAY_RANGE(MMU_SPREG_ENTRIES)};
+constexpr NameTable AM29050_SPREGS{ARRAY_RANGE(AM29050_SPREG_ENTRIES)};
+constexpr NameTable CACHE_SPREGS{ARRAY_RANGE(CACHE_SPREG_ENTRIES)};
 
 bool isMmuReg(RegName name) {
     return name >= REG_MMU && name <= REG_LRU;
@@ -192,7 +192,7 @@ StrBuffer &outSpReg(StrBuffer &out, RegName name) {
 
 RegName decodeSpReg(uint8_t number, CpuType cpuType) {
     for (const auto *p = ARRAY_BEGIN(SPREG_NUMBERS); p < ARRAY_END(SPREG_NUMBERS); p++) {
-        if (pgm_read_byte(p) == number) {
+        if (*p == number) {
             const auto i = static_cast<int8_t>(p - ARRAY_BEGIN(SPREG_NUMBERS));
             const auto name = RegName(i);
             return hasSpReg(name, cpuType) ? name : REG_UNDEF;
@@ -202,7 +202,7 @@ RegName decodeSpReg(uint8_t number, CpuType cpuType) {
 }
 
 uint8_t encodeSpReg(RegName name) {
-    return pgm_read_byte(&SPREG_NUMBERS[name]);
+    return SPREG_NUMBERS[name];
 }
 
 }  // namespace reg

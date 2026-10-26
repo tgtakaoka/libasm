@@ -93,7 +93,7 @@ void DisPdp11::decodeImmediate(DisInsn &insn, StrBuffer &out) const {
         out.oct(insn.readUint32Mix());
 #else
         if (_gnuAs)
-            out.text_P(PSTR("0f"));
+            out.text_P("0f");
         out.float32(insn.readDecFloat32());
 #endif
         break;
@@ -103,7 +103,7 @@ void DisPdp11::decodeImmediate(DisInsn &insn, StrBuffer &out) const {
         out.oct(insn.readUint64Mix());
 #else
         if (_gnuAs)
-            out.text_P(PSTR("0d"));
+            out.text_P("0d");
         out.float80(insn.readDecFloat64());
 #endif
         break;

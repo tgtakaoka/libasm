@@ -25,7 +25,7 @@ using namespace reg;
 
 const ValueFormatter::Plugins &DisPdp8::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("/"); }
+        const char *lineComment_P() const override { return "/"; }
     } PLUGINS{};
     return PLUGINS;
 }

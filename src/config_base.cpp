@@ -36,8 +36,7 @@ int32_t ConfigBase::signExtend(uint32_t u32, uint_fast8_t width) {
 
 Error ConfigBase::checkAddr(uint32_t addr, bool align) const {
     const auto width = static_cast<uint8_t>(addressWidth());
-    // width 32 spans the whole uint32_t, so nothing can overflow; 1<<32 is UB
-    // where long is 32-bit (e.g. AVR).
+    // width 32 spans the whole uint32_t, so nothing can overflow; 1<<32 is UB.
     if (width < 32) {
         const uint32_t max = UINT32_C(1) << width;
         if (addr & ~(max - 1))
