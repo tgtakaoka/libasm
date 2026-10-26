@@ -68,7 +68,7 @@ build and run on the host with PlatformIO at
 On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
-    libasm assembler (version 1.6.70)
+    libasm assembler (version 2.0.0)
     usage: asm [-o <output>] [-l <list>] <input>
       -C <CPU>          : target CPU
          MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05
@@ -129,7 +129,7 @@ It can generate Intel HEX or Motorola S-Record output.
 On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
-    libasm disassembler (version 1.6.70)
+    libasm disassembler (version 2.0.0)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
       -C <CPU>         : target CPU
          MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805 MC68HC05
