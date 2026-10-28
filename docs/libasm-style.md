@@ -130,6 +130,38 @@ modifies and deletions without touching the untracked test binaries -- unlike
 - `gh`'s "N uncommitted changes" warning counts the ~125 untracked test
   binaries; check `git status --short | grep -v '^??'` before believing it.
 
+### Backporting to `release-1`
+
+`main` carries the 2.x line, which dropped Arduino and AVR support in
+`9e34d30e`. `release-1` is the maintenance branch for the 1.x line; it
+starts at `ea52593f` (Version 1.6.70), so it still has `library.properties`,
+`README_.adoc`, `arduino-ci.yml`, the PROGMEM layer, and the version pinned
+across 47 files instead of 3.
+
+**A bug fix lands on `main` first, then gets backported to `release-1`.**
+Cherry-pick with `-x`, so the 1.x commit records where it came from:
+
+```
+git cherry-pick -x <sha-on-main>
+```
+
+New architectures and features are NOT backported unless asked for.
+
+Three things to expect:
+
+- A fix touching code the Arduino drop removed or moved will not apply
+  cleanly. Resolve it against the 1.x tree as it stands; do not reshape
+  `release-1` toward `main` to make a cherry-pick fit.
+- Arduino CI runs on `release-1` and cannot pass while drazzy.com's TLS
+  certificate is expired, so `arduino-cli` fails to fetch the DxCore index
+  and fail-fast cancels the other two boards. `gh pr checks` reports those
+  cancellations as `fail`; read the job log before calling it a real failure.
+  PlatformIO CI covers the same three boards and does not touch drazzy.com.
+- A release cut from `release-1` uses the OLD procedure: 47 version files,
+  `library.properties` naming every arch in its `paragraph`, and the Arduino
+  Library Manager picking up the tag on its own schedule. The "Release
+  procedure" section below describes `main` only.
+
 ---
 
 ## Coding style
