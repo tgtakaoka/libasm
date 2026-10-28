@@ -378,7 +378,9 @@ void AsmMc68000::encodeEffectiveAddress(AsmInsn &insn, const Operand &op, OprPos
 AddrMode AsmMc68000::branchType(AddrMode mode, InsnSize size, Config::ptrdiff_t delta) const {
     if (mode == M_REL8) {
         if (size == ISZ_NONE) {
-            if (!overflowDelta(delta, 8))
+            // A zero 8-bit displacement selects the 16-bit form, so a branch
+            // to the next instruction can not be encoded as a short branch.
+            if (delta != 0 && !overflowDelta(delta, 8))
                 return M_REL8;
             if (!overflowDelta(delta, 16))
                 return M_REL16;
@@ -428,10 +430,18 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
     if (type == M_REL8) {
         if (overflowDelta(delta, 8))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
-        if (!firstGen() && delta == -1)
-            delta = 0;
-        if (delta == 0) {
-            insn.emitOperand16(delta);
+        if (!firstGen() && delta == -1) {
+            // 0xFF selects the 32-bit form on MC68020 and later.  The odd
+            // target is rejected above, so fall back to the 16-bit form.
+            insn.emitOperand16(0);
+        } else if (delta == 0) {
+            // A zero displacement means a 16-bit displacement follows, so an
+            // explicitly short branch to the next instruction has no
+            // encoding.  Stay two bytes long and report it; emitting the
+            // longer form would make this instruction's size depend on its
+            // own target, which never settles.
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+            insn.embed(0);
         } else {
             insn.embed(static_cast<uint8_t>(delta));
         }
