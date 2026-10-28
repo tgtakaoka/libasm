@@ -147,6 +147,20 @@ git cherry-pick -x <sha-on-main>
 
 New architectures and features are NOT backported unless asked for.
 
+**Open an issue before fixing, so the two branches are tied together.**
+A fix that will be backported is tracked in three places, and each one
+points at the next:
+
+1. A GitHub issue describing the bug, opened FIRST. It is the hub.
+2. The fixing commits on `main`, which name it: `... to address issue#NN`
+   (the form `6d0be65f` used). The PR body may say `Fixes #NN`.
+3. The backport commits on `release-1`, which name the same issue AND
+   carry the `(cherry picked from commit <sha>)` line that `-x` writes.
+   That line is the reference back to the original fix; do not drop it by
+   cherry-picking without `-x` or by squashing the backport.
+
+Close the issue when BOTH branches have the fix, not when `main` does.
+
 Three things to expect:
 
 - A fix touching code the Arduino drop removed or moved will not apply
