@@ -2736,6 +2736,10 @@ void test_program() {
     ATEST(0x010000, "BLE *+$82",   0060000 | 0xF00, 0x0080);
     AERRT(0x010000, "BLE.B *-$80", OPERAND_TOO_FAR, "*-$80", 0060000 | 0xF00 | 0x7E);
     AERRT(0x010000, "BLE.S *+$82", OPERAND_TOO_FAR, "*+$82", 0060000 | 0xF00 | 0x80);
+    // A zero displacement selects the 16-bit form, so a short branch can not
+    // reach the next instruction.
+    AERRT(0x010000, "BLE.B *+2",   OPERAND_NOT_ALLOWED, "*+2", 0060000 | 0xF00 | 0x00);
+    AERRT(0x010000, "BLE.S *+2",   OPERAND_NOT_ALLOWED, "*+2", 0060000 | 0xF00 | 0x00);
     if (firstGen()) {
         AERRT(0x010000, "BLE *+1",     OPERAND_NOT_ALIGNED, "*+1", 0060000 | 0xF00 | 0xFF);
         AERRT(0x010000, "BLE.X *+$80", ILLEGAL_SIZE, "BLE.X *+$80", 0060000 | 0xF00 | 0x7E);
@@ -2999,6 +3003,9 @@ void test_program() {
     ATEST(0x10000, "BRA   *",       0060000 | 0xFE);
     ATEST(0x10000, "BRA.W *",       0060000, 0xFFFE);
     ATEST(0x10000, "BRA.W *+2",     0060000, 0x0000);
+    ATEST(0x10000, "BRA   *+2",     0060000, 0x0000);
+    AERRT(0x10000, "BRA.B *+2",     OPERAND_NOT_ALLOWED, "*+2", 0060000 | 0x00);
+    AERRT(0x10000, "BRA.S *+2",     OPERAND_NOT_ALLOWED, "*+2", 0060000 | 0x00);
     ATEST(0x10000, "BRA   *+$80",   0060000 | 0x7E);
     ATEST(0x10000, "BRA.W *+$0080", 0060000, 0x007E);
     ATEST(0x10000, "BRA.L *+$0080", 0060000, 0x007E);
@@ -3028,6 +3035,8 @@ void test_program() {
     ATEST(0x010000, "BSR.W *",       0060400, 0xFFFE);
     ATEST(0x010000, "BSR.W *+2",     0060400, 0x0000);
     ATEST(0x010000, "BSR   *+2",     0060400  | 0x00, 0x0000);
+    AERRT(0x010000, "BSR.B *+2",     OPERAND_NOT_ALLOWED, "*+2", 0060400 | 0x00);
+    AERRT(0x010000, "BSR.S *+2",     OPERAND_NOT_ALLOWED, "*+2", 0060400 | 0x00);
     ATEST(0x010000, "BSR   *+$80",   0060400  | 0x7E);
     ATEST(0x010000, "BSR.W *+$80"  , 0060400, 0x007E);
     ATEST(0x010000, "BSR   *+$82",   0060400, 0x0080);
