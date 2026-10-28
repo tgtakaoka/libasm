@@ -62,6 +62,14 @@ int AsmCommander::assemble() {
     }
     _driver.clearSymbols();
 
+    // The loop below repeats until the image and the symbols stop changing.
+    // An instruction whose length depends on its own target has no such fixed
+    // point, so give up rather than spin forever.  The whole reference suite
+    // settles within five passes.
+    constexpr auto MAX_PASSES = 20;
+    auto passes = 0;
+    auto converged = false;
+
     BinMemory memory, prev;
     SymbolStoreImpl symbols;
     StoredPrinter listout, errorout;
@@ -89,7 +97,13 @@ int AsmCommander::assemble() {
         }
         _driver.assemble(sources, memory, listout, errorout, reportError);
         reportError = true;
-    } while (errorout.size() == 0 && (memory != prev || symbols != _driver.symbols()));
+        converged = (memory == prev && symbols == _driver.symbols());
+    } while (errorout.size() == 0 && !converged && ++passes < MAX_PASSES);
+
+    if (!converged && errorout.size() == 0) {
+        fprintf(stderr, "%s: assembly didn't converge after %d passes\n", _input_name, passes);
+        return 1;
+    }
 
     int errors = 0;
     for (size_t lineno = 1; lineno <= errorout.size(); lineno++) {
