@@ -357,6 +357,76 @@ void test_optimal_class() {
     TEST("ADD:Q.W #16, R0", 0x11, 0x10, 0x40);
 }
 
+// An immediate is a datum of the operation size: the Si field sign-extends
+// independently of it (16.1.5, Table 16-4) and the operation uses its low bits,
+// so a .B #$94 is -$6C and fits :Q (16.3.48) or an 8-bit field.
+void test_immediate_size() {
+    TEST("MOV.B #$94, R0",          0x1C, 0x94, 0x40);              // -> MOV:Q.B
+    TEST("MOV.B #-108, R0",         0x1C, 0x94, 0x40);
+    TEST("MOV.B #$7F, R0",          0x1C, 0x7F, 0x40);
+    TEST("MOV.B #$FF, R0",          0x3C, 0x0F);                    // -> MOV:RQ.B #-1
+    TEST("MOV.B #-1, R0",           0x3C, 0x0F);
+    TEST("MOV.B #$94, @R1",         0x1C, 0x94, 0x01);
+    TEST("MOV:Q.B #$94, R0",        0x1C, 0x94, 0x40);
+    TEST("MOV:RQ.B #$FF, R0",       0x3C, 0x0F);
+    TEST("MOV:G.B #$94, R0",        0x0C, 0xF1, 0x94);
+    TEST("ADD.B #$94, R0",          0x10, 0x94, 0x40);              // -> ADD:Q.B
+    TEST("SUB.B #$94, R0",          0x04, 0xF1, 0x94);              // no SUB:Q
+    TEST("CMP.B #$94, R0",          0x18, 0x94, 0x40);              // -> CMP:Q.B
+    TEST("AND.B #$94, R0",          0x80, 0xF1, 0x94);
+    TEST("OR.B #$94, R0",           0x88, 0xF1, 0x94);
+    TEST("XOR.B #$94, R0",          0x84, 0xF1, 0x94);
+    TEST("MOV.W #$8094, R0",        0x0D, 0xF2, 0x80, 0x94);
+    TEST("MOV.W #$FFFF, R0",        0x3D, 0x0F);                    // -> MOV:RQ.W #-1
+    TEST("MOV.W #$94, R0",          0x0D, 0xF2, 0x00, 0x94);
+    TEST("MOV #$FF, R0",            0x0D, 0xF2, 0x00, 0xFF);        // .W: 255
+    TEST("MOV #$8094, R0",          0x0D, 0xF2, 0x80, 0x94);
+    TEST("ADD.W #$8094, R0",        0x01, 0xF2, 0x80, 0x94);
+    TEST("CMP.W #$8094, R0",        0x09, 0xF2, 0x80, 0x94);
+    TEST("AND.W #$8094, R0",        0x81, 0xF2, 0x80, 0x94);
+    TEST("MOV.L #$94, R0",          0x0E, 0xF2, 0x00, 0x94);
+    TEST("MOV.L #-1, R0",           0x3E, 0x0F);
+    TEST("MOV.L #$FFFFFFFF, R0",    0x3E, 0x0F);
+    // Fixed-size and .B/.W-only operations size their immediate the same way.
+    TEST("DADD #$94, R0",           0xA3, 0xF1, 0x94);
+    TEST("MULXU.B #$94, R0",        0xEE, 0x40, 0xF1, 0x94);
+    TEST("MULXU.W #$8094, R0",      0xEE, 0x50, 0xF2, 0x80, 0x94);
+    TEST("MOVTP.W #$8094, @R1",     0xE0, 0x72, 0x80, 0x94, 0x01);
+    // ANDC/ORC/XORC/LDC take the operation size from the control register,
+    // coded in bits 6-5 of the CR code (Table 16-9).
+    TEST("LDC #$94, VBNR",          0xFB, 0x01, 0x71, 0x94);
+    TEST("LDC #$7F, VBNR",          0xFB, 0x01, 0x71, 0x7F);
+    TEST("ANDC #$94, GBNR",         0xF8, 0x81, 0x71, 0x94);
+    TEST("LDC #$94, CCR",           0xFB, 0x20, 0x72, 0x00, 0x94);
+    TEST("LDC #$7F, CCR",           0xFB, 0x20, 0x71, 0x7F);
+    TEST("ANDC #$8094, SR",         0xF8, 0xA0, 0x72, 0x80, 0x94);
+    TEST("LDC #$94, CBNR",          0xFB, 0x40, 0x72, 0x00, 0x94);
+    TEST("LDC #$8094, CBNR",        0xFB, 0x40, 0x73, 0x00, 0x00, 0x80, 0x94);
+    // An explicit :N no wider than the operation holds the datum.
+    TEST("MOV.B #$94:8, R0",        0x1C, 0x94, 0x40);
+    TEST("MOV.B #$FF:8, R0",        0x3C, 0x0F);
+    TEST("AND.B #$FF:8, R0",        0x80, 0xF1, 0xFF);
+    TEST("MOV.W #$8094:16, R0",     0x0D, 0xF2, 0x80, 0x94);
+    TEST("MOV.W #$FFFF:16, R0",     0x3D, 0x0F);
+    TEST("MOV.L #$94:16, R0",       0x0E, 0xF2, 0x00, 0x94);
+    ERRT("MOV.L #$FF:8, R0",        OVERFLOW_RANGE, "#$FF:8, R0",   0x0E, 0xF1, 0xFF);
+    ERRT("AND.L #$FF:8, R0",        OVERFLOW_RANGE, "#$FF:8, R0",   0x82, 0xF1, 0xFF);
+    ERRT("MOV.W #$8094:8, R0",      OVERFLOW_RANGE, "#$8094:8, R0", 0x0D, 0xF1, 0x94);
+    // A wider explicit field is taken as written; the operation uses its low
+    // bits.
+    TEST("MOV.B #$94:16, R0",       0x0C, 0xF2, 0x00, 0x94);
+    TEST("MOV:G.B #$012C:16, R0",   0x0C, 0xF2, 0x01, 0x2C);
+    TEST("MOV.B #-1:16, R0",        0x3C, 0x0F);
+    // A value that is not a datum of the operation size overflows.
+    ERRT("MOV.B #300, R0",          OVERFLOW_RANGE, "#300, R0",        0x0C, 0xF1, 0x2C);
+    ERRT("MOV.B #-129, R0",         OVERFLOW_RANGE, "#-129, R0",       0x0C, 0xF1, 0x7F);
+    ERRT("MOV.B #$FFFFFF94, R0",    OVERFLOW_RANGE, "#$FFFFFF94, R0",  0x0C, 0xF1, 0x94);
+    ERRT("MOV.W #$10000, R0",       OVERFLOW_RANGE, "#$10000, R0",     0x0D, 0xF1, 0x00);
+    ERRT("MOV.W #-$8001, R0",       OVERFLOW_RANGE, "#-$8001, R0",     0x0D, 0xF2, 0x7F, 0xFF);
+    ERRT("LDC #$100, VBNR",         OVERFLOW_RANGE, "#$100, VBNR",     0xFB, 0x01, 0x71, 0x00);
+    ERRT("MOV:Q.B #300, R0",        OPERAND_NOT_ALLOWED, "");
+}
+
 // smart-branch option: a size-less branch auto-sizes its displacement by
 // distance when on, and defaults to .W when off.
 void test_smart_branch() {
@@ -573,6 +643,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_string);
     RUN_TEST(test_bitfield);
     RUN_TEST(test_optimal_class);
+    RUN_TEST(test_immediate_size);
     RUN_TEST(test_smart_branch);
     RUN_TEST(test_data_constant);
     RUN_TEST(test_errors);

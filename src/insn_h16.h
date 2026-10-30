@@ -71,6 +71,34 @@ struct Operand final : ErrorAt {
           ds2Size(0) {}
 };
 
+// Operation size in bits of an immediate source: the control register's size
+// for ANDC/ORC/XORC/LDC, the table size of an ISZ_FIXED op, long for an op
+// without a size, else the size suffix (.W when omitted).
+inline uint8_t operandBits(Entry::Flags flags, OprSize suffix, reg::CrName cr) {
+    if (cr != reg::CR_UNDEF)
+        return reg::crBits(cr);
+    auto size = suffix == SZ_NONE ? SZ_WORD : suffix;
+    if (flags.insnSize() == ISZ_FIXED)
+        size = flags.oprSize();
+    else if (flags.insnSize() == ISZ_NONE)
+        size = SZ_LONG;
+    return size == SZ_BYTE ? 8 : size == SZ_WORD ? 16 : 32;
+}
+
+// True if |val| is a valid |bits|-bit datum, written signed or unsigned.
+inline bool isDatum(const Value &val, uint8_t bits) {
+    if (bits == 8)
+        return !val.overflowUint8();
+    if (bits == 16)
+        return !val.overflowUint16();
+    return !val.overflowUint32();
+}
+
+// The |bits|-bit operand |val| denotes, read as signed.
+inline int32_t datum(const Value &val, uint8_t bits) {
+    return ConfigBase::signExtend(val.getUnsigned(), bits);
+}
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
@@ -100,6 +128,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
             mask |= uint16_t(1u << regList[i]);
         return mask;
     }
+
+    // Operation size in bits of this instruction's immediate source.
+    uint8_t immBits() const { return operandBits(flags(), sizeSuffix, op2.creg); }
 
     using AsmInsnImpl::emitByte;
 
