@@ -838,7 +838,8 @@ Error DisI8086::decodeFollower(Insn &_insn, StrBuffer &out) const {
 }
 
 // WAIT merges with a following control instruction that has a waiting form,
-// otherwise it stands alone and the following instruction continues it.
+// otherwise it stands alone and the following instruction continues it. The
+// merge is tried only at the start of a decode, so WAIT WAIT FNINIT stays as is.
 Error DisI8086::decodeWait(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     char buffer[80];
     StrBuffer discard{buffer, sizeof(buffer)};

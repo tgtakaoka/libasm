@@ -5066,6 +5066,8 @@ void test_float() {
     PTEST("FLD",   "DWORD [BX]",     FWAIT, 0xD9, 0007);
     PTEST("FLDCW", "[1234H]",        FWAIT, 0xD9, 0056, 0x34, 0x12);
     PTEST("FILD",  "WORD [SI]",      FWAIT, 0xDF, 0004);
+    PTEST("FILD",  "WORD [1234H]",   FWAIT, 0xDF, 0006, 0x34, 0x12);
+    PTEST("PUSHF", "",               FWAIT, 0x9C);
     PTEST("FADD",  "ST, ST(1)",      FWAIT, 0xD8, 0xC1);
     PTEST("MOV",   "AH, [1234H]",    FWAIT, 0x8A, 0x26, 0x34, 0x12);
     PTEST("MOV",   "AH, ES:[1234H]", FWAIT, 0x26, 0x8A, 0x26, 0x34, 0x12);
