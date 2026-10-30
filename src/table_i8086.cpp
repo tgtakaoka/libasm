@@ -1449,8 +1449,6 @@ constexpr Entry T8087_D9[] = {
     N1(030,  CF_00, TEXT_FSTP,    SZ_DWORD, M_DMEM, P_OMOD),
     E1(040,  CF_00, TEXT_FLDENV,  SZ_NONE,  M_MEM,  P_OMOD),
     E1(050,  CF_00, TEXT_FLDCW,   SZ_WORD,  M_WMEM, P_OMOD),
-    E1(060,  CF_00, TEXT_FNSTENV, SZ_NONE,  M_MEM,  P_OMOD),
-    E1(070,  CF_00, TEXT_FNSTCW,  SZ_WORD,  M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_D9[] = {
@@ -1471,8 +1469,6 @@ constexpr uint8_t I8087_D9[] = {
      10,  // TEXT_FLDPI
      13,  // TEXT_FLDZ
       2,  // TEXT_FNOP
-     32,  // TEXT_FNSTCW
-     31,  // TEXT_FNSTENV
      17,  // TEXT_FPATAN
      21,  // TEXT_FPREM
      16,  // TEXT_FPTAN
@@ -1487,6 +1483,16 @@ constexpr uint8_t I8087_D9[] = {
      18,  // TEXT_FXTRACT
      15,  // TEXT_FYL2X
      22,  // TEXT_FYL2XP1
+};
+
+constexpr Entry T8087_D9N[] = {
+    E1(060,  CF_00, TEXT_FNSTENV, SZ_NONE,  M_MEM,  P_OMOD),
+    E1(070,  CF_00, TEXT_FNSTCW,  SZ_WORD,  M_WMEM, P_OMOD),
+};
+
+constexpr uint8_t I8087_D9N[] = {
+      1,  // TEXT_FNSTCW
+      0,  // TEXT_FNSTENV
 };
 
 constexpr Entry T8087_DA[] = {
@@ -1512,10 +1518,6 @@ constexpr uint8_t I8087_DA[] = {
 };
 
 constexpr Entry T8087_DB[] = {
-    E0(0xE0, CF_00, TEXT_FNENI,  SZ_NONE),
-    E0(0xE1, CF_00, TEXT_FNDISI, SZ_NONE),
-    E0(0xE2, CF_00, TEXT_FNCLEX, SZ_NONE),
-    E0(0xE3, CF_00, TEXT_FNINIT, SZ_NONE),
     N1(000,  CF_00, TEXT_FILD,   SZ_DWORD, M_DMEM, P_OMOD),
     N1(020,  CF_00, TEXT_FIST,   SZ_DWORD, M_DMEM, P_OMOD),
     N1(030,  CF_00, TEXT_FISTP,  SZ_DWORD, M_DMEM, P_OMOD),
@@ -1524,15 +1526,25 @@ constexpr Entry T8087_DB[] = {
 };
 
 constexpr uint8_t I8087_DB[] = {
-      4,  // TEXT_FILD
-      5,  // TEXT_FIST
-      6,  // TEXT_FISTP
-      7,  // TEXT_FLD
+      0,  // TEXT_FILD
+      1,  // TEXT_FIST
+      2,  // TEXT_FISTP
+      3,  // TEXT_FLD
+      4,  // TEXT_FSTP
+};
+
+constexpr Entry T8087_DBN[] = {
+    E0(0xE0, CF_00, TEXT_FNENI,  SZ_NONE),
+    E0(0xE1, CF_00, TEXT_FNDISI, SZ_NONE),
+    E0(0xE2, CF_00, TEXT_FNCLEX, SZ_NONE),
+    E0(0xE3, CF_00, TEXT_FNINIT, SZ_NONE),
+};
+
+constexpr uint8_t I8087_DBN[] = {
       2,  // TEXT_FNCLEX
       1,  // TEXT_FNDISI
       0,  // TEXT_FNENI
       3,  // TEXT_FNINIT
-      8,  // TEXT_FSTP
 };
 
 constexpr Entry T8087_DC[] = {
@@ -1577,20 +1589,26 @@ constexpr Entry T8087_DD[] = {
     N1(020,  CF_00, TEXT_FST,    SZ_QWORD, M_FMEM, P_OMOD),
     N1(030,  CF_00, TEXT_FSTP,   SZ_QWORD, M_FMEM, P_OMOD),
     E1(040,  CF_00, TEXT_FRSTOR, SZ_NONE,  M_MEM,  P_OMOD),
-    E1(060,  CF_00, TEXT_FNSAVE, SZ_NONE,  M_MEM,  P_OMOD),
-    E1(070,  CF_00, TEXT_FNSTSW, SZ_WORD,  M_WMEM, P_OMOD),
 };
 
 constexpr uint8_t I8087_DD[] = {
       0,  // TEXT_FFREE
       3,  // TEXT_FLD
-      7,  // TEXT_FNSAVE
-      8,  // TEXT_FNSTSW
       6,  // TEXT_FRSTOR
       1,  // TEXT_FST
       4,  // TEXT_FST
       2,  // TEXT_FSTP
       5,  // TEXT_FSTP
+};
+
+constexpr Entry T8087_DDN[] = {
+    E1(060,  CF_00, TEXT_FNSAVE, SZ_NONE,  M_MEM,  P_OMOD),
+    E1(070,  CF_00, TEXT_FNSTSW, SZ_WORD,  M_WMEM, P_OMOD),
+};
+
+constexpr uint8_t I8087_DDN[] = {
+      0,  // TEXT_FNSAVE
+      1,  // TEXT_FNSTSW
 };
 
 constexpr Entry T8087_DE[] = {
@@ -2023,10 +2041,13 @@ constexpr EntryPage I8087_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
+        {0xD9, ARRAY_RANGE(T8087_D9N), ARRAY_RANGE(I8087_D9N)},
         {0xDA, ARRAY_RANGE(T8087_DA), ARRAY_RANGE(I8087_DA)},
         {0xDB, ARRAY_RANGE(T8087_DB), ARRAY_RANGE(I8087_DB)},
+        {0xDB, ARRAY_RANGE(T8087_DBN), ARRAY_RANGE(I8087_DBN)},
         {0xDC, ARRAY_RANGE(T8087_DC), ARRAY_RANGE(I8087_DC)},
         {0xDD, ARRAY_RANGE(T8087_DD), ARRAY_RANGE(I8087_DD)},
+        {0xDD, ARRAY_RANGE(T8087_DDN), ARRAY_RANGE(I8087_DDN)},
         {0xDE, ARRAY_RANGE(T8087_DE), ARRAY_RANGE(I8087_DE)},
         {0xDF, ARRAY_RANGE(T8087_DF), ARRAY_RANGE(I8087_DF)},
         {0x00, ARRAY_RANGE(T8087_00), ARRAY_RANGE(I8087_00)},
@@ -2039,10 +2060,13 @@ constexpr EntryPage I80287_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
+        {0xD9, ARRAY_RANGE(T8087_D9N), ARRAY_RANGE(I8087_D9N)},
         {0xDA, ARRAY_RANGE(T8087_DA), ARRAY_RANGE(I8087_DA)},
         {0xDB, ARRAY_RANGE(T8087_DB), ARRAY_RANGE(I8087_DB)},
+        {0xDB, ARRAY_RANGE(T8087_DBN), ARRAY_RANGE(I8087_DBN)},
         {0xDC, ARRAY_RANGE(T8087_DC), ARRAY_RANGE(I8087_DC)},
         {0xDD, ARRAY_RANGE(T8087_DD), ARRAY_RANGE(I8087_DD)},
+        {0xDD, ARRAY_RANGE(T8087_DDN), ARRAY_RANGE(I8087_DDN)},
         {0xDE, ARRAY_RANGE(T8087_DE), ARRAY_RANGE(I8087_DE)},
         {0xDF, ARRAY_RANGE(T8087_DF), ARRAY_RANGE(I8087_DF)},
         {0x00, ARRAY_RANGE(T8087_00), ARRAY_RANGE(I8087_00)},
@@ -2060,10 +2084,13 @@ constexpr EntryPage I80387_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
         {0xD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
+        {0xD9, ARRAY_RANGE(T8087_D9N), ARRAY_RANGE(I8087_D9N)},
         {0xDA, ARRAY_RANGE(T8087_DA), ARRAY_RANGE(I8087_DA)},
         {0xDB, ARRAY_RANGE(T8087_DB), ARRAY_RANGE(I8087_DB)},
+        {0xDB, ARRAY_RANGE(T8087_DBN), ARRAY_RANGE(I8087_DBN)},
         {0xDC, ARRAY_RANGE(T8087_DC), ARRAY_RANGE(I8087_DC)},
         {0xDD, ARRAY_RANGE(T8087_DD), ARRAY_RANGE(I8087_DD)},
+        {0xDD, ARRAY_RANGE(T8087_DDN), ARRAY_RANGE(I8087_DDN)},
         {0xDE, ARRAY_RANGE(T8087_DE), ARRAY_RANGE(I8087_DE)},
         {0xDF, ARRAY_RANGE(T8087_DF), ARRAY_RANGE(I8087_DF)},
         {0x00, ARRAY_RANGE(T8087_00), ARRAY_RANGE(I8087_00)},
