@@ -41,11 +41,17 @@ enum FpuType : uint8_t {
 #if !defined(LIBASM_I8086_NOFPU)
     FPU_ON,
     FPU_I8087,
+    FPU_I8087_AUTO,  // i8087 with a WAIT before every instruction but FN forms
     FPU_I80287,
     FPU_I80387,
     FPU_I80487,
     FPU_I80C187,
 #endif
+};
+
+enum FwaitMode : uint8_t {
+    FWAIT_NONE,
+    FWAIT_AUTO,
 };
 
 struct CpuSpec final {
@@ -58,15 +64,18 @@ struct CpuSpec final {
     bool hasTstReg(uint8_t num) const { return num >= (cpu == I80486 ? 3 : 6); }
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 7> {
+struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 8> {
     Config(const InsnTable<CpuType> &table)
-        : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_NONE), _model32(false) {}
+        : ConfigImpl(table, I8086),
+          _cpuSpec(I8086, FPU_NONE),
+          _model32(false),
+          _fwait(FWAIT_NONE) {}
 
     AddressWidth addressWidth() const override {
         return _cpuSpec.has32bit() ? ADDRESS_32BIT
                                    : (_cpuSpec.cpu < I80286 ? ADDRESS_20BIT : ADDRESS_24BIT);
     }
-    uint8_t nameMax() const override { return fpuType() == FPU_NONE ? 6 : 7; }
+    uint8_t nameMax() const override;
 
     void setCpuType(CpuType cpuType) override;
 
@@ -74,6 +83,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
     FpuType fpuType() const { return _cpuSpec.fpu; }
     Error setFpuType(FpuType fpuType);
     Error setFpuName(StrScanner &scan) override;
+    Error setFwaitName(StrScanner &scan);
 
     Error setUse16(bool use) { return setModel(!use); }
     Error setUse32(bool use) { return setModel(use); }
@@ -82,6 +92,9 @@ struct Config : ConfigImpl<CpuType, ADDRESS_32BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 protected:
     CpuSpec _cpuSpec;
     bool _model32;
+    FwaitMode _fwait;
+
+    FpuType i8087() const;
 
     Error setModel(bool model32) {
         if (_cpuSpec.has32bit()) {

@@ -5688,6 +5688,33 @@ void test_float_nowait() {
     }
 }
 
+void test_fwait_auto() {
+    if (!fpu_on() || strcmp("8087", dis8086.fpu_P()) != 0)
+        return;
+
+    constexpr auto FWAIT = 0x9B;
+    disassembler.setOption("fwait", "auto");
+    TEST("FLD",    "DWORD [BX]", FWAIT, 0xD9, 0007);
+    TEST("FNLD",   "DWORD [BX]",        0xD9, 0007);
+    TEST("FLD",    "ST(1)",      FWAIT, 0xD9, 0xC1);
+    TEST("FNLD",   "ST(1)",             0xD9, 0xC1);
+    TEST("FADD",   "ST, ST(1)",  FWAIT, 0xD8, 0xC1);
+    TEST("FNADD",  "ST, ST(1)",         0xD8, 0xC1);
+    TEST("FILD",   "WORD [SI]",  FWAIT, 0xDF, 0004);
+    TEST("FNILD",  "WORD [SI]",         0xDF, 0004);
+    TEST("FLDCW",  "[1234H]",    FWAIT, 0xD9, 0056, 0x34, 0x12);
+    TEST("FNLDCW", "[1234H]",           0xD9, 0056, 0x34, 0x12);
+    TEST("FNOP",   "",           FWAIT, 0xD9, 0xD0);
+    TEST("FNNOP",  "",                  0xD9, 0xD0);
+    TEST("FINIT",  "",           FWAIT, 0xDB, 0xE3);
+    TEST("FNINIT", "",                  0xDB, 0xE3);
+    TEST("FSTCW",  "[SI]",       FWAIT, 0xD9, 0074);
+    TEST("FNSTCW", "[SI]",              0xD9, 0074);
+    TEST("WAIT",   "",           FWAIT);
+    PTEST("MOV",   "AH, [1234H]", FWAIT, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("WAIT",  "",            FWAIT, FWAIT);
+}
+
 #endif
 
 bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
@@ -6177,6 +6204,7 @@ void run_tests(const char *cpu) {
 #if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
+    RUN_TEST(test_fwait_auto);
     RUN_TEST(test_illegal_8087);
 #endif
     if (is8086())

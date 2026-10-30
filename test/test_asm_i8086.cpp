@@ -3140,6 +3140,36 @@ void test_float_nowait() {
     }
 }
 
+void test_fwait_auto() {
+    if (!fpu_on() || strcmp("8087", asm8086.fpu_P()) != 0)
+        return;
+
+    ERRT("FNLD ST(1)", UNKNOWN_INSTRUCTION, "FNLD ST(1)");
+
+    assembler.setOption("fwait", "auto");
+    TEST("FLD DWORD PTR [BX]",  FWAIT, 0xD9, 0007);
+    TEST("FNLD DWORD PTR [BX]",        0xD9, 0007);
+    TEST("FLD ST(1)",           FWAIT, 0xD9, 0xC1);
+    TEST("FNLD ST(1)",                 0xD9, 0xC1);
+    TEST("FADD ST, ST(1)",      FWAIT, 0xD8, 0xC1);
+    TEST("FNADD ST, ST(1)",            0xD8, 0xC1);
+    TEST("FILD WORD PTR [SI]",  FWAIT, 0xDF, 0004);
+    TEST("FNILD WORD PTR [SI]",        0xDF, 0004);
+    TEST("FLDCW [1234H]",       FWAIT, 0xD9, 0056, 0x34, 0x12);
+    TEST("FNLDCW [1234H]",             0xD9, 0056, 0x34, 0x12);
+    TEST("FNOP",                FWAIT, 0xD9, 0xD0);
+    TEST("FNNOP",                      0xD9, 0xD0);
+    TEST("FINIT",               FWAIT, 0xDB, 0xE3);
+    TEST("FNINIT",                     0xDB, 0xE3);
+    TEST("FSTCW [SI]",          FWAIT, 0xD9, 0074);
+    TEST("FNSTCW [SI]",                0xD9, 0074);
+    TEST("FWAIT",               FWAIT);
+
+    assembler.setOption("fwait", "none");
+    TEST("FLD DWORD PTR [BX]",         0xD9, 0007);
+    ERRT("FNLD ST(1)", UNKNOWN_INSTRUCTION, "FNLD ST(1)");
+}
+
 #endif
 
 void test_undef() {
@@ -3903,6 +3933,7 @@ void run_tests(const char *cpu) {
 #if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
+    RUN_TEST(test_fwait_auto);
 #endif
     RUN_TEST(test_undef);
     RUN_TEST(test_comment);

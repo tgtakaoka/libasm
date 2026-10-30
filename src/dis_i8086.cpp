@@ -48,7 +48,8 @@ const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
 DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segInsn),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_fwait),
+      _opt_fwait(this, &Config::setFwaitName, OPT_TEXT_FWAIT, OPT_DESC_FWAIT, &_opt_segInsn),
       _opt_segInsn(
               this, &DisI8086::setSegmentInsn, OPT_BOOL_SEG_INSN, OPT_DESC_SEG_INSN, &_opt_repInsn),
       _opt_repInsn(
@@ -66,6 +67,7 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
 
 void DisI8086::reset() {
     Disassembler::reset();
+    _fwait = FWAIT_NONE;
     setFpuType(FPU_NONE);
 #if !defined(LIBASM_I8086_NOFPU)
     setFpuType(FPU_ON);

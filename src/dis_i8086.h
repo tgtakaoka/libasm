@@ -38,6 +38,7 @@ struct DisI8086 final : Disassembler, Config {
 
 private:
     const TextOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_fwait;
     const BoolOption<DisI8086> _opt_segInsn;
     const BoolOption<DisI8086> _opt_repInsn;
     const BoolOption<DisI8086> _opt_lockInsn;

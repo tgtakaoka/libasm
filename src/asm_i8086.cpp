@@ -90,7 +90,8 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_use16),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_fwait),
+      _opt_fwait(this, &Config::setFwaitName, OPT_TEXT_FWAIT, OPT_DESC_FWAIT, &_opt_use16),
       _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
       _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
@@ -101,6 +102,7 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
 
 void AsmI8086::reset() {
     Assembler::reset();
+    _fwait = FWAIT_NONE;
     setFpuType(FPU_NONE);
     setOptimizeSegment(true);
     setGnuAs(false);
