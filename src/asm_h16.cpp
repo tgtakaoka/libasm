@@ -270,6 +270,7 @@ void AsmInsn::parseClassAndSize(const ValueParser &parser) {
     ccSuffix = reg::CC_UNDEF;
     dirSuffix = DIR_NONE;
     StrScanner p{name()};
+    p.expect('.');  // a directive's leading dot is part of the stem
     p.trimStart([](char c) { return c != ':' && c != '.' && c != '/'; });
     auto stemEnd = const_cast<char *>(p.str());
     // "/X" suffixes: a /cc condition and/or a /F|/B string direction.  "/B" is

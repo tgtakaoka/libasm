@@ -561,6 +561,12 @@ void test_errors() {
     ERRT("MOV:RQ.W #8, R0",     OPERAND_NOT_ALLOWED, "");
     // Unknown mnemonic / non-existent register.
     ERRT("FOO     R0, R1",      UNKNOWN_INSTRUCTION, "FOO     R0, R1");
+    // An unknown dotted directive is an unknown instruction; a bad size on a
+    // dotted stem is still an illegal size.
+    ERRT(".byte 1",             UNKNOWN_INSTRUCTION, ".byte 1");
+    ERRT(".bogus 1",            UNKNOWN_INSTRUCTION, ".bogus 1");
+    ERRT(".ascii 'x'",          UNKNOWN_INSTRUCTION, ".ascii 'x'");
+    ERRT(".data.q 1",           ILLEGAL_SIZE,        "q");
     ERRT("ADD:G.W R16, R0",     OPERAND_NOT_ALLOWED, "");
     // An immediate can't be a write destination -- the disassembler rejects it
     // (destOnly), so the assembler must too (no asm/dis mismatch).
