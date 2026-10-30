@@ -27,6 +27,39 @@ using namespace libasm::test;
 DisI8086 dis8086;
 Disassembler &disassembler(dis8086);
 
+namespace {
+
+// Decode |codes| as a WAIT and the instruction it reads with it, which comes
+// as a continuation of the same Insn.
+void wait_assert(const char *file, int line, const Config::opcode_t *codes, size_t size,
+        const char *name2, const char *opr2) {
+    const auto endian = disassembler.config().endian();
+    const auto unit = disassembler.config().addressUnit();
+    const ArrayMemory memory(0, codes, size, endian, unit);
+    auto reader = memory.iterator();
+    Insn insn(memory.origin());
+    char actual_opr[64];
+    disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
+    asserter.equals(file, line, "WAIT", "OK", insn.errorText_P());
+    asserter.equals(file, line, "WAIT", "WAIT", insn);
+    asserter.equals(file, line, "WAIT", "", actual_opr);
+    asserter.isTrue(file, line, "WAIT", insn.hasContinue());
+    asserter.equals(file, line, "WAIT", size, insn.length());
+    disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
+    asserter.equals(file, line, name2, "OK", insn.errorText_P());
+    asserter.equals(file, line, name2, name2, insn);
+    asserter.equals(file, line, name2, opr2, actual_opr);
+    asserter.isFalse(file, line, name2, insn.hasContinue());
+}
+
+}  // namespace
+
+#define PTEST(name2, opr2, ...)                                                 \
+    do {                                                                        \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                         \
+        wait_assert(__FILE__, __LINE__, codes, sizeof(codes), name2, opr2);     \
+    } while (0)
+
 constexpr Config::opcode_t DATA32 = 0x66;
 constexpr Config::opcode_t DATA16 = 0x66;
 constexpr Config::opcode_t ADDR32 = 0x67;
@@ -4821,10 +4854,9 @@ void test_segment_override() {
     if (!fpu_on())
         return;
 
-    NMEM("", "", "", FWAIT, SEGES);
-    NMEM("", "", "", FWAIT, REP, SEGCS);
-    NMEM("", "", "", FWAIT, SEGSS, REP);
-    UNKN(            FWAIT, FWAIT);
+    NMEM("WAIT", "", "", FWAIT, SEGES);
+    NMEM("WAIT", "", "", FWAIT, REP, SEGCS);
+    NMEM("WAIT", "", "", FWAIT, SEGSS, REP);
     ERRT("WAIT", "", ILLEGAL_SEGMENT, "", SEGDS, FWAIT);
 
     TEST("FLDCW", "SS:[SI]",          SEGSS, 0xD9, 0054);
@@ -5023,23 +5055,22 @@ void test_float() {
         return;
 
     constexpr auto FWAIT = 0x9B;
-    UNKN(            FWAIT, 0x00);
-    UNKN(            FWAIT, 0xD7);
-    UNKN(            FWAIT, 0xD8);
-    NMEM("", "", "", FWAIT, 0xD9);
-    UNKN(            FWAIT, 0xDA);
-    NMEM("", "", "", FWAIT, 0xDB);
-    UNKN(            FWAIT, 0xDC);
-    NMEM("", "", "", FWAIT, 0xDD);
-    UNKN(            FWAIT, 0xDE);
-    if (is80287() || is80387()) {
-        NMEM("", "", "", FWAIT, 0xDF);  // 9B DF is the FSTSW AX prefix on 287+
-    } else {
-        UNKN(        FWAIT, 0xDF);  // 9B DF not a prefix on the 8087
-    }
-    UNKN(            FWAIT, 0xE0);
+    TEST("WAIT", "", FWAIT);
+    NMEM("WAIT", "", "", FWAIT, 0x00);
+    NMEM("WAIT", "", "", FWAIT, 0xD8);
+    NMEM("WAIT", "", "", FWAIT, 0xD9);
+    NMEM("WAIT", "", "", FWAIT, 0xDB);
+    NMEM("WAIT", "", "", FWAIT, 0xDF);
 
     TEST("FINIT", "", FWAIT, 0xDB, 0xE3);
+    PTEST("FLD",   "DWORD [BX]",     FWAIT, 0xD9, 0007);
+    PTEST("FLDCW", "[1234H]",        FWAIT, 0xD9, 0056, 0x34, 0x12);
+    PTEST("FILD",  "WORD [SI]",      FWAIT, 0xDF, 0004);
+    PTEST("FADD",  "ST, ST(1)",      FWAIT, 0xD8, 0xC1);
+    PTEST("MOV",   "AH, [1234H]",    FWAIT, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("MOV",   "AH, ES:[1234H]", FWAIT, 0x26, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("CLC",   "",               FWAIT, 0xF8);
+    PTEST("WAIT",  "",               FWAIT, FWAIT);
 
     TEST("FLDCW", "[SI]",          0xD9, 0054);
     TEST("FLDCW", "[1234H]",       0xD9, 0056, 0x34, 0x12);
@@ -5078,7 +5109,7 @@ void test_float() {
     TEST("FSTSW", "[BX+SI]",       FWAIT, 0xDD, 0070);
     TEST("FSTSW", "[BX+DI-52]",    FWAIT, 0xDD, 0171, 0xCC);
     TEST("FSTSW", "[BP+SI+89ABH]", FWAIT, 0xDD, 0272, 0xAB, 0x89);
-    UNKN(FWAIT, 0xDD, 0370);    // FSTSW AX
+    ERRT("WAIT", "", UNKNOWN_INSTRUCTION, "", FWAIT, 0xDD, 0370);  // FSTSW AX
     if (is80386() && is80387()) {
         EPRE("FSTSW", "[DI+52]",   FWAIT, DATA32, 0xDD, 0175, 0x34);
     }
