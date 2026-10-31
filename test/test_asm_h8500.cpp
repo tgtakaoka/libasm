@@ -249,6 +249,12 @@ void test_optimal_class() {
     TEST("MOV.W #$1234, R0",    0x58, 0x12, 0x34);      // MOV:I
     TEST("MOV.B @$A0:8, R0",    0x60, 0xA0);            // MOV:L (vs :G 05 A0 80)
     TEST("MOV.B R0, @$A0:8",    0x70, 0xA0);            // MOV:S
+    // A no-suffix address is @aa:16 while BR is undefined: MOV:L/MOV:S would
+    // need BR to supply the high byte.
+    TEST("MOV.B @$F001, R0",    0x15, 0xF0, 0x01, 0x80);
+    TEST("MOV.B R0, @$F001",    0x15, 0xF0, 0x01, 0x90);
+    TEST("MOV.W R0, @$F002",    0x1D, 0xF0, 0x02, 0x90);
+    TEST("MOV.B R0, @$1234",    0x15, 0x12, 0x34, 0x90);
     TEST("MOV.W R0, R1",        0xA8, 0x81);            // no short form -> MOV:G
     TEST("ADD.W #1, R0",        0xA8, 0x08);            // ADD:Q
     TEST("ADD.W #-2, R0",       0xA8, 0x0D);            // ADD:Q
@@ -518,6 +524,13 @@ void test_set_page_register() {
     TEST(".set BR, $12");
     TEST("MOV:G.W @$1234, R0", 0x0D, 0x34, 0x80);
     TEST("MOV:G.W @$5634, R0", 0x1D, 0x56, 0x34, 0x80);
+    // A bare MOV takes MOV:L/MOV:S only for an address in BR's page.
+    TEST("MOV.B @$1234, R0",   0x60, 0x34);
+    TEST("MOV.W R0, @$1234",   0x78, 0x34);
+    TEST("MOV.B @$5634, R0",   0x15, 0x56, 0x34, 0x80);
+    TEST("MOV.W R0, @$5634",   0x1D, 0x56, 0x34, 0x90);
+    // An explicit :L/:S keeps the short form and validates the page.
+    ERRT("MOV:S.W R0, @$5634", OVERFLOW_RANGE, "@$5634", 0x78, 0x34);
 
     // Unknown page register / value out of 0..255 are reported.
     ERRT(".set FOO, 1",   UNKNOWN_REGISTER, "FOO, 1");
