@@ -299,6 +299,11 @@ void test_gen_mov() {
     // MOV:G #xx,<EAd>: immediate to memory; data trails OP 0x06 (byte)/0x07 (word).
     TEST("MOV:G.B", "#H'55, @R0",   0xD0, 0x06, 0x55);
     TEST("MOV:G.W", "#H'1234, @R1", 0xD9, 0x07, 0x12, 0x34);
+    // 8-bit data with a word EA is sign-extended (manual 2.2.24 MOV:G note 3);
+    // :8 keeps it apart from the #xx:16 form.
+    TEST("MOV:G.W", "#H'FF80:8, @R1", 0xD9, 0x06, 0x80);
+    TEST("MOV:G.W", "#H'007F:8, @R1", 0xD9, 0x06, 0x7F);
+    TEST("MOV:G.W", "#5:8, @R1",      0xD9, 0x06, 0x05);
 }
 
 void test_gen_alu() {
@@ -439,10 +444,10 @@ void test_illegal_h8500() {
     // 8-bit-data OP with a word EA is the legal sign-extended form, not illegal.
     UNKN(0x05, 0x06, 0x07);
 
-    // CMP:G #imm: same Sz rule. OP 0x05 (word data) with a byte EA (D0=@R0) is
-    // impossible; OP 0x04 (byte data) with a word EA is the sign-extended form.
+    // CMP:G #imm has no sign-extended form: OP 0x05 (word data) needs a word EA
+    // and OP 0x04 (byte data) a byte EA.
     UNKN(0xD0, 0x05);
-    TEST("CMP:G.W", "#18, @R0", 0xD8, 0x04, 0x12);
+    UNKN(0xD8, 0x04);
 
     // BSET/BCLR #xx on a byte-size target (EA Sz=0): bit number must be 0-7.
     // D0=@R0 byte, C8=BSET #8 -> illegal; D8=@R0 word, C8=BSET #8 -> OK.
