@@ -90,7 +90,8 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_use16),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_fwait),
+      _opt_fwait(this, &Config::setFwaitName, OPT_TEXT_FWAIT, OPT_DESC_FWAIT, &_opt_use16),
       _opt_use16(this, &Config::setUse16, OPT_BOOL_USE16, OPT_DESC_USE16, &_opt_use32),
       _opt_use32(this, &Config::setUse32, OPT_BOOL_USE32, OPT_DESC_USE32, &_opt_optimizeSegment),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
@@ -101,6 +102,7 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
 
 void AsmI8086::reset() {
     Assembler::reset();
+    _fwait = FWAIT_NONE;
     setFpuType(FPU_NONE);
     setOptimizeSegment(true);
     setGnuAs(false);
@@ -1085,9 +1087,10 @@ void AsmInsn::embedModReg(Config::opcode_t data) {
 void AsmInsn::emitInsn() {
     uint_fast8_t pos = 0;
     auto pre = prefix();
-    if ((pre >> 8) == FWAIT) {
+    if (pre > UINT8_MAX && escapeInsn(pre)) {
+        // WAIT or NOP which leads an 8087 escape
+        emitByte(pre >> 8, pos++);
         pre &= UINT8_MAX;
-        emitByte(FWAIT, pos++);
     }
     // Prefix emission order matches GAS and nasm: segment override -> addr32
     // (67) -> data32 (66) -> lock (F0) / rep (F2/F3) -> opcode prefix ->
