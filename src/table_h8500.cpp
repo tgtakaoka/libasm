@@ -504,16 +504,6 @@ constexpr EntryPage H8520_PAGES[] = {
         SEC_PAGE,
         MAXMODE_PAGES,
 };
-
-constexpr EntryPage H8530_PAGES[] = {
-        SPC_PAGE,
-        XCH_PAGE,
-        GEN_PAGES,
-        EXT_PAGES(TABLE_EXT, INDEX_EXT),
-        EXT_PAGES(TABLE_ECLK, INDEX_ECLK),
-        SEC_PAGE,
-        MAXMODE_PAGES,
-};
 #undef SPC_PAGE
 #undef SEC_PAGE
 #undef XCH_PAGE
@@ -528,7 +518,7 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 constexpr Cpu CPU_TABLE[] = {
         {H8_500, TEXT_CPU_H8500, ARRAY_RANGE(H8500_PAGES)},
         {H8_520, TEXT_CPU_H8520, ARRAY_RANGE(H8520_PAGES)},
-        {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8530_PAGES)},
+        {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8500_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {
