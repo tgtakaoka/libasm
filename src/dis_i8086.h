@@ -69,7 +69,10 @@ private:
     void decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
     void decodeStringInsn(DisInsn &insn, StrBuffer &out) const;
-    Error searchCodes(DisInsn &insn, StrBuffer &out) const;
+    Error searchCodes(DisInsn &insn, StrBuffer &out, bool waiting) const;
+    Error decodeInsn(DisInsn &insn, Insn &_insn, StrBuffer &out, bool waiting = false) const;
+    Error decodeWait(DisMemory &memory, Insn &_insn, StrBuffer &out) const;
+    Error decodeFollower(Insn &_insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
