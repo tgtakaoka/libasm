@@ -177,7 +177,7 @@ gas-%_h8s2600.s28: %_h8s2600.gas
 	| tr -d '\015' > $(^:.gas=.s28)
 	h8300-elf-objdump -m h8300s -D $(^:.gas=.s28) > $(^:.gas=.dis)
 
-# H8/500 family targets (h8500, h8520, h8530)
+# H8/500 family targets (h8510, h8520, h8530)
 # The .gas wrapper uses a .include directive so h8500-hms-as inlines the
 # .ginc directly (no cpp pass).
 # $(1) target suffix, $(2) S-record extension, $(3) link text origin.
@@ -191,8 +191,8 @@ gas-%_$(1).$(2): %_$(1).gas
 	  | tr -d '\015' > $$(^:.gas=.$(2))
 	h8500-hms-objdump -m h8500 -D $$(^:.gas=.$(2)) > $$(^:.gas=.dis)
 endef
-$(eval $(call gas-h8500-rule,h8500,s28,0x010000))
-$(eval $(call gas-h8500-rule,h8500n,s19,0x0100))
+$(eval $(call gas-h8500-rule,h8510,s28,0x010000))
+$(eval $(call gas-h8500-rule,h8510n,s19,0x0100))
 $(eval $(call gas-h8500-rule,h8520,s28,0x010000))
 $(eval $(call gas-h8500-rule,h8520n,s19,0x0100))
 $(eval $(call gas-h8500-rule,h8530,s28,0x010000))

@@ -1485,11 +1485,11 @@ Distinguish real bugs from ASL limitations by the message:
 ### H8/500
 
 - Mode is set by the `maximum-mode` option (asm + dis; the gen tool gets
-  it via `OPT_h8500 = -O maximum-mode=on`) OR the assembler-only
+  it via `GENOPT_<target> = -O maximum-mode=on`) OR the assembler-only
   `.maxmode on` pseudo. The bare `maxmode` was dropped: libasm `.asm`
   wrappers use `.maxmode`, ASL `.asl` wrappers use bare `maxmode`.
 - Minimum mode is a flat 16-bit PHYSICAL space (no page registers);
-  maximum mode reaches the wider physical width (24-bit H8/500, 20-bit
+  maximum mode reaches the wider physical width (24-bit H8/510, 20-bit
   H8/520 and H8/530) via page registers. An org past 0xFFFF only makes sense in
   maximum mode.
 - Page jumps (PJMP/PJSR/PRTS/PRTD) are `maxModeOnly` pages, gated by BOTH

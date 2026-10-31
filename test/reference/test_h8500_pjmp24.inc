@@ -12,10 +12,10 @@
 ;### See the License for the specific language governing permissions and
 ;### limitations under the License.
 
-;### Page jumps to a 24-bit (>1MB) address. Valid only on H8/500, whose
+;### Page jumps to a 24-bit (>1MB) address. Valid only on H8/510, whose
 ;### maximum-mode physical space is 16MB (24-bit); the H8/520 and H8/530 are
 ;### limited to 1MB (20-bit), so these targets overflow there and this file is
-;### included only by the H8/500 wrappers.
+;### included only by the H8/510 wrappers.
 
 ;### PJMP - Page Jump to a 24-bit address
         pjmp    @0x123456               ;### 13 12 34 56

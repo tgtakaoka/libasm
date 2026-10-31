@@ -12,16 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/500 in maximum mode - full instruction set (E-clock + page jumps).
-;;; HD6475328 (H8/532) is the only H8/500-family code ASL knows; both H8/500
-;;; and H8/520 share the same CPU core, differing only in the E-clock pin
-;;; (H8/520 lacks MOVTPE/MOVFPE).
-
         cpu     HD6475328
-        maxmode on
-        org     H'010000
-        include "test_h8500.inc"
-        include "test_h8500_eclk.inc"
-        include "test_h8500_pjmp.inc"
-        include "test_h8500_pjmp24.inc"
+        org     H'0100
+        include "gen_h8510n.inc"
         end
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:

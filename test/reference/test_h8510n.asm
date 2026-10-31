@@ -12,12 +12,9 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/500 in maximum mode - full instruction set (E-clock + page jumps).
+;;; H8/510 in minimum mode - base + E-clock instructions (no page jumps).
 
-        .cpu     H8/500
-        .maxmode on
-        .org     H'010000
+        .cpu     H8/510
+        .org     H'0100
         .include "test_h8500.inc"
         .include "test_h8500_eclk.inc"
-        .include "test_h8500_pjmp.inc"
-        .include "test_h8500_pjmp24.inc"

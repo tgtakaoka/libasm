@@ -12,9 +12,12 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/500 in minimum mode - base + E-clock instructions (no page jumps).
-
-        .cpu     H8/500
+        .cpu     H8/510
         .org     H'0100
-        .include "test_h8500.inc"
-        .include "test_h8500_eclk.inc"
+        .include "gen_h8510n.inc"
+        .end
+
+;;; Local Variables:
+;;; mode: asm
+;;; End:
+;;; vim: set ft=asm:
