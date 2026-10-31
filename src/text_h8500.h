@@ -26,6 +26,7 @@ namespace h8500 {
 
 extern const char TEXT_H8500_LIST[] PROGMEM;
 extern const char TEXT_CPU_H8500[]  PROGMEM;
+extern const char TEXT_CPU_H8510[]  PROGMEM;
 extern const char TEXT_CPU_H8520[]  PROGMEM;
 extern const char TEXT_CPU_H8530[]  PROGMEM;
 

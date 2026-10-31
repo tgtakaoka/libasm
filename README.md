@@ -86,7 +86,7 @@ It can generate Intel HEX or Motorola S-Record output.
          AM29050 AM29200 AM29240 AM29245 80960 i8086 i80186 i80286 i80386
          i80486 V30 V33 V35 i8096 i80196KB i80196 i80196N i80296 MC68000
          MC68010 MC68020 MC68030 MC68040 H16 H8/300 H8/300H H8S/2000 H8S/2600
-         H8/500 H8/520 H8/530 80C166 80C167 XC16X SH-1 SH-2 SH-DSP SH-2E SH-2A
+         H8/510 H8/520 H8/530 80C166 80C167 XC16X SH-1 SH-2 SH-DSP SH-2E SH-2A
          TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
          MN1613 MN1613A J11 T11
       -o <output>       : output file
@@ -112,7 +112,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --intmult         : enable integer multiply instructions (bool: AM29200)
       --ip-operand      : IP-relative operand: offset (default) or target (text: 80960)
       --lwordmode       : Long word mode (bool: Z380)
-      --maximum-mode    : enable maximum mode (bool: TLCS900, H8/500)
+      --maximum-mode    : enable maximum mode (bool: TLCS900, H8/510)
       --mmc             : enable logical page:address with memory map controller (bool: 68HC12)
       --mode-bits       : value of the mode bit of an unused operand field (int: 80960)
       --optimize-index  : optimize zero index (bool: Z8)
@@ -147,7 +147,7 @@ It can read Intel HEX or Motorola S-Record input.
          AM29050 AM29200 AM29240 AM29245 80960 i8086 i80186 i80286 i80386
          i80486 V30 V33 V35 i8096 i80196KB i80196 i80196N i80296 MC68000
          MC68010 MC68020 MC68030 MC68040 H16 H8/300 H8/300H H8S/2000 H8S/2600
-         H8/500 H8/520 H8/530 80C166 80C167 XC16X SH-1 SH-2 SH-DSP SH-2E SH-2A
+         H8/510 H8/520 H8/530 80C166 80C167 XC16X SH-1 SH-2 SH-DSP SH-2E SH-2A
          TMS9900 TMS9980 TMS9995 TMS99105 TMS99110 Z8001 Z8002 NS32032 MN1610
          MN1613 MN1613A J11 T11
       -o <output>      : output file
@@ -175,7 +175,7 @@ It can read Intel HEX or Motorola S-Record input.
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
       --extmode        : Extended mode (bool: Z380)
       --far-insn       : use callf/jmpf for far call/jump (bool: 8086)
-      --fp-alias       : emit FP alias for R6 (bool: H8/500)
+      --fp-alias       : emit FP alias for R6 (bool: H8/510)
       --fpu            : enable 80960KB floating point and decimal instructions (bool: 80960)
       --fpu            : enable floating point instructions (bool: AM29200)
       --fpu            : floating point co-processor (text: 8086, 68000, SH-1, 32032)
@@ -187,7 +187,7 @@ It can read Intel HEX or Motorola S-Record input.
       --longa          : enable 16-bit accumulator (bool: 6502)
       --longi          : enable 16-bit index registers (bool: 6502)
       --lwordmode      : Long word mode (bool: Z380)
-      --maximum-mode   : enable maximum mode (bool: TLCS900, H8/500)
+      --maximum-mode   : enable maximum mode (bool: TLCS900, H8/510)
       --mmc            : enable logical page:address with memory map controller (bool: 68HC12)
       --mode-bits      : value of the mode bit of an unused operand field (int: 80960)
       --pc-alias       : decode R7 as PC (bool: CP1600)
@@ -202,7 +202,7 @@ It can read Intel HEX or Motorola S-Record input.
       --silicon        : silicon revision (default C30 1, C31 5, C32 2) (int: 320C30)
       --sp-alias       : decode R6 as SP (bool: CP1600)
       --sp-alias       : emit SP alias for ER7/R7 in indirect addressing (bool: H8/300)
-      --sp-alias       : emit SP alias for R7 in indirect addressing (bool: H8/500)
+      --sp-alias       : emit SP alias for R7 in indirect addressing (bool: H8/510)
       --sp-alias       : use SP for R15 or RR14 (bool: Z8001)
       --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
       --use-aux-name   : use aux register name ARn (bool: 32010)

@@ -42,8 +42,14 @@ void tear_down() {
 
 // clang-format off
 void test_cpu() {
+    EQUALS("cpu H8/510", true,    disassembler.setCpu("H8/510"));
+    EQUALS_P("cpu H8/510", "H8/510", disassembler.config().cpu_P());
+    EQUALS("cpu H8/510", ADDRESS_24BIT, dish8500.physicalWidth());
+
+    // Former name of H8/510.
     EQUALS("cpu H8/500", true,    disassembler.setCpu("H8/500"));
-    EQUALS_P("cpu H8/500", "H8/500", disassembler.config().cpu_P());
+    EQUALS_P("cpu H8/500", "H8/510", disassembler.config().cpu_P());
+    EQUALS("cpu H8/500", ADDRESS_24BIT, dish8500.physicalWidth());
 
     EQUALS("cpu H8/520", true,    disassembler.setCpu("H8/520"));
     EQUALS_P("cpu H8/520", "H8/520", disassembler.config().cpu_P());
@@ -242,8 +248,8 @@ void test_page_jumps() {
     TEST("PRTD", "#8",       0x11, 0x14, 0x08);
     TEST("PRTD", "#8:16",    0x11, 0x1C, 0x00, 0x08);
     TEST("PRTD", "#H'0200",  0x11, 0x1C, 0x02, 0x00);
-    // @aa:24 beyond the chip's physical space: 24-bit (16M) on the H8/500,
-    // 20-bit (1M) on the pin-limited H8/520/H8/530. 0x100000 fits only H8/500.
+    // @aa:24 beyond the chip's physical space: 24-bit (16M) on the H8/510,
+    // 20-bit (1M) on the pin-limited H8/520/H8/530. 0x100000 fits only H8/510.
     if (isH8520() || isH8530()) {
         ERRT("PJMP", "@H'100000:24", OVERFLOW_RANGE, "@H'100000:24", 0x13, 0x10, 0x00, 0x00);
     } else {
@@ -474,7 +480,7 @@ void test_ext_format() {
     // DADD/DSUB Rs,Rd: valid on all CPUs, register operands only.
     TEST("DADD", "R0, R1",  0xA0, 0x00, 0xA1);
     TEST("DSUB", "R0, R1",  0xA0, 0x00, 0xB1);
-    // MOVFPE/MOVTPE: H8/500 only (H8/520 has no E-clock pin)
+    // MOVFPE/MOVTPE: H8/510 and H8/530 only (H8/520 has no E-clock pin)
     if (isH8520()) {
         ERRT("", "", UNKNOWN_INSTRUCTION, "", 0xD0, 0x00, 0x81);
     } else {

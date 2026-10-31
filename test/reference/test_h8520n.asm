@@ -12,7 +12,7 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/520 in minimum mode - same as H8/500 minus E-clock instructions.
+;;; H8/520 in minimum mode - same as H8/510 minus E-clock instructions.
 
         .cpu     H8/520
         .org     H'0100
