@@ -509,20 +509,23 @@ Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
     return insn.getError();
 }
 
-// True if op's parsed immediate is defined and within [lo, hi].  An undefined
-// value (forward reference) is treated as not fitting, so optimal selection
-// falls back to the general form rather than risk a too-small encoding.
-static bool immFits(const Operand &op, int32_t lo, int32_t hi) {
-    if (op.val.isUndefined())
+// True if op's parsed immediate, read as a |bits|-bit datum (a .B #$94 is
+// -$6C), is within [lo, hi].  An explicit field wider than the operation keeps
+// the value as written.  An undefined value (forward reference) is treated as
+// not fitting, so optimal selection falls back to the general form rather than
+// risk a too-small encoding.
+static bool immFits(const Operand &op, uint8_t bits, int32_t lo, int32_t hi) {
+    const auto wide = op.immSize > bits;
+    if (op.val.isUndefined() || (!wide && !isDatum(op.val, bits)))
         return false;
-    const auto v = op.val.getSigned();
+    const auto v = wide ? op.val.getSigned() : datum(op.val, bits);
     return v >= lo && v <= hi;
 }
 
 
 // Lead-with-equality acceptMode helper; the parser sets the exact AddrMode the
 // table expects so the switch only carries fit-relaxations.
-static bool acceptMode(const Operand &op, AddrMode table) {
+static bool acceptMode(const Operand &op, AddrMode table, uint8_t bits) {
     if (op.mode == table)
         return true;
     switch (table) {
@@ -546,7 +549,7 @@ static bool acceptMode(const Operand &op, AddrMode table) {
         // ADD:Q / CMP:Q / MOV:Q: imm8 signed.  The range gate both rejects an
         // out-of-range explicit :Q and lets class-less selection skip :Q in
         // favor of :G when the value needs more than 8 bits.
-        return op.mode == M_IMM && immFits(op, -0x80, 0x7F);
+        return op.mode == M_IMM && immFits(op, bits, -0x80, 0x7F);
     case M_TRAPV:
     case M_FRMSZ:
     case M_SCNTI:
@@ -572,6 +575,7 @@ static bool acceptMode(const Operand &op, AddrMode table) {
 
 static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
     const auto flags = entry->readFlags();
+    const auto bits = operandBits(flags, insn.sizeSuffix, insn.op2.creg);
     // An explicit ":X" class must match the entry's class.  A class-less
     // mnemonic (IC_N) matches any class; the first acceptable entry in
     // optimal-preference (INDEX) order then wins -> smallest fitting form.
@@ -646,11 +650,11 @@ static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
         if (flags.mode1() == M_IRQ || flags.mode1() == M_SIRQ) {
             const auto lo = flags.mode1() == M_SIRQ ? -8 : 0;
             const auto hi = flags.mode1() == M_SIRQ ? 7 : 15;
-            return insn.op1.mode == M_IMM && immFits(insn.op1, lo, hi) &&
+            return insn.op1.mode == M_IMM && immFits(insn.op1, bits, lo, hi) &&
                    insn.op2.mode == M_DREG && isGlobalReg(insn.op2.reg);
         }
     }
-    return acceptMode(insn.op1, flags.mode1()) && acceptMode(insn.op2, flags.mode2());
+    return acceptMode(insn.op1, flags.mode1(), bits) && acceptMode(insn.op2, flags.mode2(), bits);
 }
 
 Error searchName(CpuType cpuType, AsmInsn &insn) {

@@ -169,6 +169,12 @@ uint8_t crCode(CrName cr) {
     return uint8_t(cr);
 }
 
+// CR-code bits 6-5 give the size: 00=byte, 01=word, 1x=long (Table 16-9).
+uint8_t crBits(CrName cr) {
+    const auto sz = (crCode(cr) >> 5) & 3;
+    return sz == 0 ? 8 : sz == 1 ? 16 : 32;
+}
+
 // Validate that |code| is one of the documented CR codes.  Reuses the CR
 // NameTable's searchName: CR_TABLE entries store the code as |name|, so the
 // search succeeds iff |code| is a known CR.

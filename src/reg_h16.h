@@ -113,6 +113,8 @@ void outCcName(StrBuffer &out, CcName cc);
 
 // Returns the CR-code byte for a given control register.
 uint8_t crCode(CrName cr);
+// Returns the operand size in bits (8/16/32) of a control register.
+uint8_t crBits(CrName cr);
 // Returns the control register for a given CR-code byte, or CR_UNDEF.
 CrName crFromCode(uint8_t code);
 
