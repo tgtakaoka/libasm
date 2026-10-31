@@ -239,9 +239,8 @@
       BCLR.W   #0, @0x0E:8
       BNOT.W   #0, @0x0E:8
       BTST.W   #0, @0x0E:8
-      CMP:G.W  #5, @0x0E:8
       CMP:G.W  #0x0607, @0x0E:8
-      MOV:G.W  #7, @0x0E:8
+      MOV:G.W  #7:8, @0x0E:8
       MOV:G.W  #0x0809, @0x0E:8
       ADD:Q.W  #1, @0x0E:8
       ADD:Q.W  #-1, @0x0E:8
@@ -421,22 +420,23 @@
       BCLR.W   #0, @0x1E1F:16
       BNOT.W   #0, @0x1E1F:16
       BTST.W   #0, @0x1E1F:16
-      CMP:G.W  #0x0607, @0x0304:16
-      MOV:G.W  #0x0809, @0x0506:16
-      ADD:Q.W  #1, @0x0506:16
-      ADD:Q.W  #-1, @0x0506:16
-      CLR.W    @0x0506:16
-      NEG.W    @0x0506:16
-      NOT.W    @0x0506:16
-      TST.W    @0x0506:16
-      SHAL.W   @0x0506:16
-      SHAR.W   @0x0506:16
-      SHLL.W   @0x0506:16
-      SHLR.W   @0x0506:16
-      ROTL.W   @0x0506:16
-      ROTR.W   @0x0506:16
-      ROTXL.W  @0x0506:16
-      ROTXR.W  @0x0506:16
+      CMP:G.W  #0x0607, @0x1E1F:16
+      MOV:G.W  #7:8, @0x1E1F:16
+      MOV:G.W  #0x0809, @0x1E1F:16
+      ADD:Q.W  #1, @0x1E1F:16
+      ADD:Q.W  #-1, @0x1E1F:16
+      CLR.W    @0x1E1F:16
+      NEG.W    @0x1E1F:16
+      NOT.W    @0x1E1F:16
+      TST.W    @0x1E1F:16
+      SHAL.W   @0x1E1F:16
+      SHAR.W   @0x1E1F:16
+      SHLL.W   @0x1E1F:16
+      SHLR.W   @0x1E1F:16
+      ROTL.W   @0x1E1F:16
+      ROTR.W   @0x1E1F:16
+      ROTXL.W  @0x1E1F:16
+      ROTXR.W  @0x1E1F:16
       BSR      *+0x1F23
       LINK     FP, #0x2021
       LINK     FP, #1:16
@@ -955,9 +955,8 @@
       BCLR.W   #0, @-R0
       BNOT.W   #0, @-R0
       BTST.W   #0, @-R0
-      CMP:G.W  #5, @-R0
       CMP:G.W  #0x0607, @-R0
-      MOV:G.W  #7, @-R0
+      MOV:G.W  #7:8, @-R0
       MOV:G.W  #0x0809, @-R0
       ADD:Q.W  #1, @-R0
       ADD:Q.W  #-1, @-R0
@@ -1013,9 +1012,8 @@
       BCLR.W   #0, @-FP
       BNOT.W   #0, @-FP
       BTST.W   #0, @-FP
-      CMP:G.W  #5, @-FP
       CMP:G.W  #0x0607, @-FP
-      MOV:G.W  #7, @-FP
+      MOV:G.W  #7:8, @-FP
       MOV:G.W  #0x0809, @-FP
       ADD:Q.W  #1, @-FP
       ADD:Q.W  #-1, @-FP
@@ -1073,9 +1071,8 @@
       BCLR.W   #0, @-SP
       BNOT.W   #0, @-SP
       BTST.W   #0, @-SP
-      CMP:G.W  #5, @-SP
       CMP:G.W  #0x0607, @-SP
-      MOV:G.W  #7, @-SP
+      MOV:G.W  #7:8, @-SP
       MOV:G.W  #0x0809, @-SP
       ADD:Q.W  #1, @-SP
       ADD:Q.W  #-1, @-SP
@@ -1334,9 +1331,8 @@
       BCLR.W   #0, @R0+
       BNOT.W   #0, @R0+
       BTST.W   #0, @R0+
-      CMP:G.W  #5, @R0+
       CMP:G.W  #0x0607, @R0+
-      MOV:G.W  #7, @R0+
+      MOV:G.W  #7:8, @R0+
       MOV:G.W  #0x0809, @R0+
       ADD:Q.W  #1, @R0+
       ADD:Q.W  #-1, @R0+
@@ -1394,9 +1390,8 @@
       BCLR.W   #0, @FP+
       BNOT.W   #0, @FP+
       BTST.W   #0, @FP+
-      CMP:G.W  #5, @FP+
       CMP:G.W  #0x0607, @FP+
-      MOV:G.W  #7, @FP+
+      MOV:G.W  #7:8, @FP+
       MOV:G.W  #0x0809, @FP+
       ADD:Q.W  #1, @FP+
       ADD:Q.W  #-1, @FP+
@@ -1453,9 +1448,8 @@
       BCLR.W   #0, @SP+
       BNOT.W   #0, @SP+
       BTST.W   #0, @SP+
-      CMP:G.W  #5, @SP+
       CMP:G.W  #0x0607, @SP+
-      MOV:G.W  #7, @SP+
+      MOV:G.W  #7:8, @SP+
       MOV:G.W  #0x0809, @SP+
       ADD:Q.W  #1, @SP+
       ADD:Q.W  #-1, @SP+
@@ -1714,9 +1708,8 @@
       BCLR.W   #9, @R0
       BNOT.W   #0, @R0
       BTST.W   #0, @R0
-      CMP:G.W  #5, @R0
       CMP:G.W  #0x0607, @R0
-      MOV:G.W  #7, @R0
+      MOV:G.W  #7:8, @R0
       MOV:G.W  #0x0809, @R0
       ADD:Q.W  #1, @R0
       ADD:Q.W  #-1, @R0
@@ -1774,9 +1767,8 @@
       BCLR.W   #15, @FP
       BNOT.W   #0, @FP
       BTST.W   #0, @FP
-      CMP:G.W  #5, @FP
       CMP:G.W  #0x0607, @FP
-      MOV:G.W  #7, @FP
+      MOV:G.W  #7:8, @FP
       MOV:G.W  #0x0809, @FP
       ADD:Q.W  #1, @FP
       ADD:Q.W  #-1, @FP
@@ -1833,9 +1825,8 @@
       BSET.W   #0, @FP
       BNOT.W   #0, @SP
       BTST.W   #0, @SP
-      CMP:G.W  #5, @SP
       CMP:G.W  #0x0607, @SP
-      MOV:G.W  #7, @SP
+      MOV:G.W  #7:8, @SP
       MOV:G.W  #0x0809, @SP
       ADD:Q.W  #1, @SP
       ADD:Q.W  #-1, @SP
@@ -2094,9 +2085,8 @@
       BNOT.B   #0, @(-24,SP)
       BNOT.W   #10, @(-23,R0)
       BTST.W   #0, @(-23,R0)
-      CMP:G.W  #5, @(-23,R0)
       CMP:G.W  #0x0607, @(-23,R0)
-      MOV:G.W  #7, @(-23,R0)
+      MOV:G.W  #7:8, @(-23,R0)
       MOV:G.W  #0x0809, @(-23,R0)
       ADD:Q.W  #1, @(-23,R0)
       ADD:Q.W  #-1, @(-23,R0)
@@ -2153,9 +2143,8 @@
       BSET.W   #0, @(-23,R0)
       BCLR.W   #0, @(-23,R0)
       BTST.W   #0, @(-17,FP)
-      CMP:G.W  #5, @(-17,FP)
       CMP:G.W  #0x0607, @(-17,FP)
-      MOV:G.W  #7, @(-17,FP)
+      MOV:G.W  #7:8, @(-17,FP)
       MOV:G.W  #0x0809, @(-17,FP)
       ADD:Q.W  #1, @(-17,FP)
       ADD:Q.W  #-1, @(-17,FP)
@@ -2213,9 +2202,8 @@
       BCLR.W   #0, @(-17,FP)
       BNOT.W   #0, @(-17,FP)
       BTST.W   #1, @(-16,SP)
-      CMP:G.W  #5, @(-16,SP)
       CMP:G.W  #0x0607, @(-16,SP)
-      MOV:G.W  #7, @(-16,SP)
+      MOV:G.W  #7:8, @(-16,SP)
       MOV:G.W  #0x0809, @(-16,SP)
       ADD:Q.W  #1, @(-16,SP)
       ADD:Q.W  #-1, @(-16,SP)
@@ -2474,176 +2462,179 @@
       BNOT.B   #0, @(-0x0707,SP)
       BTST.B   #0, @(-0x0707,SP)
       BTST.W   #11, @(-0x0606,R0)
-      CMP:G.W  #0x0607, @(0x0304,R0)
-      MOV:G.W  #0x0809, @(0x0506,R0)
-      ADD:Q.W  #1, @(0x0506,R0)
-      ADD:Q.W  #-1, @(0x0506,R0)
-      CLR.W    @(0x0506,R0)
-      NEG.W    @(0x0506,R0)
-      NOT.W    @(0x0506,R0)
-      TST.W    @(0x0506,R0)
-      SHAL.W   @(0x0506,R0)
-      SHAR.W   @(0x0506,R0)
-      SHLL.W   @(0x0506,R0)
-      SHLR.W   @(0x0506,R0)
-      ROTL.W   @(0x0506,R0)
-      ROTR.W   @(0x0506,R0)
-      ROTXL.W  @(0x0506,R0)
-      ROTXR.W  @(0x0506,R0)
-      ADD:G.W  @(0x0506,R0), R0
-      ADD:G.W  @(0x0506,R0), FP
-      ADDS.W   @(0x0506,R0), R0
-      ADDS.W   @(0x0506,R0), FP
-      SUB.W    @(0x0506,R0), R0
-      SUB.W    @(0x0506,R0), FP
-      SUBS.W   @(0x0506,R0), R0
-      SUBS.W   @(0x0506,R0), FP
-      OR.W     @(0x0506,R0), R0
-      OR.W     @(0x0506,R0), FP
-      BSET.W   R0, @(0x0506,R0)
-      BSET.W   FP, @(0x0506,R0)
-      AND.W    @(0x0506,R0), R0
-      AND.W    @(0x0506,R0), FP
-      BCLR.W   R0, @(0x0506,R0)
-      BCLR.W   FP, @(0x0506,R0)
-      XOR.W    @(0x0506,R0), R0
-      XOR.W    @(0x0506,R0), FP
-      BNOT.W   R0, @(0x0506,R0)
-      BNOT.W   FP, @(0x0506,R0)
-      CMP:G.W  @(0x0506,R0), R0
-      CMP:G.W  @(0x0506,R0), FP
-      BTST.W   R0, @(0x0506,R0)
-      BTST.W   FP, @(0x0506,R0)
-      MOV:G.W  @(0x0506,R0), R0
-      MOV:G.W  @(0x0506,R0), FP
-      LDC      @(0x0506,R0), SR
-      MOV:G.W  R0, @(0x0506,R0)
-      MOV:G.W  FP, @(0x0506,R0)
-      STC      SR, @(0x0506,R0)
-      ADDX.W   @(0x0506,R0), R0
-      ADDX.W   @(0x0506,R0), FP
-      MULXU.W  @(0x0506,R0), R0
-      MULXU.W  @(0x0506,R0), FP
-      SUBX.W   @(0x0506,R0), R0
-      SUBX.W   @(0x0506,R0), FP
-      DIVXU.W  @(0x0506,R0), R0
-      DIVXU.W  @(0x0506,R0), FP
-      BSET.W   #0, @(0x0506,R0)
-      BCLR.W   #0, @(0x0506,R0)
-      BNOT.W   #0, @(0x0506,R0)
-      CMP:G.W  #0x0607, @(0x0304,FP)
-      MOV:G.W  #0x0809, @(0x0506,FP)
-      ADD:Q.W  #1, @(0x0506,FP)
-      ADD:Q.W  #-1, @(0x0506,FP)
-      CLR.W    @(0x0506,FP)
-      NEG.W    @(0x0506,FP)
-      NOT.W    @(0x0506,FP)
-      TST.W    @(0x0506,FP)
-      SHAL.W   @(0x0506,FP)
-      SHAR.W   @(0x0506,FP)
-      SHLL.W   @(0x0506,FP)
-      SHLR.W   @(0x0506,FP)
-      ROTL.W   @(0x0506,FP)
-      ROTR.W   @(0x0506,FP)
-      ROTXL.W  @(0x0506,FP)
-      ROTXR.W  @(0x0506,FP)
-      ADD:G.W  @(0x0506,FP), R0
-      ADD:G.W  @(0x0506,FP), FP
-      ADDS.W   @(0x0506,FP), R0
-      ADDS.W   @(0x0506,FP), FP
-      SUB.W    @(0x0506,FP), R0
-      SUB.W    @(0x0506,FP), FP
-      SUBS.W   @(0x0506,FP), R0
-      SUBS.W   @(0x0506,FP), FP
-      OR.W     @(0x0506,FP), R0
-      OR.W     @(0x0506,FP), FP
-      BSET.W   R0, @(0x0506,FP)
-      BSET.W   FP, @(0x0506,FP)
-      AND.W    @(0x0506,FP), R0
-      AND.W    @(0x0506,FP), FP
-      BCLR.W   R0, @(0x0506,FP)
-      BCLR.W   FP, @(0x0506,FP)
-      XOR.W    @(0x0506,FP), R0
-      XOR.W    @(0x0506,FP), FP
-      BNOT.W   R0, @(0x0506,FP)
-      BNOT.W   FP, @(0x0506,FP)
-      CMP:G.W  @(0x0506,FP), R0
-      CMP:G.W  @(0x0506,FP), FP
-      BTST.W   R0, @(0x0506,FP)
-      BTST.W   FP, @(0x0506,FP)
-      MOV:G.W  @(0x0506,FP), R0
-      MOV:G.W  @(0x0506,FP), FP
-      LDC      @(0x0506,FP), SR
-      MOV:G.W  R0, @(0x0506,FP)
-      MOV:G.W  FP, @(0x0506,FP)
-      STC      SR, @(0x0506,FP)
-      ADDX.W   @(0x0506,FP), R0
-      ADDX.W   @(0x0506,FP), FP
-      MULXU.W  @(0x0506,FP), R0
-      MULXU.W  @(0x0506,FP), FP
-      SUBX.W   @(0x0506,FP), R0
-      SUBX.W   @(0x0506,FP), FP
-      DIVXU.W  @(0x0506,FP), R0
-      DIVXU.W  @(0x0506,FP), FP
-      BSET.W   #0, @(0x0506,FP)
-      BCLR.W   #0, @(0x0506,FP)
-      BNOT.W   #0, @(0x0506,FP)
-      BTST.W   #0, @(0x0506,FP)
-      CMP:G.W  #0x0607, @(0x0304,SP)
-      MOV:G.W  #0x0809, @(0x0506,SP)
-      ADD:Q.W  #1, @(0x0506,SP)
-      ADD:Q.W  #-1, @(0x0506,SP)
-      CLR.W    @(0x0506,SP)
-      NEG.W    @(0x0506,SP)
-      NOT.W    @(0x0506,SP)
-      TST.W    @(0x0506,SP)
-      SHAL.W   @(0x0506,SP)
-      SHAR.W   @(0x0506,SP)
-      SHLL.W   @(0x0506,SP)
-      SHLR.W   @(0x0506,SP)
-      ROTL.W   @(0x0506,SP)
-      ROTR.W   @(0x0506,SP)
-      ROTXL.W  @(0x0506,SP)
-      ROTXR.W  @(0x0506,SP)
-      ADD:G.W  @(0x0506,SP), R0
-      ADD:G.W  @(0x0506,SP), FP
-      ADDS.W   @(0x0506,SP), R0
-      ADDS.W   @(0x0506,SP), FP
-      SUB.W    @(0x0506,SP), R0
-      SUB.W    @(0x0506,SP), FP
-      SUBS.W   @(0x0506,SP), R0
-      SUBS.W   @(0x0506,SP), FP
-      OR.W     @(0x0506,SP), R0
-      OR.W     @(0x0506,SP), FP
-      BSET.W   R0, @(0x0506,SP)
-      BSET.W   FP, @(0x0506,SP)
-      AND.W    @(0x0506,SP), R0
-      AND.W    @(0x0506,SP), FP
-      BCLR.W   R0, @(0x0506,SP)
-      BCLR.W   FP, @(0x0506,SP)
-      XOR.W    @(0x0506,SP), R0
-      XOR.W    @(0x0506,SP), FP
-      BNOT.W   R0, @(0x0506,SP)
-      BNOT.W   FP, @(0x0506,SP)
-      CMP:G.W  @(0x0506,SP), R0
-      CMP:G.W  @(0x0506,SP), FP
-      BTST.W   R0, @(0x0506,SP)
-      BTST.W   FP, @(0x0506,SP)
-      MOV:G.W  @(0x0506,SP), R0
-      MOV:G.W  @(0x0506,SP), FP
-      LDC      @(0x0506,SP), SR
-      MOV:G.W  R0, @(0x0506,SP)
-      MOV:G.W  FP, @(0x0506,SP)
-      STC      SR, @(0x0506,SP)
-      ADDX.W   @(0x0506,SP), R0
-      ADDX.W   @(0x0506,SP), FP
-      MULXU.W  @(0x0506,SP), R0
-      MULXU.W  @(0x0506,SP), FP
-      SUBX.W   @(0x0506,SP), R0
-      SUBX.W   @(0x0506,SP), FP
-      DIVXU.W  @(0x0506,SP), R0
-      DIVXU.W  @(0x0506,SP), FP
-      BSET.W   #0, @(0x0506,SP)
-      BCLR.W   #0, @(0x0506,SP)
-      BNOT.W   #0, @(0x0506,SP)
-      BTST.W   #0, @(0x0506,SP)
+      CMP:G.W  #0x0607, @(-0x0606,R0)
+      MOV:G.W  #7:8, @(-0x0606,R0)
+      MOV:G.W  #0x0809, @(-0x0606,R0)
+      ADD:Q.W  #1, @(-0x0606,R0)
+      ADD:Q.W  #-1, @(-0x0606,R0)
+      CLR.W    @(-0x0606,R0)
+      NEG.W    @(-0x0606,R0)
+      NOT.W    @(-0x0606,R0)
+      TST.W    @(-0x0606,R0)
+      SHAL.W   @(-0x0606,R0)
+      SHAR.W   @(-0x0606,R0)
+      SHLL.W   @(-0x0606,R0)
+      SHLR.W   @(-0x0606,R0)
+      ROTL.W   @(-0x0606,R0)
+      ROTR.W   @(-0x0606,R0)
+      ROTXL.W  @(-0x0606,R0)
+      ROTXR.W  @(-0x0606,R0)
+      ADD:G.W  @(-0x0606,R0), R0
+      ADD:G.W  @(-0x0606,R0), FP
+      ADDS.W   @(-0x0606,R0), R0
+      ADDS.W   @(-0x0606,R0), FP
+      SUB.W    @(-0x0606,R0), R0
+      SUB.W    @(-0x0606,R0), FP
+      SUBS.W   @(-0x0606,R0), R0
+      SUBS.W   @(-0x0606,R0), FP
+      OR.W     @(-0x0606,R0), R0
+      OR.W     @(-0x0606,R0), FP
+      BSET.W   R0, @(-0x0606,R0)
+      BSET.W   FP, @(-0x0606,R0)
+      AND.W    @(-0x0606,R0), R0
+      AND.W    @(-0x0606,R0), FP
+      BCLR.W   R0, @(-0x0606,R0)
+      BCLR.W   FP, @(-0x0606,R0)
+      XOR.W    @(-0x0606,R0), R0
+      XOR.W    @(-0x0606,R0), FP
+      BNOT.W   R0, @(-0x0606,R0)
+      BNOT.W   FP, @(-0x0606,R0)
+      CMP:G.W  @(-0x0606,R0), R0
+      CMP:G.W  @(-0x0606,R0), FP
+      BTST.W   R0, @(-0x0606,R0)
+      BTST.W   FP, @(-0x0606,R0)
+      MOV:G.W  @(-0x0606,R0), R0
+      MOV:G.W  @(-0x0606,R0), FP
+      LDC      @(-0x0606,R0), SR
+      MOV:G.W  R0, @(-0x0606,R0)
+      MOV:G.W  FP, @(-0x0606,R0)
+      STC      SR, @(-0x0606,R0)
+      ADDX.W   @(-0x0606,R0), R0
+      ADDX.W   @(-0x0606,R0), FP
+      MULXU.W  @(-0x0606,R0), R0
+      MULXU.W  @(-0x0606,R0), FP
+      SUBX.W   @(-0x0606,R0), R0
+      SUBX.W   @(-0x0606,R0), FP
+      DIVXU.W  @(-0x0606,R0), R0
+      DIVXU.W  @(-0x0606,R0), FP
+      BSET.W   #0, @(-0x0606,R0)
+      BCLR.W   #0, @(-0x0606,R0)
+      BNOT.W   #0, @(-0x0606,R0)
+      CMP:G.W  #0x0607, @(-0x0100,FP)
+      MOV:G.W  #7:8, @(-0x0100,FP)
+      MOV:G.W  #0x0809, @(-0x0100,FP)
+      ADD:Q.W  #1, @(-0x0100,FP)
+      ADD:Q.W  #-1, @(-0x0100,FP)
+      CLR.W    @(-0x0100,FP)
+      NEG.W    @(-0x0100,FP)
+      NOT.W    @(-0x0100,FP)
+      TST.W    @(-0x0100,FP)
+      SHAL.W   @(-0x0100,FP)
+      SHAR.W   @(-0x0100,FP)
+      SHLL.W   @(-0x0100,FP)
+      SHLR.W   @(-0x0100,FP)
+      ROTL.W   @(-0x0100,FP)
+      ROTR.W   @(-0x0100,FP)
+      ROTXL.W  @(-0x0100,FP)
+      ROTXR.W  @(-0x0100,FP)
+      ADD:G.W  @(-0x0100,FP), R0
+      ADD:G.W  @(-0x0100,FP), FP
+      ADDS.W   @(-0x0100,FP), R0
+      ADDS.W   @(-0x0100,FP), FP
+      SUB.W    @(-0x0100,FP), R0
+      SUB.W    @(-0x0100,FP), FP
+      SUBS.W   @(-0x0100,FP), R0
+      SUBS.W   @(-0x0100,FP), FP
+      OR.W     @(-0x0100,FP), R0
+      OR.W     @(-0x0100,FP), FP
+      BSET.W   R0, @(-0x0100,FP)
+      BSET.W   FP, @(-0x0100,FP)
+      AND.W    @(-0x0100,FP), R0
+      AND.W    @(-0x0100,FP), FP
+      BCLR.W   R0, @(-0x0100,FP)
+      BCLR.W   FP, @(-0x0100,FP)
+      XOR.W    @(-0x0100,FP), R0
+      XOR.W    @(-0x0100,FP), FP
+      BNOT.W   R0, @(-0x0100,FP)
+      BNOT.W   FP, @(-0x0100,FP)
+      CMP:G.W  @(-0x0100,FP), R0
+      CMP:G.W  @(-0x0100,FP), FP
+      BTST.W   R0, @(-0x0100,FP)
+      BTST.W   FP, @(-0x0100,FP)
+      MOV:G.W  @(-0x0100,FP), R0
+      MOV:G.W  @(-0x0100,FP), FP
+      LDC      @(-0x0100,FP), SR
+      MOV:G.W  R0, @(-0x0100,FP)
+      MOV:G.W  FP, @(-0x0100,FP)
+      STC      SR, @(-0x0100,FP)
+      ADDX.W   @(-0x0100,FP), R0
+      ADDX.W   @(-0x0100,FP), FP
+      MULXU.W  @(-0x0100,FP), R0
+      MULXU.W  @(-0x0100,FP), FP
+      SUBX.W   @(-0x0100,FP), R0
+      SUBX.W   @(-0x0100,FP), FP
+      DIVXU.W  @(-0x0100,FP), R0
+      DIVXU.W  @(-0x0100,FP), FP
+      BSET.W   #0, @(-0x0100,FP)
+      BCLR.W   #0, @(-0x0100,FP)
+      BNOT.W   #0, @(-0x0100,FP)
+      BTST.W   #0, @(-0x0100,FP)
+      CMP:G.W  #0x0607, @(1,SP)
+      MOV:G.W  #7:8, @(1,SP)
+      MOV:G.W  #0x0809, @(1,SP)
+      ADD:Q.W  #1, @(1,SP)
+      ADD:Q.W  #-1, @(1,SP)
+      CLR.W    @(1,SP)
+      NEG.W    @(1,SP)
+      NOT.W    @(1,SP)
+      TST.W    @(1,SP)
+      SHAL.W   @(1,SP)
+      SHAR.W   @(1,SP)
+      SHLL.W   @(1,SP)
+      SHLR.W   @(1,SP)
+      ROTL.W   @(1,SP)
+      ROTR.W   @(1,SP)
+      ROTXL.W  @(1,SP)
+      ROTXR.W  @(1,SP)
+      ADD:G.W  @(1,SP), R0
+      ADD:G.W  @(1,SP), FP
+      ADDS.W   @(1,SP), R0
+      ADDS.W   @(1,SP), FP
+      SUB.W    @(1,SP), R0
+      SUB.W    @(1,SP), FP
+      SUBS.W   @(1,SP), R0
+      SUBS.W   @(1,SP), FP
+      OR.W     @(1,SP), R0
+      OR.W     @(1,SP), FP
+      BSET.W   R0, @(1,SP)
+      BSET.W   FP, @(1,SP)
+      AND.W    @(1,SP), R0
+      AND.W    @(1,SP), FP
+      BCLR.W   R0, @(1,SP)
+      BCLR.W   FP, @(1,SP)
+      XOR.W    @(1,SP), R0
+      XOR.W    @(1,SP), FP
+      BNOT.W   R0, @(1,SP)
+      BNOT.W   FP, @(1,SP)
+      CMP:G.W  @(1,SP), R0
+      CMP:G.W  @(1,SP), FP
+      BTST.W   R0, @(1,SP)
+      BTST.W   FP, @(1,SP)
+      MOV:G.W  @(1,SP), R0
+      MOV:G.W  @(1,SP), FP
+      LDC      @(1,SP), SR
+      MOV:G.W  R0, @(1,SP)
+      MOV:G.W  FP, @(1,SP)
+      STC      SR, @(1,SP)
+      ADDX.W   @(1,SP), R0
+      ADDX.W   @(1,SP), FP
+      MULXU.W  @(1,SP), R0
+      MULXU.W  @(1,SP), FP
+      SUBX.W   @(1,SP), R0
+      SUBX.W   @(1,SP), FP
+      DIVXU.W  @(1,SP), R0
+      DIVXU.W  @(1,SP), FP
+      BSET.W   #0, @(1,SP)
+      BCLR.W   #0, @(1,SP)
+      BNOT.W   #0, @(1,SP)
+      BTST.W   #0, @(1,SP)

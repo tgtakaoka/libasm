@@ -288,6 +288,19 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         else
             outImm8(out, insn.readByte());
         break;
+    case M_SIMM8: {
+        // A word EA sign-extends the datum (manual 2.2.24 MOV:G note 3); show the
+        // extended value with :8 so it reassembles to this form, not #xx:16.
+        const auto val = insn.readByte();
+        if ((insn.eaByte >> 3) & 1) {
+            out.letter('#');
+            outHex(out, static_cast<uint16_t>(static_cast<int8_t>(val)), 16);
+            out.text_P(":8");
+        } else {
+            outImm8(out, val);
+        }
+        break;
+    }
     case M_IMM16:
         if (immIsEa(insn)) {
             outEa(insn, out);
@@ -487,13 +500,12 @@ void DisH8500::decodeSize(DisInsn &insn, StrBuffer &out) const {
     }
 
     // The .B/.W suffix follows the live Sz bit (the EA byte, or the OP byte for
-    // the SPC short forms). For MOV:G #imm,<EAd> the OP byte (0x06 8-bit data /
-    // 0x07 16-bit data) is the data length, independent of the operation size:
-    // 0x06 with a word EA is the legal sign-extended form (manual 2.2.24 note 3),
-    // so only the impossible 0x07-with-byte-EA (16-bit data, byte op) is rejected.
+    // the SPC short forms). A fixed-size form whose Sz bit contradicts it (CMP:G
+    // #xx:8 with a word EA, #xx:16 with a byte EA) is not an instruction; MOV:G
+    // #xx:8 is size-free since a word EA sign-extends its datum.
     if (insn.insnSize() == ISZ_DATA) {
         const bool word = ((pm == PM_SPC ? insn.opByte : insn.eaByte) >> 3) & 1;
-        if (insn.oprSize() == SZ_WORD && !word) {
+        if ((insn.oprSize() == SZ_WORD && !word) || (insn.oprSize() == SZ_BYTE && word)) {
             insn.setError(UNKNOWN_INSTRUCTION);
             return;
         }
