@@ -39,6 +39,7 @@ extern const char TEXT_FPU_80387[];
 extern const char TEXT_FPU_80487[];
 extern const char TEXT_FPU_80C187[];
 extern const char TEXT_FWAIT_AUTO[];
+extern const char TEXT_FWAIT_ASM86[];
 extern const char OPT_TEXT_FWAIT[];
 extern const char OPT_DESC_FWAIT[];
 using common::TEXT_none;

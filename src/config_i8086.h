@@ -41,7 +41,8 @@ enum FpuType : uint8_t {
 #if !defined(LIBASM_I8086_NOFPU)
     FPU_ON,
     FPU_I8087,
-    FPU_I8087_AUTO,  // i8087 with a WAIT before every instruction but FN forms
+    FPU_I8087_AUTO,   // i8087 with a WAIT before every instruction but FN forms
+    FPU_I8087_ASM86,  // i8087 with a WAIT, or a NOP before no-wait forms
     FPU_I80287,
     FPU_I80387,
     FPU_I80487,
@@ -52,6 +53,7 @@ enum FpuType : uint8_t {
 enum FwaitMode : uint8_t {
     FWAIT_NONE,
     FWAIT_AUTO,
+    FWAIT_ASM86,
 };
 
 struct CpuSpec final {

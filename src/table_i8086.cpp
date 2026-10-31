@@ -2339,6 +2339,26 @@ constexpr EntryPage I8087_AUTO_PAGES[] = {
         {0xDF, ARRAY_RANGE(T8087_FN_DF), ARRAY_RANGE(I8087_FN_DF)},
 };
 
+constexpr EntryPage I8087_ASM86_PAGES[] = {
+        // i8087 with a WAIT
+        {0x9BD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
+        {0x9BD9, ARRAY_RANGE(T8087_D9), ARRAY_RANGE(I8087_D9)},
+        {0x9BDA, ARRAY_RANGE(T8087_DA), ARRAY_RANGE(I8087_DA)},
+        {0x9BDB, ARRAY_RANGE(T8087_DB), ARRAY_RANGE(I8087_DB)},
+        {0x9BDC, ARRAY_RANGE(T8087_DC), ARRAY_RANGE(I8087_DC)},
+        {0x9BDD, ARRAY_RANGE(T8087_DD), ARRAY_RANGE(I8087_DD)},
+        {0x9BDE, ARRAY_RANGE(T8087_DE), ARRAY_RANGE(I8087_DE)},
+        {0x9BDF, ARRAY_RANGE(T8087_DF), ARRAY_RANGE(I8087_DF)},
+        {0x00, ARRAY_RANGE(T8087_00), ARRAY_RANGE(I8087_00)},
+        {0x9BD9, ARRAY_RANGE(T8087_9BD9), ARRAY_RANGE(I8087_9BD9)},
+        {0x9BDB, ARRAY_RANGE(T8087_9BDB), ARRAY_RANGE(I8087_9BDB)},
+        {0x9BDD, ARRAY_RANGE(T8087_9BDD), ARRAY_RANGE(I8087_9BDD)},
+        // i8087 no-wait forms with a NOP
+        {0x90D9, ARRAY_RANGE(T8087_D9N), ARRAY_RANGE(I8087_D9N)},
+        {0x90DB, ARRAY_RANGE(T8087_DBN), ARRAY_RANGE(I8087_DBN)},
+        {0x90DD, ARRAY_RANGE(T8087_DDN), ARRAY_RANGE(I8087_DDN)},
+};
+
 constexpr EntryPage I80287_PAGES[] = {
         // i8087
         {0xD8, ARRAY_RANGE(T8087_D8), ARRAY_RANGE(I8087_D8)},
@@ -2396,6 +2416,7 @@ using Fpu = entry::CpuBase<FpuType, EntryPage>;
 constexpr Fpu FPU_TABLE[] = {
         {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
         {FPU_I8087_AUTO, TEXT_FPU_8087, ARRAY_RANGE(I8087_AUTO_PAGES)},
+        {FPU_I8087_ASM86, TEXT_FPU_8087, ARRAY_RANGE(I8087_ASM86_PAGES)},
         {FPU_I80287, TEXT_FPU_80287, ARRAY_RANGE(I80287_PAGES)},
         {FPU_I80387, TEXT_FPU_80387, ARRAY_RANGE(I80387_PAGES)},
         {FPU_I80487, TEXT_FPU_80487, ARRAY_RANGE(I80387_PAGES)},
@@ -2725,6 +2746,11 @@ const Entry *toData32(const Entry *entry) {
 }
 
 Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
+#if !defined(LIBASM_I8086_NOFPU)
+    // ASM86 spells WAIT as FWAIT, which the FPU table has.
+    if (cpuSpec.fpu == FPU_I8087_ASM86 && fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode))
+        return insn.getError();
+#endif
     auto entry = cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
     if (isData16(entry)) {
         // JCXZ/JECXZ (0xE3) switches based on address size, not data size
@@ -2745,6 +2771,29 @@ Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
 #endif
     return insn.getError();
+}
+
+namespace {
+bool leadMatcher(uint16_t code, const EntryPage *page) {
+    const auto prefix = page->readPrefix();
+    return (prefix >> 8) == code && DisInsn::escapeInsn(prefix);
+}
+}  // namespace
+
+bool isWaitLead(const CpuSpec &cpuSpec, Config::opcode_t code) {
+#if !defined(LIBASM_I8086_NOFPU)
+    return fpu(cpuSpec.fpu)->isPrefix(code, leadMatcher);
+#else
+    return false;
+#endif
+}
+
+CpuSpec noWaitSpec(const CpuSpec &cpuSpec) {
+#if !defined(LIBASM_I8086_NOFPU)
+    if (cpuSpec.fpu == FPU_I8087_AUTO || cpuSpec.fpu == FPU_I8087_ASM86)
+        return CpuSpec(cpuSpec.cpu, FPU_I8087);
+#endif
+    return cpuSpec;
 }
 
 bool isPrefix(const CpuSpec &cpuSpec, uint16_t code) {
@@ -2809,7 +2858,8 @@ Error Config::setFpuType(FpuType fpuType) {
             _cpuSpec.fpu = FPU_I80487;
             return OK;
         }
-    } else if (fpuType == FPU_I8087 || fpuType == FPU_I8087_AUTO) {
+    } else if (fpuType == FPU_I8087 || fpuType == FPU_I8087_AUTO ||
+               fpuType == FPU_I8087_ASM86) {
         if (cpuType == I8086 || cpuType == I80186) {
             _cpuSpec.fpu = i8087();
             return OK;
@@ -2852,7 +2902,9 @@ FpuType Config::i8087() const {
 #if defined(LIBASM_I8086_NOFPU)
     return FPU_NONE;
 #else
-    return _fwait == FWAIT_AUTO ? FPU_I8087_AUTO : FPU_I8087;
+    if (_fwait == FWAIT_AUTO)
+        return FPU_I8087_AUTO;
+    return _fwait == FWAIT_ASM86 ? FPU_I8087_ASM86 : FPU_I8087;
 #endif
 }
 
@@ -2861,11 +2913,14 @@ Error Config::setFwaitName(StrScanner &scan) {
         _fwait = FWAIT_NONE;
     } else if (scan.iequals_P(TEXT_FWAIT_AUTO)) {
         _fwait = FWAIT_AUTO;
+    } else if (scan.iequals_P(TEXT_FWAIT_ASM86)) {
+        _fwait = FWAIT_ASM86;
     } else {
         return UNKNOWN_OPERAND;
     }
 #if !defined(LIBASM_I8086_NOFPU)
-    if (_cpuSpec.fpu == FPU_I8087 || _cpuSpec.fpu == FPU_I8087_AUTO)
+    if (_cpuSpec.fpu == FPU_I8087 || _cpuSpec.fpu == FPU_I8087_AUTO ||
+            _cpuSpec.fpu == FPU_I8087_ASM86)
         _cpuSpec.fpu = i8087();
 #endif
     return OK;

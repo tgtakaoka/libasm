@@ -63,7 +63,6 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     static constexpr Config::opcode_t DATA32 = 0x66;
     static constexpr Config::opcode_t ADDR32 = 0x67;
     static constexpr Config::opcode_t LOCK_PREFIX = 0xF0;
-    static constexpr Config::opcode_t FWAIT = 0x9B;
     static bool escapeInsn(Config::opcode_t opc) { return opc >= 0xD8 && opc < 0xE0; }
     static bool loopInsn(Config::opcode_t opc) { return opc >= 0xE0 && opc <= 0xE2; }
     static bool repeatInsn(Config::opcode_t opc, CpuType cpuType);
@@ -170,7 +169,8 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
           _hasAddr32(false),
           _hasUnusedData32(false),
           _hasUnusedAddr32(false),
-          _farMode(FMODE_FAR) {}
+          _farMode(FMODE_FAR),
+          _noWaitForm(false) {}
     DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out)
         : DisInsnImpl(insn, o, out),
           _modReg(0),
@@ -178,7 +178,8 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
           _hasAddr32(o._hasAddr32),
           _hasUnusedData32(o._hasUnusedData32),
           _hasUnusedAddr32(o._hasUnusedAddr32),
-          _farMode(o._farMode) {}
+          _farMode(o._farMode),
+          _noWaitForm(o._noWaitForm) {}
 
     void addPrefix(const char *prefix_P, StrBuffer &out);
 
@@ -198,6 +199,9 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
             _hasUnusedAddr32 = false;
         return addr32();
     }
+    /** An 8087 escape the WAIT convention has no form for. */
+    bool noWaitForm() const { return _noWaitForm; }
+    void setNoWaitForm() { _noWaitForm = true; }
     bool hasUnusedData32() const { return _hasUnusedData32; }
     bool hasUnusedAddr32() const { return _hasUnusedAddr32; }
 
@@ -219,6 +223,7 @@ private:
     bool _hasUnusedData32;
     bool _hasUnusedAddr32;
     FarMode _farMode;
+    bool _noWaitForm;
 };
 
 }  // namespace i8086

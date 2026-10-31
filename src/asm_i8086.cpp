@@ -1087,9 +1087,10 @@ void AsmInsn::embedModReg(Config::opcode_t data) {
 void AsmInsn::emitInsn() {
     uint_fast8_t pos = 0;
     auto pre = prefix();
-    if ((pre >> 8) == FWAIT) {
+    if (pre > UINT8_MAX && escapeInsn(pre)) {
+        // WAIT or NOP which leads an 8087 escape
+        emitByte(pre >> 8, pos++);
         pre &= UINT8_MAX;
-        emitByte(FWAIT, pos++);
     }
     // Prefix emission order matches GAS and nasm: segment override -> addr32
     // (67) -> data32 (66) -> lock (F0) / rep (F2/F3) -> opcode prefix ->

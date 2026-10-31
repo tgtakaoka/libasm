@@ -3170,6 +3170,43 @@ void test_fwait_auto() {
     ERRT("FNLD ST(1)", UNKNOWN_INSTRUCTION, "FNLD ST(1)");
 }
 
+void test_fwait_asm86() {
+    if (!fpu_on())
+        return;
+
+    assembler.setOption("fwait", "asm86");
+    if (strcmp("8087", asm8086.fpu_P()) != 0) {
+        TEST("FLD ST(1)", 0xD9, 0xC1);  // no effect but on the 8087
+        return;
+    }
+    constexpr auto NOP = 0x90;
+    TEST("FLD DWORD PTR [BX]",  FWAIT, 0xD9, 0007);
+    TEST("FLD ST(1)",           FWAIT, 0xD9, 0xC1);
+    TEST("FADD ST, ST(1)",      FWAIT, 0xD8, 0xC1);
+    TEST("FILD WORD PTR [SI]",  FWAIT, 0xDF, 0004);
+    TEST("FNOP",                FWAIT, 0xD9, 0xD0);
+    TEST("FINIT",               FWAIT, 0xDB, 0xE3);
+    TEST("FNINIT",              NOP,   0xDB, 0xE3);
+    TEST("FDISI",               FWAIT, 0xDB, 0xE1);
+    TEST("FNDISI",              NOP,   0xDB, 0xE1);
+    TEST("FENI",                FWAIT, 0xDB, 0xE0);
+    TEST("FNENI",               NOP,   0xDB, 0xE0);
+    TEST("FCLEX",               FWAIT, 0xDB, 0xE2);
+    TEST("FNCLEX",              NOP,   0xDB, 0xE2);
+    TEST("FSTCW [SI]",          FWAIT, 0xD9, 0074);
+    TEST("FNSTCW [SI]",         NOP,   0xD9, 0074);
+    TEST("FSTSW [SI]",          FWAIT, 0xDD, 0074);
+    TEST("FNSTSW [SI]",         NOP,   0xDD, 0074);
+    TEST("FSTENV [SI]",         FWAIT, 0xD9, 0064);
+    TEST("FNSTENV [SI]",        NOP,   0xD9, 0064);
+    TEST("FSAVE [SI]",          FWAIT, 0xDD, 0064);
+    TEST("FNSAVE [SI]",         NOP,   0xDD, 0064);
+    TEST("FSTCW ES:[SI]",       FWAIT, 0x26, 0xD9, 0074);
+    TEST("FWAIT",               FWAIT);
+    TEST("NOP",                 NOP);
+    ERRT("FNLD ST(1)", UNKNOWN_INSTRUCTION, "FNLD ST(1)");
+}
+
 #endif
 
 void test_undef() {
@@ -3934,6 +3971,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
     RUN_TEST(test_fwait_auto);
+    RUN_TEST(test_fwait_asm86);
 #endif
     RUN_TEST(test_undef);
     RUN_TEST(test_comment);

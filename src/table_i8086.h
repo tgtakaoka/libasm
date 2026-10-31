@@ -35,6 +35,10 @@ extern const TableI8086 TABLE;
 Error searchName(const CpuSpec &, AsmInsn &insn);
 Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
 bool isPrefix(const CpuSpec &, uint16_t code);
+/** A WAIT or a NOP which may lead an 8087 escape. */
+bool isWaitLead(const CpuSpec &, Config::opcode_t code);
+/** |cpuSpec| with the 8087 in its default WAIT convention. */
+CpuSpec noWaitSpec(const CpuSpec &cpuSpec);
 bool isRepeatPrefix(const CpuSpec &, Config::opcode_t opcode);
 bool isSegmentPrefix(const CpuSpec &, Config::opcode_t opcode);
 RegName overrideSeg(const CpuSpec &, Config::opcode_t opcode, RegName defSeg = REG_UNDEF);

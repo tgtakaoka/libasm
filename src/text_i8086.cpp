@@ -36,9 +36,10 @@ constexpr char TEXT_FPU_80287[]  = "80287";
 constexpr char TEXT_FPU_80387[]  = "80387";
 constexpr char TEXT_FPU_80487[]  = "80487";
 constexpr char TEXT_FPU_80C187[] = "80C187";
-constexpr char TEXT_FWAIT_AUTO[] = "auto";
-constexpr char OPT_TEXT_FWAIT[]  = "fwait";
-constexpr char OPT_DESC_FWAIT[]  = "8087 WAIT before instructions: none (default) or auto";
+constexpr char TEXT_FWAIT_AUTO[]  = "auto";
+constexpr char TEXT_FWAIT_ASM86[] = "asm86";
+constexpr char OPT_TEXT_FWAIT[]   = "fwait";
+constexpr char OPT_DESC_FWAIT[]   = "8087 WAIT before instructions: none (default), auto or asm86";
 
 constexpr char TEXT_AAA[]    = "AAA";
 constexpr char TEXT_AAD[]    = "AAD";
