@@ -270,6 +270,7 @@ void AsmInsn::parseClassAndSize(const ValueParser &parser) {
     ccSuffix = reg::CC_UNDEF;
     dirSuffix = DIR_NONE;
     StrScanner p{name()};
+    p.expect('.');  // a directive's leading dot is part of the stem
     p.trimStart([](char c) { return c != ':' && c != '.' && c != '/'; });
     auto stemEnd = const_cast<char *>(p.str());
     // "/X" suffixes: a /cc condition and/or a /F|/B string direction.  "/B" is
@@ -787,11 +788,21 @@ void AsmH16::emitEa(AsmInsn &insn, const Operand &op, uint8_t accBit) const {
         insn.emitOperand8(accBit | 0x60 | rn);
         return;
     case M_IMM: {
-        const uint8_t size = op.immSize ? op.immSize :
-                pickDispSize(op.val.getSigned(), 0);
+        // The Si field sign-extends independently of the operation size, which
+        // uses only its low |bits| (Table 16-4).  An explicit field wider than
+        // the operation is taken as written; otherwise the value must be a
+        // valid datum of the operation size, and the field holds that datum.
+        const auto bits = insn.immBits();
+        auto value = op.val.getSigned();
+        if (op.immSize <= bits) {
+            if (!op.val.isUndefined() && !isDatum(op.val, bits))
+                insn.setErrorIf(op, OVERFLOW_RANGE);
+            value = datum(op.val, bits);
+        }
+        const uint8_t size = op.immSize ? op.immSize : pickDispSize(value, 0);
         const uint8_t si = sdFromSize(size);
         insn.emitOperand8(accBit | 0x70 | si);
-        emitValue(insn, op, size, op.val.getSigned());
+        emitValue(insn, op, size, value);
         return;
     }
     case M_ABS: {
