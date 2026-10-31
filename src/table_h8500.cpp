@@ -728,6 +728,14 @@ static bool acceptOperands(AsmInsn &insn, const Entry *entry) {
         if (q.hasError() || (v != 1 && v != 2 && v != -1 && v != -2))
             return false;
     }
+    // MOV:L/MOV:S @aa:8 addresses 0 || BR || aa8, so a bare stem takes it for a
+    // no-suffix absolute only when that lies in the assumed BR page; otherwise
+    // the search reaches MOV:G @aa:16. An explicit :L/:S keeps the short form.
+    if (insn.insnCls == IC_N && (flags.src() == M_ABS8 || flags.dst() == M_ABS8)) {
+        const auto &a = (flags.src() == M_ABS8) ? insn.op1 : insn.op2;
+        if (a.absSize == 0 && !a.brPage)
+            return false;
+    }
     return acceptMode(insn.op1, flags.src(), insn.insnSz) &&
            acceptMode(insn.op2, flags.dst(), insn.insnSz);
 }

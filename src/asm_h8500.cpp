@@ -253,6 +253,8 @@ Error AsmH8500::parseOperand(StrScanner &scan, Operand &op) const {
             } else {
                 const auto v = addr.getUnsigned();
                 op.mode = (sz == 16 || v <= 0xFFFF) ? M_ABS16 : M_ABS24;
+                const auto br = getPageRegister(PAGE_BR);
+                op.brPage = sz == 0 && br >= 0 && (v >> 8) == static_cast<uint32_t>(br);
             }
             scan = p;
             return OK;
@@ -665,11 +667,8 @@ Error AsmH8500::encodeGenFmt(AsmInsn &insn) const {
     // shorter @aa:8 when the value lies in BR's page. An explicit :size is kept.
     if (eaMode == M_ABS24) {
         eaMode = M_ABS16;
-    } else if (eaMode == M_ABS16 && eaOp.absSize == 0) {
-        const auto br = getPageRegister(PAGE_BR);
-        const auto v = eaOp.val.getUnsigned();
-        if (br >= 0 && (v >> 16) == 0 && ((v >> 8) & 0xFF) == static_cast<uint32_t>(br))
-            eaMode = M_ABS8;
+    } else if (eaMode == M_ABS16 && eaOp.brPage) {
+        eaMode = M_ABS8;
     }
 
     // [EA byte][ext 0-2][(00)][OP byte]. The EA byte is the prefix (the base
