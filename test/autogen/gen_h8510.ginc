@@ -160,9 +160,8 @@
       bclr.w   #0, @0x0e:8
       bnot.w   #0, @0x0e:8
       btst.w   #0, @0x0e:8
-      cmp:g.w  #5, @0x0e:8
       cmp:g.w  #0x0607, @0x0e:8
-      mov:g.w  #7, @0x0e:8
+      mov:g.w  #7:8, @0x0e:8
       mov:g.w  #0x0809, @0x0e:8
       add:q.w  #1, @0x0e:8
       add:q.w  #-1, @0x0e:8
@@ -289,22 +288,23 @@
       bclr.w   #0, @0x1e1f:16
       bnot.w   #0, @0x1e1f:16
       btst.w   #0, @0x1e1f:16
-      cmp:g.w  #0x0607, @0x0304:16
-      mov:g.w  #0x0809, @0x0506:16
-      add:q.w  #1, @0x0506:16
-      add:q.w  #-1, @0x0506:16
-      clr.w    @0x0506:16
-      neg.w    @0x0506:16
-      not.w    @0x0506:16
-      tst.w    @0x0506:16
-      shal.w   @0x0506:16
-      shar.w   @0x0506:16
-      shll.w   @0x0506:16
-      shlr.w   @0x0506:16
-      rotl.w   @0x0506:16
-      rotr.w   @0x0506:16
-      rotxl.w  @0x0506:16
-      rotxr.w  @0x0506:16
+      cmp:g.w  #0x0607, @0x1e1f:16
+      mov:g.w  #7:8, @0x1e1f:16
+      mov:g.w  #0x0809, @0x1e1f:16
+      add:q.w  #1, @0x1e1f:16
+      add:q.w  #-1, @0x1e1f:16
+      clr.w    @0x1e1f:16
+      neg.w    @0x1e1f:16
+      not.w    @0x1e1f:16
+      tst.w    @0x1e1f:16
+      shal.w   @0x1e1f:16
+      shar.w   @0x1e1f:16
+      shll.w   @0x1e1f:16
+      shlr.w   @0x1e1f:16
+      rotl.w   @0x1e1f:16
+      rotr.w   @0x1e1f:16
+      rotxl.w  @0x1e1f:16
+      rotxr.w  @0x1e1f:16
       bsr      .+0x1f23
       link     r6, #0x2021
       link     r6, #1:16
@@ -548,9 +548,8 @@
       bclr.w   #0, @-r0
       bnot.w   #0, @-r0
       btst.w   #0, @-r0
-      cmp:g.w  #5, @-r0
       cmp:g.w  #0x0607, @-r0
-      mov:g.w  #7, @-r0
+      mov:g.w  #7:8, @-r0
       mov:g.w  #0x0809, @-r0
       add:q.w  #1, @-r0
       add:q.w  #-1, @-r0
@@ -589,9 +588,8 @@
       bclr.w   #0, @-sp
       bnot.w   #0, @-sp
       btst.w   #0, @-sp
-      cmp:g.w  #5, @-sp
       cmp:g.w  #0x0607, @-sp
-      mov:g.w  #7, @-sp
+      mov:g.w  #7:8, @-sp
       mov:g.w  #0x0809, @-sp
       add:q.w  #1, @-sp
       add:q.w  #-1, @-sp
@@ -733,9 +731,8 @@
       bclr.w   #0, @r0+
       bnot.w   #0, @r0+
       btst.w   #0, @r0+
-      cmp:g.w  #5, @r0+
       cmp:g.w  #0x0607, @r0+
-      mov:g.w  #7, @r0+
+      mov:g.w  #7:8, @r0+
       mov:g.w  #0x0809, @r0+
       add:q.w  #1, @r0+
       add:q.w  #-1, @r0+
@@ -774,9 +771,8 @@
       bclr.w   #0, @sp+
       bnot.w   #0, @sp+
       btst.w   #0, @sp+
-      cmp:g.w  #5, @sp+
       cmp:g.w  #0x0607, @sp+
-      mov:g.w  #7, @sp+
+      mov:g.w  #7:8, @sp+
       mov:g.w  #0x0809, @sp+
       add:q.w  #1, @sp+
       add:q.w  #-1, @sp+
@@ -918,9 +914,8 @@
       bclr.w   #9, @r0
       bnot.w   #0, @r0
       btst.w   #0, @r0
-      cmp:g.w  #5, @r0
       cmp:g.w  #0x0607, @r0
-      mov:g.w  #7, @r0
+      mov:g.w  #7:8, @r0
       mov:g.w  #0x0809, @r0
       add:q.w  #1, @r0
       add:q.w  #-1, @r0
@@ -959,9 +954,8 @@
       bset.w   #0, @r0
       bnot.w   #0, @sp
       btst.w   #0, @sp
-      cmp:g.w  #5, @sp
       cmp:g.w  #0x0607, @sp
-      mov:g.w  #7, @sp
+      mov:g.w  #7:8, @sp
       mov:g.w  #0x0809, @sp
       add:q.w  #1, @sp
       add:q.w  #-1, @sp
@@ -1103,9 +1097,8 @@
       bnot.b   #0, @(-24,sp)
       bnot.w   #10, @(-23,r0)
       btst.w   #0, @(-23,r0)
-      cmp:g.w  #5, @(-23,r0)
       cmp:g.w  #0x0607, @(-23,r0)
-      mov:g.w  #7, @(-23,r0)
+      mov:g.w  #7:8, @(-23,r0)
       mov:g.w  #0x0809, @(-23,r0)
       add:q.w  #1, @(-23,r0)
       add:q.w  #-1, @(-23,r0)
@@ -1144,9 +1137,8 @@
       bset.w   #0, @(-23,r0)
       bclr.w   #0, @(-23,r0)
       btst.w   #1, @(-16,sp)
-      cmp:g.w  #5, @(-16,sp)
       cmp:g.w  #0x0607, @(-16,sp)
-      mov:g.w  #7, @(-16,sp)
+      mov:g.w  #7:8, @(-16,sp)
       mov:g.w  #0x0809, @(-16,sp)
       add:q.w  #1, @(-16,sp)
       add:q.w  #-1, @(-16,sp)
@@ -1288,82 +1280,84 @@
       bnot.b   #0, @(-0x0707,sp)
       btst.b   #0, @(-0x0707,sp)
       btst.w   #11, @(-0x0606,r0)
-      cmp:g.w  #0x0607, @(0x0304,r0)
-      mov:g.w  #0x0809, @(0x0506,r0)
-      add:q.w  #1, @(0x0506,r0)
-      add:q.w  #-1, @(0x0506,r0)
-      clr.w    @(0x0506,r0)
-      neg.w    @(0x0506,r0)
-      not.w    @(0x0506,r0)
-      tst.w    @(0x0506,r0)
-      shal.w   @(0x0506,r0)
-      shar.w   @(0x0506,r0)
-      shll.w   @(0x0506,r0)
-      shlr.w   @(0x0506,r0)
-      rotl.w   @(0x0506,r0)
-      rotr.w   @(0x0506,r0)
-      rotxl.w  @(0x0506,r0)
-      rotxr.w  @(0x0506,r0)
-      add:g.w  @(0x0506,r0), r0
-      adds.w   @(0x0506,r0), r0
-      sub.w    @(0x0506,r0), r0
-      subs.w   @(0x0506,r0), r0
-      or.w     @(0x0506,r0), r0
-      bset.w   r0, @(0x0506,r0)
-      and.w    @(0x0506,r0), r0
-      bclr.w   r0, @(0x0506,r0)
-      xor.w    @(0x0506,r0), r0
-      bnot.w   r0, @(0x0506,r0)
-      cmp:g.w  @(0x0506,r0), r0
-      btst.w   r0, @(0x0506,r0)
-      mov:g.w  @(0x0506,r0), r0
-      ldc      @(0x0506,r0), sr
-      mov:g.w  r0, @(0x0506,r0)
-      stc      sr, @(0x0506,r0)
-      addx.w   @(0x0506,r0), r0
-      mulxu.w  @(0x0506,r0), r0
-      subx.w   @(0x0506,r0), r0
-      divxu.w  @(0x0506,r0), r0
-      bset.w   #0, @(0x0506,r0)
-      bclr.w   #0, @(0x0506,r0)
-      bnot.w   #0, @(0x0506,r0)
-      cmp:g.w  #0x0607, @(0x0304,sp)
-      mov:g.w  #0x0809, @(0x0506,sp)
-      add:q.w  #1, @(0x0506,sp)
-      add:q.w  #-1, @(0x0506,sp)
-      clr.w    @(0x0506,sp)
-      neg.w    @(0x0506,sp)
-      not.w    @(0x0506,sp)
-      tst.w    @(0x0506,sp)
-      shal.w   @(0x0506,sp)
-      shar.w   @(0x0506,sp)
-      shll.w   @(0x0506,sp)
-      shlr.w   @(0x0506,sp)
-      rotl.w   @(0x0506,sp)
-      rotr.w   @(0x0506,sp)
-      rotxl.w  @(0x0506,sp)
-      rotxr.w  @(0x0506,sp)
-      add:g.w  @(0x0506,sp), r0
-      adds.w   @(0x0506,sp), r0
-      sub.w    @(0x0506,sp), r0
-      subs.w   @(0x0506,sp), r0
-      or.w     @(0x0506,sp), r0
-      bset.w   r0, @(0x0506,sp)
-      and.w    @(0x0506,sp), r0
-      bclr.w   r0, @(0x0506,sp)
-      xor.w    @(0x0506,sp), r0
-      bnot.w   r0, @(0x0506,sp)
-      cmp:g.w  @(0x0506,sp), r0
-      btst.w   r0, @(0x0506,sp)
-      mov:g.w  @(0x0506,sp), r0
-      ldc      @(0x0506,sp), sr
-      mov:g.w  r0, @(0x0506,sp)
-      stc      sr, @(0x0506,sp)
-      addx.w   @(0x0506,sp), r0
-      mulxu.w  @(0x0506,sp), r0
-      subx.w   @(0x0506,sp), r0
-      divxu.w  @(0x0506,sp), r0
-      bset.w   #0, @(0x0506,sp)
-      bclr.w   #0, @(0x0506,sp)
-      bnot.w   #0, @(0x0506,sp)
-      btst.w   #0, @(0x0506,sp)
+      cmp:g.w  #0x0607, @(-0x0606,r0)
+      mov:g.w  #7:8, @(-0x0606,r0)
+      mov:g.w  #0x0809, @(-0x0606,r0)
+      add:q.w  #1, @(-0x0606,r0)
+      add:q.w  #-1, @(-0x0606,r0)
+      clr.w    @(-0x0606,r0)
+      neg.w    @(-0x0606,r0)
+      not.w    @(-0x0606,r0)
+      tst.w    @(-0x0606,r0)
+      shal.w   @(-0x0606,r0)
+      shar.w   @(-0x0606,r0)
+      shll.w   @(-0x0606,r0)
+      shlr.w   @(-0x0606,r0)
+      rotl.w   @(-0x0606,r0)
+      rotr.w   @(-0x0606,r0)
+      rotxl.w  @(-0x0606,r0)
+      rotxr.w  @(-0x0606,r0)
+      add:g.w  @(-0x0606,r0), r0
+      adds.w   @(-0x0606,r0), r0
+      sub.w    @(-0x0606,r0), r0
+      subs.w   @(-0x0606,r0), r0
+      or.w     @(-0x0606,r0), r0
+      bset.w   r0, @(-0x0606,r0)
+      and.w    @(-0x0606,r0), r0
+      bclr.w   r0, @(-0x0606,r0)
+      xor.w    @(-0x0606,r0), r0
+      bnot.w   r0, @(-0x0606,r0)
+      cmp:g.w  @(-0x0606,r0), r0
+      btst.w   r0, @(-0x0606,r0)
+      mov:g.w  @(-0x0606,r0), r0
+      ldc      @(-0x0606,r0), sr
+      mov:g.w  r0, @(-0x0606,r0)
+      stc      sr, @(-0x0606,r0)
+      addx.w   @(-0x0606,r0), r0
+      mulxu.w  @(-0x0606,r0), r0
+      subx.w   @(-0x0606,r0), r0
+      divxu.w  @(-0x0606,r0), r0
+      bset.w   #0, @(-0x0606,r0)
+      bclr.w   #0, @(-0x0606,r0)
+      bnot.w   #0, @(-0x0606,r0)
+      cmp:g.w  #0x0607, @(1,sp)
+      mov:g.w  #7:8, @(1,sp)
+      mov:g.w  #0x0809, @(1,sp)
+      add:q.w  #1, @(1,sp)
+      add:q.w  #-1, @(1,sp)
+      clr.w    @(1,sp)
+      neg.w    @(1,sp)
+      not.w    @(1,sp)
+      tst.w    @(1,sp)
+      shal.w   @(1,sp)
+      shar.w   @(1,sp)
+      shll.w   @(1,sp)
+      shlr.w   @(1,sp)
+      rotl.w   @(1,sp)
+      rotr.w   @(1,sp)
+      rotxl.w  @(1,sp)
+      rotxr.w  @(1,sp)
+      add:g.w  @(1,sp), r0
+      adds.w   @(1,sp), r0
+      sub.w    @(1,sp), r0
+      subs.w   @(1,sp), r0
+      or.w     @(1,sp), r0
+      bset.w   r0, @(1,sp)
+      and.w    @(1,sp), r0
+      bclr.w   r0, @(1,sp)
+      xor.w    @(1,sp), r0
+      bnot.w   r0, @(1,sp)
+      cmp:g.w  @(1,sp), r0
+      btst.w   r0, @(1,sp)
+      mov:g.w  @(1,sp), r0
+      ldc      @(1,sp), sr
+      mov:g.w  r0, @(1,sp)
+      stc      sr, @(1,sp)
+      addx.w   @(1,sp), r0
+      mulxu.w  @(1,sp), r0
+      subx.w   @(1,sp), r0
+      divxu.w  @(1,sp), r0
+      bset.w   #0, @(1,sp)
+      bclr.w   #0, @(1,sp)
+      bnot.w   #0, @(1,sp)
+      btst.w   #0, @(1,sp)

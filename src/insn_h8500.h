@@ -56,6 +56,8 @@ struct Operand final : ErrorAt {
     // a no-suffix (0) absolute may be re-formed to the shortest reachable
     // @aa:8/@aa:16 using the assumed page registers.
     uint8_t absSize = 0;
+    // Explicit immediate size suffix (8/16), or 0 when none was written.
+    uint8_t immSize = 0;
     // A no-suffix absolute in the assumed BR page (0 || BR || aa8), so it is
     // reachable as @aa:8. False while BR is undefined.
     bool brPage = false;

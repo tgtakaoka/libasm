@@ -66,7 +66,7 @@ constexpr Entry TABLE_GEN[] PROGMEM = {
     E2(0x88, CF_07, TEXT_LDC,    IC_N, ISZ_NONE, SZ_DATA, M_EASRC,   M_CR),       // LDC <EAs>,<CR>
     E2(0x80, CF_07, TEXT_MOV,    IC_G, ISZ_DATA, SZ_DATA, M_EASRC,   M_REG),      // MOV:G.B/.W <EAs>,Rd
     E2(0x90, CF_07, TEXT_MOV,    IC_G, ISZ_DATA, SZ_DATA, M_REG,     M_EADST),    // MOV:G.B/.W Rs,<EAd>
-    E2(0x06, CF_00, TEXT_MOV,    IC_G, ISZ_DATA, SZ_BYTE, M_IMM8,    M_EAMEM),    // MOV:G.B #xx:8,<EAd>
+    E2(0x06, CF_00, TEXT_MOV,    IC_G, ISZ_DATA, SZ_DATA, M_SIMM8,   M_EAMEM),    // MOV:G.B/.W #xx:8,<EAd>
     E2(0x07, CF_00, TEXT_MOV,    IC_G, ISZ_DATA, SZ_WORD, M_IMM16,   M_EAMEM),    // MOV:G.W #xx:16,<EAd>
     E2(0xA8, CF_07, TEXT_MULXU,  IC_N, ISZ_DATA, SZ_DATA, M_EASRC,   M_REGP),     // MULXU.B/.W <EAs>,Rd
     E1(0x14, CF_00, TEXT_NEG,    IC_N, ISZ_DATA, SZ_DATA, M_EADST),               // NEG.B/.W <EAd>
@@ -658,6 +658,11 @@ static bool acceptMode(const Operand &op, AddrMode table, OprSize insnSz) {
     case M_IMM8:
         // ANDC/ORC/XORC .w widens the immediate-EA operand to 16 bits.
         return op.mode == M_IMM16 && insnSz == SZ_WORD;
+    case M_SIMM8:
+        // MOV:G #xx:8 takes a byte operation's immediate, or an explicit :8 that
+        // a word operation (.W, or no suffix) keeps instead of the #xx:16 form.
+        return (op.mode == M_IMM8 && insnSz == SZ_BYTE) ||
+               ((op.mode == M_IMM8 || op.mode == M_IMM16) && op.immSize == 8);
     case M_IMM16:
         // MOV:I/CMP:I are the explicit 16-bit forms: a value that parsed as
         // imm8 (e.g. a small or negative #-1) still encodes as a word.

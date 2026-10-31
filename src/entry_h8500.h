@@ -56,11 +56,12 @@ enum AddrMode : uint8_t {
     M_SP = 22,       // implicit stack operand: @SP+ (LDM src) / @-SP (STM dst)
     M_REGP = 23,     // Rn forming a pair Rn:Rn+1; must be even when word (MULXU/DIVXU.W dst)
     M_INDP = 24,     // @Rn forming a pair Rn:Rn+1; must be even (PJMP/PJSR @Rn src)
+    M_SIMM8 = 25,    // #xx:8 MOV:G datum; sign-extended for a word EA
     // ---- EA placeholders: resolved from the EA prefix byte at decode time ---
-    M_EAREG = 25,    // EA operand restricted to a register (XCH; narrower than MOV:G)
-    M_EASRC = 26,    // EA operand, source slot (accepts all 11 EA modes)
-    M_EADST = 27,    // EA operand, destination slot (no immediate)
-    M_EAMEM = 28,    // EA operand restricted to a memory mode (MOVFPE/MOVTPE)
+    M_EAREG = 26,    // EA operand restricted to a register (XCH; narrower than MOV:G)
+    M_EASRC = 27,    // EA operand, source slot (accepts all 11 EA modes)
+    M_EADST = 28,    // EA operand, destination slot (no immediate)
+    M_EAMEM = 29,    // EA operand restricted to a memory mode (MOVFPE/MOVTPE)
 };
 
 // Routing class of an instruction's leading byte(s). Recorded on the Insn and
@@ -119,7 +120,7 @@ constexpr uint8_t CODE_MASK[] = {0x00, 0x07, 0x08, 0x0F};
 struct Entry final : entry::Base<uint8_t> {
     struct Flags final {
         // Three bytes (read with pgm_read_byte, no 32-bit PROGMEM math) hold the
-        // 18 attribute bits. The 29-value AddrMode forces src/dst to 5 bits each,
+        // 18 attribute bits. The 30-value AddrMode forces src/dst to 5 bits each,
         // so the total cannot fit a single 16-bit word; 3x uint8 beats a uint32.
         //   _a: [7]=isz(1) [6:5]=cf(2) [4:0]=dst(5)
         //   _b:           [6:5]=osz(2) [4:0]=src(5)
