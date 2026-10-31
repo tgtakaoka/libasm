@@ -265,6 +265,7 @@ Error AsmH8500::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         op.val = val;
         const auto sz = parseSizeQual(p);
+        op.immSize = sz;
         if (sz == 8) {
             op.mode = M_IMM8;
         } else if (sz == 16) {
@@ -405,6 +406,17 @@ Error AsmH8500::emitOperand(AsmInsn &insn, const Operand &op, AddrMode mode) con
     case M_ABS8:
         insn.emitOperandUint8(pageLow8(insn, op));
         break;
+    case M_SIMM8: {
+        // A word EA sign-extends the datum (manual 2.2.24 MOV:G note 3), so the
+        // 16-bit value must be representable that way.
+        const auto v = op.val.getUnsigned();
+        const auto word = (insn.prefix() >> 3) & 1;
+        const auto over = word ? op.val.overflowInt8() && !(v >= 0xFF80 && v <= 0xFFFF)
+                               : op.val.overflowUint8();
+        insn.setErrorIf(op, over ? OVERFLOW_RANGE : OK);
+        insn.emitOperandUint8(static_cast<uint8_t>(v));
+        break;
+    }
     case M_IMM16:
         insn.setErrorIf(op, op.val.overflowUint16() ? OVERFLOW_RANGE : OK);
         insn.emitOperandUint16(static_cast<uint16_t>(op.val.getUnsigned()));
@@ -472,6 +484,7 @@ static Error encodeOpField(const Operand &op, AddrMode mode, uint8_t &field) {
         return OK;
     case M_BIT:
     case M_IMM8:
+    case M_SIMM8:
     case M_IMM16:
         // M_BIT: bit number 0-15 (BSET/BCLR/BNOT/BTST). An immediate here is the
         // ANDC/ORC/XORC EA source or the MOV:G #xx,<EAd> trailing data; either

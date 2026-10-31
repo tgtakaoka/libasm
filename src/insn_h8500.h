@@ -56,6 +56,8 @@ struct Operand final : ErrorAt {
     // a no-suffix (0) absolute may be re-formed to the shortest reachable
     // @aa:8/@aa:16 using the assumed page registers.
     uint8_t absSize = 0;
+    // Explicit immediate size suffix (8/16), or 0 when none was written.
+    uint8_t immSize = 0;
     Operand() : mode(M_NONE), reg(REG_UNDEF), creg(CR_UNDEF), val() {}
 };
 
