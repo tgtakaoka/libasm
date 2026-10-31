@@ -195,11 +195,15 @@ Error AsmH8500::parseOperand(StrScanner &scan, Operand &op) const {
             return op.setError(at, UNKNOWN_REGISTER);
         }
 
-        // @(d,Rn)
+        // @(d,Rn) with optional :8/:16 qualifier
         if (p.expect('(')) {
             const auto disp = parseInteger(p.skipSpaces(), op);
             if (op.hasError())
                 return op.getError();
+            const auto qual = p;
+            const auto sz = parseSizeQual(p);
+            if (sz == 24)
+                return op.setError(qual, ILLEGAL_SIZE);
             if (!p.skipSpaces().expect(','))
                 return op.setError(p, MISSING_COMMA);
             const auto at = p.skipSpaces();
@@ -211,12 +215,11 @@ Error AsmH8500::parseOperand(StrScanner &scan, Operand &op) const {
             op.val = disp;
             op.reg = reg;
             const auto d = disp.getSigned();
-            if (reg == REG_FP && d >= -128 && d <= 127) {
-                op.mode = M_FPX8;
-            } else if (d >= -128 && d <= 127) {
-                op.mode = M_IDX8;
-            } else {
+            const auto short8 = (sz == 0) ? (d >= -128 && d <= 127) : (sz == 8);
+            if (!short8) {
                 op.mode = M_IDX16;
+            } else {
+                op.mode = (reg == REG_FP) ? M_FPX8 : M_IDX8;
             }
             scan = p;
             return OK;
