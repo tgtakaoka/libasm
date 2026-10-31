@@ -48,7 +48,8 @@ const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
 DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_segInsn),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_fwait),
+      _opt_fwait(this, &Config::setFwaitName, OPT_TEXT_FWAIT, OPT_DESC_FWAIT, &_opt_segInsn),
       _opt_segInsn(
               this, &DisI8086::setSegmentInsn, OPT_BOOL_SEG_INSN, OPT_DESC_SEG_INSN, &_opt_repInsn),
       _opt_repInsn(
@@ -66,6 +67,7 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
 
 void DisI8086::reset() {
     Disassembler::reset();
+    _fwait = FWAIT_NONE;
     setFpuType(FPU_NONE);
 #if !defined(LIBASM_I8086_NOFPU)
     setFpuType(FPU_ON);
@@ -608,35 +610,41 @@ void DisI8086::decodeStringInsn(DisInsn &insn, StrBuffer &out) const {
         outRegName(out.comma(), REG_DX);
 }
 
-Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out, bool waiting) const {
+Error DisI8086::searchCodes(
+        DisInsn &insn, StrBuffer &out, const CpuSpec &spec, bool waiting) const {
     insn.setModel(model32());
     uint16_t opc = insn.readByte();
-    const auto fwait = (waiting && opc == DisInsn::FWAIT);
-    if (fwait)
+    const auto lead = opc;
+    if (waiting)
         opc = insn.readByte();
     if (insn.getError())
         return insn.getError();
 
     opc = insn.readPrefixCodes(
-            opc, _cpuSpec, _segInsn && !_gnuAs, _repInsn && !_gnuAs, _lockInsn && !_gnuAs);
+            opc, spec, _segInsn && !_gnuAs, _repInsn && !_gnuAs, _lockInsn && !_gnuAs);
     if (insn.getError())
         return insn.getError();
 
     auto prefix = opc;
-    if (fwait) {
+    if (waiting) {
         if (!DisInsn::escapeInsn(opc))
             return insn.setError(out, UNKNOWN_INSTRUCTION);
-        prefix |= (DisInsn::FWAIT << 8);
+        prefix |= (lead << 8);
     }
 
-    if (isPrefix(_cpuSpec, prefix)) {
+    // An 8087 escape the WAIT convention has no form for reads as it is.
+    const auto plain = noWaitSpec(spec);
+    const auto &search = (isPrefix(spec, prefix) || !isPrefix(plain, prefix)) ? spec : plain;
+    if (&search == &plain)
+        insn.setNoWaitForm();
+    if (isPrefix(search, prefix)) {
         insn.setPrefix(prefix);
         opc = insn.readByte();
         if (insn.getError())
             return insn.getError();
         if (prefix < 0x100) {
             prefix = (prefix << 8) | opc;
-            if (isPrefix(_cpuSpec, prefix)) {
+            if (isPrefix(search, prefix)) {
                 insn.setPrefix(prefix);
                 opc = insn.readByte();
                 if (insn.getError())
@@ -646,7 +654,7 @@ Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out, bool waiting) const {
     }
 
     insn.setOpCode(opc);
-    searchOpCode(_cpuSpec, insn, out);
+    searchOpCode(search, insn, out);
     return insn.getError();
 }
 
@@ -773,9 +781,10 @@ void DisInsn::addPrefix(const char *prefix_P, StrBuffer &out) {
     save.over(out);
 }
 
-Error DisI8086::decodeInsn(DisInsn &insn, Insn &_insn, StrBuffer &out, bool waiting) const {
+Error DisI8086::decodeInsn(
+        DisInsn &insn, Insn &_insn, StrBuffer &out, const CpuSpec &spec, bool waiting) const {
     insn.setFarMode(_farMode);
-    if (searchCodes(insn, out, waiting))
+    if (searchCodes(insn, out, spec, waiting))
         return _insn.setError(insn);
 
     insn.readModReg();
@@ -818,7 +827,7 @@ Error DisI8086::decodeInsn(DisInsn &insn, Insn &_insn, StrBuffer &out, bool wait
             }
         }
     }
-    if (insn.hasUnusedData32() || insn.hasUnusedAddr32())
+    if (insn.hasUnusedData32() || insn.hasUnusedAddr32() || insn.noWaitForm())
         insn.setErrorIf(out.str(), PREFIX_HAS_NO_EFFECT);
     return _insn.setError(insn);
 }
@@ -832,20 +841,22 @@ Error DisI8086::decodeFollower(Insn &_insn, StrBuffer &out) const {
     auto reader = memory.iterator();
     Insn work(memory.origin());
     DisInsn follower(work, reader, out);
-    decodeInsn(follower, work, out);
+    decodeInsn(follower, work, out, _cpuSpec);
     _insn.nameBuffer().reset().text(work.name());
     return _insn.setError(work);
 }
 
-// WAIT merges with a following control instruction that has a waiting form,
-// otherwise it stands alone and the following instruction continues it. The
-// merge is tried only at the start of a decode, so WAIT WAIT FNINIT stays as is.
+// WAIT (or NOP) merges with a following 8087 instruction that has a form led
+// by it, otherwise it stands alone and the following instruction continues it.
+// The merge is tried only at the start of a decode, so WAIT WAIT FNINIT stays
+// as is.
 Error DisI8086::decodeWait(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     char buffer[80];
     StrBuffer discard{buffer, sizeof(buffer)};
     Insn work(_insn.address() + 1);
     DisInsn follower(work, memory, discard);
-    const auto error = decodeInsn(follower, work, discard);
+    // Read the following instruction as it is without WAIT conventions.
+    const auto error = decodeInsn(follower, work, discard, noWaitSpec(_cpuSpec));
     for (uint8_t i = 0; i < work.length(); i++)
         _insn.emitByte(work.bytes()[i]);
     if (error == NO_MEMORY && work.length() == 0)
@@ -857,11 +868,11 @@ Error DisI8086::decodeWait(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     auto probe = waiting.iterator();
     Insn trial(waiting.origin());
     DisInsn control(trial, probe, discard);
-    if (searchCodes(control, discard, true) == OK) {
+    if (searchCodes(control, discard, _cpuSpec, true) == OK) {
         auto reader = waiting.iterator();
         Insn merged(waiting.origin());
         DisInsn insn(merged, reader, out);
-        decodeInsn(insn, merged, out, true);
+        decodeInsn(insn, merged, out, _cpuSpec, true);
         _insn.nameBuffer().reset().text(merged.name());
         return _insn.setError(merged);
     }
@@ -875,9 +886,8 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     if (_insn.hasContinue())
         return decodeFollower(_insn, out);
     DisInsn insn(_insn, memory, out);
-    decodeInsn(insn, _insn, out);
-    if (_insn.isOK() && _cpuSpec.fpu != FPU_NONE && _insn.length() == 1 &&
-            _insn.bytes()[0] == DisInsn::FWAIT)
+    decodeInsn(insn, _insn, out, _cpuSpec);
+    if (_insn.isOK() && _insn.length() == 1 && isWaitLead(_cpuSpec, _insn.bytes()[0]))
         return decodeWait(memory, _insn, out);
     return _insn.getError();
 }

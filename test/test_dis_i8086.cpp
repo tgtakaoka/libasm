@@ -29,10 +29,10 @@ Disassembler &disassembler(dis8086);
 
 namespace {
 
-// Decode |codes| as a WAIT and the instruction it reads with it, which comes
-// as a continuation of the same Insn.
+// Decode |codes| as a WAIT or NOP and the instruction it reads with it, which
+// comes as a continuation of the same Insn.
 void wait_assert(const char *file, int line, const Config::opcode_t *codes, size_t size,
-        const char *name2, const char *opr2) {
+        const char *name1, const char *name2, const char *opr2) {
     const auto endian = disassembler.config().endian();
     const auto unit = disassembler.config().addressUnit();
     const ArrayMemory memory(0, codes, size, endian, unit);
@@ -40,11 +40,11 @@ void wait_assert(const char *file, int line, const Config::opcode_t *codes, size
     Insn insn(memory.origin());
     char actual_opr[64];
     disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
-    asserter.equals(file, line, "WAIT", "OK", insn.errorText_P());
-    asserter.equals(file, line, "WAIT", "WAIT", insn);
-    asserter.equals(file, line, "WAIT", "", actual_opr);
-    asserter.isTrue(file, line, "WAIT", insn.hasContinue());
-    asserter.equals(file, line, "WAIT", size, insn.length());
+    asserter.equals(file, line, name1, "OK", insn.errorText_P());
+    asserter.equals(file, line, name1, name1, insn);
+    asserter.equals(file, line, name1, "", actual_opr);
+    asserter.isTrue(file, line, name1, insn.hasContinue());
+    asserter.equals(file, line, name1, size, insn.length());
     disassembler.decode(reader, insn, actual_opr, sizeof(actual_opr), &symtab);
     asserter.equals(file, line, name2, "OK", insn.errorText_P());
     asserter.equals(file, line, name2, name2, insn);
@@ -54,10 +54,10 @@ void wait_assert(const char *file, int line, const Config::opcode_t *codes, size
 
 }  // namespace
 
-#define PTEST(name2, opr2, ...)                                                 \
-    do {                                                                        \
-        const Config::opcode_t codes[] = {__VA_ARGS__};                         \
-        wait_assert(__FILE__, __LINE__, codes, sizeof(codes), name2, opr2);     \
+#define PTEST(name1, name2, opr2, ...)                                             \
+    do {                                                                           \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                            \
+        wait_assert(__FILE__, __LINE__, codes, sizeof(codes), name1, name2, opr2); \
     } while (0)
 
 constexpr Config::opcode_t DATA32 = 0x66;
@@ -5063,16 +5063,16 @@ void test_float() {
     NMEM("WAIT", "", "", FWAIT, 0xDF);
 
     TEST("FINIT", "", FWAIT, 0xDB, 0xE3);
-    PTEST("FLD",   "DWORD [BX]",     FWAIT, 0xD9, 0007);
-    PTEST("FLDCW", "[1234H]",        FWAIT, 0xD9, 0056, 0x34, 0x12);
-    PTEST("FILD",  "WORD [SI]",      FWAIT, 0xDF, 0004);
-    PTEST("FILD",  "WORD [1234H]",   FWAIT, 0xDF, 0006, 0x34, 0x12);
-    PTEST("PUSHF", "",               FWAIT, 0x9C);
-    PTEST("FADD",  "ST, ST(1)",      FWAIT, 0xD8, 0xC1);
-    PTEST("MOV",   "AH, [1234H]",    FWAIT, 0x8A, 0x26, 0x34, 0x12);
-    PTEST("MOV",   "AH, ES:[1234H]", FWAIT, 0x26, 0x8A, 0x26, 0x34, 0x12);
-    PTEST("CLC",   "",               FWAIT, 0xF8);
-    PTEST("WAIT",  "",               FWAIT, FWAIT);
+    PTEST("WAIT", "FLD",   "DWORD [BX]",     FWAIT, 0xD9, 0007);
+    PTEST("WAIT", "FLDCW", "[1234H]",        FWAIT, 0xD9, 0056, 0x34, 0x12);
+    PTEST("WAIT", "FILD",  "WORD [SI]",      FWAIT, 0xDF, 0004);
+    PTEST("WAIT", "FILD",  "WORD [1234H]",   FWAIT, 0xDF, 0006, 0x34, 0x12);
+    PTEST("WAIT", "PUSHF", "",               FWAIT, 0x9C);
+    PTEST("WAIT", "FADD",  "ST, ST(1)",      FWAIT, 0xD8, 0xC1);
+    PTEST("WAIT", "MOV",   "AH, [1234H]",    FWAIT, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("WAIT", "MOV",   "AH, ES:[1234H]", FWAIT, 0x26, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("WAIT", "CLC",   "",               FWAIT, 0xF8);
+    PTEST("WAIT", "WAIT",  "",               FWAIT, FWAIT);
 
     TEST("FLDCW", "[SI]",          0xD9, 0054);
     TEST("FLDCW", "[1234H]",       0xD9, 0056, 0x34, 0x12);
@@ -5688,6 +5688,68 @@ void test_float_nowait() {
     }
 }
 
+void test_fwait_auto() {
+    if (!fpu_on() || strcmp("8087", dis8086.fpu_P()) != 0)
+        return;
+
+    constexpr auto FWAIT = 0x9B;
+    disassembler.setOption("fwait", "auto");
+    TEST("FLD",    "DWORD [BX]", FWAIT, 0xD9, 0007);
+    TEST("FNLD",   "DWORD [BX]",        0xD9, 0007);
+    TEST("FLD",    "ST(1)",      FWAIT, 0xD9, 0xC1);
+    TEST("FNLD",   "ST(1)",             0xD9, 0xC1);
+    TEST("FADD",   "ST, ST(1)",  FWAIT, 0xD8, 0xC1);
+    TEST("FNADD",  "ST, ST(1)",         0xD8, 0xC1);
+    TEST("FILD",   "WORD [SI]",  FWAIT, 0xDF, 0004);
+    TEST("FNILD",  "WORD [SI]",         0xDF, 0004);
+    TEST("FLDCW",  "[1234H]",    FWAIT, 0xD9, 0056, 0x34, 0x12);
+    TEST("FNLDCW", "[1234H]",           0xD9, 0056, 0x34, 0x12);
+    TEST("FNOP",   "",           FWAIT, 0xD9, 0xD0);
+    TEST("FNNOP",  "",                  0xD9, 0xD0);
+    TEST("FINIT",  "",           FWAIT, 0xDB, 0xE3);
+    TEST("FNINIT", "",                  0xDB, 0xE3);
+    TEST("FSTCW",  "[SI]",       FWAIT, 0xD9, 0074);
+    TEST("FNSTCW", "[SI]",              0xD9, 0074);
+    TEST("WAIT",   "",           FWAIT);
+    PTEST("WAIT", "MOV",   "AH, [1234H]", FWAIT, 0x8A, 0x26, 0x34, 0x12);
+    PTEST("WAIT", "WAIT",  "",            FWAIT, FWAIT);
+}
+
+void test_fwait_asm86() {
+    if (!fpu_on() || strcmp("8087", dis8086.fpu_P()) != 0)
+        return;
+
+    constexpr auto FWAIT = 0x9B;
+    constexpr auto NOP = 0x90;
+    disassembler.setOption("fwait", "asm86");
+    TEST("FLD",     "DWORD [BX]", FWAIT, 0xD9, 0007);
+    TEST("FLD",     "ST(1)",      FWAIT, 0xD9, 0xC1);
+    TEST("FADD",    "ST, ST(1)",  FWAIT, 0xD8, 0xC1);
+    TEST("FILD",    "WORD [SI]",  FWAIT, 0xDF, 0004);
+    TEST("FNOP",    "",           FWAIT, 0xD9, 0xD0);
+    TEST("FINIT",   "",           FWAIT, 0xDB, 0xE3);
+    TEST("FNINIT",  "",           NOP,   0xDB, 0xE3);
+    TEST("FNDISI",  "",           NOP,   0xDB, 0xE1);
+    TEST("FNENI",   "",           NOP,   0xDB, 0xE0);
+    TEST("FNCLEX",  "",           NOP,   0xDB, 0xE2);
+    TEST("FSTCW",   "[SI]",       FWAIT, 0xD9, 0074);
+    TEST("FNSTCW",  "[SI]",       NOP,   0xD9, 0074);
+    TEST("FNSTSW",  "[SI]",       NOP,   0xDD, 0074);
+    TEST("FNSTENV", "[SI]",       NOP,   0xD9, 0064);
+    TEST("FNSAVE",  "[SI]",       NOP,   0xDD, 0064);
+    TEST("FSTCW",   "ES:[SI]",    FWAIT, 0x26, 0xD9, 0074);
+    TEST("FWAIT",   "",           FWAIT);
+    TEST("NOP",     "",           NOP);
+    EPRE("FLD",     "DWORD [BX]",        0xD9, 0007);  // no bare escape in ASM86
+    EPRE("FNINIT",  "",                  0xDB, 0xE3);
+    PTEST("NOP",   "MOV",   "AH, [1234H]", NOP,   0x8A, 0x26, 0x34, 0x12);
+    PTEST("FWAIT", "FWAIT", "",            FWAIT, FWAIT);
+    // A NOP or WAIT takes the next one as its continuation, which leaves the
+    // 8087 instruction after them without its leading byte.
+    PTEST("NOP",   "FWAIT", "",            NOP,   FWAIT);
+    EPRE("FILD",    "WORD [SI]",         0xDF, 0004);
+}
+
 #endif
 
 bool contains(const uint8_t *begin, const uint8_t *end, const uint8_t opc) {
@@ -6177,6 +6239,8 @@ void run_tests(const char *cpu) {
 #if !defined(LIBASM_I8086_NOFPU)
     RUN_TEST(test_float);
     RUN_TEST(test_float_nowait);
+    RUN_TEST(test_fwait_auto);
+    RUN_TEST(test_fwait_asm86);
     RUN_TEST(test_illegal_8087);
 #endif
     if (is8086())
