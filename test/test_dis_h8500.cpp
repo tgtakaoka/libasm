@@ -201,6 +201,7 @@ void test_spc_jmp() {
     // JMP/JSR @(d:16,Rn)
     TEST("JMP", "@(H'0100,R0)", 0x11, 0xF0, 0x01, 0x00);
     TEST("JSR", "@(H'0100,R0)", 0x11, 0xF8, 0x01, 0x00);
+    TEST("JSR", "@(1:16,SP)",   0x11, 0xFF, 0x00, 0x01);
 }
 
 void test_spc_scb() {
@@ -285,6 +286,10 @@ void test_gen_mov() {
     // @(d:16,Rn): byte EA byte F0, word F8.
     TEST("MOV:G.W", "@(H'0080,R0), R1", 0xF8, 0x00, 0x80, 0x81);
     TEST("MOV:G.B", "@(H'1000,SP), R1", 0xF7, 0x10, 0x00, 0x81);  // disp16 byte, R7=SP
+    // A d:16 that fits 8 bits carries :16 so it reassembles to this form.
+    TEST("MOV:G.W", "@(1:16,R0), R1",       0xF8, 0x00, 0x01, 0x81);
+    TEST("MOV:G.W", "@(-H'0080:16,R0), R1", 0xF8, 0xFF, 0x80, 0x81);
+    TEST("MOV:G.W", "R1, @(1:16,FP)",       0xFE, 0x00, 0x01, 0x91);
     TEST("MOV:G.B", "@H'10:8, R1",  0x05, 0x10, 0x81);   // abs8 byte
     TEST("MOV:G.W", "@H'10:8, R1",  0x0D, 0x10, 0x81);   // abs8 word
     TEST("MOV:G.W", "@H'1000:16, R1", 0x1D, 0x10, 0x00, 0x81);  // abs16 word
