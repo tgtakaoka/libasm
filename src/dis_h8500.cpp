@@ -87,6 +87,17 @@ void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
         out.text_P(PSTR(":16"));
 }
 
+void DisH8500::outIdx16(StrBuffer &out, int16_t disp, RegName reg) const {
+    out.letter('@').letter('(');
+    outHex(out, disp, -16);
+    // A displacement that fits 8 bits needs :16 to reassemble to this form.
+    if (disp >= -128 && disp <= 127)
+        out.text_P(PSTR(":16"));
+    out.letter(',');
+    outAddrReg(out, reg);
+    out.letter(')');
+}
+
 void DisH8500::outPcRel8(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
@@ -136,11 +147,7 @@ void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
         out.letter(')');
         break;
     case M_IDX16:
-        out.letter('@').letter('(');
-        outHex(out, static_cast<int16_t>(insn.eaVal), -16);
-        out.letter(',');
-        outAddrReg(out, insn.eaReg);
-        out.letter(')');
+        outIdx16(out, static_cast<int16_t>(insn.eaVal), insn.eaReg);
         break;
     case M_ABS8:
         outAbs8(out, static_cast<uint8_t>(insn.eaVal));
@@ -405,11 +412,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
     case M_IDX16: {
         const auto disp = static_cast<int16_t>(insn.readUint16Be());
-        out.letter('@').letter('(');
-        outHex(out, disp, -16);
-        out.letter(',');
-        outAddrReg(out, decodeReg(insn.opByte & 0x07));
-        out.letter(')');
+        outIdx16(out, disp, decodeReg(insn.opByte & 0x07));
         break;
     }
     default:
