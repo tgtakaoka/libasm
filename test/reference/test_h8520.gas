@@ -12,7 +12,7 @@
 ### See the License for the specific language governing permissions and
 ### limitations under the License.
 
-### H8/520 in maximum mode - same as H8/500 minus E-clock instructions.
+### H8/520 in maximum mode - same as H8/510 minus E-clock instructions.
 
 ### RTE (0x0A) is unknown to h8500-hms-as; supply it as a byte macro.
         .macro rte

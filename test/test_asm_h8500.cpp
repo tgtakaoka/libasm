@@ -38,8 +38,14 @@ void tear_down() {
 
 // clang-format off
 void test_cpu() {
+    EQUALS("cpu H8/510", true, assembler.setCpu("H8/510"));
+    EQUALS_P("cpu H8/510", "H8/510", assembler.config().cpu_P());
+    EQUALS("cpu H8/510", ADDRESS_24BIT, asmh8500.physicalWidth());
+
+    // Former name of H8/510.
     EQUALS("cpu H8/500", true, assembler.setCpu("H8/500"));
-    EQUALS_P("cpu H8/500", "H8/500", assembler.config().cpu_P());
+    EQUALS_P("cpu H8/500", "H8/510", assembler.config().cpu_P());
+    EQUALS("cpu H8/500", ADDRESS_24BIT, asmh8500.physicalWidth());
 
     EQUALS("cpu H8/520", true, assembler.setCpu("H8/520"));
     EQUALS_P("cpu H8/520", "H8/520", assembler.config().cpu_P());
@@ -190,7 +196,7 @@ void test_sec_max_mode() {
     // The maxmode pseudo directive switches assembler mode (no bytes emitted).
     TEST(".maxmode on");
     // PJMP/PJSR @aa:24 (SPC form). The address must fit the physical space:
-    // 24-bit (16MB) on the H8/500, 20-bit (1MB) on the H8/520/H8/530. 0x0FFFFF
+    // 24-bit (16MB) on the H8/510, 20-bit (1MB) on the H8/520/H8/530. 0x0FFFFF
     // fits both; 0x1000000 (16MB) overflows both.
     TEST("PJMP @$010203",  0x13, 0x01, 0x02, 0x03);
     TEST("PJSR @$010203",  0x03, 0x01, 0x02, 0x03);

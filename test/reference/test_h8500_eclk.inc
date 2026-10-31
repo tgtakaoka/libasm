@@ -13,7 +13,7 @@
 ;### limitations under the License.
 
 ;### E-clock peripheral access instructions.
-;### Valid on H8/500 and H8/530 (not H8/520, which has no E-clock pin).
+;### Valid on H8/510 and H8/530 (not H8/520, which has no E-clock pin).
 ;### Format C (EXT): [EA byte][EA ext][0x00][OP byte].
 
 ;### MOVFPE @EAs,Rd (move byte from E-clock-synchronized memory to register)

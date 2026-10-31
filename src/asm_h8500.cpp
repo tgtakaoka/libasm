@@ -424,7 +424,7 @@ Error AsmH8500::emitOperand(AsmInsn &insn, const Operand &op, AddrMode mode) con
         break;
     case M_ABS24:
         // @aa:24 (PJMP/PJSR) is max-mode only, so checkAddr uses physicalWidth()
-        // (24-bit on H8/500, 20-bit on the pin-limited H8/520/H8/530).
+        // (24-bit on H8/510, 20-bit on the pin-limited H8/520/H8/530).
         insn.setErrorIf(op, checkAddr(op.val.getUnsigned()));
         insn.emitOperandUint24(static_cast<uint32_t>(op.val.getUnsigned()));
         break;
@@ -724,7 +724,7 @@ Error AsmH8500::encodeSpcFmt(AsmInsn &insn) const {
 
     // PJMP/PJSR @aa:24 live on a MAXMODE-only page filtered out by searchName in
     // minimum mode, so addressWidth() here is the chip's physical width (24-bit
-    // on the H8/500, 20-bit on the pin-limited H8/520/H8/530).
+    // on the H8/510, 20-bit on the pin-limited H8/520/H8/530).
     if (esrc == M_ABS24) {
         insn.setErrorIf(insn.op1, checkAddr(insn.op1.val.getUnsigned()));
         insn.emitInsn();

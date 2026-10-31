@@ -12,10 +12,10 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-;;; H8/520 in maximum mode - identical to H8/500 except no E-clock instructions
+;;; H8/520 in maximum mode - identical to H8/510 except no E-clock instructions
 ;;; (MOVTPE/MOVFPE) because H8/520 has no E-clock output pin.
 ;;; HD6475328 is the only H8/500-family code ASL knows; the omitted .inc file
-;;; covers the only H8/520-vs-H8/500 difference.
+;;; covers the only H8/520-vs-H8/510 difference.
 
         cpu     HD6475328
         maxmode on
