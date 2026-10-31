@@ -307,6 +307,17 @@ void test_gen_mov() {
     // MOV:G #xx,<EAd>: immediate to memory (data trails OP 0x06/0x07).
     TEST("MOV:G.B #$55, @R0",       0xD0, 0x06, 0x55);
     TEST("MOV:G.W #$1234, @R1",     0xD9, 0x07, 0x12, 0x34);
+    // An explicit :8 on a word operation keeps the 8-bit data, which the CPU
+    // sign-extends (manual 2.2.24 MOV:G note 3); without it the word form wins.
+    TEST("MOV:G.W #-128:8, @R1",    0xD9, 0x06, 0x80);
+    TEST("MOV:G.W #$FF80:8, @R1",   0xD9, 0x06, 0x80);
+    TEST("MOV:G.W #127:8, @R1",     0xD9, 0x06, 0x7F);
+    TEST("MOV #-1:8, @R1",          0xD9, 0x06, 0xFF);
+    TEST("MOV.W #-1, @R1",          0xD9, 0x07, 0xFF, 0xFF);
+    TEST("MOV #1, @R1",             0xD9, 0x07, 0x00, 0x01);
+    TEST("MOV:G.B #$80:8, @R1",     0xD1, 0x06, 0x80);
+    ERRT("MOV:G.W #$80:8, @R1",     OVERFLOW_RANGE, "#$80:8, @R1", 0xD9, 0x06, 0x80);
+    ERRT("MOV:G.W #-129:8, @R1",    OVERFLOW_RANGE, "#-129:8, @R1", 0xD9, 0x06, 0x7F);
 }
 
 void test_gen_alu() {
