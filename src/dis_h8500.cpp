@@ -73,8 +73,7 @@ void DisH8500::outImm8(StrBuffer &out, uint8_t val) const {
 void DisH8500::outAbs8(StrBuffer &out, uint8_t addr) const {
     out.letter('@');
     outAbsAddr(out, addr, 8);
-    if (!_gnuAs)
-        out.text_P(":8");
+    out.text_P(":8");
 }
 
 void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
@@ -83,8 +82,7 @@ void DisH8500::outAbs16(DisInsn &insn, StrBuffer &out) const {
     // register at run time, so print it at its true 16-bit width rather than
     // zero-padded to the (24-bit) address width in maximum mode.
     outAbsAddr(out, insn.readUint16Be(), 16);
-    if (!_gnuAs)
-        out.text_P(":16");
+    out.text_P(":16");
 }
 
 void DisH8500::outIdx16(StrBuffer &out, int16_t disp, RegName reg) const {
@@ -155,8 +153,7 @@ void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
     case M_ABS16:
         out.letter('@');
         outAbsAddr(out, insn.eaVal, 16);  // 16-bit field; high byte is the DP page
-        if (!_gnuAs)
-            out.text_P(":16");
+        out.text_P(":16");
         break;
     case M_IMM8:
         outImm8(out, static_cast<uint8_t>(insn.eaVal));
@@ -342,8 +339,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         outHex(out, target, 24);
         // PJMP/PJSR have only the @aa:24 form; a page-0 (<=0xFFFF) address would
         // otherwise re-parse as @aa:16 (which they reject), so make it explicit.
-        if (!_gnuAs)
-            out.text_P(":24");
+        out.text_P(":24");
         break;
     }
     case M_REGLIST:
