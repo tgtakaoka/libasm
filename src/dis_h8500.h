@@ -40,6 +40,7 @@ private:
     void outImm8(StrBuffer &out, uint8_t val) const;
     void outAbs8(StrBuffer &out, uint8_t addr) const;
     void outAbs16(DisInsn &insn, StrBuffer &out) const;
+    void outIdx16(StrBuffer &out, int16_t disp, RegName reg) const;
     void outPcRel8(DisInsn &insn, StrBuffer &out) const;
     void outPcRel16(DisInsn &insn, StrBuffer &out) const;
     void outBit(StrBuffer &out, uint8_t bit) const;

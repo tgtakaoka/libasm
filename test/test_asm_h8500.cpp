@@ -287,6 +287,16 @@ void test_gen_mov() {
     TEST("MOV:G.W @(128, R0), R1",  0xF8, 0x00, 0x80, 0x81);
     TEST("MOV:G.W @(-129, R0), R1", 0xF8, 0xFF, 0x7F, 0x81);
     TEST("MOV:G.B @($1000, R7), R1", 0xF7, 0x10, 0x00, 0x81);  // disp16 byte EA, R7
+    // An explicit :16/:8 overrides the displacement width; :8 must still fit.
+    TEST("MOV:G.W @(1:16, R0), R1",   0xF8, 0x00, 0x01, 0x81);
+    TEST("MOV:G.W @(-1:16, R0), R1",  0xF8, 0xFF, 0xFF, 0x81);
+    TEST("MOV.W @(1:16, FP), R1",     0xFE, 0x00, 0x01, 0x81);  // not MOV:F
+    TEST("MOV.W @(1:8, FP), R1",      0x89, 0x01);              // MOV:F
+    TEST("MOV:G.W @(1:8, R0), R1",    0xE8, 0x01, 0x81);
+    TEST("JSR @(1:16, SP)",           0x11, 0xFF, 0x00, 0x01);
+    ERRT("MOV:G.W @($200:8, R0), R1", OVERFLOW_RANGE, "@($200:8, R0), R1", 0xE8, 0x00, 0x81);
+    ERRT("MOV:G.W @(1:24, R0), R1",   ILLEGAL_SIZE,   ":24, R0), R1");
+    ERRT("MOV:F.W @(1:16, FP), R1",   OPERAND_NOT_ALLOWED, "@(1:16, FP), R1");
     TEST("MOV:G.B @$10:8, R1",      0x05, 0x10, 0x81);
     TEST("MOV:G.W @$10:8, R1",      0x0D, 0x10, 0x81);
     TEST("MOV:G.W @$1000:16, R1",   0x1D, 0x10, 0x00, 0x81);
