@@ -15,6 +15,7 @@
  */
 
 #include "dis_i8086.h"
+#include "array_memory.h"
 #include "reg_i8086.h"
 #include "table_i8086.h"
 #include "text_i8086.h"
@@ -607,22 +608,14 @@ void DisI8086::decodeStringInsn(DisInsn &insn, StrBuffer &out) const {
         outRegName(out.comma(), REG_DX);
 }
 
-Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out) const {
+Error DisI8086::searchCodes(DisInsn &insn, StrBuffer &out, bool waiting) const {
     insn.setModel(model32());
     uint16_t opc = insn.readByte();
-    const auto fwait = (_cpuSpec.fpu != FPU_NONE && opc == DisInsn::FWAIT);
+    const auto fwait = (waiting && opc == DisInsn::FWAIT);
     if (fwait)
         opc = insn.readByte();
-    if (insn.getError()) {
-        if (!fwait)
-            return insn.getError();
-        insn.setSegment(0);
-        insn.setPrefix(0);
-        insn.setOpCode(DisInsn::FWAIT);
-        insn.resetLength(1);
-        searchOpCode(_cpuSpec, insn, out);
+    if (insn.getError())
         return insn.getError();
-    }
 
     opc = insn.readPrefixCodes(
             opc, _cpuSpec, _segInsn && !_gnuAs, _repInsn && !_gnuAs, _lockInsn && !_gnuAs);
@@ -780,11 +773,9 @@ void DisInsn::addPrefix(const char *prefix_P, StrBuffer &out) {
     save.over(out);
 }
 
-Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
-    DisInsn insn(_insn, memory, out);
+Error DisI8086::decodeInsn(DisInsn &insn, Insn &_insn, StrBuffer &out, bool waiting) const {
     insn.setFarMode(_farMode);
-
-    if (searchCodes(insn, out))
+    if (searchCodes(insn, out, waiting))
         return _insn.setError(insn);
 
     insn.readModReg();
@@ -830,6 +821,65 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     if (insn.hasUnusedData32() || insn.hasUnusedAddr32())
         insn.setErrorIf(out.str(), PREFIX_HAS_NO_EFFECT);
     return _insn.setError(insn);
+}
+
+// The instruction a WAIT has already read, on its own line after the WAIT.
+Error DisI8086::decodeFollower(Insn &_insn, StrBuffer &out) const {
+    _insn.setContinueMark_P(nullptr);
+    const auto offset = _insn.continueOffset();
+    const ArrayMemory memory(
+            _insn.address() + offset, _insn.bytes() + offset, _insn.length() - offset);
+    auto reader = memory.iterator();
+    Insn work(memory.origin());
+    DisInsn follower(work, reader, out);
+    decodeInsn(follower, work, out);
+    _insn.nameBuffer().reset().text(work.name());
+    return _insn.setError(work);
+}
+
+// WAIT merges with a following control instruction that has a waiting form,
+// otherwise it stands alone and the following instruction continues it. The
+// merge is tried only at the start of a decode, so WAIT WAIT FNINIT stays as is.
+Error DisI8086::decodeWait(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+    char buffer[80];
+    StrBuffer discard{buffer, sizeof(buffer)};
+    Insn work(_insn.address() + 1);
+    DisInsn follower(work, memory, discard);
+    const auto error = decodeInsn(follower, work, discard);
+    for (uint8_t i = 0; i < work.length(); i++)
+        _insn.emitByte(work.bytes()[i]);
+    if (error == NO_MEMORY && work.length() == 0)
+        return _insn.getError();  // WAIT at the end of memory
+    if (error == NO_MEMORY || error == UNKNOWN_INSTRUCTION)
+        return _insn.setError(error);
+
+    const ArrayMemory waiting(_insn.address(), _insn.bytes(), _insn.length());
+    auto probe = waiting.iterator();
+    Insn trial(waiting.origin());
+    DisInsn control(trial, probe, discard);
+    if (searchCodes(control, discard, true) == OK) {
+        auto reader = waiting.iterator();
+        Insn merged(waiting.origin());
+        DisInsn insn(merged, reader, out);
+        decodeInsn(insn, merged, out, true);
+        _insn.nameBuffer().reset().text(merged.name());
+        return _insn.setError(merged);
+    }
+
+    _insn.setContinueOffset(1);
+    _insn.setContinueMark_P(text::common::TEXT_null);
+    return _insn.getError();
+}
+
+Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+    if (_insn.hasContinue())
+        return decodeFollower(_insn, out);
+    DisInsn insn(_insn, memory, out);
+    decodeInsn(insn, _insn, out);
+    if (_insn.isOK() && _cpuSpec.fpu != FPU_NONE && _insn.length() == 1 &&
+            _insn.bytes()[0] == DisInsn::FWAIT)
+        return decodeWait(memory, _insn, out);
+    return _insn.getError();
 }
 
 }  // namespace i8086
