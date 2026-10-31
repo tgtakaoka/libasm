@@ -499,6 +499,18 @@ void test_ext_format() {
     }
 }
 
+// GNU as takes a bare address of 0xFF or less as @aa:8 and rejects a bare small
+// JMP/PJMP target, so the size qualifiers stay under gnu-as too.
+void test_gnu_as() {
+    disassembler.setOption("gnu-as", "on");
+    TEST("MOV:L.B", "@0x10:8, R0",       0x60, 0x10);
+    TEST("ADD:G.B", "@0x0012:16, R1",    0x15, 0x00, 0x12, 0x21);
+    TEST("JMP",     "@0x0012:16",        0x10, 0x00, 0x12);
+    TEST("MOV:G.W", "@(1:16,R0), R1",    0xF8, 0x00, 0x01, 0x81);
+    disassembler.setOption("maximum-mode", "on");
+    TEST("PJMP",    "@18:24",      0x13, 0x00, 0x00, 0x12);
+}
+
 void test_symbol() {
     // Absolute and PC-relative operands resolve to a symbol when the table has
     // one for the target address.
@@ -531,6 +543,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_gen_cr);
     RUN_TEST(test_ext_format);
     RUN_TEST(test_illegal_h8500);
+    RUN_TEST(test_gnu_as);
     RUN_TEST(test_symbol);
 }
 
