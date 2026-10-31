@@ -21,8 +21,9 @@ namespace text {
 namespace h8500 {
 // clang-format off
 
-constexpr char TEXT_H8500_LIST[] = "H8/500, H8/520, H8/530";
+constexpr char TEXT_H8500_LIST[] = "H8/510, H8/520, H8/530";
 constexpr char TEXT_CPU_H8500[]  = "H8/500";
+constexpr char TEXT_CPU_H8510[]  = "H8/510";
 constexpr char TEXT_CPU_H8520[]  = "H8/520";
 constexpr char TEXT_CPU_H8530[]  = "H8/530";
 

@@ -172,7 +172,7 @@ constexpr uint8_t INDEX_EXT[] = {
       1,  // TEXT_DSUB
 };
 
-// E-clock peripheral transfer (H8/500 and H8/530 only).
+// E-clock peripheral transfer (H8/510 and H8/530 only).
 constexpr Entry TABLE_ECLK[] = {
     E2(0x80, CF_07, TEXT_MOVFPE, IC_N, ISZ_NONE, SZ_BYTE, M_EAMEM,   M_REG),      // MOVFPE <EA>,Rd
     E2(0x90, CF_07, TEXT_MOVTPE, IC_N, ISZ_NONE, SZ_BYTE, M_REG,     M_EAMEM),    // MOVTPE Rs,<EA>
@@ -485,7 +485,7 @@ public:
 // MOV:G), XCH must precede GEN (claims OP 0x90 for a register EA), and within
 // TABLE_GEN the ADD:Q rows precede ADD:G. Disassembly is unaffected (pages are
 // filtered by prefix mode). Do not reorder these for tidiness.
-constexpr EntryPage H8500_PAGES[] = {
+constexpr EntryPage H8510_PAGES[] = {
         SPC_PAGE,
         XCH_PAGE,
         GEN_PAGES,
@@ -504,16 +504,6 @@ constexpr EntryPage H8520_PAGES[] = {
         SEC_PAGE,
         MAXMODE_PAGES,
 };
-
-constexpr EntryPage H8530_PAGES[] = {
-        SPC_PAGE,
-        XCH_PAGE,
-        GEN_PAGES,
-        EXT_PAGES(TABLE_EXT, INDEX_EXT),
-        EXT_PAGES(TABLE_ECLK, INDEX_ECLK),
-        SEC_PAGE,
-        MAXMODE_PAGES,
-};
 #undef SPC_PAGE
 #undef SEC_PAGE
 #undef XCH_PAGE
@@ -526,9 +516,10 @@ constexpr EntryPage H8530_PAGES[] = {
 using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 constexpr Cpu CPU_TABLE[] = {
-        {H8_500, TEXT_CPU_H8500, ARRAY_RANGE(H8500_PAGES)},
+        {H8_510, TEXT_CPU_H8510, ARRAY_RANGE(H8510_PAGES)},
+        {H8_510, TEXT_CPU_H8500, ARRAY_RANGE(H8510_PAGES)},
         {H8_520, TEXT_CPU_H8520, ARRAY_RANGE(H8520_PAGES)},
-        {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8530_PAGES)},
+        {H8_530, TEXT_CPU_H8530, ARRAY_RANGE(H8510_PAGES)},
 };
 
 static const Cpu *cpu(CpuType cpuType) {

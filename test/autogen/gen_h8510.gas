@@ -18,7 +18,7 @@
         .macro  rte
         .byte   0x0a
         .endm
-        .include "gen_h8500.ginc"
+        .include "gen_h8510.ginc"
 
 ### Local Variables:
 ### mode: asm
