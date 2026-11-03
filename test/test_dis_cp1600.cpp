@@ -151,13 +151,16 @@ void test_data_access() {
     TEST("AND@", "SP, R3", 0x03B3);
     TEST("XOR@", "SP, R4", 0x03F4);
     // Immediate (MMM=111)
-    TEST("MVOI", "R0, X'00'", 0x0278, 0x0000);
-    TEST("MVII", "X'FF', PC", 0x02BF, 0x00FF);
-    TEST("ADDI", "X'55', R1", 0x02F9, 0x0055);
-    TEST("SUBI", "X'AA', R2", 0x033A, 0x00AA);
-    TEST("CMPI", "X'FF', R3", 0x037B, 0x00FF);
-    TEST("ANDI", "X'3C', R4", 0x03BC, 0x003C);
-    TEST("XORI", "X'C3', R5", 0x03FD, 0x00C3);
+    TEST("MVOI", "R0, X'0000'", 0x0278, 0x0000);
+    TEST("MVOI", "R1, X'FFFF'", 0x0279, 0xFFFF);
+    TEST("MVII", "X'00FF', PC", 0x02BF, 0x00FF);
+    TEST("MVII", "X'0200', SP", 0x02BE, 0x0200);
+    TEST("ADDI", "X'0055', R1", 0x02F9, 0x0055);
+    TEST("SUBI", "X'00AA', R2", 0x033A, 0x00AA);
+    TEST("CMPI", "X'00FF', R3", 0x037B, 0x00FF);
+    TEST("ANDI", "X'1234', R4", 0x03BC, 0x1234);
+    TEST("ANDI", "X'003C', R4", 0x03BC, 0x003C);
+    TEST("XORI", "X'FFC3', R5", 0x03FD, 0xFFC3);
 }
 
 // sp-alias / pc-alias decode R6 as SP and R7 as PC (default off).
@@ -165,8 +168,8 @@ void test_sp_pc_alias() {
     // Off: R6/R7 (round-trips through ASL, which only knows R0-R7).
     dis1600.setSpAlias(false);
     dis1600.setPcAlias(false);
-    TEST("XOR", "X'9ABC', R6", 0x03C6, 0x9ABC);  // R6 as destination
-    TEST("MVII", "X'FF', R7", 0x02BF, 0x00FF);    // R7 as destination
+    TEST("XOR", "X'9ABC', R6", 0x03C6, 0x9ABC);   // R6 as destination
+    TEST("MVII", "X'00FF', R7", 0x02BF, 0x00FF);  // R7 as destination
     TEST("ADD@", "R6, R0", 0x02F0);               // R6 as stack source (M_STACK)
     TEST("XOR@", "R3, R6", 0x03DE);               // R6 as indirect destination
     TEST("INCR", "R7", 0x000F);                   // R7 as register operand
@@ -174,7 +177,7 @@ void test_sp_pc_alias() {
     dis1600.setSpAlias(true);
     dis1600.setPcAlias(true);
     TEST("XOR", "X'9ABC', SP", 0x03C6, 0x9ABC);
-    TEST("MVII", "X'FF', PC", 0x02BF, 0x00FF);
+    TEST("MVII", "X'00FF', PC", 0x02BF, 0x00FF);
     TEST("ADD@", "SP, R0", 0x02F0);
     TEST("XOR@", "R3, SP", 0x03DE);
     TEST("INCR", "PC", 0x000F);
@@ -240,7 +243,7 @@ void test_sdbd() {
     DERRT("SDBD", "EIS", "", 0x0001, 0x0002);
     DERRT("SDBD", "MVO", "R0, X'1234'", 0x0001, 0x0240, 0x1234);
     DERRT("SDBD", "MVO@", "R0, R1", 0x0001, 0x0248);
-    DERRT("SDBD", "MVOI", "R0, X'34'", 0x0001, 0x0278, 0x0034);
+    DERRT("SDBD", "MVOI", "R0, X'0034'", 0x0001, 0x0278, 0x0034);
     DERRT("SDBD", "MVI", "X'1234', R0", 0x0001, 0x0280, 0x1234);
     DERRT("SDBD", "PULR", "R0", 0x0001, 0x02B0);
 }

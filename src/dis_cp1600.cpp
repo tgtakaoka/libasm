@@ -118,10 +118,8 @@ void DisCp1600::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
             val |= (w1 & UINT8_MAX);
             outHex(out, val, 16, false);
         } else {
-            const auto val = insn.readUint16();
-            if (val & ~UINT8_MAX)
-                insn.setErrorIf(out, ILLEGAL_OPERAND);
-            outHex(out, val, 8, false);
+            // The immediate is one full memory word (CP1600 User's Manual p.105).
+            outHex(out, insn.readUint16(), 16, false);
         }
         break;
     case M_INDIR:
