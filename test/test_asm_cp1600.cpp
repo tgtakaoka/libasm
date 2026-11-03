@@ -170,6 +170,7 @@ void test_data_access() {
     // Immediate (MMM=111)
     TEST("MVOI R0, X'00'", 0x0278, 0x0000);
     TEST("MVII X'FF', R7", 0x02BF, 0x00FF);
+    TEST("MVII X'0200', R6", 0x02BE, 0x0200);
     TEST("ADDI X'55', R1", 0x02F9, 0x0055);
     TEST("SUBI X'AA', R2", 0x033A, 0x00AA);
     TEST("CMPI X'FF', R3", 0x037B, 0x00FF);
