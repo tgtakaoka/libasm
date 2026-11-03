@@ -74,7 +74,7 @@ void test_dis_cp1600() {
       org   x'0100'
       swap  r0
       mvi   x'1234', r0
-      addi  x'55', r1
+      addi  x'0055', r1
       j     x'0100'
       b     x'0100'
       sdbd
@@ -88,7 +88,7 @@ void test_dis_cp1600() {
      100 :                            org   x'0100'
      100 : 0040                       swap  r0
      101 : 0280 1234                  mvi   x'1234', r0
-     103 : 02f9 0055                  addi  x'55', r1
+     103 : 02f9 0055                  addi  x'0055', r1
      105 : 0004 0300 0100             j     x'0100'
      108 : 0220 0009                  b     x'0100'
      10a : 0001                       sdbd

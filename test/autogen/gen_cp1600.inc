@@ -78,23 +78,23 @@
       MVO   R0, X'0341'
       MVO@  R0, R1
       PSHR  R0
-      MVOI  R0, X'00'
+      MVOI  R0, X'0379'
       MVI   X'0381', R0
       MVI@  R1, R0
       PULR  R0
-      MVII  X'00', R0
+      MVII  X'03B9', R0
       ADD   X'03C1', R0
       ADD@  R1, R0
-      ADDI  X'00', R0
+      ADDI  X'03F9', R0
       SUB   X'0401', R0
       SUB@  R1, R0
-      SUBI  X'00', R0
+      SUBI  X'0439', R0
       CMP   X'0441', R0
       CMP@  R1, R0
-      CMPI  X'00', R0
+      CMPI  X'0479', R0
       AND   X'0481', R0
       AND@  R1, R0
-      ANDI  X'00', R0
+      ANDI  X'04B9', R0
       XOR   X'04C1', R0
       XOR@  R1, R0
-      XORI  X'00', R0
+      XORI  X'04F9', R0

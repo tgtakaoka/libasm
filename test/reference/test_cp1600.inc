@@ -370,6 +370,8 @@ D_DATA: EQU     X'1234'
         ANDI    X'FF', R7
         XORI    X'00', R0
         XORI    X'FF', R1
+        MVII    X'0200', R6
+        XORI    X'FFFF', R5
 
 ;;; SDBD prefix - double-byte immediate (16-bit values)
         SDBD
