@@ -1520,10 +1520,11 @@ Distinguish real bugs from ASL limitations by the message:
   exhaustive autogen is also in `ASL_exclude`: the dis emits MOV:F
   negative displacements as `@(-0x7F,FP)`, which ASL rejects (it wants
   `@((-0x7F),fp)`); the curated reference spells them ASL-compatibly.
-- `fp-alias` (default on) shows R6 as `FP` in all contexts;
-  `sp-alias` (default on) shows R7 as `SP` *in indirect addressing only*
-  (so `CMP:I SP, R0` stays `R7` -- the helper is `outAddrReg`, not
-  `outReg`).
+- `fp-alias` and `sp-alias` (both default on) show R6 as `FP` and R7 as `SP`
+  in every context, byte operands and register lists included (Table 1-10
+  Note 5 writes `MOV.W SP, @-SP`). The generator turns both off so R6/R7
+  dedupe with the other registers; GNU as also rejects a register list that
+  starts with an alias, `(sp)` or `(fp-sp)`.
 
 ### i80386 / i8086
 
@@ -1619,7 +1620,7 @@ Distinguish real bugs from ASL limitations by the message:
   `reservedSize()`. Check both matchers when a table entry lands on a
   prefix page's reserved code.
 - `sp-alias` (dis, default OFF) shows the global-bank R15 as `SP` in *every*
-  operand that names it, register-direct included -- unlike h8300/h8500.
+  operand that names it, register-direct included -- unlike h8300.
   Manual 4.3.13 makes global R15 the stack pointer whenever an addressing mode
   names it, and Table 4-7 lists register direct as one; Figure 4-1 Note 1
   covers the non-EA Rn fields. Two exceptions: `CR15`/`PR15` (a ring-bank R15

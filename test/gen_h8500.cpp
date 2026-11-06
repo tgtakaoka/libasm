@@ -38,9 +38,10 @@ int main(int argc, const char **argv) {
     // H'xxxx and absolute targets are not recognized by the tokenizer).
     dish8500.setOption("c-style", "enable");
     dish8500.setOption("relative", "enable");
+    // The FP/SP aliases spell R6/R7, which the Rn tokenizer already covers.
+    dish8500.setOption("fp-alias", "off");
+    dish8500.setOption("sp-alias", "off");
     if (driver.generateGas()) {
-        // h8500-hms-as rejects the FP alias inside a register list; emit R6.
-        dish8500.setOption("fp-alias", "off");
         // h8500-hms-as uses '.' as the current-location symbol, not '$'.
         dish8500.setOption("origin-char", ".");
     } else {
