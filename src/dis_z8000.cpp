@@ -32,7 +32,7 @@ constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
 constexpr char OPT_BOOL_EXTERN_SYMBOL[] PROGMEM = "extern-symbol";
 constexpr char OPT_DESC_EXTERN_SYMBOL[] PROGMEM = "emit direct address as seg_SS_off_XXXX symbol";
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for R15 or RR14";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for the stack pointer";
 
 }  // namespace
 

@@ -30,9 +30,9 @@ constexpr char TEXT_CPU_H8530[]  PROGMEM = "H8/530";
 constexpr char OPT_BOOL_MAX_MODE[] PROGMEM = "maximum-mode";
 constexpr char OPT_DESC_MAX_MODE[] PROGMEM = "enable maximum mode";
 constexpr char OPT_BOOL_FP_ALIAS[] PROGMEM = "fp-alias";
-constexpr char OPT_DESC_FP_ALIAS[] PROGMEM = "emit FP alias for R6";
+constexpr char OPT_DESC_FP_ALIAS[] PROGMEM = "use FP for the frame pointer";
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "emit SP alias for R7 in indirect addressing";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for the stack pointer";
 
 // constexpr char TEXT_MAXMODE[] PROGMEM = "MAXMODE";
 

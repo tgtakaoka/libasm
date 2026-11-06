@@ -42,9 +42,9 @@ const ValueFormatter::Plugins &DisCp1600::defaultPlugins() {
 
 namespace {
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "decode R6 as SP";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for the stack pointer";
 constexpr char OPT_BOOL_PC_ALIAS[] PROGMEM = "pc-alias";
-constexpr char OPT_DESC_PC_ALIAS[] PROGMEM = "decode R7 as PC";
+constexpr char OPT_DESC_PC_ALIAS[] PROGMEM = "use PC for the program counter";
 }  // namespace
 
 DisCp1600::DisCp1600(const ValueFormatter::Plugins &plugins)

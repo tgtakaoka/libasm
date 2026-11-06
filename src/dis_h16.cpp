@@ -31,7 +31,7 @@ const ValueFormatter::Plugins &DisH16::defaultPlugins() {
 
 namespace {
 constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "decode R15 as SP";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for the stack pointer";
 }  // namespace
 
 DisH16::DisH16(const ValueFormatter::Plugins &plugins)
