@@ -74,6 +74,15 @@ void test_spc_misc() {
     TEST("LINK FP, #$200",  0x1F, 0x02, 0x00);
 }
 
+// SP names R7 in every operand, register-direct included.
+void test_sp_alias() {
+    TEST("MOV:G.W SP, R0",  0xAF, 0x80);
+    TEST("MOV:G.W R7, R0",  0xAF, 0x80);
+    TEST("MOV:G.B SP, R0",  0xA7, 0x80);
+    TEST("ADD:Q.W #1, SP",  0xAF, 0x08);
+    TEST("XCH R0, SP",      0xA8, 0x97);
+}
+
 void test_spc_branch() {
     // Bcc d:8 (forward to address 0x12, base addr=0, delta=0x10)
     ATEST(0x0000, "BRA $0012", 0x20, 0x10);
@@ -157,6 +166,9 @@ void test_spc_ldm_stm() {
     TEST("STM (R7), @-SP",         0x12, 0x80);
     TEST("STM (R0-R3), @-SP",      0x12, 0x0F);
     TEST("STM (R0, R2-R4), @-SP",  0x12, 0x1D);
+    // SP and FP are R7 and R6 in a list too.
+    TEST("LDM @SP+, (R0-SP)",      0x02, 0xFF);
+    TEST("STM (R0, FP-SP), @-SP",  0x12, 0xC1);
     // Wrong stack direction (LDM needs @SP+, STM needs @-SP) and a descending
     // range are rejected.
     ERRT("LDM @-SP, (R0)",    REGISTER_NOT_ALLOWED, "@-SP, (R0)");
@@ -576,6 +588,7 @@ void test_data_directives() {
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_spc_misc);
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_spc_branch);
     RUN_TEST(test_spc_branch16);
     RUN_TEST(test_spc_move);

@@ -50,15 +50,11 @@ void DisH8500::outReg(StrBuffer &out, RegName reg) const {
         out.text_P(TEXT_REG_R6);
         return;
     }
-    outRegName(out, reg);
-}
-
-void DisH8500::outAddrReg(StrBuffer &out, RegName reg) const {
     if (reg == REG_R7 && spAlias()) {
         out.text_P(TEXT_REG_SP);
         return;
     }
-    outReg(out, reg);
+    outRegName(out, reg);
 }
 
 void DisH8500::outCr(StrBuffer &out, CrName cr) const {
@@ -92,7 +88,7 @@ void DisH8500::outIdx16(StrBuffer &out, int16_t disp, RegName reg) const {
     if (disp >= -128 && disp <= 127)
         out.text_P(PSTR(":16"));
     out.letter(',');
-    outAddrReg(out, reg);
+    outReg(out, reg);
     out.letter(')');
 }
 
@@ -126,22 +122,22 @@ void DisH8500::outEa(DisInsn &insn, StrBuffer &out) const {
         break;
     case M_IND:
         out.letter('@');
-        outAddrReg(out, insn.eaReg);
+        outReg(out, insn.eaReg);
         break;
     case M_PDEC:
         out.text_P(PSTR("@-"));
-        outAddrReg(out, insn.eaReg);
+        outReg(out, insn.eaReg);
         break;
     case M_PINC:
         out.letter('@');
-        outAddrReg(out, insn.eaReg);
+        outReg(out, insn.eaReg);
         out.letter('+');
         break;
     case M_IDX8:
         out.letter('@').letter('(');
         outHex(out, static_cast<int8_t>(insn.eaVal), -8);
         out.letter(',');
-        outAddrReg(out, insn.eaReg);
+        outReg(out, insn.eaReg);
         out.letter(')');
         break;
     case M_IDX16:
@@ -352,7 +348,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
             out.text_P(PSTR("@-"));
         else
             out.letter('@');
-        outAddrReg(out, REG_SP);
+        outReg(out, REG_SP);
         if (insn.src() == M_SP)
             out.letter('+');
         break;
@@ -385,7 +381,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
     case M_IND:
         out.letter('@');
-        outAddrReg(out, decodeReg(insn.opByte & 0x07));
+        outReg(out, decodeReg(insn.opByte & 0x07));
         break;
     case M_INDP: {
         // PJMP/PJSR @Rn copy Rn->CP and Rn+1->PC, so Rn must be the even base
@@ -394,7 +390,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         if (regno & 1)
             insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
         out.letter('@');
-        outAddrReg(out, decodeReg(regno));
+        outReg(out, decodeReg(regno));
         break;
     }
     case M_IDX8: {
@@ -402,7 +398,7 @@ void DisH8500::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
         out.letter('@').letter('(');
         outHex(out, disp, -8);
         out.letter(',');
-        outAddrReg(out, decodeReg(insn.opByte & 0x07));
+        outReg(out, decodeReg(insn.opByte & 0x07));
         out.letter(')');
         break;
     }
