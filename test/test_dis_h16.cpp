@@ -311,6 +311,32 @@ void test_bank_prefix() {
     TEST("ADD:G.W", "PR5, R1",  0x01, 0x74, 0x45, 0x41);
 }
 
+// sp-alias decodes the global-bank R15 as SP (default off) in every operand
+// that names it; a ring-bank CR15/PR15 and a register-list bit stay as-is.
+void test_sp_alias() {
+    TEST("MOV:G.L",  "R15, R0",          0x0E, 0x4F, 0x40);
+    TEST("MOV:G.L",  "@R15, R0",         0x0E, 0x0F, 0x40);
+    TEST("STM.L",    "R0-R15, @-R15",    0x72, 0x6F, 0xFF, 0xFF);
+
+    dish16.setSpAlias(true);
+    TEST("MOV:G.L",  "SP, R0",           0x0E, 0x4F, 0x40);
+    TEST("MOV:G.L",  "@SP, R0",          0x0E, 0x0F, 0x40);
+    TEST("MOV:G.L",  "@SP+, R0",         0x0E, 0x5F, 0x40);
+    TEST("MOV:G.L",  "R0, @-SP",         0x0E, 0x40, 0x6F);
+    TEST("MOV:G.L",  "@(4,SP), R0",      0x0E, 0x1F, 0x04, 0x40);
+    TEST("MOV:G.L",  "@(4,SP*2), R0",    0x0E, 0x79, 0x1F, 0x04, 0x40);
+    TEST("MOV:G.L",  "@(SP.W,R1), R0",   0x0E, 0x7C, 0x01, 0x0F, 0x40);
+    TEST("MOV:R.L",  "R0, SP",           0x2E, 0x0F);
+    TEST("ADD:RQ.L", "#4, SP",           0x32, 0xF4);
+    TEST("LINK.W",   "SP, #-$0100",      0xD1, 0x0F, 0xFF, 0x00);
+    TEST("SMOV/F.W", "SP, R1, R2",       0x95, 0x22, 0xF1);
+    TEST("BFMOV",    "R0, R1, R2, R3, R4, SP", 0xD7, 0x01, 0x23, 0x4F);
+    // Not the stack pointer: the register list, and R15 of a ring bank.
+    TEST("STM.L",    "R0-R15, @-SP",     0x72, 0x6F, 0xFF, 0xFF);
+    TEST("MOV:G.L",  "CR15, R0",         0x0E, 0x70, 0x4F, 0x40);
+    TEST("MOV:G.L",  "@PR15, R0",        0x0E, 0x74, 0x0F, 0x40);
+}
+
 // Don't-care ("*") bits in the manual are zero-required: setting any of them
 // to 1 must report ILLEGAL_OPERAND_MODE.
 void test_illegal_zero() {
@@ -403,6 +429,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_frame);
     RUN_TEST(test_cr);
     RUN_TEST(test_bank_prefix);
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_illegal_zero);
 }
 

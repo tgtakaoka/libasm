@@ -29,8 +29,36 @@ const ValueFormatter::Plugins &DisH16::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
-DisH16::DisH16(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
+namespace {
+constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "decode R15 as SP";
+}  // namespace
+
+DisH16::DisH16(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_spAlias),
+      Config(TABLE),
+      _opt_spAlias(this, &DisH16::setSpAlias, OPT_BOOL_SP_ALIAS, OPT_DESC_SP_ALIAS) {
     reset();
+}
+
+void DisH16::reset() {
+    Disassembler::reset();
+    setSpAlias(false);
+}
+
+Error DisH16::setSpAlias(bool enable) {
+    _spAlias = enable;
+    return OK;
+}
+
+// Only the global-bank R15 is the stack pointer (Manual 4.3.13); a ring-bank
+// R15 (CR15/PR15) is not.
+void DisH16::outReg(StrBuffer &out, RegName reg) const {
+    if (_spAlias && reg == REG_R15) {
+        out.text_P(TEXT_REG_SP);
+    } else {
+        outRegName(out, reg);
+    }
 }
 
 namespace {
@@ -187,7 +215,7 @@ void DisH16::decodeEa(
         // Manual Available EA forbids Rn for a memory/peripheral operand.
         if (kind == EA_MEM || kind == EA_PERI)
             insn.setErrorIf(ILLEGAL_OPERAND_MODE);
-        outRegName(out, decodeReg(rn, bank));
+        outReg(out, decodeReg(rn, bank));
         return;
     case 0x00:
     case 0x01:
@@ -196,14 +224,14 @@ void DisH16::decodeEa(
         const auto sd = (code >> 4) & 0x03;
         if (sd == 0) {
             out.letter('@');
-            outRegName(out, decodeReg(rn, bank));
+            outReg(out, decodeReg(rn, bank));
         } else {
             const auto disp = readSignedDisp(insn, sd);
             out.letter('@').letter('(');
             outHex(out, disp, dispWidth(sd));
             outAutoLen(out, disp, fieldBits(sd));
             out.letter(',');
-            outRegName(out, decodeReg(rn, bank));
+            outReg(out, decodeReg(rn, bank));
             out.letter(')');
         }
         return;
@@ -217,7 +245,7 @@ void DisH16::decodeEa(
             out.letter('@').letter('-');
         else
             out.letter('@');
-        outRegName(out, decodeReg(rn, bank));
+        outReg(out, decodeReg(rn, bank));
         if (top3 == 0x05)
             out.letter('+');
         return;
@@ -289,7 +317,7 @@ void DisH16::decodeEa(
                 outAutoLen(out, disp, fieldBits(sd));
                 out.letter(',');
             }
-            outRegName(out, decodeReg(base, bank));
+            outReg(out, decodeReg(base, bank));
             out.letter('*');
             outHex(out, scale, 4);
             out.letter(')');
@@ -313,7 +341,7 @@ void DisH16::decodeEa(
             }
             outIndex(insn, out, ext2, longIdx);
             out.letter(',');
-            outRegName(out, decodeReg(base, bank));
+            outReg(out, decodeReg(base, bank));
             out.letter(')');
             return;
         }
@@ -378,7 +406,7 @@ void DisH16::decodeEa(
             outHex(out, disp1, s1 == 1 ? -8 : -32);
             outDsLen(out, disp1, s1);
             out.letter(',');
-            outRegName(out, decodeReg(base, bank));
+            outReg(out, decodeReg(base, bank));
             out.text_P(PSTR("))"));
             return;
         }
@@ -393,7 +421,7 @@ void DisH16::outIndex(DisInsn &insn, StrBuffer &out, uint8_t ext, bool longIdx) 
     requireZero(insn, ext, 0xC0);  // ext: [00|Sf|Xm]
     const auto sf = (ext >> 4) & 0x03;
     const auto xm = ext & 0x0F;
-    outRegName(out, decodeReg(xm));  // Xm always global
+    outReg(out, decodeReg(xm));  // Xm always global
     out.text_P(longIdx ? PSTR(".L") : PSTR(".W"));
     if (sf != 0) {
         out.letter('*');
@@ -435,7 +463,7 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         // M_EADST), so honor accumulator form here too.
         if (insn.accumulatorForm) {
             insn.accConsumed = true;
-            outRegName(out, REG_R0);
+            outReg(out, REG_R0);
         } else {
             decodeEa(insn, out, insn.oprSize);
         }
@@ -443,7 +471,7 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case M_EADST:
         if (insn.accumulatorForm) {
             insn.accConsumed = true;
-            outRegName(out, REG_R0);
+            outReg(out, REG_R0);
         } else {
             decodeEa(insn, out, insn.oprSize, REG_R0, EA_DEST);
         }
@@ -459,7 +487,7 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         if (insn.accumulatorForm) {
             insn.accConsumed = true;
             insn.setErrorIf(ILLEGAL_OPERAND_MODE);
-            outRegName(out, REG_R0);
+            outReg(out, REG_R0);
         } else {
             decodeEa(insn, out, insn.oprSize, REG_R0, EA_PERI);
         }
@@ -470,9 +498,9 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         return;
     case M_RR: {
         const auto b = insn.readByte();
-        outRegName(out, decodeReg(b >> 4));
+        outReg(out, decodeReg(b >> 4));
         out.comma();
-        outRegName(out, decodeReg(b & 0x0F));
+        outReg(out, decodeReg(b & 0x0F));
         return;
     }
     case M_IRQ: {
@@ -481,7 +509,7 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
         out.letter('#');
         outHex(out, b & 0x0F, 4);
         out.comma();
-        outRegName(out, decodeReg(b >> 4));
+        outReg(out, decodeReg(b >> 4));
         return;
     }
     case M_SIRQ: {
@@ -493,19 +521,19 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
             v -= 0x10;
         outHex(out, v, -4);
         out.comma();
-        outRegName(out, decodeReg(b >> 4));
+        outReg(out, decodeReg(b >> 4));
         return;
     }
     case M_RNNO: {
         // Rn in low 4 bits; upper 4 bits are zero-required.
         const auto b = insn.readByte();
         requireZero(insn, b, 0xF0);
-        outRegName(out, decodeReg(b));
+        outReg(out, decodeReg(b));
         return;
     }
     case M_RCC:
         // SCB: Rn was pre-read with the /cc byte; output it here.
-        outRegName(out, insn.scbReg);
+        outReg(out, insn.scbReg);
         return;
     case M_RLIST: {
         // STM/LDM/PGBN: 16-bit register-list mask.  An empty list (mask 0) is
@@ -553,7 +581,7 @@ void DisH16::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     case M_SCNTR:
     case M_BNUMR:
         // Rn embedded in low 4 bits of the second-byte opcode.
-        outRegName(out, decodeReg(insn.opCode() & 0x0F));
+        outReg(out, decodeReg(insn.opCode() & 0x0F));
         return;
     case M_SCNTI:
     case M_BNUMI:
@@ -640,14 +668,14 @@ Error DisH16::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
         }
         nb.letter('/').letter((opc & 0x40) ? 'B' : 'F');
         outSize(insn);
-        outRegName(out, rns);
+        outReg(out, rns);
         out.comma();
-        outRegName(out, rnd);
+        outReg(out, rnd);
         out.comma();
-        outRegName(out, rnc);
+        outReg(out, rnc);
         if (fourReg) {
             out.comma();
-            outRegName(out, rnf);
+            outReg(out, rnf);
         }
         return _insn.setError(insn);
     }
@@ -657,25 +685,25 @@ Error DisH16::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
         const auto b1 = insn.readByte();
         const auto b2 = insn.readByte();
         const auto b3 = insn.readByte();
-        outRegName(out, decodeReg(b1 >> 4));
+        outReg(out, decodeReg(b1 >> 4));
         out.comma();
-        outRegName(out, decodeReg(b1 & 0x0F));
+        outReg(out, decodeReg(b1 & 0x0F));
         out.comma();
-        outRegName(out, decodeReg(b2 >> 4));
+        outReg(out, decodeReg(b2 >> 4));
         out.comma();
-        outRegName(out, decodeReg(b2 & 0x0F));
+        outReg(out, decodeReg(b2 & 0x0F));
         out.comma();
-        outRegName(out, decodeReg(b3 >> 4));
+        outReg(out, decodeReg(b3 >> 4));
         out.comma();
-        outRegName(out, decodeReg(b3 & 0x0F));
+        outReg(out, decodeReg(b3 & 0x0F));
         return _insn.setError(insn);
     }
     // Bit-field ops BFEXT/BFINS/BFSCH: [Rnb|Rnf] then EAs, EAd.
     if (insn.mode1() == M_BITF) {
         const auto b1 = insn.readByte();
-        outRegName(out, decodeReg(b1 >> 4));
+        outReg(out, decodeReg(b1 >> 4));
         out.comma();
-        outRegName(out, decodeReg(b1 & 0x0F));
+        outReg(out, decodeReg(b1 & 0x0F));
         // Both bit-field operands forbid immediate and auto-inc/dec
         // (manual Available EA); register-direct and memory modes are fine.
         out.comma();
