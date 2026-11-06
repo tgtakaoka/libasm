@@ -269,6 +269,23 @@ void test_ea_modes() {
     ERRT("ADD:G.W @(R1.W*3, R2), R3",  MISSING_CLOSING_PAREN, "@(R1.W*3, R2), R3");
 }
 
+// SP is a synonym for the global-bank R15 (Manual 4.3.13).
+void test_sp_alias() {
+    TEST("MOV:G.L SP, R1",          0x0E, 0x4F, 0x41);
+    TEST("MOV:G.L R15, R1",         0x0E, 0x4F, 0x41);
+    TEST("MOV:G.L @SP, R1",         0x0E, 0x0F, 0x41);
+    TEST("MOV:G.L @R15, R1",        0x0E, 0x0F, 0x41);
+    TEST("MOV:G.L @SP+, R1",        0x0E, 0x5F, 0x41);
+    TEST("MOV:G.L R0, @-SP",        0x0E, 0x40, 0x6F);
+    TEST("MOV:G.L @(4:8, SP), R1",  0x0E, 0x1F, 0x04, 0x41);
+    TEST("MOV:G.L @(SP.W, R1), R1", 0x0E, 0x7C, 0x01, 0x0F, 0x41);
+    TEST("MOV:R.L R0, SP",          0x2E, 0x0F);
+    TEST("LINK.W SP, #-$100",       0xD1, 0x0F, 0xFF, 0x00);
+    TEST("STM.L R0, SP, @-SP",      0x72, 0x6F, 0x80, 0x01);
+    TEST("STM.L R12-SP, @-SP",      0x72, 0x6F, 0xF0, 0x00);
+    ERRT("MOV:G.L @SP1, R1", UNDEFINED_SYMBOL, "SP1, R1", 0x0E, 0x75, 0x00, 0x41);
+}
+
 // H8/300-family data/space directives: .DATA[.B/.W/.L], .SDATA, .RES[.B/.W/.L].
 void test_data_constant() {
     // .data.b: byte values (strings go through .sdata, not here).
@@ -645,6 +662,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_mul_div);
     RUN_TEST(test_cr);
     RUN_TEST(test_ea_modes);
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_reg_list);
     RUN_TEST(test_string);
     RUN_TEST(test_bitfield);

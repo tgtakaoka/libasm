@@ -38,7 +38,18 @@ enum EaKind : uint8_t { EA_ANY, EA_DEST, EA_MEM, EA_PERI, EA_BITF };
 struct DisH16 final : Disassembler, Config {
     DisH16(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setSpAlias(bool enable);
+
 private:
+    const BoolOption<DisH16> _opt_spAlias;
+
+    bool _spAlias;
+
+    // Output a register name; the global-bank R15 becomes SP under sp-alias.
+    void outReg(StrBuffer &out, reg::RegName reg) const;
+
     // Decode an EA byte plus any extension bytes implied by the EA code.
     // |bank| selects the register file for Rn fields: REG_R0 = global bank
     // (default), REG_CR0 / REG_PR0 when the EA was preceded by a <CRn> /

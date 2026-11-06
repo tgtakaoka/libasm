@@ -124,6 +124,7 @@ using common::TEXT_CC_T;    // "T"
 // CR register name constants (used by the CR_TABLE NameEntry lookup).
 using common::TEXT_REG_CCR;
 using common::TEXT_REG_PC;
+using common::TEXT_REG_SP;
 using common::TEXT_REG_SR;
 using common::TEXT_REG_USP;
 
