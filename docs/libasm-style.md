@@ -1618,6 +1618,14 @@ Distinguish real bugs from ASL limitations by the message:
   was swallowed as a prefix byte and died as a two-byte unknown. Both now share
   `reservedSize()`. Check both matchers when a table entry lands on a
   prefix page's reserved code.
+- `sp-alias` (dis, default OFF) shows the global-bank R15 as `SP` in *every*
+  operand that names it, register-direct included -- unlike h8300/h8500.
+  Manual 4.3.13 makes global R15 the stack pointer whenever an addressing mode
+  names it, and Table 4-7 lists register direct as one; Figure 4-1 Note 1
+  covers the non-EA Rn fields. Two exceptions: `CR15`/`PR15` (a ring-bank R15
+  is never SP), and the STM/LDM/PGBN register list, which is a bitmask printed
+  as numeric ranges (`outRegList` stays on `outRegName`). The assembler accepts
+  `SP` as `R15` unconditionally, list ranges included.
 - Accumulator-form (A) bit lives on bit 7 of the FIRST byte of the EA
   field. When a bank prefix is present, A goes on the prefix byte
   (e.g. `0xF4` not `0x74` when the destination is R0). Manual ref:

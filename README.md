@@ -198,6 +198,7 @@ It can read Intel HEX or Motorola S-Record input.
       --sfr-name       : use name for core SFR (bool: 80C166)
       --short-direct   : use |addr| for short direct notation (bool: Z8001)
       --silicon        : silicon revision (default C30 1, C31 5, C32 2) (int: 320C30)
+      --sp-alias       : decode R15 as SP (bool: H16)
       --sp-alias       : decode R6 as SP (bool: CP1600)
       --sp-alias       : emit SP alias for ER7/R7 in indirect addressing (bool: H8/300)
       --sp-alias       : emit SP alias for R7 in indirect addressing (bool: H8/510)
