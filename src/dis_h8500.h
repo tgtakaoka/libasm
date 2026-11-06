@@ -35,7 +35,6 @@ private:
     const BoolOption<Config> _opt_spAlias;
 
     void outReg(StrBuffer &out, RegName reg) const;
-    void outAddrReg(StrBuffer &out, RegName reg) const;
     void outCr(StrBuffer &out, CrName cr) const;
     void outImm8(StrBuffer &out, uint8_t val) const;
     void outAbs8(StrBuffer &out, uint8_t addr) const;
