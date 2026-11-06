@@ -145,6 +145,18 @@ Cherry-pick with `-x`, so the 1.x commit records where it came from:
 git cherry-pick -x <sha-on-main>
 ```
 
+**Pick only AFTER the main PR merges.** GitHub's "Rebase and merge"
+re-commits the PR head with GitHub as committer, so the SHA changes even with
+an identical tree and parent (#199: `0d54c328` -> `34162852`, same tree, same
+parent). A pick taken from the unmerged PR head writes a
+`(cherry picked from commit <sha>)` line naming a commit that never lands on
+`main` -- which happened to #200.
+
+- Check the line: `git merge-base --is-ancestor <pick-sha> origin/main`.
+- Prove the content matches with `git patch-id --stable` on both commits.
+- NEVER force-push `release-1` to repair a wrong line. The line is cosmetic;
+  a rewrite of a shared branch is not.
+
 New architectures and features are NOT backported unless asked for.
 
 **Open an issue before fixing, so the two branches are tied together.**
@@ -166,15 +178,18 @@ Three things to expect:
 - A fix touching code the Arduino drop removed or moved will not apply
   cleanly. Resolve it against the 1.x tree as it stands; do not reshape
   `release-1` toward `main` to make a cherry-pick fit.
-- Arduino CI runs on `release-1` and cannot pass while drazzy.com's TLS
-  certificate is expired, so `arduino-cli` fails to fetch the DxCore index
-  and fail-fast cancels the other two boards. `gh pr checks` reports those
-  cancellations as `fail`; read the job log before calling it a real failure.
-  PlatformIO CI covers the same three boards and does not touch drazzy.com.
-- A release cut from `release-1` uses the OLD procedure: 47 version files,
-  `library.properties` naming every arch in its `paragraph`, and the Arduino
-  Library Manager picking up the tag on its own schedule. The "Release
-  procedure" section below describes `main` only.
+- Arduino CI runs on `release-1` and breaks for reasons outside libasm.
+  Fail-fast then cancels the other two boards, and `gh pr checks` reports
+  those cancellations as `fail`; read the job log before calling it a real
+  failure. Two causes seen so far: drazzy.com's expired TLS certificate
+  (`arduino-cli` cannot fetch the DxCore index), and `ubuntu-latest` moving to
+  26.04, where `arduino/compile-sketches@v1` asks setup-python for 3.12.4 and
+  gets "The version '3.12.4' with architecture 'x64' was not found for
+  Ubuntu 26.04". `dc6a7f6e` fixed the latter by pinning the runner to
+  `ubuntu-24.04`. PlatformIO CI covers the same three boards.
+- A release cut from `release-1` bumps 47 files, not 3; see "1.x releases
+  from `release-1`" under Release procedure. `release-1` has no copy of this
+  file, so that list lives here.
 
 ---
 
@@ -2280,13 +2295,14 @@ paren quoted. Real fix: drop one `)` on the last line of the `gen-out` macro.
 
 ## Release procedure
 
-Releases are cut on `main` and published to the PlatformIO registry. Each
-release is a single bump commit, a LIGHTWEIGHT tag on it, a GitHub release, and
-a PlatformIO publish. Verified against 1.6.66 (2026-09-27).
+Releases are cut on `main` (2.x) or `release-1` (1.x) and published to the
+PlatformIO registry. Each release is a single bump commit, a LIGHTWEIGHT tag on
+it, a GitHub release, and a PlatformIO publish. Verified against 2.0.3 and
+1.6.73 (2026-11-06).
 
 ### 1. The version bump commit
 
-All mechanical:
+All mechanical. On `main`:
 
 | File | What changes |
 |---|---|
@@ -2297,7 +2313,7 @@ All mechanical:
 Three traps, all hit for real:
 
 - **`LIBASM_VERSION_PATCH` is a BARE number**, so a blanket
-  `sed s/1.6.65/1.6.66/g` silently misses it and leaves the macro one behind
+  `sed s/2.0.2/2.0.3/g` silently misses it and leaves the macro one behind
   the string. Check `grep -E 'PATCH|STRING' src/version.h` after the sed.
 - **`library.json` `keywords` must cover every arch in `ARCHS`**
   (`src/Makefile.arch`), in ARCHS order uppercased -- NOT alphabetical.
@@ -2309,12 +2325,12 @@ Three traps, all hit for real:
   a correct regeneration yields a 2-line diff per file -- more than that means
   the blocks had drifted, which is a separate finding worth reporting.
 
-Message format (see `git log v1.6.65` for precedent):
+Message format (see `git log v2.0.2` for precedent):
 
-    Version 1.6.66
+    Version 2.0.3
 
-    - Addition: [i960] Support Intel 80960
-    - Bugfix: [H16] Fix DADD and DSUB opcodes
+    - Addition: [h16] Add sp-alias option
+    - Change: [h8500] Use the SP alias in every context
 
 Only USER-VISIBLE changes are listed -- `[ci]`, `[test]`, `[platformio]`,
 autogen regenerations and internal refactors are left out.
@@ -2322,12 +2338,30 @@ autogen regenerations and internal refactors are left out.
 `Bugfix: [Z280] Add missing ADD/ADC/...`). A whole new architecture is still
 a PATCH bump: 1.6.64 added six of them.
 
+### 1.x releases from `release-1`
+
+`release-1` has no copy of this file. Its bump touches 47 files, 50 insertions
+and 50 deletions (1.6.72 `4eb3cf0e`, 1.6.73 `b5446b5f`):
+
+- `src/version.h`, `library.json`, `library.properties`, `README.md`,
+  `README_.adoc`, `examples/platformio.common`;
+- all 41 `examples/<arch>/platformio.ini`, each pinning
+  `tgtakaoka/libasm@X.Y.Z`.
+
+Steps 2-4 are the same, with `release-1` in place of `main` and
+`--latest=false` on the GitHub release.
+
 ### 2. PR, merge, tag
 
-The bump goes through a PR like anything else. After it merges:
+The bump is made in a dedicated session's worktree and goes through a PR like
+anything else; that worktree stops at the PR. The tag, the GitHub release and
+the publish run in the MAIN clone, with `main` (or `release-1`) checked out.
+After the PR merges:
 
-1. `git pull --ff-only`, then **confirm `git diff <local-sha> origin/main` is
-   empty** before tagging. The tag is the step you cannot quietly redo.
+1. Fast-forward the branch in the main clone (`git fetch origin main:main`, or
+   `git merge --ff-only origin/main` when it is checked out), then **confirm
+   `git diff <local-sha> origin/main` is empty** before tagging. The tag is the
+   step you cannot quietly redo.
 2. Re-run the checks on the MERGED commit, not the pre-merge one: both binaries
    print the new version, `ninja -C test` green, no old version string left
    (`grep -rl` over `*.h *.json *.md`).
@@ -2335,46 +2369,69 @@ The bump goes through a PR like anything else. After it merges:
    `git push origin vX.Y.Z`.
 
 Watch the merge dialog: a squash merge that appends `(#NNN)` would leave the
-release commit reading `Version 1.6.66 (#146)`, unlike every other release.
+release commit reading `Version 2.0.3 (#210)`, unlike every other release.
 
 ### 3. GitHub release
 
-    gh release create vX.Y.Z --title "release X.Y.Z" --notes-file notes.md
+    gh release create vX.Y.Z --title "release X.Y.Z" --latest --notes-file notes.md
 
 Title is `release X.Y.Z` (lowercase word, no `v`); only the tag carries the
 `v`. Body is exactly the commit's bullet list, no heading (1.6.67 and 1.6.68):
 `git log -1 --format=%b vX.Y.Z | gh release create ... --notes-file -`. No
 assets, not a draft, not a prerelease.
 
-### 4. PlatformIO: publish `git archive <tag>`, NEVER the working tree
+- **`--latest` for a 2.x release, `--latest=false` for a 1.x one.** Without
+  it a 1.x maintenance release silently becomes the repository's Latest.
+  Confirm with `gh api repos/tgtakaoka/libasm/releases/latest -q .tag_name`.
+- gh 2.46.0 has no `gh release view --json isLatest` and no
+  `gh pr checks --json`; parse the tab-separated text of `gh pr checks`.
 
-`library.json` has **no `export` section**, so `pio pkg publish` packages
-whatever directory it is handed -- and the working clone carries ~650MB of
-build output and ~1100 gitignored files.
+### 4. PlatformIO: pack a clean clone of the tag
 
-Do NOT `git clean` to fix that: it destroys the build state and still cannot
-promise a pristine tree. Export the tag instead, which emits only TRACKED files
-so nothing untracked or ignored can leak:
+Pack from a REAL clone with the tag checked out, never from the working clone
+and never from a worktree:
 
 ```sh
-mkdir -p /tmp/pub && git archive --format=tar vX.Y.Z | tar -x -C /tmp/pub
-cd /tmp/pub && pio pkg pack -o /tmp/libasm-X.Y.Z.tar.gz   # INSPECT before publishing
-pio pkg publish /tmp/libasm-X.Y.Z.tar.gz --no-interactive
+D=/tmp/libasm-pub; mkdir -p $D
+git clone --no-hardlinks ~/libasm $D/src && cd $D/src
+git checkout vX.Y.Z
+make cli                                     # plain `make` only prints help
+cli/asm --help 2>&1 | grep -o 'version [0-9.]*'   # line 1 is "no input file"
+cli/dis --help 2>&1 | grep -o 'version [0-9.]*'
+make clean
+pio pkg pack -o $D/libasm-X.Y.Z.tar.gz       # INSPECT before publishing
+pio pkg publish $D/libasm-X.Y.Z.tar.gz --no-interactive --type library
+rm -rf $D                                    # once the download is proven
 ```
+
+What `pio pkg pack` does and does not do:
+
+- **It reads the version from the CHECKOUT.** A stale clone packed a tarball
+  named 2.0.0. Check out the tag, not a branch you assume is current.
+- **It drops `test/` on its own**, so `library.json` needs no `export` field.
+- **It IGNORES `.gitignore`** and has NO exclude for build output. An unclean
+  tree ships `cli/*.o`: 1304 entries and 3.4MB with 248 `.o` files, against
+  806 entries clean.
+- **Inside a git worktree it packs the `.git` POINTER FILE** as a member (807
+  entries instead of 806). Use `git clone --no-hardlinks`; plain `--local`
+  fails with "Invalid cross-device link" when the destination is on another
+  filesystem.
+
+**Order matters: verify the binaries, THEN `make clean`, THEN pack.** Proving
+the new version in the packing clone leaves 248 `.o` files behind; packing
+before `make clean` ships them.
 
 Checks worth the minute they cost:
 
-- **Size.** `test/` (109MB) is stripped by PlatformIO's default excludes, so a
-  115MB export packs to ~720KB. Compare with the previously published tarball;
-  a jump means something bulky got in.
 - **Diff the file list against the LAST PUBLISHED package**, not against the
   repo:
 
-      PREV=1.6.65
+      PREV=2.0.2
       URL=https://dl.registry.platformio.org/download/tgtakaoka/library/libasm
-      curl -sL -o prev.tar.gz $URL/$PREV/libasm-$PREV.tar.gz
-      LC_ALL=C comm -3 <(tar tzf prev.tar.gz | grep -v '/$' | LC_ALL=C sort) \
-                       <(tar tzf new.tar.gz  | grep -v '/$' | LC_ALL=C sort)
+      UA="PlatformIO/6.1.19 CPython/3.11.2"
+      curl -sL -A "$UA" -o $D/prev.tar.gz $URL/$PREV/libasm-$PREV.tar.gz
+      LC_ALL=C comm -3 <(tar tzf $D/prev.tar.gz | grep -v '/$' | LC_ALL=C sort) \
+                       <(tar tzf $D/libasm-X.Y.Z.tar.gz | grep -v '/$' | LC_ALL=C sort)
 
   `LC_ALL=C` on BOTH sorts and the `comm`, or `comm` rejects the input as
   unsorted. Every added file should be one you expect.
@@ -2382,11 +2439,21 @@ Checks worth the minute they cost:
   This is how the 1.6.65 leak was found: it shipped
   a local editor settings file and `src/.gdb_history` -- the latter matched by
   `.gitignore` and packaged anyway, because that release was published from the
-  live working directory. The export is exactly what prevents it.
-- The registry serves the new version some minutes after "the package has been
-  accepted"; poll
-  `https://api.registry.platformio.org/v3/packages/tgtakaoka/library/libasm`
-  instead of assuming.
+  live working directory. A clean clone is exactly what prevents it.
+- **Prove the publish with a version-specific download** of
+  `$URL/X.Y.Z/libasm-X.Y.Z.tar.gz`, using BOTH `-sL` and the PlatformIO user
+  agent as above. The registry serves the version some minutes after "the
+  package has been accepted".
+  - It answers **HTTP 302** and redirects. Without `-L`, curl saves a 197-byte
+    redirect body and reports 302, which looks exactly like "not published
+    yet".
+  - Do not poll
+    `https://api.registry.platformio.org/v3/packages/tgtakaoka/library/libasm`:
+    that listing lags, and polling it never succeeded.
+    `/v3/packages/.../download?version=` answers 405 Method Not Allowed.
+  - Compare extracted CONTENTS of the packed and downloaded tarballs, not byte
+    sizes: the registry re-stores the bytes. For 2.0.3 and 1.6.73 the
+    contents were identical.
 
 **Still shipped, arguably should not be**: `.github/`, `.gemini/`, `.clangd`,
 `.clang-format`, `.clang-tidy`, `.gitignore`, `scripts/`. An `export.exclude`
@@ -2454,5 +2521,6 @@ than a property of PlatformIO's defaults plus a clean source tree.
 - Don't trust a bullet in THIS file over the code: the SuperH `origin-char`
   note described `*` for months while `gen_superh.cpp` set `$`. When a claim
   here is load-bearing, re-verify it, then fix whichever side is wrong.
-- Don't run `pio pkg publish` in the working clone, and don't `git clean` it to
-  make that safe -- publish an export of the tag (see Release procedure).
+- Don't run `pio pkg pack` in the working clone or a worktree, and don't
+  `git clean` it to make that safe -- pack a fresh clone of the tag after
+  `make clean` (see Release procedure).
