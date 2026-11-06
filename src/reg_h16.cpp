@@ -93,7 +93,7 @@ constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 // clang-format on
 }  // namespace
 
-// Parse Rn, CRn, or PRn (n = 0..15).  Reads an alphanumeric identifier and
+// Parse Rn, CRn, PRn (n = 0..15), or SP.  Reads an alphanumeric identifier and
 // splits it into a 1- or 2-character prefix and a 1- or 2-digit number.
 RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
@@ -109,6 +109,11 @@ RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
         base = REG_PR0;
     } else if (token.iexpect('R')) {
         base = REG_R0;
+    } else if (token.iexpect('S')) {
+        // SP is the global-bank R15 (Manual 4.3.13).
+        if (!token.iexpect('P') || token.size()) return REG_UNDEF;
+        scan = p;
+        return REG_R15;
     } else {
         return REG_UNDEF;
     }

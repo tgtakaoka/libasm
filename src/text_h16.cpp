@@ -72,6 +72,7 @@ constexpr char TEXT_REG_IBR[]  = "IBR";
 constexpr char TEXT_REG_RBR[]  = "RBR";
 constexpr char TEXT_REG_VBNR[] = "VBNR";
 // constexpr char TEXT_REG_PC[]  = "PC";
+// constexpr char TEXT_REG_SP[]  = "SP";
 // constexpr char TEXT_REG_USP[] = "USP";
 
 // clang-format on
