@@ -171,7 +171,7 @@ constexpr char TEXT_REG_EXR[]  = "EXR";
 constexpr char OPT_BOOL_ADVANCED_MODE[] = "advanced-mode";
 constexpr char OPT_DESC_ADVANCED_MODE[] = "H8/300H 24-bit advanced mode";
 constexpr char OPT_BOOL_SP_ALIAS[] = "sp-alias";
-constexpr char OPT_DESC_SP_ALIAS[] = "emit SP alias for ER7/R7 in indirect addressing";
+constexpr char OPT_DESC_SP_ALIAS[] = "use SP for the stack pointer";
 
 // clang-format on
 }  // namespace h8300
