@@ -165,7 +165,7 @@ void test_data_move() {
 
     // MOV.W Rs,@Rn (0x69, bit7=1): byte2=0x80|(Rn3<<4)|Rs3
     TEST("MOV.W", AREG("R0, @R0", "R0, @ER0"), 0x6980|(0<<4)|0);
-    TEST("MOV.W", "R7, @SP",                   0x6980|(7<<4)|7);
+    TEST("MOV.W", AREG("SP, @SP", "R7, @SP"),                   0x6980|(7<<4)|7);
 
     // MOV.B @abs16,Rd (0x6A, bits[7:6]=00): byte2=Rd nibble
     TEST("MOV.B", "@H'1234, R0H",    0x6A00|0x0, 0x1234);
@@ -177,7 +177,7 @@ void test_data_move() {
 
     // MOV.W @abs16,Rd (0x6B, bit7=0): byte2=Rd3
     TEST("MOV.W", "@H'1234, R0",    0x6B00|0, 0x1234);
-    TEST("MOV.W", "@H'FFFE:16, R7", 0x6B00|7, 0xFFFE);
+    TEST("MOV.W", AREG("@H'FFFE:16, SP", "@H'FFFE:16, R7"), 0x6B00|7, 0xFFFE);
 
     // MOV.W Rs,@abs16 (0x6B, bit7=1): byte2=0x80|Rs3
     TEST("MOV.W", "R0, @H'1234", 0x6B80|0, 0x1234);
@@ -229,7 +229,7 @@ void test_data_move() {
     // MOV.W #imm,Rd (0x79): byte2=Rd3, then imm16
     TEST("MOV.W", "#0, R0",     0x7900|0, 0x0000);
     TEST("MOV.W", "#H'1234, R3", 0x7900|3, 0x1234);
-    TEST("MOV.W", "#H'FFFF, R7", 0x7900|7, 0xFFFF);
+    TEST("MOV.W", AREG("#H'FFFF, SP", "#H'FFFF, R7"), 0x7900|7, 0xFFFF);
 
     // MOV.B #imm,Rd (0xF0-0xFF): byte1=0xF0|(Rd nibble), byte2=imm8
     TEST("MOV.B", "#0, R0H",   0xF000|(0x0<<8)|0x00);
@@ -247,12 +247,12 @@ void test_data_move() {
         // (POS__7_ / POS___7); the destination bit-3 reserved bit is checked.
         TEST("MOV.L", "ER0, ER1",                0x0F80|(0<<4)|1);
         TEST("MOV.L", "ER2, ER5",                0x0F80|(2<<4)|5);
-        TEST("MOV.L", "ER7, ER0",                0x0F80|(7<<4)|0);
+        TEST("MOV.L", "SP, ER0",                0x0F80|(7<<4)|0);
         UNKN(                                    0x0F80|(0<<4)|0x8);  // bit 3 of ERd reserved
 
         // MOV.L #imm32, ERd via 0x7A00 prefix
         TEST("MOV.L", "#H'12345678, ER0",        0x7A00|0, 0x1234, 0x5678);
-        TEST("MOV.L", "#H'FFFFFFFF, ER7",        0x7A00|7, 0xFFFF, 0xFFFF);
+        TEST("MOV.L", "#H'FFFFFFFF, SP",        0x7A00|7, 0xFFFF, 0xFFFF);
 
         // MOV.B / MOV.W with ER pointer (decoded via decodeOprAddrReg).
         TEST("MOV.B", "@ER0, R0H",               0x6800|(0<<4)|0x0);
@@ -278,7 +278,7 @@ void test_data_move() {
         TEST("MOV.W", "@H'000100:24, R0",        0x6B20|0x0,         0x0000, 0x0100);
         TEST("MOV.W", "R7, @H'FFFFFE:24",        0x6BA0|0x7,         0x00FF, 0xFFFE);
         TEST("MOV.L", "@H'000100:24, ER0",       0x0100, 0x6B20|0,   0x0000, 0x0100);
-        TEST("MOV.L", "ER7, @H'FFFFFE:24",       0x0100, 0x6BA0|7,   0x00FF, 0xFFFE);
+        TEST("MOV.L", "SP, @H'FFFFFE:24",       0x0100, 0x6BA0|7,   0x00FF, 0xFFFE);
 
         // MOV.L with addressing modes via 0x0100 super-prefix
         TEST("MOV.L", "@ER0, ER1",               0x0100, 0x6900|(0<<4)|1);
@@ -311,7 +311,7 @@ void test_arithmetic() {
     TEST("SUB.B", "R0H, R0H", 0x1800|(0x0<<4)|0x0);
     TEST("SUB.B", "R5L, R2H", 0x1800|(0xD<<4)|0x2);
     TEST("SUB.W", "R0, R0",   0x1900|(0<<4)|0);
-    TEST("SUB.W", "R4, R7",   0x1900|(4<<4)|7);
+    TEST("SUB.W", AREG("R4, SP", "R4, R7"),   0x1900|(4<<4)|7);
     TEST("SUBX",  "R0H, R7L", 0x1E00|(0x0<<4)|0xF);
 
     TEST("CMP.B", "R0H, R0H", 0x1C00|(0x0<<4)|0x0);
@@ -333,12 +333,12 @@ void test_arithmetic() {
     TEST("ADDS", AREG("#1, R0", "#1, ER0"), 0x0B00|0);
     TEST("ADDS", AREG("#1, R5", "#1, ER5"), 0x0B00|5);
     TEST("ADDS", AREG("#2, R0", "#2, ER0"), 0x0B80|0);
-    TEST("ADDS", AREG("#2, R7", "#2, ER7"), 0x0B80|7);
+    TEST("ADDS", "#2, SP", 0x0B80|7);
 
     TEST("SUBS", AREG("#1, R0", "#1, ER0"), 0x1B00|0);
     TEST("SUBS", AREG("#1, R3", "#1, ER3"), 0x1B00|3);
     TEST("SUBS", AREG("#2, R0", "#2, ER0"), 0x1B80|0);
-    TEST("SUBS", AREG("#2, R7", "#2, ER7"), 0x1B80|7);
+    TEST("SUBS", "#2, SP", 0x1B80|7);
 
     TEST("DAA", "R0H", 0x0F00|0x0);
     TEST("DAA", "R7L", 0x0F00|0xF);
@@ -371,7 +371,7 @@ void test_arithmetic() {
     if (is_h8300h() || is_h8s()) {
         // ADD.L / SUB.L / CMP.L ERs,ERd (same shape as MOV.L)
         TEST("ADD.L",   "ER0, ER1",         0x0A80|(0<<4)|1);
-        TEST("ADD.L",   "ER7, ER0",         0x0A80|(7<<4)|0);
+        TEST("ADD.L",   "SP, ER0",         0x0A80|(7<<4)|0);
         TEST("SUB.L",   "ER0, ER1",         0x1A80|(0<<4)|1);
         TEST("CMP.L",   "ER3, ER5",         0x1F80|(3<<4)|5);
 
@@ -384,7 +384,7 @@ void test_arithmetic() {
         TEST("INC.W",   "#2, R7",           0x0BD0|0x7);
         TEST("INC.W",   "#1, E5",           0x0B50|0xD);
         TEST("INC.L",   "#1, ER0",          0x0B70|0);
-        TEST("INC.L",   "#2, ER7",          0x0BF0|7);
+        TEST("INC.L",   "#2, SP",          0x0BF0|7);
         TEST("DEC.W",   "#1, R0",           0x1B50|0x0);
         TEST("DEC.W",   "#2, R7",           0x1BD0|0x7);
         TEST("DEC.L",   "#1, ER3",          0x1B70|3);
@@ -392,13 +392,13 @@ void test_arithmetic() {
 
         // ADDS / SUBS via M_ADREG: ER target on H8/300H (suffix is implicit).
         TEST("ADDS",    "#1, ER0",          0x0B00|0);
-        TEST("ADDS",    "#1, ER7",          0x0B00|7);
+        TEST("ADDS",    "#1, SP",          0x0B00|7);
         TEST("ADDS",    "#2, ER3",          0x0B80|3);
         TEST("SUBS",    "#1, ER4",          0x1B00|4);
         TEST("SUBS",    "#2, ER5",          0x1B80|5);
         // ADDS / SUBS #4 (H8/300H-only encoding 0x0B90 / 0x1B90)
         TEST("ADDS",    "#4, ER0",          0x0B90|0);
-        TEST("ADDS",    "#4, ER7",          0x0B90|7);
+        TEST("ADDS",    "#4, SP",          0x0B90|7);
         TEST("SUBS",    "#4, ER3",          0x1B90|3);
 
         // ADD.W / SUB.W / CMP.W #imm16, Rd
@@ -415,16 +415,16 @@ void test_arithmetic() {
         // MULXU.W / DIVXU.W Rs,ERd
         TEST("MULXU.W", "R0, ER0",          0x5200|(0x0<<4)|0);
         TEST("MULXU.W", "R3, ER5",          0x5200|(0x3<<4)|5);
-        TEST("MULXU.W", "E2, ER7",          0x5200|(0xA<<4)|7);
+        TEST("MULXU.W", "E2, SP",          0x5200|(0xA<<4)|7);
         TEST("DIVXU.W", "R0, ER1",          0x5300|(0x0<<4)|1);
-        TEST("DIVXU.W", "E7, ER7",          0x5300|(0xF<<4)|7);
+        TEST("DIVXU.W", "E7, SP",          0x5300|(0xF<<4)|7);
         UNKN(                               0x5200|(0x0<<4)|0x8);  // bit 3 of ERd reserved
 
         // MULXS / DIVXS via 0x01C0 / 0x01D0 prefix
         TEST("MULXS.B", "R0H, R0",          0x01C0, 0x5000|(0x0<<4)|0x0);
         TEST("MULXS.B", "R3H, R5",          0x01C0, 0x5000|(0x3<<4)|0x5);
         TEST("MULXS.W", "R0, ER0",          0x01C0, 0x5200|(0x0<<4)|0);
-        TEST("MULXS.W", "E7, ER7",          0x01C0, 0x5200|(0xF<<4)|7);
+        TEST("MULXS.W", "E7, SP",          0x01C0, 0x5200|(0xF<<4)|7);
         TEST("DIVXS.B", "R0H, R0",          0x01D0, 0x5100|(0x0<<4)|0x0);
         TEST("DIVXS.W", "R3, ER2",          0x01D0, 0x5300|(0x3<<4)|2);
     }
@@ -455,7 +455,7 @@ void test_logic() {
         TEST("NOT.W",  "R0",                0x1710|0x0);
         TEST("NOT.W",  "E5",                0x1710|0xD);
         TEST("NOT.L",  "ER0",               0x1730|0);
-        TEST("NOT.L",  "ER7",               0x1730|7);
+        TEST("NOT.L",  "SP",               0x1730|7);
         UNKN(                               0x1730|0x8);  // bit 3 of ERd reserved
 
         // EXTU.W / EXTU.L Rd  (zero-extend)
@@ -519,7 +519,7 @@ void test_shift_rotate() {
         TEST("SHAL.W",  "R3",  0x1090|0x3);
         TEST("SHAL.L",  "ER5", 0x10B0|5);
         TEST("SHLR.W",  "E0",  0x1110|0x8);
-        TEST("SHLR.L",  "ER7", 0x1130|7);
+        TEST("SHLR.L",  "SP", 0x1130|7);
         TEST("SHAR.W",  "R7",  0x1190|0x7);
         TEST("SHAR.L",  "ER1", 0x11B0|1);
         TEST("ROTXL.W", "R0",  0x1210|0x0);
@@ -1307,21 +1307,32 @@ void test_illegal_h8s() {
 }
 
 void test_sp_alias() {
-    // Default: SP alias for ER7 (H8/300H+) / R7 (H8/300) in indirect modes.
+    // Default: SP names the stack pointer at its width -- ER7 on H8/300H+,
+    // R7 on H8/300 -- in indirect and register-direct operands alike.
     if (is_h8300h() || is_h8s()) {
         TEST("MOV.L", "@SP, ER0",   0x0100, 0x6900|(7<<4)|0);
         TEST("MOV.W", "R7, @SP",    0x6980|(7<<4)|7);
+        TEST("MOV.L", "SP, ER0",    0x0F80|(7<<4)|0);
+        TEST("ADDS",  "#4, SP",     0x0B90|7);
+        TEST("MOV.W", "E7, R7",     0x0D00|(0xF<<4)|7);
     } else {
         TEST("MOV.W", "@SP, R0",    0x6900|(7<<4)|0);
+        TEST("MOV.W", "SP, R0",     0x0D00|(7<<4)|0);
+        TEST("ADDS",  "#2, SP",     0x0B80|7);
     }
+    TEST("MOV.B", "R7H, R7L",       0x0C00|(7<<4)|0xF);
 
     // Disable the alias: expect canonical ER7/R7 instead.
     disassembler.setOption("sp-alias", "off");
     if (is_h8300h() || is_h8s()) {
         TEST("MOV.L", "@ER7, ER0",  0x0100, 0x6900|(7<<4)|0);
         TEST("MOV.W", "R7, @ER7",   0x6980|(7<<4)|7);
+        TEST("MOV.L", "ER7, ER0",   0x0F80|(7<<4)|0);
+        TEST("ADDS",  "#4, ER7",    0x0B90|7);
     } else {
         TEST("MOV.W", "@R7, R0",    0x6900|(7<<4)|0);
+        TEST("MOV.W", "R7, R0",     0x0D00|(7<<4)|0);
+        TEST("ADDS",  "#2, R7",     0x0B80|7);
     }
     disassembler.setOption("sp-alias", "on");
 }
@@ -1363,7 +1374,7 @@ void test_advanced_mode() {
         TEST("MOV.W", "@H'00000100:32, R0",  0x6B20|0x0, 0x0000, 0x0100);
         TEST("MOV.W", "R7, @H'FFFFFFFE:32",  0x6BA0|0x7, 0xFFFF, 0xFFFE);
         TEST("MOV.L", "@H'00000100:32, ER0", 0x0100, 0x6B20|0x0, 0x0000, 0x0100);
-        TEST("MOV.L", "ER7, @H'FFFFFFFE:32", 0x0100, 0x6BA0|0x7, 0xFFFF, 0xFFFE);
+        TEST("MOV.L", "SP, @H'FFFFFFFE:32", 0x0100, 0x6BA0|0x7, 0xFFFF, 0xFFFE);
         TEST("LDC",   "@H'12345678:32, CCR", 0x0140, 0x6B20, 0x1234, 0x5678);
         TEST("STC",   "CCR, @H'12345678:32", 0x0140, 0x6BA0, 0x1234, 0x5678);
         TEST("LDC",   "@H'12345678:32, EXR", 0x0141, 0x6B20, 0x1234, 0x5678);
@@ -1435,7 +1446,7 @@ void test_h8s_extensions() {
     TEST("SHLL.W", "#2, R0",  0x1050);
     TEST("SHLL.W", "#2, E7",  0x105F);
     TEST("SHLL.L", "#2, ER0", 0x1070);
-    TEST("SHLL.L", "#2, ER7", 0x1077);
+    TEST("SHLL.L", "#2, SP", 0x1077);
     TEST("SHAL",   "#2, R0H", 0x10C0);
     TEST("SHAL.W", "#2, R0",  0x10D0);
     TEST("SHAL.L", "#2, ER0", 0x10F0);
@@ -1485,14 +1496,14 @@ void test_h8s2600_mac() {
     TEST("MAC", "@ER3+, @ER4+", 0x0160, 0x6D34);
 
     TEST("LDMAC", "ER0, MACH", 0x0320);
-    TEST("LDMAC", "ER7, MACH", 0x0327);
+    TEST("LDMAC", "SP, MACH", 0x0327);
     TEST("LDMAC", "ER0, MACL", 0x0330);
-    TEST("LDMAC", "ER7, MACL", 0x0337);
+    TEST("LDMAC", "SP, MACL", 0x0337);
 
     TEST("STMAC", "MACH, ER0", 0x0220);
-    TEST("STMAC", "MACH, ER7", 0x0227);
+    TEST("STMAC", "MACH, SP", 0x0227);
     TEST("STMAC", "MACL, ER0", 0x0230);
-    TEST("STMAC", "MACL, ER7", 0x0237);
+    TEST("STMAC", "MACL, SP", 0x0237);
 }
 
 
