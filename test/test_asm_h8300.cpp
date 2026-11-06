@@ -210,6 +210,11 @@ void test_data_move() {
     TEST("MOV.W @SP+, R1", 0x6D00|(7<<4)|1);
     TEST("MOV   R5, @-SP", 0x6DF0|5);
     TEST("MOV.W @SP, R6",  0x6900|(7<<4)|6);
+    if (!is_h8300h() && !is_h8s()) {
+        // On H8/300 SP is R7 in register-direct operands too.
+        TEST("MOV.W SP, R0",   0x0D00|(7<<4)|0);
+        TEST("ADDS  #2, SP",   0x0B80|7);
+    }
 
     // PUSH Rs (0x6D, Rn=SP=R7, bit7=1): byte2=0xF0|Rs3
     TEST("PUSH   R0", 0x6DF0|0);
