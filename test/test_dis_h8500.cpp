@@ -146,41 +146,59 @@ void test_spc_move() {
     TEST("CMP:E", "#H'AB, R3",  0x43, 0xAB);
     // CMP:I #imm16,Rd
     TEST("CMP:I", "#H'FFFF, R0", 0x48, 0xFF, 0xFF);
-    TEST("CMP:I", "#H'1234, R7", 0x4F, 0x12, 0x34);
+    TEST("CMP:I", "#H'1234, SP", 0x4F, 0x12, 0x34);
     // MOV:L @aa:8,Rd -- Sz is OP-byte bit 3 (0x60 byte, 0x68 word)
     TEST("MOV:L.B", "@H'10:8, R0", 0x60, 0x10);
-    TEST("MOV:L.B", "@H'FF:8, R7", 0x67, 0xFF);
+    TEST("MOV:L.B", "@H'FF:8, SP", 0x67, 0xFF);
     TEST("MOV:L.W", "@H'10:8, R0", 0x68, 0x10);
-    TEST("MOV:L.W", "@H'FF:8, R7", 0x6F, 0xFF);
+    TEST("MOV:L.W", "@H'FF:8, SP", 0x6F, 0xFF);
     // MOV:S Rs,@aa:8 (0x70 byte, 0x78 word)
     TEST("MOV:S.B", "R0, @H'10:8", 0x70, 0x10);
-    TEST("MOV:S.B", "R7, @H'FF:8", 0x77, 0xFF);
+    TEST("MOV:S.B", "SP, @H'FF:8", 0x77, 0xFF);
     TEST("MOV:S.W", "R0, @H'10:8", 0x78, 0x10);
-    TEST("MOV:S.W", "R7, @H'FF:8", 0x7F, 0xFF);
+    TEST("MOV:S.W", "SP, @H'FF:8", 0x7F, 0xFF);
     // MOV:F @(d:8,FP),Rd (0x80 byte, 0x88 word)
     TEST("MOV:F.B", "@(8,FP), R0",  0x80, 0x08);
     TEST("MOV:F.B", "@(-1,FP), R0", 0x80, 0xFF);
-    TEST("MOV:F.B", "@(0,FP), R7",  0x87, 0x00);
+    TEST("MOV:F.B", "@(0,FP), SP",  0x87, 0x00);
     TEST("MOV:F.W", "@(8,FP), R0",  0x88, 0x08);
-    TEST("MOV:F.W", "@(0,FP), R7",  0x8F, 0x00);
+    TEST("MOV:F.W", "@(0,FP), SP",  0x8F, 0x00);
     // MOV:F Rs,@(d:8,FP) (0x90 byte, 0x98 word)
     TEST("MOV:F.B", "R0, @(8,FP)",  0x90, 0x08);
-    TEST("MOV:F.B", "R7, @(-1,FP)", 0x97, 0xFF);
+    TEST("MOV:F.B", "SP, @(-1,FP)", 0x97, 0xFF);
     TEST("MOV:F.W", "R0, @(8,FP)",  0x98, 0x08);
-    TEST("MOV:F.W", "R7, @(-1,FP)", 0x9F, 0xFF);
+    TEST("MOV:F.W", "SP, @(-1,FP)", 0x9F, 0xFF);
 }
 
 void test_spc_ldm_stm() {
     // LDM @SP+,(list): low-to-high, consecutive runs collapse to Rm-Rn.
     TEST("LDM", "@SP+, (R0)",        0x02, 0x01);
-    TEST("LDM", "@SP+, (R7)",        0x02, 0x80);
+    TEST("LDM", "@SP+, (SP)",        0x02, 0x80);
     TEST("LDM", "@SP+, (R0-R3)",     0x02, 0x0F);
     TEST("LDM", "@SP+, (R0,R2-R4)", 0x02, 0x1D);
     // STM (list),@-SP at opcode 0x12
     TEST("STM", "(R0), @-SP",        0x12, 0x01);
-    TEST("STM", "(R7), @-SP",        0x12, 0x80);
+    TEST("STM", "(SP), @-SP",        0x12, 0x80);
     TEST("STM", "(R0-R3), @-SP",     0x12, 0x0F);
     TEST("STM", "(R0,R2-R4), @-SP", 0x12, 0x1D);
+}
+
+// fp-alias / sp-alias (both default on) name R6 and R7 in every context.
+void test_reg_alias() {
+    TEST("MOV:G.W", "SP, R0",          0xAF, 0x80);
+    TEST("MOV:G.B", "SP, R0",          0xA7, 0x80);
+    TEST("MOV:G.B", "FP, R0",          0xA6, 0x80);
+    TEST("ADD:Q.W", "#1, SP",          0xAF, 0x08);
+    TEST("LDM",     "@SP+, (R0-SP)",   0x02, 0xFF);
+    TEST("STM",     "(R0,FP-SP), @-SP", 0x12, 0xC1);
+
+    dish8500.setOption("fp-alias", "off");
+    dish8500.setOption("sp-alias", "off");
+    TEST("MOV:G.W", "R7, R0",          0xAF, 0x80);
+    TEST("MOV:G.B", "R6, R0",          0xA6, 0x80);
+    TEST("ADD:Q.W", "#1, R7",          0xAF, 0x08);
+    TEST("LDM",     "@R7+, (R0-R7)",   0x02, 0xFF);
+    TEST("STM",     "(R0,R6-R7), @-R7", 0x12, 0xC1);
 }
 
 void test_spc_jmp() {
@@ -208,7 +226,7 @@ void test_spc_scb() {
     // SCB/F, SCB/EQ, SCB/NE Rc,rel8
     TEST("SCB/F",  "R0, H'0004",  0x01, 0xB8, 0x01);
     TEST("SCB/EQ", "R3, H'0004",  0x07, 0xBB, 0x01);
-    TEST("SCB/NE", "R7, H'0004",  0x06, 0xBF, 0x01);
+    TEST("SCB/NE", "SP, H'0004",  0x06, 0xBF, 0x01);
 }
 
 void test_spc_add_q() {
@@ -359,7 +377,7 @@ void test_gen_alu() {
     // XCH (register-only EA) shares OP 0x90 with MOV:G store but wins for a
     // register EA; a memory EA at 0x90 stays MOV:G.
     TEST("XCH",     "R0, R1",   0xA8, 0x91);
-    TEST("XCH",     "R7, R3",   0xAF, 0x93);
+    TEST("XCH",     "SP, R3",   0xAF, 0x93);
     TEST("MOV:G.W", "R0, @R1",  0xD9, 0x90);
 }
 
@@ -531,6 +549,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_spc_branch);
     RUN_TEST(test_spc_move);
     RUN_TEST(test_spc_ldm_stm);
+    RUN_TEST(test_reg_alias);
     RUN_TEST(test_spc_jmp);
     RUN_TEST(test_spc_scb);
     RUN_TEST(test_spc_add_q);
