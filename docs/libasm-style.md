@@ -1318,7 +1318,11 @@ expectation (often `UNKNOWN_INSTRUCTION`) in the `else`.
   assembler errors on values in the gap.
 - Advanced-mode `@aa:8` valid: `[0, 0xFF]` or `[0xFFFF00, 0xFFFFFF]`;
   disassembler widens `0xnn` to `0xFFFFnn`.
-- M_ADREG decodes R7/ER7 as `SP`; plain M_REG16/M_REG32 keep `R7`/`ER7`.
+- `sp-alias` (default on) names the stack pointer at its width in every
+  operand: R7 on H8/300, ER7 on H8/300H/H8S in both modes (Software Manual
+  1.4.2 makes ER7 the SP with no mode qualifier). The H8/300H word R7 is only
+  ER7's low half and stays `R7`, as do R7H/R7L and E7. GNU as takes `sp` as R7
+  in normal mode and rejects it for ER7. The generator turns the alias off.
 - **H8S bit operations on `@aa:16`/`@aa:32` put the address BEFORE the
   operation code**: `6A10 aaaa 7300` is `BTST #0,@aa:16`. The prefix carries
   the address width (`6A10`/`6A30`) and whether the operation writes memory
@@ -1620,12 +1624,13 @@ Distinguish real bugs from ASL limitations by the message:
   `reservedSize()`. Check both matchers when a table entry lands on a
   prefix page's reserved code.
 - `sp-alias` (dis, default OFF) shows the global-bank R15 as `SP` in *every*
-  operand that names it, register-direct included -- unlike h8300.
+  operand that names it, register-direct included, as h8300/h8500 do.
   Manual 4.3.13 makes global R15 the stack pointer whenever an addressing mode
   names it, and Table 4-7 lists register direct as one; Figure 4-1 Note 1
   covers the non-EA Rn fields. Two exceptions: `CR15`/`PR15` (a ring-bank R15
   is never SP), and the STM/LDM/PGBN register list, which is a bitmask printed
-  as numeric ranges (`outRegList` stays on `outRegName`). The assembler accepts
+  as numeric ranges (`outRegList` stays on `outRegName`; h8500 lists show SP
+  because they already showed FP). The assembler accepts
   `SP` as `R15` unconditionally, list ranges included.
 - Accumulator-form (A) bit lives on bit 7 of the FIRST byte of the EA
   field. When a bank prefix is present, A goes on the prefix byte

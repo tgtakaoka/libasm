@@ -34,13 +34,12 @@ int main(int argc, const char **argv) {
 
     dish8300.setOption("relative", "enable");
     dish8300.setOption("c-style", "enable");
+    // The SP alias spells R7/ER7, which the Rn tokenizers already cover.
+    dish8300.setOption("sp-alias", "disable");
     if (driver.generateGas()) {
         dish8300.setOption("gnu-as", "enable");
     } else {
         dish8300.setOption("origin-char", "*");
-        // libasm and asl both prefer the canonical ER7/R7 form over the SP
-        // alias; the gas path keeps the alias since gas accepts both.
-        dish8300.setOption("sp-alias", "disable");
     }
 
     TestGenerator generator(driver, dish8300, 0x0100, standardTokenizers<CstyleNumber>(dish8300.curSym(), {&INDEX_TOK, &REG_ER, &REG_R, &REG_E}));
