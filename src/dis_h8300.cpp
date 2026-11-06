@@ -126,6 +126,9 @@ RegName DisH8300::decodeOprReg16(
             insn.setErrorIf(out, ILLEGAL_SIZE);
         return spAlias() ? REG_SP : REG_R7;
     }
+    // On H8/300H the stack pointer is ER7; R7 is only its low half.
+    if (regno == 7 && spAlias() && !hasReg32())
+        return REG_SP;
     return decodeReg16(regno);
 }
 
@@ -137,7 +140,7 @@ RegName DisH8300::decodeOprReg32(
     const auto regno = Entry::decodeOperand(code, pos);
     if (regno & 0x08)
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
-    if (regno == 7 && mode != M_REG32 && mode != M_ADREG) {
+    if (regno == 7) {
         if (insn.oprSize() == SZ_BYTE && (mode == M_PINC || mode == M_PDEC))
             insn.setErrorIf(out, ILLEGAL_SIZE);
         return spAlias() ? REG_SP : REG_ER7;

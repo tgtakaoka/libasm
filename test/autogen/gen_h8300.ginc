@@ -108,12 +108,10 @@
       bsr    .+2
       rte
       jmp    @r0
-      jmp    @sp
       jmp    @0x5b02
       jmp    @0xff00:16
       jmp    @@0x0000
       jsr    @r0
-      jsr    @sp
       jsr    @0x5f02
       jsr    @0xff00:16
       jsr    @@0x0000
@@ -139,16 +137,10 @@
       bist   #0, r0l
       mov.b  @r0, r0h
       mov.b  @r0, r0l
-      mov.b  @sp, r0h
-      mov.b  @sp, r0l
       mov.b  r0h, @r0
       mov.b  r0l, @r0
-      mov.b  r0h, @sp
-      mov.b  r0l, @sp
       mov.w  @r0, r0
-      mov.w  @sp, r0
       mov.w  r0, @r0
-      mov.w  r0, @sp
       mov.b  @0x6b01, r0h
       mov.b  @0xff00:16, r0h
       mov.b  @0x6b09, r0l
@@ -179,16 +171,10 @@
       push   r0
       mov.b  @(0x6f01,r0), r0h
       mov.b  @(0x6f09,r0), r0l
-      mov.b  @(0x6f71,sp), r0h
-      mov.b  @(0x6f79,sp), r0l
       mov.b  r0h, @(0x6f81,r0)
       mov.b  r0l, @(0x6f89,r0)
-      mov.b  r0h, @(0x6ff1,sp)
-      mov.b  r0l, @(0x6ff9,sp)
       mov.w  @(0x7001,r0), r0
-      mov.w  @(0x7071,sp), r0
       mov.w  r0, @(0x7081,r0)
-      mov.w  r0, @(0x70f1,sp)
       bset   #0, r0h
       bset   #0, r0l
       bnot   #0, r0h
@@ -226,17 +212,6 @@
       biand  #0, @r0
       bld    #0, @r0
       bild   #0, @r0
-      btst   r0h, @sp
-      btst   r0l, @sp
-      btst   #0, @sp
-      bor    #0, @sp
-      bior   #0, @sp
-      bxor   #0, @sp
-      bixor  #0, @sp
-      band   #0, @sp
-      biand  #0, @sp
-      bld    #0, @sp
-      bild   #0, @sp
       bset   r0h, @r0
       bset   r0l, @r0
       bnot   r0h, @r0
@@ -248,17 +223,6 @@
       bset   #0, @r0
       bnot   #0, @r0
       bclr   #0, @r0
-      bset   r0h, @sp
-      bset   r0l, @sp
-      bnot   r0h, @sp
-      bnot   r0l, @sp
-      bclr   r0h, @sp
-      bclr   r0l, @sp
-      bst    #0, @sp
-      bist   #0, @sp
-      bset   #0, @sp
-      bnot   #0, @sp
-      bclr   #0, @sp
       btst   r0h, @0xff00:8
       btst   r0l, @0xff00:8
       btst   #0, @0xff00:8
