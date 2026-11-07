@@ -247,6 +247,7 @@ extern const char TEXT_REG_CAAR[];
 extern const char TEXT_REG_CACR[];
 extern const char TEXT_REG_ISP[];
 extern const char TEXT_REG_MSP[];
+extern const char TEXT_REG_ZPC[];
 
 // MC68030
 extern const char TEXT_PMOVEFD[];

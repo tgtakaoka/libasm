@@ -399,6 +399,8 @@ void DisMc68000::decodeFullExtension(
     const auto bdSize = (ext >> 4) & 3;
     if (bdSize == 0)
         insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+    if (ext & 0x80)  // base suppress; a suppressed PC still reads program space
+        base = (base == REG_PC) ? REG_ZPC : REG_UNDEF;
     if ((ext & 7) == 0) {
         const auto disp = readDisplacement(insn, base, bdSize);
         if ((ext & 0xC0) == 0xC0 || (base == REG_PC && (ext & 0x40) != 0)) {
@@ -407,7 +409,7 @@ void DisMc68000::decodeFullExtension(
         }
         out.letter('(');
         auto delim = outDisplacement(insn, out, base, disp, bdSize, TEXT_null);
-        if ((ext & 0x80) == 0) {
+        if (base != REG_UNDEF) {
             outReg(out.text(delim), base);
             delim = PSTR_COMMA;
         }
@@ -425,7 +427,7 @@ void DisMc68000::decodeFullExtension(
         }
         out.letter('(').letter('[');
         auto delim = outDisplacement(insn, out, base, disp, bdSize, TEXT_null);
-        if ((ext & 0x80) == 0) {
+        if (base != REG_UNDEF) {
             outReg(out.text(delim), base);
             delim = PSTR_COMMA;
         }

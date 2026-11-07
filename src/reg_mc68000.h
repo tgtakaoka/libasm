@@ -61,6 +61,7 @@ enum RegName : int8_t {
     REG_PC = 0 + 24,
     REG_CCR = 1 + 24,
     REG_SR = 2 + 24,
+    REG_ZPC = 3 + 24,  // MC68020/MC68030/MC68040; PC suppressed (BS=1)
     // Floating point status/control registers
     REG_FPCR = 4 + 24,
     REG_FPSR = 5 + 24,
