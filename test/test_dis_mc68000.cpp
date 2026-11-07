@@ -3234,6 +3234,42 @@ void test_multiproc() {
     }
 }
 
+// sp-alias decodes A7 as SP (default off) in every operand that names it,
+// except a MOVEM register list.
+void test_sp_alias() {
+    TEST("MOVE.L", "D1, -(A7)",  0027401);
+    TEST("LEA",    "(4,A7), A0", 0040757, 0x0004);
+
+    disassembler.setOption("sp-alias", "on");
+    TEST("MOVE.L",  "D1, -(SP)",           0027401);
+    TEST("MOVE.L",  "(SP)+, D1",           0021037);
+    TEST("MOVE.L",  "(SP), D1",            0021027);
+    TEST("MOVE.L",  "SP, D1",              0021017);
+    TEST("MOVEA.L", "SP, A0",              0020117);
+    TEST("MOVEA.L", "A0, SP",              0027110);
+    TEST("LEA",     "(4,SP), A0",          0040757, 0x0004);
+    TEST("ADDQ.L",  "#4, SP",              0054217);
+    TEST("MOVE.W",  "(18,A0,SP.W), D1",   0031060, 0170022);
+    TEST("MOVE.W",  "(18,SP,D0.L), D1",   0031067, 0004022);
+    TEST("MOVE",    "SP, USP",             0047147);
+    TEST("MOVE.L",  "A6, D1",              0021016);
+    // Not the stack pointer: a bit of a MOVEM register list.
+    TEST("MOVEM.L", "D0-A7, -(SP)",  0044347, 0xFFFF);
+    TEST("MOVEM.L", "(SP)+, D0/A7",        0046337, 0x8001);
+    if (!firstGen()) {
+        TEST("MOVE.L", "(18,SP,SP.L*4), D2",       0022067, 0176022);
+        TEST("MOVE.L", "(SP.W), D2",                0022060, 0170620);
+        TEST("MOVE.L", "([18,SP],SP.L*4,$0034), D2", 0022067, 0176446, 0x0012, 0x0034);
+        TEST("CAS2.W", "D1:D2, D3:D4, (A5):(SP)",   0006374, 0150301, 0170402);
+    }
+    disassembler.setOption("gnu-as", "on");
+    TEST("MOVEL", "D1, -(SP)", 0027401);
+    disassembler.setOption("gnu-as", "off");
+
+    disassembler.setOption("sp-alias", "off");
+    TEST("MOVE.L", "D1, -(A7)",  0027401);
+}
+
 void test_addressing() {
     // MOVE.L src, D2: 00220|M|Rn
 #define TIDX(opr, mr, ...) TEST("MOVE.L", opr ", D2", 0022000 | mr,  __VA_ARGS__)
@@ -7444,6 +7480,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program);
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_addressing);
     if (!firstGen())
         RUN_TEST(test_bitfield);

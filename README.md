@@ -198,7 +198,7 @@ It can read Intel HEX or Motorola S-Record input.
       --sfr-name       : use name for core SFR (bool: 80C166)
       --short-direct   : use |addr| for short direct notation (bool: Z8001)
       --silicon        : silicon revision (default C30 1, C31 5, C32 2) (int: 320C30)
-      --sp-alias       : use SP for the stack pointer (bool: CP1600, H16, H8/300, H8/510, Z8001)
+      --sp-alias       : use SP for the stack pointer (bool: CP1600, 68000, H16, H8/300, H8/510, Z8001)
       --use-absolute   : zero register indexing as absolute addressing (bool: 8096)
       --use-aux-name   : use aux register name ARn (bool: 32010)
       --use-port-name  : use port name PAn (bool: 32010)
