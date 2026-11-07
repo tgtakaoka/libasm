@@ -224,9 +224,9 @@
         mulu.l  (*+$1234,pc),d6:d7
         mulu.l  (*+18,pc,d3.w),d6:d7
         pack    d2,d7,#$234
-        pack    -(a2),-(a7),#$1234
+        pack    -(a2),-(sp),#$1234
         unpk    d2,d7,#$1234
-        unpk    -(a2),-(a7),#$1234
+        unpk    -(a2),-(sp),#$1234
         bra.x   *+2
         bra.x   *+$80
         bra.x   *-$8000
@@ -351,14 +351,14 @@
         movec   d0, isp
 ;;; Brief extention
         ;; scaled index
-        move.l  ($23,a7,d1.w*1),d2
-        move.l  ($23,a7,a1.w*2),d2
-        move.l  ($23,a7,d1.w*4),d2
-        move.l  ($23,a7,a1.w*8),d2
-        move.l  ($23,a7,a1.l*1),d2
-        move.l  ($23,a7,d1.l*2),d2
-        move.l  ($23,a7,a1.l*4),d2
-        move.l  ($23,a7,d1.l*8),d2
+        move.l  ($23,sp,d1.w*1),d2
+        move.l  ($23,sp,a1.w*2),d2
+        move.l  ($23,sp,d1.w*4),d2
+        move.l  ($23,sp,a1.w*8),d2
+        move.l  ($23,sp,a1.l*1),d2
+        move.l  ($23,sp,d1.l*2),d2
+        move.l  ($23,sp,a1.l*4),d2
+        move.l  ($23,sp,d1.l*8),d2
         move.l  (*+54,pc,a1.w*1),d2
         move.l  (*+54,pc,d1.w*2),d2
         move.l  (*+54,pc,a1.w*4),d2
@@ -368,25 +368,25 @@
         move.l  (*+54,pc,d1.l*4),d2
         move.l  (*+54,pc,a1.l*8),d2
         ;; no displacement
-        move.l  (a7,d1.w),d2
-        move.l  (a7,d1.l),d2
-        move.l  (a7,a1.w),d2
-        move.l  (a7,a1.l),d2
+        move.l  (sp,d1.w),d2
+        move.l  (sp,d1.l),d2
+        move.l  (sp,a1.w),d2
+        move.l  (sp,a1.l),d2
 ;;; Full extension
         ;; large displacement
-        move.l  ($12345678,a7),d2
-        move.l  ($12345678,a7,d1.w),d2
-        move.l  ($12345678,a7,d1.l),d2
-        move.l  ($12345678,a7,a1.w),d2
-        move.l  ($12345678,a7,a1.l),d2
+        move.l  ($12345678,sp),d2
+        move.l  ($12345678,sp,d1.w),d2
+        move.l  ($12345678,sp,d1.l),d2
+        move.l  ($12345678,sp,a1.w),d2
+        move.l  ($12345678,sp,a1.l),d2
         ;; extended base without indirect
-        move.l  (a7.w),d2
+        move.l  (sp.w),d2
         move.l  (d1.w),d2
         move.l  (d1.l),d2
-        move.l  ($1234,a7.w),d2
+        move.l  ($1234,sp.w),d2
         move.l  ($1234,d1.w),d2
         move.l  ($1234,d1.l),d2
-        move.l  ($12345678,a7.w),d2
+        move.l  ($12345678,sp.w),d2
         move.l  ($12345678,d1.w),d2
         move.l  ($12345678,d1.l),d2
         ;; indirect without base and index
@@ -397,21 +397,21 @@
         move.l  ([$12345678],$7654),d2
         move.l  ([$12345678],$76543210),d2
         ;; indirect without base
-        move.l  ([$1234],a7.w),d2
-        move.l  ([$1234],a7.w,$5678),d2
-        move.l  ([$1234],a7.w,$56789ABC),d2
+        move.l  ([$1234],sp.w),d2
+        move.l  ([$1234],sp.w,$5678),d2
+        move.l  ([$1234],sp.w,$56789ABC),d2
         move.l  ([$1234],d1.w),d2
         move.l  ([$1234],d1.w,$5678),d2
         move.l  ([$1234],d1.w,$56789ABC),d2
         move.l  ([$1234],d1.l),d2
         move.l  ([$1234],d1.l,$5678),d2
         move.l  ([$1234],d1.l,$56789ABC),d2
-        move.l  ([$12345678],a7.l),d2
-        move.l  ([$12345678],a7.l,$5678),d2
-        move.l  ([$12345678],a7.l,$56789ABC),d2
-        move.l  ([$12345678],a7.w),d2
-        move.l  ([$12345678],a7.w,$5678),d2
-        move.l  ([$12345678],a7.w,$56789ABC),d2
+        move.l  ([$12345678],sp.l),d2
+        move.l  ([$12345678],sp.l,$5678),d2
+        move.l  ([$12345678],sp.l,$56789ABC),d2
+        move.l  ([$12345678],sp.w),d2
+        move.l  ([$12345678],sp.w,$5678),d2
+        move.l  ([$12345678],sp.w,$56789ABC),d2
         move.l  ([$12345678],d1.w),d2
         move.l  ([$12345678],d1.w,$5678),d2
         move.l  ([$12345678],d1.w,$56789ABC),d2
@@ -419,36 +419,36 @@
         move.l  ([$12345678],d1.l,$5678),d2
         move.l  ([$12345678],d1.l,$56789ABC),d2
         ;; indirect with base and no index
-        move.l  ([a7]),d2
-        move.l  ([a7],$1234),d2
-        move.l  ([a7],$12345678),d2
-        move.l  ([a7.w]),d2
-        move.l  ([a7.w],$1234),d2
-        move.l  ([a7.w],$12345678),d2
+        move.l  ([sp]),d2
+        move.l  ([sp],$1234),d2
+        move.l  ([sp],$12345678),d2
+        move.l  ([sp.w]),d2
+        move.l  ([sp.w],$1234),d2
+        move.l  ([sp.w],$12345678),d2
         move.l  ([d1.w]),d2
         move.l  ([d1.w],$1234),d2
         move.l  ([d1.w],$12345678),d2
         move.l  ([d1.l]),d2
         move.l  ([d1.l],$1234),d2
         move.l  ([d1.l],$12345678),d2
-        move.l  ([$1234,a7]),d2
-        move.l  ([$1234,a7],$5678),d2
-        move.l  ([$1234,a7],$56789ABC),d2
-        move.l  ([$1234,a7.w]),d2
-        move.l  ([$1234,a7.w],$5678),d2
-        move.l  ([$1234,a7.w],$56789ABC),d2
+        move.l  ([$1234,sp]),d2
+        move.l  ([$1234,sp],$5678),d2
+        move.l  ([$1234,sp],$56789ABC),d2
+        move.l  ([$1234,sp.w]),d2
+        move.l  ([$1234,sp.w],$5678),d2
+        move.l  ([$1234,sp.w],$56789ABC),d2
         move.l  ([$1234,d1.w]),d2
         move.l  ([$1234,d1.w],$5678),d2
         move.l  ([$1234,d1.w],$56789ABC),d2
         move.l  ([$1234,d1.l]),d2
         move.l  ([$1234,d1.l],$5678),d2
         move.l  ([$1234,d1.l],$56789ABC),d2
-        move.l  ([$12345678,a7]),d2
-        move.l  ([$12345678,a7],$7654),d2
-        move.l  ([$12345678,a7],$76543210),d2
-        move.l  ([$12345678,a7.w]),d2
-        move.l  ([$12345678,a7.w],$7654),d2
-        move.l  ([$12345678,a7.w],$76543210),d2
+        move.l  ([$12345678,sp]),d2
+        move.l  ([$12345678,sp],$7654),d2
+        move.l  ([$12345678,sp],$76543210),d2
+        move.l  ([$12345678,sp.w]),d2
+        move.l  ([$12345678,sp.w],$7654),d2
+        move.l  ([$12345678,sp.w],$76543210),d2
         move.l  ([$12345678,d1.w]),d2
         move.l  ([$12345678,d1.w],$7654),d2
         move.l  ([$12345678,d1.w],$76543210),d2
@@ -456,79 +456,79 @@
         move.l  ([$12345678,d1.l],$7654),d2
         move.l  ([$12345678,d1.l],$76543210),d2
         ;; indirect with base and inner index
-        move.l  ([a7,d1.w]),d2
-        move.l  ([a7,d1.w],$1234),d2
-        move.l  ([a7,d1.w],$12345678),d2
-        move.l  ([a7,d1.l]),d2
-        move.l  ([a7,d1.l],$1234),d2
-        move.l  ([a7,d1.l],$12345678),d2
-        move.l  ([a7,a1.w]),d2
-        move.l  ([a7,a1.w],$1234),d2
-        move.l  ([a7,a1.w],$12345678),d2
-        move.l  ([a7,a1.l]),d2
-        move.l  ([a7,a1.l],$1234),d2
-        move.l  ([a7,a1.l],$12345678),d2
-        move.l  ([$1234,a7,d1.w]),d2
-        move.l  ([$1234,a7,d1.w],$7654),d2
-        move.l  ([$1234,a7,d1.w],$76543210),d2
-        move.l  ([$1234,a7,d1.l]),d2
-        move.l  ([$1234,a7,d1.l],$7654),d2
-        move.l  ([$1234,a7,d1.l],$76543210),d2
-        move.l  ([$1234,a7,a1.w]),d2
-        move.l  ([$1234,a7,a1.w],$7654),d2
-        move.l  ([$1234,a7,a1.w],$76543210),d2
-        move.l  ([$1234,a7,a1.l]),d2
-        move.l  ([$1234,a7,a1.l],$7654),d2
-        move.l  ([$1234,a7,a1.l],$76543210),d2
-        move.l  ([$12345678,a7,d1.w]),d2
-        move.l  ([$12345678,a7,d1.w],$7654),d2
-        move.l  ([$12345678,a7,d1.w],$76543210),d2
-        move.l  ([$12345678,a7,d1.l]),d2
-        move.l  ([$12345678,a7,d1.l],$7654),d2
-        move.l  ([$12345678,a7,d1.l],$76543210),d2
-        move.l  ([$12345678,a7,a1.w]),d2
-        move.l  ([$12345678,a7,a1.w],$7654),d2
-        move.l  ([$12345678,a7,a1.w],$76543210),d2
-        move.l  ([$12345678,a7,a1.l]),d2
-        move.l  ([$12345678,a7,a1.l],$7654),d2
-        move.l  ([$12345678,a7,a1.l],$76543210),d2
+        move.l  ([sp,d1.w]),d2
+        move.l  ([sp,d1.w],$1234),d2
+        move.l  ([sp,d1.w],$12345678),d2
+        move.l  ([sp,d1.l]),d2
+        move.l  ([sp,d1.l],$1234),d2
+        move.l  ([sp,d1.l],$12345678),d2
+        move.l  ([sp,a1.w]),d2
+        move.l  ([sp,a1.w],$1234),d2
+        move.l  ([sp,a1.w],$12345678),d2
+        move.l  ([sp,a1.l]),d2
+        move.l  ([sp,a1.l],$1234),d2
+        move.l  ([sp,a1.l],$12345678),d2
+        move.l  ([$1234,sp,d1.w]),d2
+        move.l  ([$1234,sp,d1.w],$7654),d2
+        move.l  ([$1234,sp,d1.w],$76543210),d2
+        move.l  ([$1234,sp,d1.l]),d2
+        move.l  ([$1234,sp,d1.l],$7654),d2
+        move.l  ([$1234,sp,d1.l],$76543210),d2
+        move.l  ([$1234,sp,a1.w]),d2
+        move.l  ([$1234,sp,a1.w],$7654),d2
+        move.l  ([$1234,sp,a1.w],$76543210),d2
+        move.l  ([$1234,sp,a1.l]),d2
+        move.l  ([$1234,sp,a1.l],$7654),d2
+        move.l  ([$1234,sp,a1.l],$76543210),d2
+        move.l  ([$12345678,sp,d1.w]),d2
+        move.l  ([$12345678,sp,d1.w],$7654),d2
+        move.l  ([$12345678,sp,d1.w],$76543210),d2
+        move.l  ([$12345678,sp,d1.l]),d2
+        move.l  ([$12345678,sp,d1.l],$7654),d2
+        move.l  ([$12345678,sp,d1.l],$76543210),d2
+        move.l  ([$12345678,sp,a1.w]),d2
+        move.l  ([$12345678,sp,a1.w],$7654),d2
+        move.l  ([$12345678,sp,a1.w],$76543210),d2
+        move.l  ([$12345678,sp,a1.l]),d2
+        move.l  ([$12345678,sp,a1.l],$7654),d2
+        move.l  ([$12345678,sp,a1.l],$76543210),d2
         ;; indirect with base and outer index
-        move.l  ([a7],d1.w),d2
-        move.l  ([a7],d1.w,$1234),d2
-        move.l  ([a7],d1.w,$12345678),d2
-        move.l  ([a7],d1.l),d2
-        move.l  ([a7],d1.l,$1234),d2
-        move.l  ([a7],d1.l,$12345678),d2
-        move.l  ([a7],a1.w),d2
-        move.l  ([a7],a1.w,$1234),d2
-        move.l  ([a7],a1.w,$12345678),d2
-        move.l  ([a7],a1.l),d2
-        move.l  ([a7],a1.l,$1234),d2
-        move.l  ([a7],a1.l,$12345678),d2
-        move.l  ([$1234,a7],d1.w),d2
-        move.l  ([$1234,a7],d1.w,$7654),d2
-        move.l  ([$1234,a7],d1.w,$76543210),d2
-        move.l  ([$1234,a7],d1.l),d2
-        move.l  ([$1234,a7],d1.l,$7654),d2
-        move.l  ([$1234,a7],d1.l,$76543210),d2
-        move.l  ([$1234,a7],a1.w),d2
-        move.l  ([$1234,a7],a1.w,$7654),d2
-        move.l  ([$1234,a7],a1.w,$76543210),d2
-        move.l  ([$1234,a7],a1.l),d2
-        move.l  ([$1234,a7],a1.l,$7654),d2
-        move.l  ([$1234,a7],a1.l,$76543210),d2
-        move.l  ([$12345678,a7],d1.w),d2
-        move.l  ([$12345678,a7],d1.w,$7654),d2
-        move.l  ([$12345678,a7],d1.w,$76543210),d2
-        move.l  ([$12345678,a7],d1.l),d2
-        move.l  ([$12345678,a7],d1.l,$7654),d2
-        move.l  ([$12345678,a7],d1.l,$76543210),d2
-        move.l  ([$12345678,a7],a1.w),d2
-        move.l  ([$12345678,a7],a1.w,$7654),d2
-        move.l  ([$12345678,a7],a1.w,$76543210),d2
-        move.l  ([$12345678,a7],a1.l),d2
-        move.l  ([$12345678,a7],a1.l,$7654),d2
-        move.l  ([$12345678,a7],a1.l,$76543210),d2
+        move.l  ([sp],d1.w),d2
+        move.l  ([sp],d1.w,$1234),d2
+        move.l  ([sp],d1.w,$12345678),d2
+        move.l  ([sp],d1.l),d2
+        move.l  ([sp],d1.l,$1234),d2
+        move.l  ([sp],d1.l,$12345678),d2
+        move.l  ([sp],a1.w),d2
+        move.l  ([sp],a1.w,$1234),d2
+        move.l  ([sp],a1.w,$12345678),d2
+        move.l  ([sp],a1.l),d2
+        move.l  ([sp],a1.l,$1234),d2
+        move.l  ([sp],a1.l,$12345678),d2
+        move.l  ([$1234,sp],d1.w),d2
+        move.l  ([$1234,sp],d1.w,$7654),d2
+        move.l  ([$1234,sp],d1.w,$76543210),d2
+        move.l  ([$1234,sp],d1.l),d2
+        move.l  ([$1234,sp],d1.l,$7654),d2
+        move.l  ([$1234,sp],d1.l,$76543210),d2
+        move.l  ([$1234,sp],a1.w),d2
+        move.l  ([$1234,sp],a1.w,$7654),d2
+        move.l  ([$1234,sp],a1.w,$76543210),d2
+        move.l  ([$1234,sp],a1.l),d2
+        move.l  ([$1234,sp],a1.l,$7654),d2
+        move.l  ([$1234,sp],a1.l,$76543210),d2
+        move.l  ([$12345678,sp],d1.w),d2
+        move.l  ([$12345678,sp],d1.w,$7654),d2
+        move.l  ([$12345678,sp],d1.w,$76543210),d2
+        move.l  ([$12345678,sp],d1.l),d2
+        move.l  ([$12345678,sp],d1.l,$7654),d2
+        move.l  ([$12345678,sp],d1.l,$76543210),d2
+        move.l  ([$12345678,sp],a1.w),d2
+        move.l  ([$12345678,sp],a1.w,$7654),d2
+        move.l  ([$12345678,sp],a1.w,$76543210),d2
+        move.l  ([$12345678,sp],a1.l),d2
+        move.l  ([$12345678,sp],a1.l,$7654),d2
+        move.l  ([$12345678,sp],a1.l,$76543210),d2
         ;; pc-relative large displacement
         move.l  (*+$12345678,pc),d2
         move.l  (*+$12345678,pc,d1.w),d2

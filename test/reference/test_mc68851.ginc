@@ -617,7 +617,7 @@
         pvalid  a4,(0x1234,a2)
         pvalid  a5,(0x34,a2,d3.w)
         pvalid  a6,(0x1234).w
-        pvalid  a7,(0x12345678).l
+        pvalid  sp,(0x12345678).l
 
 ;### Local Variables:
 ;### mode: asm

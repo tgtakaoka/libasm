@@ -57,7 +57,7 @@
         movec   dtt1, d4
         movec   mmusr, a5
         movec   urp, d6
-        movec   srp, a7
+        movec   srp, sp
 
 ;### MC68040 FPU
         fmovex  fp0, fp1
@@ -126,7 +126,7 @@
         fmovel  d2, fpiar
         fmovel  a5, fpiar
         fmovel  (a6), fpcr
-        fmovel  (a7), fpsr
+        fmovel  (sp), fpsr
         fmovel  (a0), fpiar
         fmovel  (a1)+, fpcr
         fmovel  (a2)+, fpsr
@@ -134,7 +134,7 @@
         fmovel  -(a4), fpcr
         fmovel  -(a5), fpsr
         fmovel  -(a6), fpiar
-        fmovel  (0x1234,a7), fpcr
+        fmovel  (0x1234,sp), fpcr
         fmovel  (0x2345,a0), fpsr
         fmovel  (0x3456,a1), fpiar
         fmovel  (0x45,a2,d1.w), fpcr
@@ -160,7 +160,7 @@
         fmovel  fpiar, d2
         fmovel  fpiar, a5
         fmovel  fpcr, (a6)
-        fmovel  fpsr, (a7)
+        fmovel  fpsr, (sp)
         fmovel  fpiar, (a0)
         fmovel  fpcr, (a1)+
         fmovel  fpsr, (a2)+
@@ -168,7 +168,7 @@
         fmovel  fpcr, -(a4)
         fmovel  fpsr, -(a5)
         fmovel  fpiar, -(a6)
-        fmovel  fpcr, (0x1234,a7)
+        fmovel  fpcr, (0x1234,sp)
         fmovel  fpsr, (0x2345,a0)
         fmovel  fpiar, (0x3456,a1)
         fmovel  fpcr, (0x45,a2,d1.w)
@@ -188,7 +188,7 @@
         fmoveml (a4)+, fpcr/fpsr/fpiar
         fmoveml -(a5), fpcr/fpsr
         fmoveml (0x1234,a6), fpsr/fpiar
-        fmoveml (0x34,a7,d2.w), fpcr/fpiar
+        fmoveml (0x34,sp,d2.w), fpcr/fpiar
         fmoveml (0x005678).w, fpcr/fpsr/fpiar
         fmoveml (0x6789aa).l, fpcr/fpsr
         fmoveml (.+0x1234,pc), fpsr/fpiar
@@ -201,7 +201,7 @@
         fmoveml fpcr/fpsr/fpiar, (a4)+
         fmoveml fpcr/fpsr, -(a5)
         fmoveml fpsr/fpiar, (0x1234,a6)
-        fmoveml fpcr/fpiar, (0x34,a7,d2.w)
+        fmoveml fpcr/fpiar, (0x34,sp,d2.w)
         fmoveml fpcr/fpsr/fpiar, (0x005678).w
         fmoveml fpcr/fpsr, (0x6789aa).l
 
