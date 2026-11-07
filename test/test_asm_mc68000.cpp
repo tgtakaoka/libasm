@@ -176,6 +176,7 @@ void test_data_move() {
     ABSW("LEA (@W).W,A1", "FF00",  0041770, 0xFF00);
     TEST("LEA ($001234).L,A1",     0041771, 0x0000, 0x1234);
     TEST("LEA (*+$1234,PC),A1",    0041772, 0x1232);
+    TEST("LEA (PC),A1",            0041772, 0x0000);
     TEST("lea (*+$12,pc,a3.l),a1", 0041773, 0xB810);
     ERRT("LEA #$1234,A1",          OPERAND_NOT_ALLOWED, "#$1234,A1", 0041700);
 
@@ -3066,6 +3067,7 @@ void test_program() {
     TEST("JMP ($001234).W",     0047370, 0x1234);
     TEST("JMP ($123456).L",     0047371, 0x0012, 0x3456);
     TEST("JMP (*+$1234,PC)",    0047372, 0x1232);
+    TEST("JMP (PC)",            0047372, 0x0000);
     TEST("JMP (*+$12,PC,D3.L)", 0047373, 0x3810);
     ERRT("JMP #$1234",          OPERAND_NOT_ALLOWED, "#$1234", 0047300);
     ERRT("JMP ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047370, 0x3455);
@@ -3697,6 +3699,9 @@ void test_addressing() {
     TIDX("($1234).W",      070, 0x1234);
     TIDX("($123456).L",    071, 0x0012, 0x3456);
     TIDX("(*+$1236,PC)",   072, 0x1234);
+    TIDX("(*+2,PC)",       072, 0x0000);
+    TIDX("(PC)",           072, 0x0000);
+    TIDX("(0,PC)",         072, 0xFFFE);
     TIDX("#$00123456",     074, 0x0012, 0x3456);
     // Brief extension: a|Xn|Sz|disp8 a:Dn=0,An=1 Sz:W=0,L=4
     TIDX("($34,A7,D1.W)",  067, 0010000 | 0x34);
@@ -3707,11 +3712,15 @@ void test_addressing() {
     TIDX("(*+54,PC,D1.L)", 073, 0014000 | 0x34);
     TIDX("(*+54,PC,A2.W)", 073, 0120000 | 0x34);
     TIDX("(*+54,PC,A2.L)", 073, 0124000 | 0x34);
+    TIDX("(*+2,PC,D0.W)",  073, 0000000);
+    TIDX("(PC,D0.W)",      073, 0000000);
     ERRT("MOVE.L (PC)+, D2", UNKNOWN_OPERAND, "+, D2");
     ERRT("MOVE.L -(PC), D2", UNKNOWN_OPERAND, "-(PC), D2");
+    ERRT("MOVE.L D2, (PC)",  OPERAND_NOT_ALLOWED, "(PC)", 0020002);
 
     if (firstGen()) {
         ERRT("MOVE.L ($1234,ZPC), D2", REGISTER_NOT_ALLOWED, "ZPC), D2");
+        ERRT("MOVE.L (ZPC), D2",       REGISTER_NOT_ALLOWED, "ZPC), D2");
         return;
     }
 
@@ -3990,6 +3999,7 @@ void test_bitfield(){
     ABSW("BFTST (@W).W{1:2}", "1234", 0164370, 0000102, 0x1234);
     TEST("BFTST ($12346).L{1:2}",     0164371, 0000102, 0x0001, 0x2346);
     TEST("BFTST (*+$1234,PC){1:2}",   0164372, 0000102, 0x1230);
+    TEST("BFTST (PC){1:2}",           0164372, 0000102, 0x0000);
     TEST("BFTST (*+35,PC,D3.L){1:2}", 0164373, 0000102, 0x381F);
     ERRT("BFTST #$1234{1:2}", OPERAND_NOT_ALLOWED, "#$1234{1:2}", 0164300, 0000102);
 

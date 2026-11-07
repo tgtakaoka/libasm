@@ -1441,6 +1441,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                     }
                     return OK;
                 }
+                if (op.addr.base == REG_PC) {
+                    op.mode = M_PCDSP;  // PC+0
+                    return OK;
+                }
             } else if (op.addr.base == REG_UNDEF) {
                 op.mode = M_ALONG;
                 return OK;
