@@ -3707,9 +3707,13 @@ void test_addressing() {
     TIDX("(*+54,PC,D1.L)", 073, 0014000 | 0x34);
     TIDX("(*+54,PC,A2.W)", 073, 0120000 | 0x34);
     TIDX("(*+54,PC,A2.L)", 073, 0124000 | 0x34);
+    ERRT("MOVE.L (PC)+, D2", UNKNOWN_OPERAND, "+, D2");
+    ERRT("MOVE.L -(PC), D2", UNKNOWN_OPERAND, "-(PC), D2");
 
-    if (firstGen())
+    if (firstGen()) {
+        ERRT("MOVE.L ($1234,ZPC), D2", REGISTER_NOT_ALLOWED, "ZPC), D2");
         return;
+    }
 
     // Brief extension: a|Xn|SzSc|disp8 a:Dn=0,An=1 Sz:W=0,L=4 Sc=*2=1,*4=2,*8=3
     TIDX("($23,A7,D1.W)",    067, 0010000 | 0x23);
@@ -3943,6 +3947,32 @@ void test_addressing() {
     TIDX("([*+$1234567A,PC],$54)",       073, 0000562, 0x1234, 0x5678, 0x0054);
     TIDX("([*+$1234567A,PC],$7654)",     073, 0000562, 0x1234, 0x5678, 0x7654);
     TIDX("([*+$1234567A,PC],$76543210)", 073, 0000563, 0x1234, 0x5678, 0x7654, 0x3210);
+
+    // BASE=ZPC, base suppressed: the displacement is not PC-relative
+    TIDX("(ZPC)",                     073, 0000720);
+    TIDX("(0,ZPC)",                   073, 0000720);
+    TIDX("($34,ZPC)",                 073, 0000740, 0x0034);
+    TIDX("($1234,ZPC)",               073, 0000740, 0x1234);
+    TIDX("($12345678,ZPC)",           073, 0000760, 0x1234, 0x5678);
+    TIDX("(ZPC,D1.W)",                073, 0010620);
+    TIDX("($12345678,ZPC,D1.W)",      073, 0010660, 0x1234, 0x5678);
+    TIDX("($12345678,ZPC,A1.L*4)",    073, 0116660, 0x1234, 0x5678);
+    TIDX("([ZPC])",                   073, 0000721);
+    TIDX("([ZPC],$1234)",             073, 0000722, 0x1234);
+    TIDX("([$1234,ZPC])",             073, 0000741, 0x1234);
+    TIDX("([$1234,ZPC],$56789ABC)",   073, 0000743, 0x1234, 0x5678, 0x9ABC);
+    TIDX("([ZPC,D1.W])",              073, 0010621);
+    TIDX("([$1234,ZPC,D1.W],$5678)",  073, 0010642, 0x1234, 0x5678);
+    TIDX("([ZPC],D1.W)",              073, 0010625);
+    TIDX("([$1234,ZPC],D1.W,$5678)",  073, 0010646, 0x1234, 0x5678);
+    TIDX("([$12345678,ZPC],D1.W)",    073, 0010665, 0x1234, 0x5678);
+    ERRT("MOVE.L ZPC, D2",        REGISTER_NOT_ALLOWED, "ZPC, D2");
+    ERRT("MOVE.L (PC,ZPC), D2",   REGISTER_NOT_ALLOWED, "ZPC), D2");
+    ERRT("MOVE.L (ZPC,PC), D2",   REGISTER_NOT_ALLOWED, "PC), D2");
+    ERRT("MOVE.L (A1,ZPC), D2",   REGISTER_NOT_ALLOWED, "ZPC), D2");
+    ERRT("MOVE.L (ZPC)+, D2",     UNKNOWN_OPERAND,      "+, D2");
+    ERRT("MOVE.L -(ZPC), D2",     UNKNOWN_OPERAND,      "-(ZPC), D2");
+    ERRT("MOVE.L D2, ($1234,ZPC)", OPERAND_NOT_ALLOWED, "($1234,ZPC)", 0020002);
 }
 
 void test_bitfield(){

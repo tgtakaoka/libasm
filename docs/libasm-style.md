@@ -1803,6 +1803,17 @@ and `sh2a` an external adjudicator for the first time.
   disassembler's own output. Disassemble the assembled corpus and count the
   flagged lines to catch a display regression (issue#216).
 
+### MC68000 family ZPC
+
+- `ZPC` is the PC with `BS = 1` (mode `073`, full extension word only), and
+  the access still goes to program space (PRM 2.2.13). It is not the same as
+  omitting the base (mode `060`, data space), so neither side collapses one
+  into the other. The disassembler prints `bd` as a plain value, never `*+N`.
+- `REG_ZPC` is a real `RegName` in `REG_ENTRIES`, unlike `SP`: it has its own
+  spelling to print and aliases nothing. MC68000/010 reject it.
+- gnu-as output prints bare `zpc`, which GNU as accepts with
+  `--register-prefix-optional`.
+
 ### MC68000 family FPU / PMMU defaults
 
 - **A CPU's on-chip units follow from the CPU**, not from `reset()`:
