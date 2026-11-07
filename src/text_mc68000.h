@@ -191,6 +191,7 @@ extern const char TEXT_REG_D5[];
 extern const char TEXT_REG_D6[];
 extern const char TEXT_REG_D7[];
 using common::TEXT_REG_PC;
+using common::TEXT_REG_SP;
 using common::TEXT_REG_SR;
 using common::TEXT_REG_USP;
 

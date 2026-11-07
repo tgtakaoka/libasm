@@ -613,7 +613,7 @@
         pvalid  a4,($1234,a2)
         pvalid  a5,($34,a2,d3.w)
         pvalid  a6,($1234).w
-        pvalid  a7,($12345678).l
+        pvalid  sp,($12345678).l
 
 ;### Local Variables:
 ;### mode: asm

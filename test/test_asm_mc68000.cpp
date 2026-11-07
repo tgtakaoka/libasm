@@ -3655,6 +3655,34 @@ void test_areg_alias() {
     TEST("MOVE.L #$00345678,A6",      0026174, 0x0034, 0x5678);
 }
 
+// SP is a synonym for A7, the hardware stack pointer (PRM 1.1.2).
+void test_sp_alias() {
+    TEST("MOVE.L D1,-(SP)",          0027401);
+    TEST("MOVE.L D1,-(A7)",          0027401);
+    TEST("MOVE.L (SP)+,D1",          0021037);
+    TEST("MOVE.L (SP),D1",           0021027);
+    TEST("MOVE.L SP,D1",             0021017);
+    TEST("MOVE.L SP,A0",             0020117);
+    TEST("MOVE.L A0,SP",             0027110);
+    TEST("LEA (4,SP),A0",            0040757, 0x0004);
+    TEST("LEA (4,A0),SP",            0047750, 0x0004);
+    TEST("ADDQ.L #4,SP",             0054217);
+    TEST("MOVE.W ($12,A0,SP.W),D1",  0031060, 0170022);
+    TEST("MOVE.W ($12,SP,D0.L),D1",  0031067, 0004022);
+    TEST("MOVEM.L D0-D7/A0-A6/SP,-(SP)", 0044347, 0xFFFF);
+    TEST("MOVEM.L (SP)+,D0/SP",      0046337, 0x8001);
+    TEST("MOVEM.L (SP)+,A0-SP",      0046337, 0xFF00);
+    TEST("MOVE SP,USP",              0047147);
+    TEST("LINK A6,#-8",              0047126, 0xFFF8);
+    ERRT("MOVE.L (SP1),D1", UNDEFINED_SYMBOL, "SP1),D1", 0021070, 0x0000);
+    if (!firstGen()) {
+        TEST("MOVE.L ($12,SP,SP.L*4),D2",        0022067, 0176022);
+        TEST("MOVE.L (SP.W),D2",                 0022060, 0170620);
+        TEST("MOVE.L ([$12,SP],SP.L*4,$34),D2",  0022067, 0176446, 0x0012, 0x0034);
+        TEST("CAS2.W D1:D2, D3:D4, (A5):(SP)",   0006374, 0150301, 0170402);
+    }
+}
+
 void test_addressing() {
 
 #define TIDX(opr, mr, ...) TEST("MOVE.L " opr ", D2", 0022000 | mr,  __VA_ARGS__)
@@ -8156,6 +8184,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
     RUN_TEST(test_areg_alias);
+    RUN_TEST(test_sp_alias);
     RUN_TEST(test_addressing);
     if (!firstGen())
         RUN_TEST(test_bitfield);
