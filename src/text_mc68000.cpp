@@ -184,6 +184,7 @@ constexpr char TEXT_REG_D5[] PROGMEM = "D5";
 constexpr char TEXT_REG_D6[] PROGMEM = "D6";
 constexpr char TEXT_REG_D7[] PROGMEM = "D7";
 // constexpr char TEXT_REG_PC[]  PROGMEM = "PC";
+// constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 // constexpr char TEXT_REG_SR[]  PROGMEM = "SR";
 // constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 

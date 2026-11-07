@@ -57,7 +57,7 @@
         movec   dtt1, d4
         movec   mmusr, a5
         movec   urp, d6
-        movec   srp, a7
+        movec   srp, sp
 
 ;### MC68040 FPU
         fmove.x fp0, fp1
@@ -126,7 +126,7 @@
         fmove.l d2, fpiar
         fmove.l a5, fpiar
         fmove.l (a6), fpcr
-        fmove.l (a7), fpsr
+        fmove.l (sp), fpsr
         fmove.l (a0), fpiar
         fmove.l (a1)+, fpcr
         fmove.l (a2)+, fpsr
@@ -134,7 +134,7 @@
         fmove.l -(a4), fpcr
         fmove.l -(a5), fpsr
         fmove.l -(a6), fpiar
-        fmove.l ($1234,a7), fpcr
+        fmove.l ($1234,sp), fpcr
         fmove.l ($2345,a0), fpsr
         fmove.l ($3456,a1), fpiar
         fmove.l ($45,a2,d1.w), fpcr
@@ -160,7 +160,7 @@
         fmove.l fpiar, d2
         fmove.l fpiar, a5
         fmove.l fpcr, (a6)
-        fmove.l fpsr, (a7)
+        fmove.l fpsr, (sp)
         fmove.l fpiar, (a0)
         fmove.l fpcr, (a1)+
         fmove.l fpsr, (a2)+
@@ -168,7 +168,7 @@
         fmove.l fpcr, -(a4)
         fmove.l fpsr, -(a5)
         fmove.l fpiar, -(a6)
-        fmove.l fpcr, ($1234,a7)
+        fmove.l fpcr, ($1234,sp)
         fmove.l fpsr, ($2345,a0)
         fmove.l fpiar, ($3456,a1)
         fmove.l fpcr, ($45,a2,d1.w)
@@ -188,7 +188,7 @@
         fmovem.l (a4)+, fpcr/fpsr/fpiar
         fmovem.l -(a5), fpcr/fpsr
         fmovem.l ($1234,a6), fpsr/fpiar
-        fmovem.l ($34,a7,d2.w), fpcr/fpiar
+        fmovem.l ($34,sp,d2.w), fpcr/fpiar
         fmovem.l ($005678).w, fpcr/fpsr/fpiar
         fmovem.l ($6789aa).l, fpcr/fpsr
         fmovem.l (*+$1234,pc), fpsr/fpiar
@@ -201,7 +201,7 @@
         fmovem.l fpcr/fpsr/fpiar, (a4)+
         fmovem.l fpcr/fpsr, -(a5)
         fmovem.l fpsr/fpiar, ($1234,a6)
-        fmovem.l fpcr/fpiar, ($34,a7,d2.w)
+        fmovem.l fpcr/fpiar, ($34,sp,d2.w)
         fmovem.l fpcr/fpsr/fpiar, ($005678).w
         fmovem.l fpcr/fpsr, ($6789aa).l
 

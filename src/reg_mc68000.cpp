@@ -128,10 +128,17 @@ PROGMEM constexpr NameTable CACHE_TABLE{ARRAY_RANGE(CACHE_ENTRIES)};
 RegName parseRegName(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     // exclude register size '.[WL]' at end of register name
-    const auto *entry = TABLE.searchText(parser.readRegName(p, true));
+    const auto name = parser.readRegName(p, true);
+    const auto *entry = TABLE.searchText(name);
     if (entry) {
         scan = p;
         return RegName(entry->name());
+    }
+    // SP is A7, the hardware stack pointer (PRM 1.1.2). It is kept out of
+    // TABLE so that outRegName() always prints A7.
+    if (name.iequals_P(TEXT_REG_SP)) {
+        scan = p;
+        return REG_A7;
     }
     return REG_UNDEF;
 }
