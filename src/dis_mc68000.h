@@ -32,6 +32,13 @@ struct DisMc68000 final : Disassembler, Config {
 private:
     const TextOption<Config> _opt_fpu;
     const TextOption<Config> _opt_pmmu;
+    const BoolOption<DisMc68000> _opt_spAlias;
+
+    bool _spAlias;
+    Error setSpAlias(bool enable);
+
+    // Output a general register name; A7 becomes SP under sp-alias.
+    StrBuffer &outReg(StrBuffer &out, RegName reg) const;
 
     void outCacheList(StrBuffer &out, CacheName cache) const;
     void outBitField(DisInsn &insn, StrBuffer &out) const;

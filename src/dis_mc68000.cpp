@@ -30,11 +30,17 @@ const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
     return ValueFormatter::Plugins::motorola();
 }
 
+namespace {
+constexpr char OPT_BOOL_SP_ALIAS[] PROGMEM = "sp-alias";
+constexpr char OPT_DESC_SP_ALIAS[] PROGMEM = "use SP for the stack pointer";
+}  // namespace
+
 DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
       _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
-      _opt_pmmu(this, &Config::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
+      _opt_pmmu(this, &Config::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU, &_opt_spAlias),
+      _opt_spAlias(this, &DisMc68000::setSpAlias, OPT_BOOL_SP_ALIAS, OPT_DESC_SP_ALIAS) {
     reset();
 }
 
@@ -52,6 +58,18 @@ void DisMc68000::reset() {
 #endif
     setFpuCid(DEFAULT_FPU_CID);
     setGnuAs(false);
+    setSpAlias(false);
+}
+
+Error DisMc68000::setSpAlias(bool enable) {
+    _spAlias = enable;
+    return OK;
+}
+
+StrBuffer &DisMc68000::outReg(StrBuffer &out, RegName reg) const {
+    if (_spAlias && reg == REG_A7)
+        return out.text_P(TEXT_REG_SP);
+    return outRegName(out, reg);
 }
 
 namespace {
@@ -114,7 +132,7 @@ void DisMc68000::outDataRegPair(DisInsn &insn, StrBuffer &out, OprPos pos) const
 void DisMc68000::outPointerPair(DisInsn &insn, StrBuffer &out) const {
     const auto reg1 = decodeGeneralReg(insn.postfix() >> 12);
     const auto reg2 = decodeGeneralReg(insn.post2 >> 12);
-    outRegName(outRegName(out.letter('('), reg1).text_P(PSTR("):(")), reg2).letter(')');
+    outReg(outReg(out.letter('('), reg1).text_P(PSTR("):(")), reg2).letter(')');
 }
 
 void DisMc68000::outControlReg(DisInsn &insn, StrBuffer &out) const {
@@ -310,8 +328,8 @@ void DisMc68000::decodeBriefExtension(
     } else {
         outHex(out, disp8, -8);
     }
-    outRegName(out.letter(','), base);
-    outRegName(out.letter(','), decodeGeneralReg(ext >> 12));
+    outReg(out.letter(','), base);
+    outReg(out.letter(','), decodeGeneralReg(ext >> 12));
     outOprSize(out, (ext & 0x800) ? SZ_LONG : SZ_WORD);
     const auto indexScale = (ext >> 9) & 3;
     if (indexScale && !firstGen()) {
@@ -323,7 +341,7 @@ void DisMc68000::decodeBriefExtension(
 const char *DisMc68000::outIndexReg(StrBuffer &out, uint16_t ext, const char *delim) const {
     if (ext & 0x40)
         return delim;
-    outRegName(out.text(delim), decodeGeneralReg(ext >> 12));
+    outReg(out.text(delim), decodeGeneralReg(ext >> 12));
     outOprSize(out, (ext & 0x800) ? SZ_LONG : SZ_WORD);
     const auto indexScale = (ext >> 9) & 3;
     if (indexScale && !firstGen()) {
@@ -397,7 +415,7 @@ void DisMc68000::decodeFullExtension(
         out.letter('(');
         auto delim = outDisplacement(insn, out, base, disp, bdSize, TEXT_null);
         if ((ext & 0x80) == 0) {
-            outRegName(out.text(delim), base);
+            outReg(out.text(delim), base);
             delim = PSTR_COMMA;
         }
         outIndexReg(out, ext, delim);
@@ -413,7 +431,7 @@ void DisMc68000::decodeFullExtension(
         out.letter('(').letter('[');
         auto delim = outDisplacement(insn, out, base, disp, bdSize, TEXT_null);
         if ((ext & 0x80) == 0) {
-            outRegName(out.text(delim), base);
+            outReg(out.text(delim), base);
             delim = PSTR_COMMA;
         }
         if (iis < 4)
@@ -436,7 +454,7 @@ void DisMc68000::outEffectiveAddr(
                 insn.setErrorIf(out, ILLEGAL_SIZE);
         }
 #endif
-        outRegName(out, reg);
+        outReg(out, reg);
         return;
     }
     if (mode == M_IMDAT) {
@@ -459,9 +477,9 @@ void DisMc68000::outEffectiveAddr(
             outHex(out.letter('('), val16, -16);
         }
         out.letter(',');
-        outRegName(out, base);
+        outReg(out, base);
     } else if (mode == M_AIND || mode == M_PINC || mode == M_PDEC) {
-        outRegName(out.letter('('), reg);
+        outReg(out.letter('('), reg);
     } else if (mode == M_AWORD || mode == M_ALONG) {
         const Config::uintptr_t target =
                 (mode == M_AWORD) ? static_cast<int16_t>(insn.readUint16()) : insn.readUint32();
@@ -781,7 +799,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode type, Opr
         outEffectiveAddr(insn, out, type, decodeAddrReg(r), size);
         break;
     case M_GREG:
-        outRegName(out, decodeGeneralReg(r));
+        outReg(out, decodeGeneralReg(r));
         break;
     case M_ALONG:
         outEffectiveAddr(insn, out, type, REG_UNDEF, SZ_NONE);
