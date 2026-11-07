@@ -19,7 +19,7 @@
         orib   #5,(a4)+
         orib   #5,-(a5)
         orib   #5,(4,a6)
-        orib   #5,(8,a7,d3)
+        orib   #5,(8,sp,d3)
         orib   #5,(-4).w
         orib   #5,(8).l
 ;#       orib   #5,(.,pc)
@@ -31,7 +31,7 @@
         oriw    #5,(a4)+
         oriw    #5,-(a5)
         oriw    #5,(4,a6)
-        oriw    #5,(8,a7,d3)
+        oriw    #5,(8,sp,d3)
         oriw    #5,(-4).w
         oriw    #5,(8).l
 ;#       oriw    #5,(.,pc)
@@ -42,7 +42,7 @@
         oril    #5,(a4)+
         oril    #5,-(a5)
         oril    #5,(4,a6)
-        oril    #5,(8,a7,d3)
+        oril    #5,(8,sp,d3)
         oril    #5,(-4).w
         oril    #5,(8).l
 ;#       oril    #5,(.,pc)
@@ -56,7 +56,7 @@
         andib  #5,(a4)+
         andib  #5,-(a5)
         andib  #5,(4,a6)
-        andib  #5,(8,a7,d3)
+        andib  #5,(8,sp,d3)
         andib  #5,(-4).w
         andib  #5,(8).l
 ;#       andib  #5,(.,pc)
@@ -68,7 +68,7 @@
         andiw   #5,(a4)+
         andiw   #5,-(a5)
         andiw   #5,(4,a6)
-        andiw   #5,(8,a7,d3)
+        andiw   #5,(8,sp,d3)
         andiw   #5,(-4).w
         andiw   #5,(8).l
 ;#       andiw   #5,(.,pc)
@@ -79,7 +79,7 @@
         andil   #5,(a4)+
         andil   #5,-(a5)
         andil   #5,(4,a6)
-        andil   #5,(8,a7,d3)
+        andil   #5,(8,sp,d3)
         andil   #5,(-4).w
         andil   #5,(8).l
 ;#       andil   #5,(.,pc)
@@ -92,7 +92,7 @@
         subib  #0x56,(a4)+
         subib  #0x56,-(a5)
         subib  #0x56,(4,a6)
-        subib  #0x56,(8,a7,d3)
+        subib  #0x56,(8,sp,d3)
         subib  #0x56,(-4).w
         subib  #0x56,(8).l
 ;#       subib  #0x56,(.,pc)
@@ -103,7 +103,7 @@
         subiw   #0x56,(a4)+
         subiw   #0x56,-(a5)
         subiw   #0x56,(4,a6)
-        subiw   #0x56,(8,a7,d3)
+        subiw   #0x56,(8,sp,d3)
         subiw   #0x56,(-4).w
         subiw   #0x56,(8).l
 ;#       subiw   #0x56,(.,pc)
@@ -114,7 +114,7 @@
         subil   #0x56,(a4)+
         subil   #0x56,-(a5)
         subil   #0x56,(4,a6)
-        subil   #0x56,(8,a7,d3)
+        subil   #0x56,(8,sp,d3)
         subil   #0x56,(-4).w
         subil   #0x56,(8).l
 ;#       subil   #0x56,(.,pc)
@@ -127,7 +127,7 @@
         addib  #0x56,(a4)+
         addib  #0x56,-(a5)
         addib  #0x56,(4,a6)
-        addib  #0x56,(8,a7,d3)
+        addib  #0x56,(8,sp,d3)
         addib  #0x56,(-4).w
         addib  #0x56,(8).l
 ;#       addib  #0x56,(.,pc)
@@ -138,7 +138,7 @@
         addiw   #0x56,(a4)+
         addiw   #0x56,-(a5)
         addiw   #0x56,(4,a6)
-        addiw   #0x56,(8,a7,d3)
+        addiw   #0x56,(8,sp,d3)
         addiw   #0x56,(-4).w
         addiw   #0x56,(8).l
 ;#       addiw   #0x56,(.,pc)
@@ -149,7 +149,7 @@
         addil   #0x56,(a4)+
         addil   #0x56,-(a5)
         addil   #0x56,(4,a6)
-        addil   #0x56,(8,a7,d3)
+        addil   #0x56,(8,sp,d3)
         addil   #0x56,(-4).w
         addil   #0x56,(8).l
 ;#       addil   #0x56,(.,pc)
@@ -163,7 +163,7 @@
         eorib  #0x56,(a4)+
         eorib  #0x56,-(a5)
         eorib  #0x56,(4,a6)
-        eorib  #0x56,(8,a7,d3)
+        eorib  #0x56,(8,sp,d3)
         eorib  #0x56,(-4).w
         eorib  #0x56,(8).l
 ;#       eorib  #0x56,(.,pc)
@@ -175,7 +175,7 @@
         eoriw   #0x56,(a4)+
         eoriw   #0x56,-(a5)
         eoriw   #0x56,(4,a6)
-        eoriw   #0x56,(8,a7,d3)
+        eoriw   #0x56,(8,sp,d3)
         eoriw   #0x56,(-4).w
         eoriw   #0x56,(8).l
 ;#       eoriw   #0x56,(.,pc)
@@ -186,7 +186,7 @@
         eoril   #0x56,(a4)+
         eoril   #0x56,-(a5)
         eoril   #0x56,(4,a6)
-        eoril   #0x56,(8,a7,d3)
+        eoril   #0x56,(8,sp,d3)
         eoril   #0x56,(-4).w
         eoril   #0x56,(8).l
 ;#       eoril   #0x56,(.,pc)
@@ -199,7 +199,7 @@
         cmpib  #0x56,(a4)+
         cmpib  #0x56,-(a5)
         cmpib  #0x56,(4,a6)
-        cmpib  #0x56,(8,a7,d3)
+        cmpib  #0x56,(8,sp,d3)
         cmpib  #0x56,(-4).w
         cmpib  #0x56,(8).l
 ;#       cmpib  #0x56,(.,pc)
@@ -210,7 +210,7 @@
         cmpiw   #0x56,(a4)+
         cmpiw   #0x56,-(a5)
         cmpiw   #0x56,(4,a6)
-        cmpiw   #0x56,(8,a7,d3)
+        cmpiw   #0x56,(8,sp,d3)
         cmpiw   #0x56,(-4).w
         cmpiw   #0x56,(8).l
 ;#       cmpiw   #0x56,(.,pc)
@@ -221,7 +221,7 @@
         cmpil   #0x56,(a4)+
         cmpil   #0x56,-(a5)
         cmpil   #0x56,(4,a6)
-        cmpil   #0x56,(8,a7,d3)
+        cmpil   #0x56,(8,sp,d3)
         cmpil   #0x56,(-4).w
         cmpil   #0x56,(8).l
 ;#       cmpil   #0x56,(.,pc)
@@ -234,7 +234,7 @@
         bchgb  #5,(a4)+
         bchgb  #5,-(a5)
         bchgb  #5,(4,a6)
-        bchgb  #5,(8,a7,d3)
+        bchgb  #5,(8,sp,d3)
         bchgb  #5,(-4).w
         bchgb  #5,(8).l
 ;#       bchgb  #5,(.,pc)
@@ -245,7 +245,7 @@
         bchgb  d2,(a4)+
         bchgb  d2,-(a5)
         bchgb  d2,(4,a6)
-        bchgb  d2,(8,a7,d3)
+        bchgb  d2,(8,sp,d3)
         bchgb  d2,(-4).w
         bchgb  d2,(8).l
 ;#       bchgb  d2,(.,pc)
@@ -258,7 +258,7 @@
         bclrb  #5,(a4)+
         bclrb  #5,-(a5)
         bclrb  #5,(4,a6)
-        bclrb  #5,(8,a7,d3)
+        bclrb  #5,(8,sp,d3)
         bclrb  #5,(-4).w
         bclrb  #5,(8).l
 ;#       bclrb  #5,(.,pc)
@@ -269,7 +269,7 @@
         bclrb  d2,(a4)+
         bclrb  d2,-(a5)
         bclrb  d2,(4,a6)
-        bclrb  d2,(8,a7,d3)
+        bclrb  d2,(8,sp,d3)
         bclrb  d2,(-4).w
         bclrb  d2,(8).l
 ;#       bclrb  d2,(.,pc)
@@ -282,7 +282,7 @@
         bsetb  #5,(a4)+
         bsetb  #5,-(a5)
         bsetb  #5,(4,a6)
-        bsetb  #5,(8,a7,d3)
+        bsetb  #5,(8,sp,d3)
         bsetb  #5,(-4).w
         bsetb  #5,(8).l
 ;#       bsetb  #5,(.,pc)
@@ -293,7 +293,7 @@
         bsetb  d2,(a4)+
         bsetb  d2,-(a5)
         bsetb  d2,(4,a6)
-        bsetb  d2,(8,a7,d3)
+        bsetb  d2,(8,sp,d3)
         bsetb  d2,(-4).w
         bsetb  d2,(8).l
 ;#       bsetb  d2,(.,pc)
@@ -306,7 +306,7 @@
         btstb  #5,(a4)+
         btstb  #5,-(a5)
         btstb  #5,(4,a6)
-        btstb  #5,(8,a7,d3)
+        btstb  #5,(8,sp,d3)
         btstb  #5,(-4).w
         btstb  #5,(8).l
         btstb  #5,(.,pc)
@@ -317,7 +317,7 @@
         btstb  d2,(a4)+
         btstb  d2,-(a5)
         btstb  d2,(4,a6)
-        btstb  d2,(8,a7,d3)
+        btstb  d2,(8,sp,d3)
         btstb  d2,(-4).w
         btstb  d2,(8).l
         btstb  d2,(.,pc)
@@ -336,7 +336,7 @@
         moveaw  (a4)+,a2
         moveaw  -(a5),a2
         moveaw  (4,a6),a2
-        moveaw  (8,a7,d3),a2
+        moveaw  (8,sp,d3),a2
         moveaw  (-4).w,a2
         moveaw  (8).l,a2
         moveaw  #5,a2
@@ -348,7 +348,7 @@
         moveal  (a4)+,a2
         moveal  -(a5),a2
         moveal  (4,a6),a2
-        moveal  (8,a7,d3),a2
+        moveal  (8,sp,d3),a2
         moveal  (-4).w,a2
         moveal  (8).l,a2
         moveal  #5,a2
@@ -362,7 +362,7 @@
         movew   sr,(a4)+
         movew   sr,-(a5)
         movew   sr,(4,a6)
-        movew   sr,(8,a7,d3)
+        movew   sr,(8,sp,d3)
         movew   sr,(-4).w
         movew   sr,(8).l
 ;#       movew   sr,(.,pc)
@@ -375,7 +375,7 @@
         movew   (a4)+,ccr
         movew   -(a5),ccr
         movew   (4,a6),ccr
-        movew   (8,a7,d3),ccr
+        movew   (8,sp,d3),ccr
         movew   (-4).w,ccr
         movew   (8).l,ccr
         movew   #5,ccr
@@ -389,7 +389,7 @@
         movew   (a4)+,sr
         movew   -(a5),sr
         movew   (4,a6),sr
-        movew   (8,a7,d3),sr
+        movew   (8,sp,d3),sr
         movew   (-4).w,sr
         movew   (8).l,sr
         movew   #5,sr
@@ -403,7 +403,7 @@
         moveb  (a4)+,d1
         moveb  -(a5),d1
         moveb  (4,a6),d1
-        moveb  (8,a7,d3),d1
+        moveb  (8,sp,d3),d1
         moveb  (-4).w,d1
         moveb  (8).l,d1
         moveb  #5,d1
@@ -415,7 +415,7 @@
 ;#       moveb  (a4)+,a2
 ;#       moveb  -(a5),a2
 ;#       moveb  (4,a6),a2
-;#       moveb  (8,a7,d3),a2
+;#       moveb  (8,sp,d3),a2
 ;#       moveb  (-4).w,a2
 ;#       moveb  (8).l,a2
 ;#       moveb  #5,a2
@@ -427,7 +427,7 @@
         moveb  (a4)+,(a3)
         moveb  -(a5),(a3)
         moveb  (4,a6),(a3)
-        moveb  (8,a7,d3),(a3)
+        moveb  (8,sp,d3),(a3)
         moveb  (-4).w,(a3)
         moveb  (8).l,(a3)
         moveb  #5,(a3)
@@ -438,7 +438,7 @@
         moveb  (a4)+,(a4)+
         moveb  -(a5),(a4)+
         moveb  (4,a6),(a4)+
-        moveb  (8,a7,d3),(a4)+
+        moveb  (8,sp,d3),(a4)+
         moveb  (-4).w,(a4)+
         moveb  (8).l,(a4)+
         moveb  #5,(a4)+
@@ -449,7 +449,7 @@
         moveb  (a4)+,-(a5)
         moveb  -(a5),-(a5)
         moveb  (4,a6),-(a5)
-        moveb  (8,a7,d3),-(a5)
+        moveb  (8,sp,d3),-(a5)
         moveb  (-4).w,-(a5)
         moveb  (8).l,-(a5)
         moveb  #5,-(a5)
@@ -460,7 +460,7 @@
         moveb  (a4)+,(4,a6)
         moveb  -(a5),(4,a6)
         moveb  (4,a6),(4,a6)
-        moveb  (8,a7,d3),(4,a6)
+        moveb  (8,sp,d3),(4,a6)
         moveb  (-4).w,(4,a6)
         moveb  (8).l,(4,a6)
         moveb  #5,(4,a6)
@@ -471,7 +471,7 @@
         moveb  (a4)+,(0,a4,d2)
         moveb  -(a5),(0,a4,d2)
         moveb  (4,a6),(0,a4,d2)
-        moveb  (8,a7,d3),(0,a4,d2)
+        moveb  (8,sp,d3),(0,a4,d2)
         moveb  (-4).w,(0,a4,d2)
         moveb  (8).l,(0,a4,d2)
         moveb  #5,(0,a4,d2)
@@ -482,7 +482,7 @@
         moveb  (a4)+,(-4).w
         moveb  -(a5),(-4).w
         moveb  (4,a6),(-4).w
-        moveb  (8,a7,d3),(-4).w
+        moveb  (8,sp,d3),(-4).w
         moveb  (-4).w,(-4).w
         moveb  (8).l,(-4).w
         moveb  #5,(-4).w
@@ -493,7 +493,7 @@
         moveb  (a4)+,(8).l
         moveb  -(a5),(8).l
         moveb  (4,a6),(8).l
-        moveb  (8,a7,d3),(8).l
+        moveb  (8,sp,d3),(8).l
         moveb  (-4).w,(8).l
         moveb  (8).l,(8).l
         moveb  #5,(8).l
@@ -507,7 +507,7 @@
         movew   (a4)+,d1
         movew   -(a5),d1
         movew   (4,a6),d1
-        movew   (8,a7,d3),d1
+        movew   (8,sp,d3),d1
         movew   (-4).w,d1
         movew   (8).l,d1
         movew   #5,d1
@@ -519,7 +519,7 @@
         movew   (a4)+,a2
         movew   -(a5),a2
         movew   (4,a6),a2
-        movew   (8,a7,d3),a2
+        movew   (8,sp,d3),a2
         movew   (-4).w,a2
         movew   (8).l,a2
         movew   #5,a2
@@ -531,7 +531,7 @@
         movew   (a4)+,(a3)
         movew   -(a5),(a3)
         movew   (4,a6),(a3)
-        movew   (8,a7,d3),(a3)
+        movew   (8,sp,d3),(a3)
         movew   (-4).w,(a3)
         movew   (8).l,(a3)
         movew   #5,(a3)
@@ -542,7 +542,7 @@
         movew   (a4)+,(a4)+
         movew   -(a5),(a4)+
         movew   (4,a6),(a4)+
-        movew   (8,a7,d3),(a4)+
+        movew   (8,sp,d3),(a4)+
         movew   (-4).w,(a4)+
         movew   (8).l,(a4)+
         movew   #5,(a4)+
@@ -553,7 +553,7 @@
         movew   (a4)+,-(a5)
         movew   -(a5),-(a5)
         movew   (4,a6),-(a5)
-        movew   (8,a7,d3),-(a5)
+        movew   (8,sp,d3),-(a5)
         movew   (-4).w,-(a5)
         movew   (8).l,-(a5)
         movew   #5,-(a5)
@@ -564,7 +564,7 @@
         movew   (a4)+,(4,a6)
         movew   -(a5),(4,a6)
         movew   (4,a6),(4,a6)
-        movew   (8,a7,d3),(4,a6)
+        movew   (8,sp,d3),(4,a6)
         movew   (-4).w,(4,a6)
         movew   (8).l,(4,a6)
         movew   #5,(4,a6)
@@ -575,7 +575,7 @@
         movew   (a4)+,(0,a4,d2)
         movew   -(a5),(0,a4,d2)
         movew   (4,a6),(0,a4,d2)
-        movew   (8,a7,d3),(0,a4,d2)
+        movew   (8,sp,d3),(0,a4,d2)
         movew   (-4).w,(0,a4,d2)
         movew   (8).l,(0,a4,d2)
         movew   #5,(0,a4,d2)
@@ -586,7 +586,7 @@
         movew   (a4)+,(-4).w
         movew   -(a5),(-4).w
         movew   (4,a6),(-4).w
-        movew   (8,a7,d3),(-4).w
+        movew   (8,sp,d3),(-4).w
         movew   (-4).w,(-4).w
         movew   (8).l,(-4).w
         movew   #5,(-4).w
@@ -597,7 +597,7 @@
         movew   (a4)+,(8).l
         movew   -(a5),(8).l
         movew   (4,a6),(8).l
-        movew   (8,a7,d3),(8).l
+        movew   (8,sp,d3),(8).l
         movew   (-4).w,(8).l
         movew   (8).l,(8).l
         movew   #5,(8).l
@@ -611,7 +611,7 @@
         movel   (a4)+,d1
         movel   -(a5),d1
         movel   (4,a6),d1
-        movel   (8,a7,d3),d1
+        movel   (8,sp,d3),d1
         movel   (-4).l,d1
         movel   (8).l,d1
         movel   #0x5678,d1
@@ -623,7 +623,7 @@
         movel   (a4)+,a2
         movel   -(a5),a2
         movel   (4,a6),a2
-        movel   (8,a7,d3),a2
+        movel   (8,sp,d3),a2
         movel   (-4).l,a2
         movel   (8).l,a2
         movel   #5,a2
@@ -635,7 +635,7 @@
         movel   (a4)+,(a3)
         movel   -(a5),(a3)
         movel   (4,a6),(a3)
-        movel   (8,a7,d3),(a3)
+        movel   (8,sp,d3),(a3)
         movel   (-4).l,(a3)
         movel   (8).l,(a3)
         movel   #5,(a3)
@@ -646,7 +646,7 @@
         movel   (a4)+,(a4)+
         movel   -(a5),(a4)+
         movel   (4,a6),(a4)+
-        movel   (8,a7,d3),(a4)+
+        movel   (8,sp,d3),(a4)+
         movel   (-4).l,(a4)+
         movel   (8).l,(a4)+
         movel   #5,(a4)+
@@ -657,7 +657,7 @@
         movel   (a4)+,-(a5)
         movel   -(a5),-(a5)
         movel   (4,a6),-(a5)
-        movel   (8,a7,d3),-(a5)
+        movel   (8,sp,d3),-(a5)
         movel   (-4).l,-(a5)
         movel   (8).l,-(a5)
         movel   #5,-(a5)
@@ -668,7 +668,7 @@
         movel   (a4)+,(4,a6)
         movel   -(a5),(4,a6)
         movel   (4,a6),(4,a6)
-        movel   (8,a7,d3),(4,a6)
+        movel   (8,sp,d3),(4,a6)
         movel   (-4).l,(4,a6)
         movel   (8).l,(4,a6)
         movel   #5,(4,a6)
@@ -679,7 +679,7 @@
         movel   (a4)+,(0,a4,d2)
         movel   -(a5),(0,a4,d2)
         movel   (4,a6),(0,a4,d2)
-        movel   (8,a7,d3),(0,a4,d2)
+        movel   (8,sp,d3),(0,a4,d2)
         movel   (-4).l,(0,a4,d2)
         movel   (8).l,(0,a4,d2)
         movel   #5,(0,a4,d2)
@@ -690,7 +690,7 @@
         movel   (a4)+,(-4).l
         movel   -(a5),(-4).l
         movel   (4,a6),(-4).l
-        movel   (8,a7,d3),(-4).l
+        movel   (8,sp,d3),(-4).l
         movel   (-4).l,(-4).l
         movel   (8).l,(-4).l
         movel   #5,(-4).l
@@ -701,7 +701,7 @@
         movel   (a4)+,(8).l
         movel   -(a5),(8).l
         movel   (4,a6),(8).l
-        movel   (8,a7,d3),(8).l
+        movel   (8,sp,d3),(8).l
         movel   (-4).l,(8).l
         movel   (8).l,(8).l
         movel   #5,(8).l
@@ -715,7 +715,7 @@
         negxb  (a4)+
         negxb  -(a5)
         negxb  (4,a6)
-        negxb  (8,a7,d3)
+        negxb  (8,sp,d3)
         negxb  (-4).w
         negxb  (8).l
 ;#       negxb  (.,pc)
@@ -726,7 +726,7 @@
         negxw   (a4)+
         negxw   -(a5)
         negxw   (4,a6)
-        negxw   (8,a7,d3)
+        negxw   (8,sp,d3)
         negxw   (-4).w
         negxw   (8).l
 ;#       negxw   (.,pc)
@@ -737,7 +737,7 @@
         negxl   (a4)+
         negxl   -(a5)
         negxl   (4,a6)
-        negxl   (8,a7,d3)
+        negxl   (8,sp,d3)
         negxl   (-4).w
         negxl   (8).l
 ;#       negxl   (.,pc)
@@ -750,7 +750,7 @@
         clrb   (a4)+
         clrb   -(a5)
         clrb   (4,a6)
-        clrb   (8,a7,d3)
+        clrb   (8,sp,d3)
         clrb   (-4).w
         clrb   (8).l
 ;#       clrb   (.,pc)
@@ -761,7 +761,7 @@
         clrw    (a4)+
         clrw    -(a5)
         clrw    (4,a6)
-        clrw    (8,a7,d3)
+        clrw    (8,sp,d3)
         clrw    (-4).w
         clrw    (8).l
 ;#       clrw    (.,pc)
@@ -772,7 +772,7 @@
         clrl    (a4)+
         clrl    -(a5)
         clrl    (4,a6)
-        clrl    (8,a7,d3)
+        clrl    (8,sp,d3)
         clrl    (-4).w
         clrl    (8).l
 ;#       clrl    (.,pc)
@@ -785,7 +785,7 @@
         negb   (a4)+
         negb   -(a5)
         negb   (4,a6)
-        negb   (8,a7,d3)
+        negb   (8,sp,d3)
         negb   (-4).w
         negb   (8).l
 ;#       negb   (.,pc)
@@ -796,7 +796,7 @@
         negw    (a4)+
         negw    -(a5)
         negw    (4,a6)
-        negw    (8,a7,d3)
+        negw    (8,sp,d3)
         negw    (-4).w
         negw    (8).l
 ;#       negw    (.,pc)
@@ -807,7 +807,7 @@
         negl    (a4)+
         negl    -(a5)
         negl    (4,a6)
-        negl    (8,a7,d3)
+        negl    (8,sp,d3)
         negl    (-4).w
         negl    (8).l
 ;#       negl    (.,pc)
@@ -820,7 +820,7 @@
         notb   (a4)+
         notb   -(a5)
         notb   (4,a6)
-        notb   (8,a7,d3)
+        notb   (8,sp,d3)
         notb   (-4).w
         notb   (8).l
 ;#       notb   (.,pc)
@@ -831,7 +831,7 @@
         notw    (a4)+
         notw    -(a5)
         notw    (4,a6)
-        notw    (8,a7,d3)
+        notw    (8,sp,d3)
         notw    (-4).w
         notw    (8).l
 ;#       notw    (.,pc)
@@ -842,7 +842,7 @@
         notl    (a4)+
         notl    -(a5)
         notl    (4,a6)
-        notl    (8,a7,d3)
+        notl    (8,sp,d3)
         notl    (-4).w
         notl    (8).l
 ;#       notl    (.,pc)
@@ -859,7 +859,7 @@
         nbcdb  (a4)+
         nbcdb  -(a5)
         nbcdb  (4,a6)
-        nbcdb  (8,a7,d3)
+        nbcdb  (8,sp,d3)
         nbcdb  (-4).w
         nbcdb  (8).l
 ;#       nbcdb  (.,pc)
@@ -877,7 +877,7 @@
 ;#       peal    (a4)+
 ;#       peal    -(a5)
         peal    (4,a6)
-        peal    (8,a7,d3)
+        peal    (8,sp,d3)
         peal    (-4).w
         peal    (8).l
 ;#       peal    #5
@@ -891,7 +891,7 @@
         tasb   (a4)+
         tasb   -(a5)
         tasb   (4,a6)
-        tasb   (8,a7,d3)
+        tasb   (8,sp,d3)
         tasb   (-4).w
         tasb   (8).l
 ;#       tasb   (.,pc)
@@ -904,7 +904,7 @@
         tstb   (a4)+
         tstb   -(a5)
         tstb   (4,a6)
-        tstb   (8,a7,d3)
+        tstb   (8,sp,d3)
         tstb   (-4).w
         tstb   (8).l
 ;#       tstb   #0x45
@@ -916,7 +916,7 @@
         tstw    (a4)+
         tstw    -(a5)
         tstw    (4,a6)
-        tstw    (8,a7,d3)
+        tstw    (8,sp,d3)
         tstw    (-4).w
         tstw    (8).l
 ;#       tstw    #0x1234
@@ -928,7 +928,7 @@
         tstl    (a4)+
         tstl    -(a5)
         tstl    (4,a6)
-        tstl    (8,a7,d3)
+        tstl    (8,sp,d3)
         tstl    (-4).w
         tstl    (8).l
 ;#       tstl    #0x12345678
@@ -957,7 +957,7 @@
 ;#       jsr     (a4)+
 ;#       jsr     -(a5)
         jsr     (4,a6)
-        jsr     (8,a7,d3)
+        jsr     (8,sp,d3)
         jsr     (-4).w
         jsr     (8).l
 ;#       jsr     #5
@@ -971,7 +971,7 @@
 ;#       jmp     (a4)+
 ;#       jmp     -(a5)
         jmp     (4,a6)
-        jmp     (8,a7,d3)
+        jmp     (8,sp,d3)
         jmp     (-4).w
         jmp     (8).l
 ;#       jmp     #5
@@ -982,40 +982,40 @@
         movemw  d0-d7,(a3)
 ;#       movemw  d0-d7,(a4)+
         movemw  d0-d7,-(a5)
-        movemw  a7/a5/a3/a1/d7/d5/d3/d1,(4,a6)
-        movemw  a6/a4/a2/a0/d6/d4/d2/d0,(8,a7,d3)
-        movemw  a0-a7/d0-d7,(-4).w
-        movemw  a0-a7/d0-d7,(8).l
-;#       movemw  a0-a7/d0-d7,(.,pc)
-;#       movemw  a0-a7/d0-d7,(.,pc,d2)
-        moveml  a0-a7/d0-d7,(a3)
-;#       moveml  a0-a7/d0-d7,(a4)+
-        moveml  a0-a7/d0-d7,-(a5)
-        moveml  a0-a7/d0-d7,(4,a6)
-        moveml  a0-a7/d0-d7,(8,a7,d3)
-        moveml  a0-a7/d0-d7,(-4).l
-        moveml  a0-a7/d0-d7,(8).l
-;#       moveml  a0-a7/d0-d7,(.,pc)
-;#       moveml  a0-a7/d0-d7,(.,pc,d2)
+        movemw  sp/a5/a3/a1/d7/d5/d3/d1,(4,a6)
+        movemw  a6/a4/a2/a0/d6/d4/d2/d0,(8,sp,d3)
+        movemw  a0-sp/d0-d7,(-4).w
+        movemw  a0-sp/d0-d7,(8).l
+;#       movemw  a0-sp/d0-d7,(.,pc)
+;#       movemw  a0-sp/d0-d7,(.,pc,d2)
+        moveml  a0-sp/d0-d7,(a3)
+;#       moveml  a0-sp/d0-d7,(a4)+
+        moveml  a0-sp/d0-d7,-(a5)
+        moveml  a0-sp/d0-d7,(4,a6)
+        moveml  a0-sp/d0-d7,(8,sp,d3)
+        moveml  a0-sp/d0-d7,(-4).l
+        moveml  a0-sp/d0-d7,(8).l
+;#       moveml  a0-sp/d0-d7,(.,pc)
+;#       moveml  a0-sp/d0-d7,(.,pc,d2)
 
         movemw  (a3),d0-d7
-        movemw  (a4)+,a0-a7
-;#       movemw  -(a5),a0-a7
+        movemw  (a4)+,a0-sp
+;#       movemw  -(a5),a0-sp
         movemw  (4,a6),d0/d2/d4/d6/a0/a2/a4/a6
-        movemw  (8,a7,d3),d1/d3/d5/d7/a1/a3/a5/a7
-        movemw  (-4).w,d0-d7/a0-a7
-        movemw  (8).l,d0-d7/a0-a7
-        movemw  (.,pc),d0-d7/a0-a7
-        movemw  (.,pc,d2),d0-d7/a0-a7
-        moveml  (a3),d0-d7/a0-a7
-        moveml  (a4)+,d0-d7/a0-a7
-;#       moveml  -(a5),d0-d7/a0-a7
-        moveml  (4,a6),d0-d7/a0-a7
-        moveml  (8,a7,d3),d0-d7/a0-a7
-        moveml  (-4).l,d0-d7/a0-a7
-        moveml  (8).l,d0-d7/a0-a7
-        moveml  (.,pc),d0-d7/a0-a7
-        moveml  (.,pc,d2),d0-d7/a0-a7
+        movemw  (8,sp,d3),d1/d3/d5/d7/a1/a3/a5/sp
+        movemw  (-4).w,d0-d7/a0-sp
+        movemw  (8).l,d0-d7/a0-sp
+        movemw  (.,pc),d0-d7/a0-sp
+        movemw  (.,pc,d2),d0-d7/a0-sp
+        moveml  (a3),d0-d7/a0-sp
+        moveml  (a4)+,d0-d7/a0-sp
+;#       moveml  -(a5),d0-d7/a0-sp
+        moveml  (4,a6),d0-d7/a0-sp
+        moveml  (8,sp,d3),d0-d7/a0-sp
+        moveml  (-4).l,d0-d7/a0-sp
+        moveml  (8).l,d0-d7/a0-sp
+        moveml  (.,pc),d0-d7/a0-sp
+        moveml  (.,pc,d2),d0-d7/a0-sp
 
 ;#       .align  32
 ;#       leal    d1,a2
@@ -1024,7 +1024,7 @@
 ;#       leal    (a4)+,a2
 ;#       leal    -(a5),a2
         leal    (4,a6),a2
-        leal    (8,a7,d3),a2
+        leal    (8,sp,d3),a2
         leal    (-4).w,a2
         leal    (8).l,a2
 ;#       leal    #5,a2
@@ -1038,7 +1038,7 @@
         chkw    (a4)+,d1
         chkw    -(a5),d1
         chkw    (4,a6),d1
-        chkw    (8,a7,d3),d1
+        chkw    (8,sp,d3),d1
         chkw    (-4).w,d1
         chkw    (8).l,d1
         chkw    #5,d1
@@ -1052,7 +1052,7 @@
         addqb  #5,(a4)+
         addqb  #5,-(a5)
         addqb  #5,(4,a6)
-        addqb  #5,(8,a7,d3)
+        addqb  #5,(8,sp,d3)
         addqb  #5,(-4).w
         addqb  #5,(8).l
 ;#       addqb  #5,(.,pc)
@@ -1063,7 +1063,7 @@
         addqw   #5,(a4)+
         addqw   #5,-(a5)
         addqw   #5,(4,a6)
-        addqw   #5,(8,a7,d3)
+        addqw   #5,(8,sp,d3)
         addqw   #5,(-4).w
         addqw   #5,(8).l
 ;#       addqw   #5,(.,pc)
@@ -1074,7 +1074,7 @@
         addql   #5,(a4)+
         addql   #5,-(a5)
         addql   #5,(4,a6)
-        addql   #5,(8,a7,d3)
+        addql   #5,(8,sp,d3)
         addql   #5,(-4).w
         addql   #5,(8).l
 ;#       addql   #5,(.,pc)
@@ -1087,7 +1087,7 @@
         subqb  #5,(a4)+
         subqb  #5,-(a5)
         subqb  #5,(4,a6)
-        subqb  #5,(8,a7,d3)
+        subqb  #5,(8,sp,d3)
         subqb  #5,(-4).w
         subqb  #5,(8).l
 ;#       subqb  #5,(.,pc)
@@ -1098,7 +1098,7 @@
         subqw   #5,(a4)+
         subqw   #5,-(a5)
         subqw   #5,(4,a6)
-        subqw   #5,(8,a7,d3)
+        subqw   #5,(8,sp,d3)
         subqw   #5,(-4).w
         subqw   #5,(8).l
 ;#       subqw   #5,(.,pc)
@@ -1109,7 +1109,7 @@
         subql   #5,(a4)+
         subql   #5,-(a5)
         subql   #5,(4,a6)
-        subql   #5,(8,a7,d3)
+        subql   #5,(8,sp,d3)
         subql   #5,(-4).w
         subql   #5,(8).l
 ;#       subql   #5,(.,pc)
@@ -1122,7 +1122,7 @@
         stb    (a4)+
         stb    -(a5)
         stb    (4,a6)
-        stb    (8,a7,d3)
+        stb    (8,sp,d3)
         stb    (-4).w
         stb    (8).l
 ;#       stb    (.,pc)
@@ -1135,7 +1135,7 @@
         sfb    (a4)+
         sfb    -(a5)
         sfb    (4,a6)
-        sfb    (8,a7,d3)
+        sfb    (8,sp,d3)
         sfb    (-4).w
         sfb    (8).l
 ;#       sfb    (.,pc)
@@ -1148,7 +1148,7 @@
         shib   (a4)+
         shib   -(a5)
         shib   (4,a6)
-        shib   (8,a7,d3)
+        shib   (8,sp,d3)
         shib   (-4).w
         shib   (8).l
 ;#       shib   (.,pc)
@@ -1161,7 +1161,7 @@
         slsb   (a4)+
         slsb   -(a5)
         slsb   (4,a6)
-        slsb   (8,a7,d3)
+        slsb   (8,sp,d3)
         slsb   (-4).w
         slsb   (8).l
 ;#       slsb   (.,pc)
@@ -1174,7 +1174,7 @@
         sccb   (a4)+
         sccb   -(a5)
         sccb   (4,a6)
-        sccb   (8,a7,d3)
+        sccb   (8,sp,d3)
         sccb   (-4).w
         sccb   (8).l
 ;#       sccb   (.,pc)
@@ -1187,7 +1187,7 @@
         scsb   (a4)+
         scsb   -(a5)
         scsb   (4,a6)
-        scsb   (8,a7,d3)
+        scsb   (8,sp,d3)
         scsb   (-4).w
         scsb   (8).l
 ;#       scsb   (.,pc)
@@ -1200,7 +1200,7 @@
         slsb   (a4)+
         slsb   -(a5)
         slsb   (4,a6)
-        slsb   (8,a7,d3)
+        slsb   (8,sp,d3)
         slsb   (-4).w
         slsb   (8).l
 ;#       slsb   (.,pc)
@@ -1213,7 +1213,7 @@
         sneb   (a4)+
         sneb   -(a5)
         sneb   (4,a6)
-        sneb   (8,a7,d3)
+        sneb   (8,sp,d3)
         sneb   (-4).w
         sneb   (8).l
 ;#       sneb   (.,pc)
@@ -1226,7 +1226,7 @@
         seqb   (a4)+
         seqb   -(a5)
         seqb   (4,a6)
-        seqb   (8,a7,d3)
+        seqb   (8,sp,d3)
         seqb   (-4).w
         seqb   (8).l
 ;#       seqb   (.,pc)
@@ -1239,7 +1239,7 @@
         svcb   (a4)+
         svcb   -(a5)
         svcb   (4,a6)
-        svcb   (8,a7,d3)
+        svcb   (8,sp,d3)
         svcb   (-4).w
         svcb   (8).l
 ;#       svcb   (.,pc)
@@ -1252,7 +1252,7 @@
         svsb   (a4)+
         svsb   -(a5)
         svsb   (4,a6)
-        svsb   (8,a7,d3)
+        svsb   (8,sp,d3)
         svsb   (-4).w
         svsb   (8).l
 ;#       svsb   (.,pc)
@@ -1265,7 +1265,7 @@
         splb   (a4)+
         splb   -(a5)
         splb   (4,a6)
-        splb   (8,a7,d3)
+        splb   (8,sp,d3)
         splb   (-4).w
         splb   (8).l
 ;#       splb   (.,pc)
@@ -1278,7 +1278,7 @@
         smib   (a4)+
         smib   -(a5)
         smib   (4,a6)
-        smib   (8,a7,d3)
+        smib   (8,sp,d3)
         smib   (-4).w
         smib   (8).l
 ;#       smib   (.,pc)
@@ -1291,7 +1291,7 @@
         sgeb   (a4)+
         sgeb   -(a5)
         sgeb   (4,a6)
-        sgeb   (8,a7,d3)
+        sgeb   (8,sp,d3)
         sgeb   (-4).w
         sgeb   (8).l
 ;#       sgeb   (.,pc)
@@ -1304,7 +1304,7 @@
         sltb   (a4)+
         sltb   -(a5)
         sltb   (4,a6)
-        sltb   (8,a7,d3)
+        sltb   (8,sp,d3)
         sltb   (-4).w
         sltb   (8).l
 ;#       sltb   (.,pc)
@@ -1317,7 +1317,7 @@
         sgtb   (a4)+
         sgtb   -(a5)
         sgtb   (4,a6)
-        sgtb   (8,a7,d3)
+        sgtb   (8,sp,d3)
         sgtb   (-4).w
         sgtb   (8).l
 ;#       sgtb   (.,pc)
@@ -1330,7 +1330,7 @@
         sleb   (a4)+
         sleb   -(a5)
         sleb   (4,a6)
-        sleb   (8,a7,d3)
+        sleb   (8,sp,d3)
         sleb   (-4).w
         sleb   (8).l
 ;#       sleb   (.,pc)
@@ -1437,7 +1437,7 @@
         orb    (a4)+,d1
         orb    -(a5),d1
         orb    (4,a6),d1
-        orb    (8,a7,d3),d1
+        orb    (8,sp,d3),d1
         orb    (-4).w,d1
         orb    (8).l,d1
         orb    #5,d1
@@ -1449,7 +1449,7 @@
         orb    d1,(a4)+
         orb    d1,-(a5)
         orb    d1,(4,a6)
-        orb    d1,(8,a7,d3)
+        orb    d1,(8,sp,d3)
         orb    d1,(-4).w
         orb    d1,(8).l
 ;#       orb    d1,#5
@@ -1461,7 +1461,7 @@
         orw     (a4)+,d1
         orw     -(a5),d1
         orw     (4,a6),d1
-        orw     (8,a7,d3),d1
+        orw     (8,sp,d3),d1
         orw     (-4).w,d1
         orw     (8).l,d1
         orw     #5,d1
@@ -1473,7 +1473,7 @@
         orw     d1,(a4)+
         orw     d1,-(a5)
         orw     d1,(4,a6)
-        orw     d1,(8,a7,d3)
+        orw     d1,(8,sp,d3)
         orw     d1,(-4).w
         orw     d1,(8).l
 ;#       orw     d1,#5
@@ -1485,7 +1485,7 @@
         orl     (a4)+,d1
         orl     -(a5),d1
         orl     (4,a6),d1
-        orl     (8,a7,d3),d1
+        orl     (8,sp,d3),d1
         orl     (-4).w,d1
         orl     (8).l,d1
         orl     #5,d1
@@ -1497,7 +1497,7 @@
         orl     d1,(a4)+
         orl     d1,-(a5)
         orl     d1,(4,a6)
-        orl     d1,(8,a7,d3)
+        orl     d1,(8,sp,d3)
         orl     d1,(-4).w
         orl     d1,(8).l
 ;#       orl     d1,#5
@@ -1511,7 +1511,7 @@
         subb   (a4)+,d1
         subb   -(a5),d1
         subb   (4,a6),d1
-        subb   (8,a7,d3),d1
+        subb   (8,sp,d3),d1
         subb   (-4).w,d1
         subb   (8).l,d1
         subb   #0x56,d1
@@ -1522,7 +1522,7 @@
         subb   d1,(a4)+
         subb   d1,-(a5)
         subb   d1,(4,a6)
-        subb   d1,(8,a7,d3)
+        subb   d1,(8,sp,d3)
         subb   d1,(-4).w
         subb   d1,(8).l
 ;#       subb   d1,#0x56
@@ -1534,7 +1534,7 @@
         subw    (a4)+,d1
         subw    -(a5),d1
         subw    (4,a6),d1
-        subw    (8,a7,d3),d1
+        subw    (8,sp,d3),d1
         subw    (-4).w,d1
         subw    (8).l,d1
         subw    #0x56,d1
@@ -1545,7 +1545,7 @@
         subw    d1,(a4)+
         subw    d1,-(a5)
         subw    d1,(4,a6)
-        subw    d1,(8,a7,d3)
+        subw    d1,(8,sp,d3)
         subw    d1,(-4).w
         subw    d1,(8).l
 ;#       subw    d1,#0x56
@@ -1557,7 +1557,7 @@
         subl    (a4)+,d1
         subl    -(a5),d1
         subl    (4,a6),d1
-        subl    (8,a7,d3),d1
+        subl    (8,sp,d3),d1
         subl    (-4).w,d1
         subl    (8).l,d1
         subl    #0x56,d1
@@ -1568,7 +1568,7 @@
         subl    d1,(a4)+
         subl    d1,-(a5)
         subl    d1,(4,a6)
-        subl    d1,(8,a7,d3)
+        subl    d1,(8,sp,d3)
         subl    d1,(-4).w
         subl    d1,(8).l
 ;#       subl    d1,#0x56
@@ -1588,7 +1588,7 @@
         subaw   (a4)+,a2
         subaw   -(a5),a2
         subaw   (4,a6),a2
-        subaw   (8,a7,d3),a2
+        subaw   (8,sp,d3),a2
         subaw   (-4).w,a2
         subaw   (8).l,a2
         subaw   #5,a2
@@ -1600,7 +1600,7 @@
         subal   (a4)+,a2
         subal   -(a5),a2
         subal   (4,a6),a2
-        subal   (8,a7,d3),a2
+        subal   (8,sp,d3),a2
         subal   (-4).w,a2
         subal   (8).l,a2
         subal   #5,a2
@@ -1614,7 +1614,7 @@
         eorb   d1,(a4)+
         eorb   d1,-(a5)
         eorb   d1,(4,a6)
-        eorb   d1,(8,a7,d3)
+        eorb   d1,(8,sp,d3)
         eorb   d1,(-4).w
         eorb   d1,(8).l
 ;#       eorb   d1,#5
@@ -1626,7 +1626,7 @@
         eorw    d1,(a4)+
         eorw    d1,-(a5)
         eorw    d1,(4,a6)
-        eorw    d1,(8,a7,d3)
+        eorw    d1,(8,sp,d3)
         eorw    d1,(-4).w
         eorw    d1,(8).l
 ;#       eorw    d1,#5
@@ -1638,7 +1638,7 @@
         eorl    d1,(a4)+
         eorl    d1,-(a5)
         eorl    d1,(4,a6)
-        eorl    d1,(8,a7,d3)
+        eorl    d1,(8,sp,d3)
         eorl    d1,(-4).w
         eorl    d1,(8).l
 ;#       eorl    d1,#5
@@ -1657,7 +1657,7 @@
         cmpb   (a4)+,d1
         cmpb   -(a5),d1
         cmpb   (4,a6),d1
-        cmpb   (8,a7,d3),d1
+        cmpb   (8,sp,d3),d1
         cmpb   (-4).w,d1
         cmpb   (8).l,d1
         cmpb   #0x56,d1
@@ -1669,7 +1669,7 @@
         cmpw    (a4)+,d1
         cmpw    -(a5),d1
         cmpw    (4,a6),d1
-        cmpw    (8,a7,d3),d1
+        cmpw    (8,sp,d3),d1
         cmpw    (-4).w,d1
         cmpw    (8).l,d1
         cmpw    #0x56,d1
@@ -1681,7 +1681,7 @@
         cmpl    (a4)+,d1
         cmpl    -(a5),d1
         cmpl    (4,a6),d1
-        cmpl    (8,a7,d3),d1
+        cmpl    (8,sp,d3),d1
         cmpl    (-4).w,d1
         cmpl    (8).l,d1
         cmpl    #0x56,d1
@@ -1695,7 +1695,7 @@
         cmpaw   (a4)+,a2
         cmpaw   -(a5),a2
         cmpaw   (4,a6),a2
-        cmpaw   (8,a7,d3),a2
+        cmpaw   (8,sp,d3),a2
         cmpaw   (-4).w,a2
         cmpaw   (8).l,a2
         cmpaw   #5,a2
@@ -1707,7 +1707,7 @@
         cmpal   (a4)+,a2
         cmpal   -(a5),a2
         cmpal   (4,a6),a2
-        cmpal   (8,a7,d3),a2
+        cmpal   (8,sp,d3),a2
         cmpal   (-4).w,a2
         cmpal   (8).l,a2
         cmpal   #5,a2
@@ -1758,7 +1758,7 @@
         andb   (a4)+,d1
         andb   -(a5),d1
         andb   (4,a6),d1
-        andb   (8,a7,d3),d1
+        andb   (8,sp,d3),d1
         andb   (-4).w,d1
         andb   (8).l,d1
         andb   #5,d1
@@ -1769,7 +1769,7 @@
         andb   d1,(a4)+
         andb   d1,-(a5)
         andb   d1,(4,a6)
-        andb   d1,(8,a7,d3)
+        andb   d1,(8,sp,d3)
         andb   d1,(-4).w
         andb   d1,(8).l
 ;#       andb   d1,#5
@@ -1781,7 +1781,7 @@
         andw    (a4)+,d1
         andw    -(a5),d1
         andw    (4,a6),d1
-        andw    (8,a7,d3),d1
+        andw    (8,sp,d3),d1
         andw    (-4).w,d1
         andw    (8).l,d1
         andw    #5,d1
@@ -1792,7 +1792,7 @@
         andw    d1,(a4)+
         andw    d1,-(a5)
         andw    d1,(4,a6)
-        andw    d1,(8,a7,d3)
+        andw    d1,(8,sp,d3)
         andw    d1,(-4).w
         andw    d1,(8).l
 ;#       andw    d1,#5
@@ -1804,7 +1804,7 @@
         andl    (a4)+,d1
         andl    -(a5),d1
         andl    (4,a6),d1
-        andl    (8,a7,d3),d1
+        andl    (8,sp,d3),d1
         andl    (-4).w,d1
         andl    (8).l,d1
         andl    #5,d1
@@ -1815,7 +1815,7 @@
         andl    d1,(a4)+
         andl    d1,-(a5)
         andl    d1,(4,a6)
-        andl    d1,(8,a7,d3)
+        andl    d1,(8,sp,d3)
         andl    d1,(-4).w
         andl    d1,(8).l
 ;#       andl    d1,#5
@@ -1829,7 +1829,7 @@
         addb   (a4)+,d1
         addb   -(a5),d1
         addb   (4,a6),d1
-        addb   (8,a7,d3),d1
+        addb   (8,sp,d3),d1
         addb   (-4).w,d1
         addb   (8).l,d1
         addb   #0x56,d1
@@ -1840,7 +1840,7 @@
         addb   d1,(a4)+
         addb   d1,-(a5)
         addb   d1,(4,a6)
-        addb   d1,(8,a7,d3)
+        addb   d1,(8,sp,d3)
         addb   d1,(-4).w
         addb   d1,(8).l
 ;#       addb   d1,#0x56
@@ -1852,7 +1852,7 @@
         addw    (a4)+,d1
         addw    -(a5),d1
         addw    (4,a6),d1
-        addw    (8,a7,d3),d1
+        addw    (8,sp,d3),d1
         addw    (-4).w,d1
         addw    (8).l,d1
         addw    #0x56,d1
@@ -1863,7 +1863,7 @@
         addw    d1,(a4)+
         addw    d1,-(a5)
         addw    d1,(4,a6)
-        addw    d1,(8,a7,d3)
+        addw    d1,(8,sp,d3)
         addw    d1,(-4).w
         addw    d1,(8).l
 ;#       addw    d1,#0x56
@@ -1875,7 +1875,7 @@
         addl    (a4)+,d1
         addl    -(a5),d1
         addl    (4,a6),d1
-        addl    (8,a7,d3),d1
+        addl    (8,sp,d3),d1
         addl    (-4).w,d1
         addl    (8).l,d1
         addl    #0x56,d1
@@ -1886,7 +1886,7 @@
         addl    d1,(a4)+
         addl    d1,-(a5)
         addl    d1,(4,a6)
-        addl    d1,(8,a7,d3)
+        addl    d1,(8,sp,d3)
         addl    d1,(-4).w
         addl    d1,(8).l
 ;#       addl    d1,#0x56
@@ -1906,7 +1906,7 @@
         addaw   (a4)+,a2
         addaw   -(a5),a2
         addaw   (4,a6),a2
-        addaw   (8,a7,d3),a2
+        addaw   (8,sp,d3),a2
         addaw   (-4).w,a2
         addaw   (8).l,a2
         addaw   #5,a2
@@ -1918,7 +1918,7 @@
         addal   (a4)+,a2
         addal   -(a5),a2
         addal   (4,a6),a2
-        addal   (8,a7,d3),a2
+        addal   (8,sp,d3),a2
         addal   (-4).w,a2
         addal   (8).l,a2
         addal   #5,a2
@@ -1936,7 +1936,7 @@
         asrw    (a4)+
         asrw    -(a5)
         asrw    (4,a6)
-        asrw    (8,a7,d3)
+        asrw    (8,sp,d3)
         asrw    (-4).w
         asrw    (8).l
 ;#       asrw    (.,pc)
@@ -1953,7 +1953,7 @@
         aslw    (a4)+
         aslw    -(a5)
         aslw    (4,a6)
-        aslw    (8,a7,d3)
+        aslw    (8,sp,d3)
         aslw    (-4).w
         aslw    (8).l
 ;#       aslw    (.,pc)
@@ -1970,7 +1970,7 @@
         lsrw    (a4)+
         lsrw    -(a5)
         lsrw    (4,a6)
-        lsrw    (8,a7,d3)
+        lsrw    (8,sp,d3)
         lsrw    (-4).w
         lsrw    (8).l
 ;#       lsrw    (.,pc)
@@ -1987,7 +1987,7 @@
         lslw    (a4)+
         lslw    -(a5)
         lslw    (4,a6)
-        lslw    (8,a7,d3)
+        lslw    (8,sp,d3)
         lslw    (-4).w
         lslw    (8).l
 ;#       lslw    (.,pc)
@@ -2004,7 +2004,7 @@
         roxrw   (a4)+
         roxrw   -(a5)
         roxrw   (4,a6)
-        roxrw   (8,a7,d3)
+        roxrw   (8,sp,d3)
         roxrw   (-4).w
         roxrw   (8).l
 ;#       roxrw   (.,pc)
@@ -2021,7 +2021,7 @@
         roxlw   (a4)+
         roxlw   -(a5)
         roxlw   (4,a6)
-        roxlw   (8,a7,d3)
+        roxlw   (8,sp,d3)
         roxlw   (-4).w
         roxlw   (8).l
 ;#       roxlw   (.,pc)
@@ -2038,7 +2038,7 @@
         rorw    (a4)+
         rorw    -(a5)
         rorw    (4,a6)
-        rorw    (8,a7,d3)
+        rorw    (8,sp,d3)
         rorw    (-4).w
         rorw    (8).l
 ;#       rorw    (.,pc)
@@ -2055,7 +2055,7 @@
         rolw    (a4)+
         rolw    -(a5)
         rolw    (4,a6)
-        rolw    (8,a7,d3)
+        rolw    (8,sp,d3)
         rolw    (-4).w
         rolw    (8).l
 ;#       rolw    (.,pc)
