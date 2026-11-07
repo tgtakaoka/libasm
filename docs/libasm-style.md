@@ -1814,6 +1814,14 @@ and `sh2a` an external adjudicator for the first time.
 - gnu-as output prints bare `zpc`, which GNU as accepts with
   `--register-prefix-optional`.
 
+### MC68000 family bare (PC)
+
+- A bare `(PC)` is PC+0 (mode `072`, `d16 = 0`) on every CPU, where PC is the
+  extension word address: `(*+2,PC)` after a one-word opcode, `(*+4,PC)` after
+  a postword. An omitted PC displacement is likewise zero in `(PC,Xn)` and
+  `([PC])` (PRM 2.2.13). It is not `(0,PC)`, whose `0` is a target address.
+- The disassembler never prints a bare `(PC)`, so this is assembler-only.
+
 ### MC68000 family FPU / PMMU defaults
 
 - **A CPU's on-chip units follow from the CPU**, not from `reset()`:
