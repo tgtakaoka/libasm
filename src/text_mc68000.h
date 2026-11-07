@@ -247,6 +247,7 @@ extern const char TEXT_REG_CAAR[] PROGMEM;
 extern const char TEXT_REG_CACR[] PROGMEM;
 extern const char TEXT_REG_ISP[]  PROGMEM;
 extern const char TEXT_REG_MSP[]  PROGMEM;
+extern const char TEXT_REG_ZPC[]  PROGMEM;
 
 // MC68030
 extern const char TEXT_PMOVEFD[] PROGMEM;

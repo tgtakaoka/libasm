@@ -62,6 +62,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
     { TEXT_REG_FPSR,  REG_FPSR  },
     { TEXT_REG_PC,    REG_PC    },
     { TEXT_REG_SR,    REG_SR    },
+    { TEXT_REG_ZPC,   REG_ZPC   },
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};

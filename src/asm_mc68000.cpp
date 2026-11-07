@@ -276,7 +276,7 @@ uint_fast8_t displacementSize(const Displacement &disp) {
 
 void AsmMc68000::encodeFullExtension(AsmInsn &insn, const Addressing &addr) const {
     auto ext = UINT16_C(0x0100);
-    if (addr.base == REG_UNDEF)
+    if (addr.base == REG_UNDEF || addr.base == REG_ZPC)
         ext |= 0x80;  // base suppress
     if (addr.index.reg == REG_UNDEF) {
         ext |= 0x40;  // index suppress
@@ -370,7 +370,7 @@ void AsmMc68000::encodeEffectiveAddress(AsmInsn &insn, const Operand &op, OprPos
             return;
         }
     }
-    const auto mode = (op.addr.base == REG_PC) ? M_PCIDX : M_INDX;
+    const auto mode = (op.addr.base == REG_PC || op.addr.base == REG_ZPC) ? M_PCIDX : M_INDX;
     encodeModeReg(insn, mode, op.addr.base, pos);
     encodeFullExtension(insn, op.addr);
 }
@@ -1312,7 +1312,9 @@ Error AsmMc68000::parseAddressing(
             } else {
                 return error.setError(at, REGISTER_NOT_ALLOWED);
             }
-        } else if (reg == REG_PC) {
+        } else if (reg == REG_PC || reg == REG_ZPC) {
+            if (reg == REG_ZPC && firstGen())
+                return error.setError(at, REGISTER_NOT_ALLOWED);
             if (addr.base == REG_UNDEF) {
                 addr.base = reg;
             } else {
@@ -1423,7 +1425,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (pdec || pinc) {
             if (pdec && pinc)
                 return op.setErrorIf(at, UNKNOWN_OPERAND);
-            if (op.addr.base == REG_UNDEF || op.addr.index.reg != REG_UNDEF || !op.addr.disp.none)
+            if (!isAddrReg(op.addr.base) || op.addr.index.reg != REG_UNDEF || !op.addr.disp.none)
                 return op.setErrorIf(at, UNKNOWN_OPERAND);
         }
         scan = p;
@@ -1450,7 +1452,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                 return OK;
             }
         }
-        op.mode = (op.addr.base == REG_PC) ? M_PCIDX : M_INDX;
+        op.mode = (op.addr.base == REG_PC || op.addr.base == REG_ZPC) ? M_PCIDX : M_INDX;
         scan = p;
         return OK;
     }
