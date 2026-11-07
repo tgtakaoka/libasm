@@ -1786,6 +1786,23 @@ and `sh2a` an external adjudicator for the first time.
 - The reference `.inc`/`.ginc` spell the stack pointer `sp`; both libasm and
   GNU as assemble them to the same bytes as the former `a7` spelling.
 
+### MC68000 family null base displacement
+
+- A null base displacement (`BD SIZE = 01`) prints nothing while a base
+  register or an index still appears in its group, and `0` when nothing else
+  would: `(0)`, `([0])`, `([0],Xn)`, `([0],od)`. Those are the spellings the
+  assembler encodes back to the same extension word.
+- `BS` and `IS` are independent of a null displacement (PRM Table 2-1); only
+  the `IS` / `I/IS` pairs Table 2-2 marks reserved are errors, and they report
+  `UNKNOWN_POSTBYTE`.
+- The fully suppressed `([0])` is accepted on both sides: Table 2-2 defines
+  the operation, and 2.5's "at least one element must be active" is a rule
+  for the programmer, not a reserved encoding. `(0)` assembles as absolute
+  short, so `$01D0` disassembles to text that reassembles to other bytes.
+- The autogen `.inc` is assembler input; nothing reassembles the
+  disassembler's own output. Disassemble the assembled corpus and count the
+  flagged lines to catch a display regression (issue#216).
+
 ### MC68000 family FPU / PMMU defaults
 
 - **A CPU's on-chip units follow from the CPU**, not from `reset()`:
