@@ -1771,6 +1771,21 @@ and `sh2a` an external adjudicator for the first time.
   leaking too). `test/reference/Makefile` had always applied the filter to the
   union; autogen now matches. Check both when adding an exclusion.
 
+### MC68000 family SP alias
+
+- The assembler accepts `SP` as `A7` unconditionally on every CPU, register
+  lists included (PRM 1.1.2; the PMMU notes write `PFLUSH [(SP)]` as an
+  operand). `SP` is matched in `parseRegName` and kept OUT of `REG_ENTRIES`:
+  `searchName` is a first-match linear search, so a table entry would leave
+  `outRegName(REG_A7)` printing `A7` only because `A7` sorts before `SP`.
+- `sp-alias` (dis, default OFF) shows `A7` as `SP` wherever a general
+  register is named -- base, index, register direct and CAS2 pointers. The
+  MOVEM register list stays numeric, so `D0-A7` never reads `D0-SP`.
+- No `FP` for `A6` (every `FP` in the PRM is the FPU) and no `SSP` (`USP`,
+  `ISP`, `MSP` are control registers). The generator leaves `sp-alias` off.
+- The reference `.inc`/`.ginc` spell the stack pointer `sp`; both libasm and
+  GNU as assemble them to the same bytes as the former `a7` spelling.
+
 ### MC68000 family FPU / PMMU defaults
 
 - **A CPU's on-chip units follow from the CPU**, not from `reset()`:
