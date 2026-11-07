@@ -240,6 +240,7 @@ constexpr char TEXT_REG_CAAR[] PROGMEM = "CAAR";
 constexpr char TEXT_REG_CACR[] PROGMEM = "CACR";
 constexpr char TEXT_REG_ISP[]  PROGMEM = "ISP";
 constexpr char TEXT_REG_MSP[]  PROGMEM = "MSP";
+constexpr char TEXT_REG_ZPC[]  PROGMEM = "ZPC";
 
 // MC68030
 constexpr char TEXT_PMOVEFD[] PROGMEM = "PMOVEFD";
