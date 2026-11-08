@@ -25,6 +25,7 @@ namespace am29000 {
 
 using namespace reg;
 using namespace text::am29000;
+using namespace text::option;
 
 namespace {
 
@@ -40,7 +41,7 @@ const ValueFormatter::Plugins &DisAm29000::defaultPlugins() {
 DisAm29000::DisAm29000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &Config::setFpu, OPT_BOOL_FPU, OPT_DESC_FPU, &_opt_intMul),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_intMul),
       _opt_intMul(this, &Config::setIntMul, OPT_BOOL_INTMULT, OPT_DESC_INTMULT,
               &_opt_externSymbol),
       _opt_externSymbol(this, &DisAm29000::setExternSymbol, OPT_BOOL_EXTERN_SYMBOL,

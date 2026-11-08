@@ -29,6 +29,7 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::common;
 using namespace text::i960;
+using namespace text::option;
 
 namespace {
 
@@ -92,7 +93,7 @@ AsmI960::AsmI960(const ValueParser::Plugins &plugins)
               &_opt_ipOperand),
       _opt_ipOperand(this, &Config::setIpOperand, OPT_TEXT_IP_OPERAND, OPT_DESC_IP_OPERAND,
               &_opt_fpu),
-      _opt_fpu(this, &AsmI960::setFpuOption, OPT_BOOL_FPU, OPT_DESC_FPU) {
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 
@@ -105,23 +106,10 @@ void AsmI960::reset() {
     setFpu(false);
 }
 
-Error AsmI960::setFpuOption(bool enable) {
-    return setFpu(enable);
-}
-
 Error AsmI960::processFpu(StrScanner &scan, Insn &insn, uint16_t) {
-    auto p = scan.skipSpaces();
-    const auto at = p;
-    bool on;
-    if (p.expectTrue()) {
-        on = true;
-    } else if (p.expectFalse()) {
-        on = false;
-    } else {
-        return insn.setError(at, UNKNOWN_OPERAND);
-    }
-    scan = p;
-    return insn.setErrorIf(at, setFpu(on));
+    const auto at = scan;
+    const auto error = _opt_fpu.set(scan);
+    return error ? insn.setErrorIf(at, error) : OK;
 }
 
 Error AsmI960::setModeBitsOption(int32_t value) {

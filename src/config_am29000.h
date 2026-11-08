@@ -76,6 +76,14 @@ struct Config
         return OK;
     }
 
+    Error setFpuName(StrScanner &scan) override {
+        if (scan.expectFalse())
+            return setFpu(false);
+        if (scan.expectTrue())
+            return setFpu(true);
+        return UNKNOWN_OPERAND;
+    }
+
     Error setIntMul(bool enable) {
         if (!enable && cpuHasIntMul(cpuType()))
             return OPERAND_NOT_ALLOWED;
