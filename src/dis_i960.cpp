@@ -25,6 +25,7 @@ namespace i960 {
 
 using namespace reg;
 using namespace text::i960;
+using namespace text::option;
 
 const ValueFormatter::Plugins &DisI960::defaultPlugins() {
     return ValueFormatter::Plugins::cstyle();
@@ -39,7 +40,7 @@ DisI960::DisI960(const ValueFormatter::Plugins &plugins)
               &_opt_canonicalMem),
       _opt_canonicalMem(
               this, &DisI960::setCanonicalMem, OPT_BOOL_CANONICAL_MEM, nullptr, &_opt_fpu),
-      _opt_fpu(this, &Config::setFpu, OPT_BOOL_FPU, OPT_DESC_FPU) {
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU) {
     reset();
 }
 

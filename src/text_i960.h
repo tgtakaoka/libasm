@@ -31,8 +31,6 @@ extern const char OPT_DESC_MODE_BITS[];
 extern const char OPT_TEXT_IP_OPERAND[];
 extern const char OPT_DESC_IP_OPERAND[];
 extern const char OPT_BOOL_CANONICAL_MEM[];
-extern const char OPT_BOOL_FPU[];
-extern const char OPT_DESC_FPU[];
 extern const char TEXT_REG_PFP[];
 extern const char TEXT_REG_RIP[];
 extern const char TEXT_REG_IP[];

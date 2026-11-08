@@ -30,7 +30,7 @@ struct AsmAm29000 final : Assembler, Config {
     void reset() override;
 
 private:
-    const BoolOption<AsmAm29000> _opt_fpu;
+    const TextOption<Config> _opt_fpu;
     const BoolOption<AsmAm29000> _opt_intMul;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -40,7 +40,6 @@ private:
             AddrMode mode = M_NONE) const;
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
-    Error setFpuOption(bool enable);
     Error setIntMulOption(bool enable);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;

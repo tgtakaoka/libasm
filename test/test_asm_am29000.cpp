@@ -368,6 +368,14 @@ void test_no_fpu_option() {
     TEST("SQRT gr96, gr97, 1",    0xE5606101);
     asm29000.setOption("fpu", "off");
     ERUI("FADD gr96, gr97, gr98");
+    asm29000.setOption("fpu", "enable");
+    TEST("FADD gr96, gr97, gr98", 0xF0606162);
+    asm29000.setOption("fpu", "none");
+    ERUI("FADD gr96, gr97, gr98");
+    BTEST("FPU on");
+    TEST("FADD gr96, gr97, gr98", 0xF0606162);
+    BTEST("FPU no");
+    ERUI("FADD gr96, gr97, gr98");
 }
 
 void test_no_intmult_option() {
@@ -381,6 +389,8 @@ void test_no_intmult_option() {
 // A chip which has the hardware cannot have it turned off.
 void test_fpu_always_on() {
     EQUALS("fpu off", OPERAND_NOT_ALLOWED, asm29000.setOption("fpu", "off"));
+    EQUALS("fpu none", OPERAND_NOT_ALLOWED, asm29000.setOption("fpu", "none"));
+    ERRT("FPU off", OPERAND_NOT_ALLOWED, "off");
     TEST("FADD gr96, gr97, gr98", 0xF0606162);
 }
 

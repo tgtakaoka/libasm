@@ -160,8 +160,6 @@ using common::TEXT_XOR;
 extern const char TEXT_XNOR[];
 
 // Options
-extern const char OPT_BOOL_FPU[];
-extern const char OPT_DESC_FPU[];
 extern const char OPT_BOOL_INTMULT[];
 extern const char OPT_DESC_INTMULT[];
 

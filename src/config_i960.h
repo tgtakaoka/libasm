@@ -72,6 +72,14 @@ struct Config
         return OK;
     }
 
+    Error setFpuName(StrScanner &scan) override {
+        if (scan.expectFalse())
+            return setFpu(false);
+        if (scan.expectTrue())
+            return setFpu(true);
+        return UNKNOWN_OPERAND;
+    }
+
     ModeBits modeBits() const { return _modeBits; }
 
     void setModeBits(ModeBits modeBits) { _modeBits = modeBits; }
