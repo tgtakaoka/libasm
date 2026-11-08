@@ -456,6 +456,10 @@ void test_fpu() {
 void test_no_fpu() {
     disassembler.setOption("fpu", "off");
     UNKN(0x78107F80);
+    disassembler.setOption("fpu", "enable");
+    TEST("ADDR", "FP0, FP1, FP2", 0x78107F80);
+    disassembler.setOption("fpu", "none");
+    UNKN(0x78107F80);
     UNKN(0x791CA790);
     UNKN(0x64944090);
 }

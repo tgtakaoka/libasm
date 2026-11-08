@@ -32,7 +32,7 @@ struct AsmI960 final : Assembler, Config {
 private:
     const IntOption<AsmI960> _opt_modeBits;
     const TextOption<Config> _opt_ipOperand;
-    const BoolOption<AsmI960> _opt_fpu;
+    const TextOption<Config> _opt_fpu;
 
     Error parseMemory(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -47,7 +47,6 @@ private:
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error setModeBitsOption(int32_t value);
-    Error setFpuOption(bool enable);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;

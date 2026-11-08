@@ -30,6 +30,7 @@ using namespace pseudo;
 using namespace reg;
 using namespace text::am29000;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
@@ -72,7 +73,7 @@ const ValueParser::Plugins &AsmAm29000::defaultPlugins() {
 AsmAm29000::AsmAm29000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &AsmAm29000::setFpuOption, OPT_BOOL_FPU, OPT_DESC_FPU, &_opt_intMul),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_intMul),
       _opt_intMul(this, &AsmAm29000::setIntMulOption, OPT_BOOL_INTMULT, OPT_DESC_INTMULT) {
     reset();
 }
@@ -83,29 +84,15 @@ void AsmAm29000::reset() {
     setCpuType(cpuType());
 }
 
-Error AsmAm29000::setFpuOption(bool enable) {
-    return setFpu(enable);
-}
-
 Error AsmAm29000::setIntMulOption(bool enable) {
     return setIntMul(enable);
 }
 
 Error AsmAm29000::processFpu(StrScanner &scan, Insn &insn, uint16_t) {
-    auto p = scan.skipSpaces();
-    const auto at = p;
-    bool on;
-    if (p.expectTrue()) {
-        on = true;
-    } else if (p.expectFalse()) {
-        on = false;
-    } else {
-        return insn.setError(at, UNKNOWN_OPERAND);
-    }
-    scan = p;
-    return insn.setErrorIf(at, setFpu(on));
+    const auto at = scan;
+    const auto error = _opt_fpu.set(scan);
+    return error ? insn.setErrorIf(at, error) : OK;
 }
-
 
 Error AsmAm29000::processIntMul(StrScanner &scan, Insn &insn, uint16_t) {
     auto p = scan.skipSpaces();
