@@ -157,8 +157,6 @@ constexpr char TEXT_SUBU[]    PROGMEM = "SUBU";
 constexpr char TEXT_XNOR[]    PROGMEM = "XNOR";
 
 // Options
-constexpr char OPT_BOOL_FPU[]     PROGMEM = "fpu";
-constexpr char OPT_DESC_FPU[]     PROGMEM = "enable floating point instructions";
 constexpr char OPT_BOOL_INTMULT[] PROGMEM = "intmult";
 constexpr char OPT_DESC_INTMULT[] PROGMEM = "enable integer multiply instructions";
 

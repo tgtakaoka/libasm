@@ -374,11 +374,16 @@ void test_no_float() {
     TEST("CLASS",   "GR96, GR97, 2",    0xE6606102);
     dis29000.setOption("fpu", "off");
     UNKN(0xF0606162);
+    dis29000.setOption("fpu", "enable");
+    TEST("FADD", "GR96, GR97, GR98", 0xF0606162);
+    dis29000.setOption("fpu", "none");
+    UNKN(0xF0606162);
 }
 
 // The Am29050 has the floating-point unit, so it cannot be turned off there.
 void test_float_always_on() {
     EQUALS("fpu off", OPERAND_NOT_ALLOWED, dis29000.setOption("fpu", "off"));
+    EQUALS("fpu none", OPERAND_NOT_ALLOWED, dis29000.setOption("fpu", "none"));
     TEST("FADD", "GR96, GR97, GR98", 0xF0606162);
 }
 

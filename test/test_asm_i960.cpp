@@ -397,6 +397,7 @@ void test_errors() {
     ERRT(".modebits maybe", UNKNOWN_OPERAND, "maybe");
     ERRT(".modebits 2", OVERFLOW_RANGE, "2");
     ERRT(".ipoperand maybe", UNKNOWN_OPERAND, "maybe");
+    ERRT(".fpu maybe", UNKNOWN_OPERAND, "maybe");
 }
 
 // The 80960KB floating-point and decimal extensions, which the fpu option and
@@ -427,6 +428,13 @@ void test_fpu() {
     TEST("ATANR FP0, FP1, FP2", 0x68107800);
     TEST("DADDC G0, G1, G2", 0x64944110);
     TEST("DMOVT G0, G1", 0x64881210);
+
+    assembler.setOption("fpu", "none");
+    ERUI("ADDR FP0, FP1, FP2");
+    BTEST(".fpu enable");
+    TEST("ADDR FP0, FP1, FP2", 0x78107F80);
+    BTEST(".fpu off");
+    ERUI("ADDR FP0, FP1, FP2");
 }
 
 // Without the option the extensions are not part of the instruction set.

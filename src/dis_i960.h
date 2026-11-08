@@ -35,7 +35,7 @@ private:
     const IntOption<Config> _opt_modeBits;
     const TextOption<Config> _opt_ipOperand;
     const BoolOption<DisI960> _opt_canonicalMem;
-    const BoolOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_fpu;
 
     bool _canonicalMem;
 

@@ -32,7 +32,7 @@ struct DisAm29000 final : Disassembler, Config {
     Error setExternSymbol(bool enable);
 
 private:
-    const BoolOption<Config> _opt_fpu;
+    const TextOption<Config> _opt_fpu;
     const BoolOption<Config> _opt_intMul;
     const BoolOption<DisAm29000> _opt_externSymbol;
 
