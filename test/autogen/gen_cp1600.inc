@@ -31,7 +31,9 @@
       ADCR  R0
       GSWD  R0
       NOP
+      NOP   2
       SIN
+      SIN   2
       RSWD  R0
       SWAP  R0
       SWAP  R0, 2
@@ -58,23 +60,23 @@
       ANDR  R0, R0
       CLRR  R0
       XORR  R0, R1
-      B     X'0349'
-      BC    X'034C'
-      BOV   X'034F'
-      BPL   X'0352'
-      BZE   X'0355'
-      BLT   X'0358'
-      BLE   X'035B'
-      BUSC  X'035E'
+      B     X'034B'
+      BC    X'034E'
+      BOV   X'0351'
+      BPL   X'0354'
+      BZE   X'0357'
+      BLT   X'035A'
+      BLE   X'035D'
+      BUSC  X'0360'
       NOPP
-      BNC   X'0364'
-      BNOV  X'0367'
-      BMI   X'036A'
-      BNZE  X'036D'
-      BGE   X'0370'
-      BGT   X'0373'
-      BESC  X'0376'
-      BEXT  X'0379', 0
+      BNC   X'0366'
+      BNOV  X'0369'
+      BMI   X'036C'
+      BNZE  X'036F'
+      BGE   X'0372'
+      BGT   X'0375'
+      BESC  X'0378'
+      BEXT  X'037B', 0
       MVO   R0, X'0341'
       MVO@  R0, R1
       PSHR  R0
