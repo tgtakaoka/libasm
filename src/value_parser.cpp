@@ -324,8 +324,10 @@ Value ValueParser::_eval(StrScanner &scan, ErrorAt &error, ParserContext &contex
                 }
             }
             // expression ends with ')'
-            if (ostack.empty())
+            if (ostack.empty()) {
+                scan = expr;
                 break;
+            }
 
             const auto openParen = ostack.pop();
             if (!ostack.empty() && ostack.top().isFunction()) {
