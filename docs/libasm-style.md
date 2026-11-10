@@ -2459,10 +2459,17 @@ What `pio pkg pack` does and does not do:
 
 - **It reads the version from the CHECKOUT.** A stale clone packed a tarball
   named 2.0.0. Check out the tag, not a branch you assume is current.
-- **It drops `test/` on its own**, so `library.json` needs no `export` field.
-- **It IGNORES `.gitignore`** and has NO exclude for build output. An unclean
-  tree ships `cli/*.o`: 1304 entries and 3.4MB with 248 `.o` files, against
-  806 entries clean.
+- **`library.json` `export.exclude` owns the package contents.** Any `export`
+  field switches off PlatformIO's own extra excludes (`test`, `docs`, binary
+  and document patterns) AND its reading of the top-level `.gitignore`, so the
+  list restores `test` and `docs` and mirrors every ignore pattern itself.
+  Without it a pack ships `test/`: 1958 entries instead of 801 on `main`.
+  When adding a pattern to any `.gitignore`, add it to `export.exclude` too.
+- **Without that list it IGNORES `.gitignore`** below the top level, and reads
+  the top-level patterns as root-anchored, so `src/.gdb_history` shipped. An
+  unclean tree shipped `cli/*.o`: 1304 entries and 3.4MB with 248 `.o` files,
+  against 806 entries clean. Junk ignored only by a GLOBAL git ignore (e.g.
+  `.claude/settings.local.json`) is invisible to `git status` either way.
 - **Inside a git worktree it packs the `.git` POINTER FILE** as a member (807
   entries instead of 806). Use `git clone --no-hardlinks`; plain `--local`
   fails with "Invalid cross-device link" when the destination is on another
@@ -2470,7 +2477,8 @@ What `pio pkg pack` does and does not do:
 
 **Order matters: verify the binaries, THEN `make clean`, THEN pack.** Proving
 the new version in the packing clone leaves 248 `.o` files behind; packing
-before `make clean` ships them.
+before `make clean` shipped them before `export.exclude`, and still ships any
+build output the list does not name.
 
 Checks worth the minute they cost:
 
@@ -2507,9 +2515,8 @@ Checks worth the minute they cost:
     contents were identical.
 
 **Still shipped, arguably should not be**: `.github/`, `.gemini/`, `.clangd`,
-`.clang-format`, `.clang-tidy`, `.gitignore`, `scripts/`. An `export.exclude`
-list in `library.json` would make the package contents deterministic rather
-than a property of PlatformIO's defaults plus a clean source tree.
+`.clang-format`, `.clang-tidy`, `.gitignore`, `scripts/`. Dropping any of
+them is a one-line addition to `export.exclude`.
 
 ---
 
