@@ -89,13 +89,6 @@ StrBuffer &DisI8096::outRelative(StrBuffer &out, DisInsn &insn, const Operand &o
     }
 }
 
-namespace {
-int32_t signExtend24(uint32_t val24) {
-    const auto v = val24 & UINT32_C(0xFFFFFF);
-    return static_cast<int32_t>(v & 0x800000 ? v | UINT32_C(0xFF000000) : v);
-}
-}  // namespace
-
 StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const {
     switch (op.mode) {
     case M_COUNT:
@@ -133,7 +126,8 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op
     case M_EIDX:
         return outRegister(outAbsAddr(out, op.val24, 24), insn, op.regno, true);
     case M_REL24:
-        return outRelAddr(out, insn.address() + 4 + static_cast<int32_t>(signExtend24(op.val24)),
+        // The 24-bit PC wraps.
+        return outRelAddr(out, (insn.address() + 4 + op.val24) & UINT32_C(0xFFFFFF),
                 insn.address(), 24);
     case M_AINC:
         return outRegister(out, insn, op.regno & ~1, true).letter('+');
