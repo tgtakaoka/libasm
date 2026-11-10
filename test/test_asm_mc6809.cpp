@@ -1566,6 +1566,12 @@ void test_comment() {
     COMM("ORG $1000\tcomment", "comment");
     COMM("RMB 2\tcomment", "comment");
     COMM("SETDP 0\tcomment", "comment");
+    ERRT("FCB 2)",   ILLEGAL_CONSTANT, "2)");
+    ERRT("FCB (2))", ILLEGAL_CONSTANT, "(2))");
+    ERRT("FDB 3)",   ILLEGAL_CONSTANT, "3)");
+    ERRT("RMB 2)",   GARBAGE_AT_END,   ")");
+    COMM("FCB 2 )",  ")", 0x02);
+    TEST("FCB (1+(2*3))", 0x07);
 }
 
 void test_error() {
