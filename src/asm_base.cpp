@@ -102,6 +102,8 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
         error = encodeImpl(scan, insn);
         if (error == UNKNOWN_INSTRUCTION)
             return insn.setError(at, error);
+        if (error == OK && !endOfOperand(scan, line))
+            return insn.setError(scan, GARBAGE_AT_END);
     }
 
     if (error == OK)
