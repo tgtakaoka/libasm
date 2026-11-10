@@ -153,10 +153,12 @@ Error Disassembler::setGnuAs(bool enable) {
 
 Error Disassembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
-    const auto error = _commonOptions.setOption(name, scan);
-    if (error != UNKNOWN_OPTION)
-        return error;
-    return options().setOption(name, scan);
+    auto error = _commonOptions.setOption(name, scan);
+    if (error == UNKNOWN_OPTION)
+        error = options().setOption(name, scan);
+    if (error == OK && *scan.skipSpaces())
+        return GARBAGE_AT_END;
+    return error;
 }
 
 Error Disassembler::decode(
