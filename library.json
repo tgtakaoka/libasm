@@ -17,6 +17,25 @@
         }
     ],
     "licence": "Apache-2.0",
+    "export":
+    {
+        "exclude":
+        [
+            "test",
+            "docs",
+            "**/*.o",
+            "**/*.d",
+            "**/*~",
+            "**/build",
+            "**/compile_commands.json",
+            "**/.ninja_log",
+            "**/.ninja_deps",
+            "**/.gdb_history",
+            "cli/asm",
+            "cli/dis",
+            ".claude"
+        ]
+    },
     "homepage": "https://github.com/tgtakaoka/libasm/",
     "platforms": "native"
 }
