@@ -87,8 +87,11 @@ void DisCp1600::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     case M_NOPP:
         insn.readUint16();
         // Fall-through
-    case M_BIT0:
     case M_NONE:
+        break;
+    case M_BIT0:
+        if (opc & 1)
+            out.letter('2');
         break;
     case M_DREG:
     case M_XREG:
