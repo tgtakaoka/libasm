@@ -51,7 +51,8 @@ Assembler::Assembler(
       _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
               &_opt_smartBranch),
       _opt_smartBranch(
-              this, &Assembler::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH) {
+              this, &Assembler::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH),
+      _symtab(nullptr) {
     Assembler::reset();
 }
 
