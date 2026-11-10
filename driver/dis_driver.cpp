@@ -91,7 +91,7 @@ void DisDriver::setUppercase(bool uppercase) {
     _uppercase = uppercase;
 }
 
-bool DisDriver::setOption(const char *name, const char *value) {
+Error DisDriver::setOption(const char *name, const char *value) {
     return current()->setOption(name, value);
 }
 

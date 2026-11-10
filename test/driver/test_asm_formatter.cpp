@@ -237,6 +237,24 @@ void test_switch_cpu() {
 )");
 }
 
+void test_set_option() {
+    i8080::AsmI8080 asm8080;
+    IntelDirective dir8080(asm8080);
+    z80::AsmZ80 asmz80;
+    ZilogDirective dirz80(asmz80);
+    AsmDriver driver{&dir8080, &dirz80};
+
+    EQ("zilog-syntax", OK, driver.setOption("zilog-syntax", "on"));
+    EQ("zilog-syntax", OK, driver.setOption("zilog-syntax", ""));
+    EQ("zilog-syntax", OK, driver.setOption("zilog-syntax", "none"));
+    EQ("zilog-syntax", UNDEFINED_SYMBOL, driver.setOption("zilog-syntax", "bogus"));
+    EQ("smart-branch", OK, driver.setOption("smart-branch", "yes"));
+    EQ("smart-branch", UNDEFINED_SYMBOL, driver.setOption("smart-branch", "bogus"));
+    EQ("list-radix", OK, driver.setOption("list-radix", "8"));
+    EQ("list-radix", UNDEFINED_SYMBOL, driver.setOption("list-radix", "x"));
+    EQ("unknown", UNKNOWN_OPTION, driver.setOption("unknown", "on"));
+}
+
 void test_list_radix() {
     mos6502::AsmMos6502 asm6502;
     MostekDirective dir6502(asm6502);
@@ -395,6 +413,7 @@ void run_tests() {
     RUN_TEST(test_symbols_z80);
     RUN_TEST(test_undefined);
     RUN_TEST(test_switch_cpu);
+    RUN_TEST(test_set_option);
     RUN_TEST(test_list_radix);
     RUN_TEST(test_function);
     RUN_TEST(test_forward_labels);

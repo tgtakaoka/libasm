@@ -153,8 +153,9 @@ Error Disassembler::setGnuAs(bool enable) {
 
 Error Disassembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
-    if (_commonOptions.setOption(name, scan) == OK)
-        return OK;
+    const auto error = _commonOptions.setOption(name, scan);
+    if (error != UNKNOWN_OPTION)
+        return error;
     return options().setOption(name, scan);
 }
 
