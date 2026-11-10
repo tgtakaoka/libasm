@@ -894,6 +894,11 @@ void test_comment() {
 
     ACOMM(0x1000, "JR 1000H     ; comment", "; comment", 0x18, 0xFE);
     ACOMM(0x1000, "JR NZ , 1004H; comment", "; comment", 0x20, 0x02);
+
+    COMM("ORG 1000H   ; comment", "; comment");
+    ERRT("ORG 1000H   junk", GARBAGE_AT_END, "junk");
+    ERRT("DS 2 junk",        GARBAGE_AT_END, "junk");
+    ERRT("ALIGN 2 junk",     GARBAGE_AT_END, "junk");
 }
 
 void test_undefined_symbol() {

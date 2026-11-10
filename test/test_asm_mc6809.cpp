@@ -1560,6 +1560,12 @@ void test_comment() {
     COMM("FDB -128, 255\tcomment", "comment", 0xFF, 0x80, 0x00, 0xFF);
     COMM("FCC ;TEXT;\tcomment", "comment", 0x54, 0x45, 0x58, 0x54);
     COMM("LDA #1\tcomment", "comment", 0x86, 0x01);
+    COMM("ORG $1000     comment", "comment");
+    COMM("RMB 2         comment", "comment");
+    COMM("SETDP 0       comment", "comment");
+    COMM("ORG $1000\tcomment", "comment");
+    COMM("RMB 2\tcomment", "comment");
+    COMM("SETDP 0\tcomment", "comment");
 }
 
 void test_error() {
