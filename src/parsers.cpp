@@ -762,7 +762,7 @@ bool StarCommentParser::commentLine(StrScanner &scan) const {
 }
 
 bool StarCommentParser::endOfLine(StrScanner &scan) const {
-    const auto end = (*scan == 0 || *scan == ' ');
+    const auto end = (*scan == 0 || isspace(*scan));
     scan.skipSpaces();
     return end || SemicolonCommentParser::singleton().endOfLine(scan);
 }
