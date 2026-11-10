@@ -168,6 +168,12 @@ bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name)
     }
 }
 
+// Whether |name| is the register that decodeRegNum() yields for |size|.
+bool isSizedReg(bool segmentedModel, RegName name, OprSize size) {
+    RegName reg;
+    return decodeRegNum(segmentedModel, encodeGeneralRegName(name), size, reg) && reg == name;
+}
+
 RegName decodeWordReg(uint8_t num) {
     return RegName(num & 0xF);
 }
