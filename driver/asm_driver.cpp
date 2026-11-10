@@ -100,10 +100,15 @@ void AsmDriver::reset() {
     }
 }
 
-void AsmDriver::setOption(const char *name, const char *value) {
+// A source file may switch CPUs, so |value| is valid if any directive accepts it.
+Error AsmDriver::setOption(const char *name, const char *value) {
+    Error result = UNKNOWN_OPTION;
     for (auto dir : _directives) {
-        dir->setOption(name, value);
+        const auto error = dir->setOption(name, value);
+        if (error == OK || result == UNKNOWN_OPTION)
+            result = error;
     }
+    return result;
 }
 
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,

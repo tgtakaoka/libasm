@@ -53,8 +53,8 @@ void AsmDirective::reset(CpuSwitcher &switcher) {
     _switcher = &switcher;
 }
 
-void AsmDirective::setOption(const char *name, const char *value) {
-    _assembler.setOption(name, value);
+Error AsmDirective::setOption(const char *name, const char *value) {
+    return _assembler.setOption(name, value);
 }
 
 const Options &AsmDirective::commonOptions() const {

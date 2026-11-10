@@ -41,7 +41,7 @@ struct DisDriver final {
 
     void setUpperHex(bool upperHex);
     void setUppercase(bool uppercase);
-    bool setOption(const char *name, const char *value);
+    Error setOption(const char *name, const char *value);
 
     void disassemble(BinReader &memory, const char *inputName, TextPrinter &output,
             TextPrinter &listout, TextPrinter &errorout);

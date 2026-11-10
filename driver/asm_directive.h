@@ -46,7 +46,7 @@ struct AsmDirective : ErrorAt {
     const Options &options() const;
 
     void reset(CpuSwitcher &switcher);
-    void setOption(const char *name, const char *value);
+    Error setOption(const char *name, const char *value);
     Radix listRadix() const;
     uint32_t currentLocation() const;
 

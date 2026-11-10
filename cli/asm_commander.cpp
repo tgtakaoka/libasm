@@ -54,6 +54,21 @@ int AsmCommander::assemble() {
         fprintf(stderr, "unknown CPU '%s'\n", _cpu);
         return 4;
     }
+    for (const auto &it : _options) {
+        const auto name = it.first.c_str();
+        const auto value = it.second.c_str();
+        auto error = _driver.setOption(name, value);
+        // A CPU chosen by -C must accept the value itself.
+        if (_cpu) {
+            const auto cpuError = _driver.current()->setOption(name, value);
+            if (cpuError != UNKNOWN_OPTION)
+                error = cpuError;
+        }
+        if (error && error != UNKNOWN_OPTION) {
+            fprintf(stderr, "invalid option value --%s=%s\n", name, value);
+            return 1;
+        }
+    }
 
     int pass = 0;
     if (_verbose) {
