@@ -115,6 +115,8 @@ void test_load_and_exchange() {
     TEST("LD  R2,R8",   0xA182);
     TEST("LDB RH2,RL0", 0xA082);
     TEST("ldl rr2,rr8", 0x9482);
+    ERRT("LD  R1,RR2",  REGISTER_NOT_ALLOWED, "RR2", 0xA121);
+    ERRT("LDL RR2,R15", REGISTER_NOT_ALLOWED, "R15", 0x94F2);
     TEST("LD  R2,#%5678", 0x2102, 0x5678);
     TEST("LDB RH2,#%56",   0xC256);
     TEST("LDB RH2,#'%%'",  0xC225);
@@ -276,11 +278,13 @@ void test_load_and_exchange() {
         TEST("LDA RR8,%561234(R2)", 0x7628, 0xD600, 0x1234);
         TEST("LDA RR8,RR2(#%1234)", 0x3428, 0x1234);
         TEST("LDA RR8,RR2(R4)",     0x7428, 0x0400);
+        ERRT("LDA R8,RR2(#%1234)", REGISTER_NOT_ALLOWED, "R8,RR2(#%1234)", 0x3428, 0x1234);
     } else {
         TEST("LDA R8,%1234",      0x7608, 0x1234);
         TEST("LDA R8,%1234(R2)",  0x7628, 0x1234);
         TEST("LDA R8,R2(#%1234)", 0x3428, 0x1234);
         TEST("LDA R8,R2(R4)",     0x7428, 0x0400);
+        ERRT("LDA RR8,R2(#%1234)", REGISTER_NOT_ALLOWED, "RR8,R2(#%1234)", 0x3428, 0x1234);
     }
 
     // Load Address Relative
@@ -1433,8 +1437,8 @@ void test_shift() {
     TEST("SLAB RH2,#0",   0xB229, 0x0000);
     TEST("SLAL RR2,#0",   0xB32D, 0x0000);
     ERRT("SLA  R2,#17",   OVERFLOW_RANGE, "#17", 0xB329, 0x0011);
-    ERRT("SLAB R2,#9",    OVERFLOW_RANGE, "#9",  0xB229, 0x0009);
-    ERRT("SLAL R2,#33",   OVERFLOW_RANGE, "#33", 0xB32D, 0x0021);
+    ERRT("SLAB RH2,#9",   OVERFLOW_RANGE, "#9",  0xB229, 0x0009);
+    ERRT("SLAL RR2,#33",  OVERFLOW_RANGE, "#33", 0xB32D, 0x0021);
     ERRT("SLA  R2,#-1",   OVERFLOW_RANGE, "#-1", 0xB329, 0xFFFF);
     ERRT("SLAB RH2,#-1",  OVERFLOW_RANGE, "#-1", 0xB229, 0x00FF);
     ERRT("SLAL RR2,#-1",  OVERFLOW_RANGE, "#-1", 0xB32D, 0xFFFF);
@@ -1447,8 +1451,8 @@ void test_shift() {
     TEST("SRAB RH2,#0",   0xB229, 0x0000);
     TEST("SRAL RR2,#0",   0xB32D, 0x0000);
     ERRT("SRA  R2,#17",   OVERFLOW_RANGE, "#17", 0xB329, 0xFFEF);
-    ERRT("SRAB R2,#9",    OVERFLOW_RANGE, "#9",  0xB229, 0x00F7);
-    ERRT("SRAL R2,#33",   OVERFLOW_RANGE, "#33", 0xB32D, 0xFFDF);
+    ERRT("SRAB RH2,#9",   OVERFLOW_RANGE, "#9",  0xB229, 0x00F7);
+    ERRT("SRAL RR2,#33",  OVERFLOW_RANGE, "#33", 0xB32D, 0xFFDF);
     ERRT("SRA  R2,#-1",   OVERFLOW_RANGE, "#-1", 0xB329, 0x0001);
     ERRT("SRAB RH2,#-1",  OVERFLOW_RANGE, "#-1", 0xB229, 0x0001);
     ERRT("SRAL RR2,#-1",  OVERFLOW_RANGE, "#-1", 0xB32D, 0x0001);
@@ -1458,16 +1462,16 @@ void test_shift() {
     TEST("SLLB RH2,#8",  0xB221, 0x0008);
     TEST("SLLL RR2,#32", 0xB325, 0x0020);
     ERRT("SLL  R2,#17",  OVERFLOW_RANGE, "#17", 0xB321, 0x0011);
-    ERRT("SLLB R2,#9",   OVERFLOW_RANGE, "#9",  0xB221, 0x0009);
-    ERRT("SLLL R2,#33",  OVERFLOW_RANGE, "#33", 0xB325, 0x0021);
+    ERRT("SLLB RH2,#9",  OVERFLOW_RANGE, "#9",  0xB221, 0x0009);
+    ERRT("SLLL RR2,#33", OVERFLOW_RANGE, "#33", 0xB325, 0x0021);
 
     // Shift Right Logical
     TEST("SRL  R2,#16",  0xB321, 0xFFF0);
     TEST("SRLB RH2,#8",  0xB221, 0x00F8);
     TEST("SRLL RR2,#32", 0xB325, 0xFFE0);
     ERRT("SRL  R2,#17",  OVERFLOW_RANGE, "#17", 0xB321, 0xFFEF);
-    ERRT("SRLB R2,#9",   OVERFLOW_RANGE, "#9",  0xB221, 0x00F7);
-    ERRT("SRLL R2,#33",  OVERFLOW_RANGE, "#33", 0xB325, 0xFFDF);
+    ERRT("SRLB RH2,#9",  OVERFLOW_RANGE, "#9",  0xB221, 0x00F7);
+    ERRT("SRLL RR2,#33", OVERFLOW_RANGE, "#33", 0xB325, 0xFFDF);
 }
 
 void test_compare_block() {
@@ -2580,7 +2584,7 @@ void test_sp_alias() {
         TEST("LDL   RR2, SP",       0x94E2);
         TEST("LDL   SP, RR2",       0x942E);
         TEST("PUSH  @SP, R1",       0x93E1);
-        TEST("LDA   R1, SP(#4)",    0x34E1, 0x0004);
+        TEST("LDA   RR2, SP(#4)",   0x34E2, 0x0004);
         TEST("LD    R1, SP(#2)",    0x31E1, 0x0002);
         TEST("LD    R1, R15",       0xA1F1);
         ERUS("LD    R1, SPAM", "SPAM", 0x6101, 0x8000, 0x0000);

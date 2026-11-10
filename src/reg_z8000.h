@@ -141,6 +141,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name, RegName sp);
 RegName stackPointer(bool segmentedModel);
 uint8_t encodeGeneralRegName(RegName name);
 bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name);
+bool isSizedReg(bool segmentedModel, RegName name, OprSize size);
 RegName decodeByteReg(uint8_t num);
 RegName decodeWordReg(uint8_t num);
 RegName decodeLongReg(uint8_t num);
