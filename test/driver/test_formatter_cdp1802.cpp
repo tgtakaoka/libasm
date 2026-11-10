@@ -53,6 +53,17 @@ symbol  =     x'1234'
        abd7 : c0 ab 23                   lbr   x'ab23'
 )");
 
+    ASM("cdp1804",
+            R"(        org   x'abcd'
+        option smart-branch, on,off
+        lbr   x'ab23'
+)",
+            R"(       abcd :                            org   x'abcd'
+cdp1804:2:32: error: Garbage at line end: ",off"
+       abcd :                            option smart-branch, on,off
+       abcd : c0 ab 23                   lbr   x'ab23'
+)");
+
     options.set("use-register", "on");
     options.set("smart-branch", "on");
 

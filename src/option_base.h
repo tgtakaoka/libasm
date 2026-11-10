@@ -40,6 +40,8 @@ struct OptionBase {
     const char *description_P() const { return _desc_P; }
     /** An option without description is for tests and not listed for users. */
     bool isPrivate() const { return _desc_P == nullptr; }
+    /** Parse the value in |scan| without applying it. */
+    virtual Error check(StrScanner &scan) const = 0;
     virtual Error set(StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 
@@ -78,6 +80,11 @@ struct BoolOption : public OptionBase {
         return parseBoolOption(scan, value);
     }
 
+    Error check(StrScanner &scan) const override {
+        bool value = false;
+        return parseBool(scan, value, _app);
+    }
+
     Error set(StrScanner &scan) const override {
         bool value = false;
         const auto error = parseBool(scan, value, _app);
@@ -106,6 +113,11 @@ struct IntOption : public OptionBase {
         return parseIntOption(scan, value);
     }
 
+    Error check(StrScanner &scan) const override {
+        int32_t value = 0;
+        return parseInt(scan, value, _app);
+    }
+
     Error set(StrScanner &scan) const override {
         int32_t value = 0;
         const auto error = parseInt(scan, value, _app);
@@ -124,6 +136,11 @@ struct CharOption : public OptionBase {
     constexpr CharOption(APP *app, Setter setter, const char *name_P,
             const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_CHAR, next), _app(app), _setter(setter) {}
+
+    Error check(StrScanner &scan) const override {
+        char value = 0;
+        return parseCharOption(scan, value);
+    }
 
     Error set(StrScanner &scan) const override {
         char value = 0;
@@ -144,6 +161,11 @@ struct TextOption : public OptionBase {
             const char *desc_P = nullptr, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_TEXT, next), _app(app), _setter(setter) {}
 
+    Error check(StrScanner &scan) const override {
+        StrScanner value;
+        return parseTextOption(scan, value);
+    }
+
     Error set(StrScanner &scan) const override {
         StrScanner value;
         const auto error = parseTextOption(scan, value);
@@ -160,7 +182,7 @@ struct Options {
 
     const OptionBase *head() const { return _head; }
     const OptionBase *search(const StrScanner &name) const;
-    Error setOption(const StrScanner &name, StrScanner &scan) const;
+    Error setOption(const StrScanner &name, const char *text) const;
 
     static const char *nameof(OptionBase::OptionSpec spec);
 
