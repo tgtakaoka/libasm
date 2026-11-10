@@ -88,6 +88,18 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
     _parser.readInstruction(scan, symbol);
     insn.nameBuffer().reset().text(symbol);
     auto error = processPseudo(scan.skipSpaces(), insn);
+    if (error == OK) {
+        // Also test from the end of the operand; in Motorola syntax the white
+        // space following it is what starts a comment.
+        auto end = scan.str();
+        while (end > line && isspace(end[-1]))
+            --end;
+        StrScanner tail{end, scan.str() + scan.size()};
+        auto p = scan;
+        if (!endOfLine(p) && !endOfLine(tail))
+            return insn.setError(p, GARBAGE_AT_END);
+        scan = p;
+    }
 
     if (error == UNKNOWN_DIRECTIVE) {
         insn.setError(at, OK);
@@ -173,8 +185,6 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint16_t) {
         return MISSING_COMMA;
     if (insn.setErrorIf(p, setOption(option, p.skipSpaces())))
         return insn.getError();
-    if (!endOfLine(p))
-        return insn.setError(p, GARBAGE_AT_END);
     scan = p;
     return OK;
 }
