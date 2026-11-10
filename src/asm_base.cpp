@@ -89,14 +89,8 @@ Error Assembler::encode(const char *line, Insn &insn, const SymbolTable *symtab)
     insn.nameBuffer().reset().text(symbol);
     auto error = processPseudo(scan.skipSpaces(), insn);
     if (error == OK) {
-        // Also test from the end of the operand; in Motorola syntax the white
-        // space following it is what starts a comment.
-        auto end = scan.str();
-        while (end > line && isspace(end[-1]))
-            --end;
-        StrScanner tail{end, scan.str() + scan.size()};
         auto p = scan;
-        if (!endOfLine(p) && !endOfLine(tail))
+        if (!endOfOperand(p, line))
             return insn.setError(p, GARBAGE_AT_END);
         scan = p;
     }
@@ -158,15 +152,17 @@ int32_t Assembler::branchDelta(
     return delta;
 }
 
-Error Assembler::setOption(const char *name, const char *text) {
-    StrScanner scan{text};
-    const auto error = setOption(name, scan);
-    if (error == OK && *scan.skipSpaces())
-        return GARBAGE_AT_END;
-    return error;
+bool Assembler::endOfOperand(StrScanner &scan, const char *start) const {
+    // Also test from the end of the operand; in Motorola syntax the white
+    // space following it is what starts a comment.
+    auto end = scan.str();
+    while (end > start && isspace(end[-1]))
+        --end;
+    StrScanner tail{end, scan.str() + scan.size()};
+    return endOfLine(scan) || endOfLine(tail);
 }
 
-Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
+Error Assembler::setOption(const char *name, const char *text) {
     const auto error = _commonOptions.setOption(name, text);
     if (error != UNKNOWN_OPTION)
         return error;
@@ -183,9 +179,21 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint16_t) {
         return MISSING_CLOSING_DQUOTE;
     if (!p.skipSpaces().expect(','))
         return MISSING_COMMA;
-    if (insn.setErrorIf(p, setOption(option, p.skipSpaces())))
+    p.skipSpaces();
+    auto opt = _commonOptions.search(option);
+    if (opt == nullptr)
+        opt = options().search(option);
+    if (opt == nullptr)
+        return insn.setError(p, UNKNOWN_OPTION);
+    auto end = p;
+    if (insn.setErrorIf(p, opt->check(end)))
         return insn.getError();
-    scan = p;
+    if (!endOfOperand(end, p.str()))
+        return insn.setError(end, GARBAGE_AT_END);
+    auto value = p;
+    if (insn.setErrorIf(p, opt->set(value)))
+        return insn.getError();
+    scan = value;
     return OK;
 }
 

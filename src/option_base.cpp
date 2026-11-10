@@ -114,9 +114,18 @@ const OptionBase *Options::search(const StrScanner &name) const {
     return nullptr;
 }
 
-Error Options::setOption(const StrScanner &name, StrScanner &scan) const {
+Error Options::setOption(const StrScanner &name, const char *text) const {
     const auto *option = search(name);
-    return option ? option->set(scan) : UNKNOWN_OPTION;
+    if (option == nullptr)
+        return UNKNOWN_OPTION;
+    StrScanner scan{text};
+    auto p = scan;
+    const auto error = option->check(p);
+    if (error)
+        return error;
+    if (*p.skipSpaces())
+        return GARBAGE_AT_END;
+    return option->set(scan);
 }
 
 const char *Options::nameof(OptionBase::OptionSpec spec) {
