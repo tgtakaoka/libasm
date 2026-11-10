@@ -253,7 +253,8 @@ void test_set_option() {
     EQ("list-radix", OK, driver.setOption("list-radix", "8"));
     EQ("list-radix", UNDEFINED_SYMBOL, driver.setOption("list-radix", "x"));
     EQ("list-radix", OK, driver.setOption("list-radix", "8 "));
-    EQ("list-radix", GARBAGE_AT_END, driver.setOption("list-radix", "8x"));
+    EQ("list-radix", GARBAGE_AT_END, driver.setOption("list-radix", "16x"));
+    EQ("list-radix", RADIX_8, asm8080.listRadix());
     EQ("zilog-syntax", GARBAGE_AT_END, driver.setOption("zilog-syntax", "1x"));
     EQ("zilog-syntax", GARBAGE_AT_END, driver.setOption("zilog-syntax", "on,off"));
     EQ("unknown", UNKNOWN_OPTION, driver.setOption("unknown", "on"));

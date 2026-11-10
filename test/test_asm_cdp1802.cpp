@@ -734,6 +734,7 @@ void test_undef() {
     }
 
     ERRT("OPTION SMART-BRANCH, ON,OFF", GARBAGE_AT_END, ",OFF");
+    ATEST(0x1200, "LBR 1234H", 0xC0, 0x12, 0x34);
     TEST("OPTION SMART-BRANCH, ON");
     AERUS(0x1234, "BR  UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
     AERUS(0x1234, "LBR UNDEF", "UNDEF", 0xC0, 0x00, 0x00);

@@ -39,6 +39,8 @@ struct Assembler {
     const ValueParser &parser() const { return _parser; }
     ParserContext parserContext(const SymbolTable *symtab, char delim = 0) const;
     bool endOfLine(StrScanner &scan) const { return _parser.endOfLine(scan); }
+    /** True if |scan| is at the end of an operand which starts at |start|. */
+    bool endOfOperand(StrScanner &scan, const char *start) const;
     /** Parse |expr| text as an integer expression and get value. */
     Value parseInteger(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text as an expression and get value. */
@@ -47,7 +49,6 @@ struct Assembler {
     bool setCpu(const char *name) { return configSetter().setCpu(name); }
 
     Error setOption(const char *name, const char *text);
-    Error setOption(const StrScanner &name, StrScanner &text);
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
     Error parseBoolOption(StrScanner &scan, bool &value) const;
