@@ -1013,6 +1013,10 @@ void test_jump_80196n() {
     ATEST(0x2000, "EJMP", "000DD0H", 0xE6, 0xCC, 0xED, 0xFF);
     ATEST(0x2000, "ECALL", "002004H", 0xF1, 0x00, 0x00, 0x00);
     ATEST(0x2000, "ECALL", "003238H", 0xF1, 0x34, 0x12, 0x00);
+    ATEST(0x2000, "EJMP", "0EA08EBH", 0xE6, 0xE7, 0xE8, 0xE9);
+    ATEST(0x2000, "EJMP", "0FF2080H", 0xE6, 0x7C, 0x00, 0xFF);
+    ATEST(0x2000, "ECALL", "0F513FAH", 0xF1, 0xF6, 0xF3, 0xF4);
+    ATEST(0xFFF000, "EJMP", "001000H", 0xE6, 0xFC, 0x1F, 0x00);
 
     TEST("ELD",    "52, [32]",            0xE8, 0x20, 0x34);
     TEST("ELD",    "52, 123456H[32]",     0xE9, 0x20, 0x56, 0x34, 0x12, 0x34);
@@ -1214,6 +1218,17 @@ void test_illegal_80296() {
     }
 }
 
+void test_jump_relative_80196n() {
+    disassembler.setOption("relative", "on");
+
+    ATEST(0x2000, "EJMP",  "$+4",        0xE6, 0x00, 0x00, 0x00);
+    ATEST(0x2000, "EJMP",  "$+001238H",  0xE6, 0x34, 0x12, 0x00);
+    ATEST(0x2000, "EJMP",  "$-001230H",  0xE6, 0xCC, 0xED, 0xFF);
+    ATEST(0x2000, "EJMP",  "$+0E9E8EBH", 0xE6, 0xE7, 0xE8, 0xE9);
+    ATEST(0x2000, "ECALL", "$+0F4F3FAH", 0xF1, 0xF6, 0xF3, 0xF4);
+    ATEST(0xFFF000, "EJMP", "$-0FFE000H", 0xE6, 0xFC, 0x1F, 0x00);
+}
+
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
@@ -1224,6 +1239,7 @@ void run_tests(const char *cpu) {
         // test_jump and test_jump_relative do not apply; decoding is the same
         // code and is covered by the autogen round-trip.
         RUN_TEST(test_jump_80196n);
+        RUN_TEST(test_jump_relative_80196n);
     } else {
         RUN_TEST(test_jump);
         RUN_TEST(test_jump_relative);
