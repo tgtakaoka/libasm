@@ -264,6 +264,10 @@ static const char *basename(const char *str, char sep_char = '/') {
     return sep ? sep + 1 : str;
 }
 
+static bool hasOption(const AsmDirective *dir, const char *name) {
+    return dir->commonOptions().search(name) || dir->options().search(name);
+}
+
 void AsmCommander::parseOptionValue(const char *option) {
     const auto equ = strchr(option, '=');
     if (equ) {
@@ -364,27 +368,20 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
         return 2;
     }
 
+    // A source file may switch CPUs, so a name is valid if any directive has it,
+    // unless -C names a CPU.
+    const auto *cpu = (_cpu && _driver.setCpu(_cpu)) ? _driver.current() : nullptr;
     for (auto &option : _options) {
+        const auto name = option.first.c_str();
         auto valid = false;
-        for (const auto *dir : _driver) {
-            for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
-                    valid = true;
-                    break;
-                }
-            }
-            if (valid)
-                continue;
-            for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
-                    valid = true;
-                    break;
-                }
-            }
+        if (cpu) {
+            valid = hasOption(cpu, name);
+        } else {
+            for (const auto *dir : _driver)
+                valid |= hasOption(dir, name);
         }
         if (!valid) {
-            fprintf(stderr, "unknown option --%s=%s\n", option.first.c_str(),
-                    option.second.c_str());
+            fprintf(stderr, "unknown option --%s=%s\n", name, option.second.c_str());
             return 1;
         }
     }
