@@ -39,7 +39,7 @@ int DisCommander::disassemble() {
         fprintf(stderr, "No target CPU specified\n");
         return 1;
     }
-    if (_driver.setCpu(_cpu) == nullptr) {
+    if (_cpu && _driver.setCpu(_cpu) == nullptr) {
         fprintf(stderr, "Unknown target CPU %s\n", _cpu);
         return 1;
     }
