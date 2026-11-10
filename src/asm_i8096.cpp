@@ -357,10 +357,9 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
     case M_REL24: {
         const auto base = insn.address() + 4;
         const auto target = op.getError() ? base : op.val.getUnsigned();
-        const auto delta = static_cast<int32_t>(target - base);
-        if (delta < -0x800000 || delta > 0x7FFFFF)
-            insn.setErrorIf(op, OPERAND_TOO_FAR);
-        insn.emitOperand24(static_cast<uint32_t>(delta));
+        // The 24-bit PC wraps, so any target in the address space is reachable.
+        insn.setErrorIf(op, checkAddr(target));
+        insn.emitOperand24(target - base);
         return;
     }
     case M_BAOP:
