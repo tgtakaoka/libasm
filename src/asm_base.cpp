@@ -148,7 +148,10 @@ int32_t Assembler::branchDelta(
 
 Error Assembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
-    return setOption(name, scan);
+    const auto error = setOption(name, scan);
+    if (error == OK && *scan.skipSpaces())
+        return GARBAGE_AT_END;
+    return error;
 }
 
 Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
@@ -170,6 +173,8 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint16_t) {
         return MISSING_COMMA;
     if (insn.setErrorIf(p, setOption(option, p.skipSpaces())))
         return insn.getError();
+    if (!endOfLine(p))
+        return insn.setError(p, GARBAGE_AT_END);
     scan = p;
     return OK;
 }
