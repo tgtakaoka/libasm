@@ -43,6 +43,14 @@ int DisCommander::disassemble() {
         fprintf(stderr, "Unknown target CPU %s\n", _cpu);
         return 1;
     }
+    for (auto &opt : _options) {
+        const auto error = _driver.setOption(opt.first.c_str(), opt.second.c_str());
+        if (error && error != UNKNOWN_OPTION) {
+            fprintf(stderr, "invalid option value --%s=%s\n", opt.first.c_str(),
+                    opt.second.c_str());
+            return 1;
+        }
+    }
 
     FileReader input(_input_name);
     if (!input.open()) {
@@ -89,9 +97,6 @@ int DisCommander::disassemble() {
 
     _driver.setUpperHex(_upper_hex);
     _driver.setUppercase(_uppercase);
-    for (auto &opt : _options) {
-        _driver.setOption(opt.first.c_str(), opt.second.c_str());
-    }
 
     _driver.disassemble(memory, _input_name, output, listout, FilePrinter::STDERR);
 

@@ -152,8 +152,9 @@ Error Assembler::setOption(const char *name, const char *text) {
 }
 
 Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
-    if (_commonOptions.setOption(name, text) == OK)
-        return OK;
+    const auto error = _commonOptions.setOption(name, text);
+    if (error != UNKNOWN_OPTION)
+        return error;
     return options().setOption(name, text);
 }
 

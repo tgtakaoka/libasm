@@ -73,6 +73,8 @@ void test_dis_cdp1802() {
 
     driver.setUpperHex(false);
     EQ("use-register", OK, driver.setOption("use-register", "on"));
+    EQ("use-register", ILLEGAL_CONSTANT, driver.setOption("use-register", "bogus"));
+    EQ("relative", ILLEGAL_CONSTANT, driver.setOption("relative", "bogus"));
 
     DIS8("cdp1804", 0xabcd,
             R"(      cpu   1804
