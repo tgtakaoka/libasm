@@ -610,14 +610,14 @@
       EBR   [228]
       EBMOVI    232, 230
       RETI
-      EJMP  $-161715H
+      EJMP  $+0E9E8EBH
       LJMP  $-1615H
       ELD   238, [236]
       ELDB  237, [236]
       ELDB  240, 0EFEEEDH[236]
       LCALL $-0E0DH
       RET
-      ECALL $-0B0C0AH
+      ECALL $+0F4F3F6H
       PUSHF
       POPF
       PUSHA
