@@ -899,6 +899,9 @@ void test_comment() {
     ERRT("ORG 1000H   junk", GARBAGE_AT_END, "junk");
     ERRT("DS 2 junk",        GARBAGE_AT_END, "junk");
     ERRT("ALIGN 2 junk",     GARBAGE_AT_END, "junk");
+    ERRT("DS 2)",            GARBAGE_AT_END, ")");
+    ERRT("DB 1,2)",          ILLEGAL_CONSTANT, "2)", 0x01);
+    TEST("DB (1+(2*3))",     0x07);
 }
 
 void test_undefined_symbol() {
