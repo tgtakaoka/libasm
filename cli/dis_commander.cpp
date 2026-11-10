@@ -218,6 +218,10 @@ static const char *basename(const char *str, char sep_char = '/') {
     return sep ? sep + 1 : str;
 }
 
+static bool hasOption(const Disassembler *dis, const char *name) {
+    return dis->commonOptions().search(name) || dis->options().search(name);
+}
+
 void DisCommander::parseOptionValue(const char *option) {
     const auto equ = strchr(option, '=');
     if (equ) {
@@ -342,27 +346,20 @@ int DisCommander::parseArgs(int argc, const char **argv) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
     }
+    auto *cpu = defaultDisassembler();
+    if (_cpu)
+        cpu = _driver.setCpu(_cpu);
     for (auto &option : _options) {
+        const auto name = option.first.c_str();
         auto valid = false;
-        for (const auto *dis : _driver) {
-            for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
-                    valid = true;
-                    break;
-                }
-            }
-            if (valid)
-                continue;
-            for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
-                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
-                    valid = true;
-                    break;
-                }
-            }
+        if (cpu) {
+            valid = hasOption(cpu, name);
+        } else {
+            for (const auto *dis : _driver)
+                valid |= hasOption(dis, name);
         }
         if (!valid) {
-            fprintf(stderr, "unknown option --%s=%s\n", option.first.c_str(),
-                    option.second.c_str());
+            fprintf(stderr, "unknown option --%s=%s\n", name, option.second.c_str());
             return 1;
         }
     }
