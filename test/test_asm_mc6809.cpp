@@ -1572,6 +1572,10 @@ void test_comment() {
     ERRT("RMB 2)",   GARBAGE_AT_END,   ")");
     COMM("FCB 2 )",  ")", 0x02);
     TEST("FCB (1+(2*3))", 0x07);
+    ERRT("LDB #2)",  GARBAGE_AT_END, ")",   0xC6, 0x02);
+    ERRT("LDB #2]",  GARBAGE_AT_END, "]",   0xC6, 0x02);
+    ERRT("LDA 2),X", GARBAGE_AT_END, "),X", 0x96, 0x02);
+    COMM("LDB #2 )", ")", 0xC6, 0x02);
 }
 
 void test_error() {

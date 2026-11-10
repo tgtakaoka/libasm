@@ -902,6 +902,11 @@ void test_comment() {
     ERRT("DS 2)",            GARBAGE_AT_END, ")");
     ERRT("DB 1,2)",          ILLEGAL_CONSTANT, "2)", 0x01);
     TEST("DB (1+(2*3))",     0x07);
+    ERRT("LD A,1)",          GARBAGE_AT_END, ")",  0x3E, 0x01);
+    ERRT("LD A,(1000H))",    GARBAGE_AT_END, ")",  0x3A, 0x00, 0x10);
+    ERRT("LD A,(1+2)*3",     GARBAGE_AT_END, "*3", 0x3A, 0x03, 0x00);
+    ERRT("LD A,1 junk",      GARBAGE_AT_END, "junk", 0x3E, 0x01);
+    TEST("LD A,((1+2)*3)",   0x3A, 0x09, 0x00);
 }
 
 void test_undefined_symbol() {
