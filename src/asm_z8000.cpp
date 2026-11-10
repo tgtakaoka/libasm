@@ -317,8 +317,11 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         if (insn.size() == SZ_QUAD && !isQuadReg(op.reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-        /* Fall-through */
+        emitRegister(insn, pos, op.reg);
+        break;
     case M_R:
+        if (!isSizedReg(segmentedModel(), op.reg, insn.size()))
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         emitRegister(insn, pos, op.reg);
         break;
     case M_WR07:
@@ -346,6 +349,8 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         /* Fall-through */
     case M_GEND:
         if (op.mode == M_R) {
+            if (!isSizedReg(segmentedModel(), op.reg, insn.size()))
+                insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             insn.embed(0x8000);
             emitRegister(insn, pos, op.reg);
             break;
