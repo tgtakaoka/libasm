@@ -92,9 +92,9 @@ void test_single_register() {
     TEST("GSWD", "R0", 0x0030);
     TEST("GSWD", "R3", 0x0033);
     TEST("NOP", "", 0x0034);
-    TEST("NOP", "", 0x0035);
+    TEST("NOP", "2", 0x0035);
     TEST("SIN", "", 0x0036);
-    TEST("SIN", "", 0x0037);
+    TEST("SIN", "2", 0x0037);
     TEST("RSWD", "R0", 0x0038);
     TEST("RSWD", "PC", 0x003F);
 }

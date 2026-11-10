@@ -35,7 +35,7 @@ enum AddrMode : uint8_t {
     M_SHCNT = 6,   // |_|___|___|n__|: shift count 1 or 2
     M_INDIR = 7,   // |_|___|iii|___|: R1~R3 indirect, R4/R5 post-inc
     M_BCOND = 8,   // |_|___|_1c|ccc|: external branch condition
-    M_BIT0 = 9,    // |_|___|___|__x|: don't care bit 0
+    M_BIT0 = 9,    // |_|___|___|__n|: NOP/SIN count 1 or 2
     M_BDISP = 10,  // |_|___|S__|___|: branch displacement, word 2
     M_JADDR = 11,  // |_|___|S__|S__|: jump addr-hi in word2 bits 7:2 (mask 00374)
     // 2nd word
