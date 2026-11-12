@@ -19,3 +19,5 @@
 %include "test_i80286.ninc"
 %include "test_i8087.ninc"
 %include "test_i80287.ninc"
+%include "test_i80c187.ninc"
+%include "test_i80287xl.ninc"

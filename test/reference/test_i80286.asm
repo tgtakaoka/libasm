@@ -20,6 +20,9 @@
         fpu     on
         include "test_i8087.ginc"
         include "test_i80287.ginc"
+        fpu     80287xl
+        include "test_i80c187.ginc"
+        include "test_i80287xl.ginc"
         end
 
 ;;; Local Variables:

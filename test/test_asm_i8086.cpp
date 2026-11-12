@@ -65,8 +65,13 @@ bool is80287() {
     return strcmp("80287", asm8086.fpu_P()) == 0;
 }
 
-bool is80C187() {
-    return strcasecmp("80C187", asm8086.fpu_P()) == 0;
+bool is80287XL() {
+    return strcasecmp("80287XL", asm8086.fpu_P()) == 0;
+}
+
+bool is80387() {
+    return strcmp("80387", asm8086.fpu_P()) == 0 || strcmp("80487", asm8086.fpu_P()) == 0
+        || strcasecmp("80C187", asm8086.fpu_P()) == 0 || is80287XL();
 }
 
 bool fpu_on() {
@@ -78,6 +83,7 @@ bool fpu_on() {
         EQUALS_P("V series", "none", asm8086.fpu_P());
         return false;
     } else if (is80186()) {
+        ERRT("FPU 80287XL", FLOAT_NOT_SUPPORTED, "80287XL");
         TEST("FPU ON");
         EQUALS_P("80186/8087", "8087", asm8086.fpu_P());
         TEST("FPU 80C187");
@@ -85,6 +91,8 @@ bool fpu_on() {
     } else if (is80286()) {
         TEST("FPU ON");
         EQUALS_P("80286", "80287", asm8086.fpu_P());
+        TEST("FPU 80287XL");
+        EQUALS_P("80286/80287XL", "80287XL", asm8086.fpu_P());
     } else if (is80386()) {
         TEST("FPU ON");
         EQUALS_P("80386", "80387", asm8086.fpu_P());
@@ -2545,7 +2553,7 @@ void test_float() {
     TEST("FSTCW [BX+DI-52]",      FWAIT, 0xD9, 0171, 0xCC);
     TEST("FSTCW [BP+SI+89ABH]",   FWAIT, 0xD9, 0272, 0xAB, 0x89);
 
-    if (is80286() || is80386() || is80486() || is80C187()) {
+    if (is80287() || is80387()) {
         TEST("FSTSW AX", FWAIT, 0xDF, 0xE0);  // 287+ WAIT form
     } else {
         ERRT("FSTSW AX", OPERAND_NOT_ALLOWED, "AX");  // no FSTSW AX on the 8087
@@ -2940,7 +2948,7 @@ void test_float() {
     TEST("FCOMP ST(2)", 0xD8, 0xDA);
     TEST("FCOMPP",      0xDE, 0xD9);
 
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FUCOM  ST(1)", 0xDD, 0xE1);
         TEST("FUCOMP ST(7)", 0xDD, 0xEF);
         TEST("FUCOMPP",      0xDA, 0xE9);
@@ -3088,7 +3096,7 @@ void test_float() {
     TEST("FXAM",    0xD9, 0xE5);
     TEST("FXTRACT", 0xD9, 0xF4);
     TEST("FPREM",   0xD9, 0xF8);
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FPREM1", 0xD9, 0xF5);
     }
     TEST("FSQRT",   0xD9, 0xFA);
@@ -3100,7 +3108,7 @@ void test_float() {
     TEST("FPTAN",   0xD9, 0xF2);
     TEST("FPATAN",  0xD9, 0xF3);
     TEST("FYL2XP1", 0xD9, 0xF9);
-    if (is80C187()) {
+    if (is80387()) {
         TEST("FSINCOS", 0xD9, 0xFB);
         TEST("FSIN",    0xD9, 0xFE);
         TEST("FCOS",    0xD9, 0xFF);
@@ -3133,10 +3141,17 @@ void test_float_nowait() {
     TEST("FNSAVE [SI]",  0xDD, 0064);
     TEST("FNENI",        0xDB, 0xE0);
     TEST("FNDISI",       0xDB, 0xE1);
-    if (is80286() || is80C187()) {
+    if (is80287() || is80387()) {
         TEST("FNSETPM",   0xDB, 0xE4);
         TEST("FSETPM",    FWAIT, 0xDB, 0xE4);
         TEST("FNSTSW AX", 0xDF, 0xE0);
+    }
+    if (is80287XL()) {
+        TEST("FNRSTPM", 0xDB, 0xF4);
+        TEST("FRSTPM",  FWAIT, 0xDB, 0xF4);
+    } else {
+        ERRT("FNRSTPM", UNKNOWN_INSTRUCTION, "FNRSTPM");
+        ERRT("FRSTPM",  UNKNOWN_INSTRUCTION, "FRSTPM");
     }
 }
 
