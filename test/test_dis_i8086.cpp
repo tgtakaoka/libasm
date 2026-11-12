@@ -126,9 +126,13 @@ bool is80287() {
     return strcmp_P("80287", dis8086.fpu_P()) == 0;
 }
 
+bool is80287XL() {
+    return strcmp_P("80287XL", dis8086.fpu_P()) == 0;
+}
+
 bool is80387() {
     return strcmp_P("80387", dis8086.fpu_P()) == 0 || strcmp_P("80487", dis8086.fpu_P()) == 0
-        || strcmp_P("80C187", dis8086.fpu_P()) == 0;
+        || strcmp_P("80C187", dis8086.fpu_P()) == 0 || is80287XL();
 }
 
 bool fpu_on() {
@@ -140,6 +144,7 @@ bool fpu_on() {
         EQUALS_P("V series", "none", dis8086.fpu_P());
         return false;
     } else if (is80186()) {
+        EQUALS("80186/80287XL", FLOAT_NOT_SUPPORTED, dis8086.setFpuType(FPU_I80287XL));
         EQUALS("80186", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("80186/8087", "8087", dis8086.fpu_P());
         EQUALS("80C187", OK, dis8086.setFpuType(FPU_I80C187));
@@ -147,6 +152,8 @@ bool fpu_on() {
     } else if (is80286()) {
         EQUALS("80286", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("80287", "80287", dis8086.fpu_P());
+        EQUALS("80287XL", OK, dis8086.setFpuType(FPU_I80287XL));
+        EQUALS_P("80286/80287XL", "80287XL", dis8086.fpu_P());
     } else if (is80386()) {
         EQUALS("80386", OK, dis8086.setFpuType(FPU_ON));
         EQUALS_P("80387", "80387", dis8086.fpu_P());
@@ -5680,6 +5687,10 @@ void test_float_nowait() {
         TEST("FNSTSW", "AX", 0xDF, 0xE0);
         TEST("FSTSW", "AX",  FWAIT, 0xDF, 0xE0);
     }
+    if (is80287XL()) {
+        TEST("FNRSTPM", "", 0xDB, 0xF4);
+        TEST("FRSTPM", "",  FWAIT, 0xDB, 0xF4);
+    }
 
     if (is80386() && is80387()) {
         EPRE("FNSTCW", "[SI]", DATA32, 0xD9, 0074);
@@ -6192,6 +6203,8 @@ void test_illegal_8087() {
                     if (!contains(ARRAY_RANGE(LEGALS_DB), opc)) {
                         if ((is80287() || is80387()) && opc == 0xE4) {
                             ;   // FNSETPM
+                        } else if (is80287XL() && opc == 0xF4) {
+                            ;   // FNRSTPM
                         } else {
                             UNKN(0xDB, opc);
                         }
