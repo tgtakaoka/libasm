@@ -3129,10 +3129,7 @@ void test_float() {
     TEST("FWAIT",       0x9B);
 }
 
-void test_float_nowait() {
-    if (!fpu_on())
-        return;
-
+static void float_nowait() {
     TEST("FNINIT",       0xDB, 0xE3);
     TEST("FNSTCW [SI]",  0xD9, 0074);
     TEST("FNSTSW [SI]",  0xDD, 0074);
@@ -3152,6 +3149,21 @@ void test_float_nowait() {
     } else {
         ERRT("FNRSTPM", UNKNOWN_INSTRUCTION, "FNRSTPM");
         ERRT("FRSTPM",  UNKNOWN_INSTRUCTION, "FRSTPM");
+    }
+    if (!is80387())
+        ERRT("FUCOMPP", UNKNOWN_INSTRUCTION, "FUCOMPP");
+}
+
+void test_float_nowait() {
+    if (!fpu_on())
+        return;
+
+    float_nowait();
+    if (is80287XL()) {
+        // fpu_on() selects the 80287XL; check the default 80287 too
+        TEST("FPU ON");
+        EQUALS_P("80286", "80287", asm8086.fpu_P());
+        float_nowait();
     }
 }
 
