@@ -6137,18 +6137,7 @@ void test_illegal_80486() {
     }
 }
 
-void test_illegal_8087() {
-    if (!fpu_on()) {
-        UNKN(0xD8);
-        UNKN(0xD9);
-        UNKN(0xDA);
-        UNKN(0xDB);
-        UNKN(0xDC);
-        UNKN(0xDD);
-        UNKN(0xDF);
-        return;
-    }
-
+static void illegal_8087() {
     static constexpr Config::opcode_t ILLEGALS_D9[] = {
         0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
         0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
@@ -6228,6 +6217,26 @@ void test_illegal_8087() {
                 }
             }
         }
+    }
+}
+
+void test_illegal_8087() {
+    if (!fpu_on()) {
+        UNKN(0xD8);
+        UNKN(0xD9);
+        UNKN(0xDA);
+        UNKN(0xDB);
+        UNKN(0xDC);
+        UNKN(0xDD);
+        UNKN(0xDF);
+        return;
+    }
+
+    illegal_8087();
+    if (is80287XL()) {
+        // fpu_on() selects the 80287XL; sweep the default 80287 too
+        EQUALS("80287", OK, dis8086.setFpuType(FPU_ON));
+        illegal_8087();
     }
 }
 // clang-format on

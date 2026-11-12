@@ -19,6 +19,7 @@
         .include "test_i8087.ginc"
         .include "test_i80287.ginc"
         .include "test_i80c187.ginc"
+        # GNU as encodes frstpm as DB E5, against the datasheet; see issue#266
         .byte   0xDB, 0xF4              # fnrstpm
         .byte   0x9B, 0xDB, 0xF4        # frstpm
 
