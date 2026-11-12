@@ -18,6 +18,9 @@
         .include "test_i80286.ginc"
         .include "test_i8087.ginc"
         .include "test_i80287.ginc"
+        .include "test_i80c187.ginc"
+        .byte   0xDB, 0xF4              # fnrstpm
+        .byte   0x9B, 0xDB, 0xF4        # frstpm
 
 ;### Local Variables:
 ;### mode: asm

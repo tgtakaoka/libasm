@@ -50,6 +50,10 @@ s/^\([[:space:]]\+\)int[[:space:]]\+3[[:space:]]*$/\1int3/
 # FPU mnemonic name differences (libasm/GAS use fnsetpm, nasm uses fsetpm)
 s/^\([[:space:]]\+\)fnsetpm[[:space:]]*$/\1fsetpm/
 
+# 80287XL reset protected mode, unknown to nasm
+s/^\([[:space:]]\+\)fnrstpm[[:space:]]*$/\1db 0xdb, 0xf4/
+s/^\([[:space:]]\+\)frstpm[[:space:]]*$/\1db 0x9b, 0xdb, 0xf4/
+
 # Strip redundant segment overrides matching the addressing-mode default
 # (DS for [bx]/[si]/[di]/[disp], SS for [bp]/[sp]/[ebp]/[esp]).
 s/\bds:\[\(bx\)\b/[\1/g

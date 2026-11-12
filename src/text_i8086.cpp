@@ -31,11 +31,12 @@ constexpr char TEXT_CPU_80486[]  PROGMEM = "80486";
 constexpr char TEXT_CPU_V30[]    PROGMEM = "V30";
 constexpr char TEXT_CPU_V33[]    PROGMEM = "V33";
 constexpr char TEXT_CPU_V35[]    PROGMEM = "V35";
-constexpr char TEXT_FPU_8087[]   PROGMEM = "8087";
-constexpr char TEXT_FPU_80287[]  PROGMEM = "80287";
-constexpr char TEXT_FPU_80387[]  PROGMEM = "80387";
-constexpr char TEXT_FPU_80487[]  PROGMEM = "80487";
-constexpr char TEXT_FPU_80C187[] PROGMEM = "80C187";
+constexpr char TEXT_FPU_8087[]    PROGMEM = "8087";
+constexpr char TEXT_FPU_80287[]   PROGMEM = "80287";
+constexpr char TEXT_FPU_80287XL[] PROGMEM = "80287XL";
+constexpr char TEXT_FPU_80387[]   PROGMEM = "80387";
+constexpr char TEXT_FPU_80487[]   PROGMEM = "80487";
+constexpr char TEXT_FPU_80C187[]  PROGMEM = "80C187";
 constexpr char TEXT_FWAIT_AUTO[]  PROGMEM = "auto";
 constexpr char TEXT_FWAIT_ASM86[] PROGMEM = "asm86";
 constexpr char OPT_TEXT_FWAIT[]   PROGMEM = "fwait";
@@ -459,6 +460,10 @@ constexpr char TEXT_FPREM1[]    PROGMEM = "FPREM1";
 constexpr char TEXT_FUCOM[]     PROGMEM = "FUCOM";
 constexpr char TEXT_FUCOMP[]    PROGMEM = "FUCOMP";
 constexpr char TEXT_FUCOMPP[]   PROGMEM = "FUCOMPP";
+
+// i80287XL
+constexpr char TEXT_FNRSTPM[] PROGMEM = "FNRSTPM";
+constexpr char TEXT_FRSTPM[]  PROGMEM = "FRSTPM";
 
 
 // i8086
