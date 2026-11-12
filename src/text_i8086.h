@@ -35,6 +35,7 @@ extern const char TEXT_CPU_V33[];
 extern const char TEXT_CPU_V35[];
 extern const char TEXT_FPU_8087[];
 extern const char TEXT_FPU_80287[];
+extern const char TEXT_FPU_80287XL[];
 extern const char TEXT_FPU_80387[];
 extern const char TEXT_FPU_80487[];
 extern const char TEXT_FPU_80C187[];
@@ -464,6 +465,10 @@ using common::TEXT_FSINCOS;
 extern const char TEXT_FUCOM[];
 extern const char TEXT_FUCOMP[];
 extern const char TEXT_FUCOMPP[];
+
+// i80287XL
+extern const char TEXT_FNRSTPM[];
+extern const char TEXT_FRSTPM[];
 
 // i8086
 extern const char TEXT_REG_AH[];

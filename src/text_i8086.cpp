@@ -31,11 +31,12 @@ constexpr char TEXT_CPU_80486[]  = "80486";
 constexpr char TEXT_CPU_V30[]    = "V30";
 constexpr char TEXT_CPU_V33[]    = "V33";
 constexpr char TEXT_CPU_V35[]    = "V35";
-constexpr char TEXT_FPU_8087[]   = "8087";
-constexpr char TEXT_FPU_80287[]  = "80287";
-constexpr char TEXT_FPU_80387[]  = "80387";
-constexpr char TEXT_FPU_80487[]  = "80487";
-constexpr char TEXT_FPU_80C187[] = "80C187";
+constexpr char TEXT_FPU_8087[]    = "8087";
+constexpr char TEXT_FPU_80287[]   = "80287";
+constexpr char TEXT_FPU_80287XL[] = "80287XL";
+constexpr char TEXT_FPU_80387[]   = "80387";
+constexpr char TEXT_FPU_80487[]   = "80487";
+constexpr char TEXT_FPU_80C187[]  = "80C187";
 constexpr char TEXT_FWAIT_AUTO[]  = "auto";
 constexpr char TEXT_FWAIT_ASM86[] = "asm86";
 constexpr char OPT_TEXT_FWAIT[]   = "fwait";
@@ -459,6 +460,10 @@ constexpr char TEXT_FPREM1[]    = "FPREM1";
 constexpr char TEXT_FUCOM[]     = "FUCOM";
 constexpr char TEXT_FUCOMP[]    = "FUCOMP";
 constexpr char TEXT_FUCOMPP[]   = "FUCOMPP";
+
+// i80287XL
+constexpr char TEXT_FNRSTPM[] = "FNRSTPM";
+constexpr char TEXT_FRSTPM[]  = "FRSTPM";
 
 
 // i8086

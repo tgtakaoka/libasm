@@ -47,6 +47,7 @@ enum FpuType : uint8_t {
     FPU_I80387,
     FPU_I80487,
     FPU_I80C187,
+    FPU_I80287XL,
 #endif
 };
 
