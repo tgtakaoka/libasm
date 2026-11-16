@@ -26,6 +26,14 @@ constexpr char TEXT_CPU_DCJ11[] PROGMEM = "DCJ11";
 constexpr char TEXT_CPU_DCT11[] PROGMEM = "DCT11";
 constexpr char TEXT_CPU_J11[]   PROGMEM = "J11";
 constexpr char TEXT_CPU_T11[]   PROGMEM = "T11";
+constexpr char TEXT_FDMODE_SINGLE[] PROGMEM = "single";
+constexpr char TEXT_FDMODE_DOUBLE[] PROGMEM = "double";
+constexpr char TEXT_FLMODE_SHORT[]  PROGMEM = "short";
+constexpr char TEXT_FLMODE_LONG[]   PROGMEM = "long";
+constexpr char OPT_TEXT_FDMODE[]    PROGMEM = "fdmode";
+constexpr char OPT_DESC_FDMODE[]    PROGMEM = "FP11 FD mode: single (default) or double";
+constexpr char OPT_TEXT_FLMODE[]    PROGMEM = "flmode";
+constexpr char OPT_DESC_FLMODE[]    PROGMEM = "FP11 FL mode: short (default) or long";
 
 // PDP11 base instructions
 // constexpr char TEXT_ADC[]   PROGMEM = "ADC";

@@ -29,7 +29,16 @@ struct DisPdp11 final : Disassembler, Config {
 
     void reset() override;
 
+    Error setFdMode(StrScanner &scan);
+    Error setFlMode(StrScanner &scan);
+
 private:
+    const TextOption<DisPdp11> _opt_fdmode;
+    const TextOption<DisPdp11> _opt_flmode;
+
+    bool _fdDouble;
+    bool _flLong;
+
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out) const;
     void decodeGeneralMode(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t opr) const;

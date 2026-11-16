@@ -616,6 +616,9 @@ void test_miscellaneous() {
 }
 
 void test_floating_point() {
+    disassembler.setOption("fdmode", "double");
+    disassembler.setOption("flmode", "long");
+
     TEST("CFCC", "", 0170000);
     TEST("SETF", "", 0170001);
     TEST("SETI", "", 0170002);
@@ -647,12 +650,12 @@ void test_floating_point() {
     TEST("LDEXP", "#000020, AC3", 0176727, 000020);
     TEST("LDCLD", "(SP)+, AC1",        0177126);
     TEST("LDCLD", "#02471267654, AC2", 0177227, 012345, 067654);
-    TEST("LDCDF", "(R4)+, AC2",        0177624);
+    TEST("LDCFD", "(R4)+, AC2",        0177624);
 
-    TFLT("LDCDF",
+    TFLT("LDCFD",
          "#-2.5, AC1",
-         "#1404400000000000000000, AC1",
-         0177527, 0xC120, 0x0000, 0x0000, 0x0000);
+         "#14044000000, AC1",
+         0177527, 0xC120, 0x0000);
     TFLT("LDD",
          "#1.70141183460469229371E+38, AC0",
          "#0777777777777777777777, AC0",
@@ -695,6 +698,85 @@ void test_floating_point() {
          0173627, 0x4000, 0x0000, 0x0000, 0x0000);
 }
 
+void test_fp11_mode() {
+    EQUALS("fdmode single", OK,              disassembler.setOption("fdmode", "single"));
+    EQUALS("fdmode double", OK,              disassembler.setOption("fdmode", "DOUBLE"));
+    EQUALS("fdmode float",  UNKNOWN_OPERAND, disassembler.setOption("fdmode", "float"));
+    EQUALS("flmode short",  OK,              disassembler.setOption("flmode", "short"));
+    EQUALS("flmode long",   OK,              disassembler.setOption("flmode", "Long"));
+    EQUALS("flmode int",    UNKNOWN_OPERAND, disassembler.setOption("flmode", "int"));
+}
+
+void test_floating_point_single() {
+    disassembler.setOption("fdmode", "single");
+    disassembler.setOption("flmode", "long");
+
+    TEST("CFCC",  "",        0170000);
+    TEST("LDFPS", "#123456", 0170127, 0123456);
+    TEST("CLRF",  "AC5",     0170405);
+    TEST("TSTF",  "(R4)",    0170514);
+    TEST("ABSF",  "(R3)+",   0170623);
+    TEST("NEGF",  "-(R2)",   0170742);
+    TEST("MULF",  "AC1, AC2",    0171201);
+    TEST("MODF",  "(R1), AC3",   0171711);
+    TEST("ADDF",  "(R2)+, AC1",  0172122);
+    TEST("LDF",   "-(R3), AC0",  0172443);
+    TEST("SUBF",  "@(R4)+, AC3", 0173334);
+    TEST("STF",   "AC1, -(SP)",  0174146);
+    ERRT("STF",   "AC1, R1",     REGISTER_NOT_ALLOWED,
+         "R1",                   0174101);
+    TEST("DIVF",  "(SP)+, AC0",  0174426);
+    TEST("STEXP", "AC3, (R1)",   0175311);
+    TEST("STCFL", "AC2, -(SP)",  0175646);
+    TEST("STCFL", "AC2, R4" ,    0175604);
+    TEST("STCFD", "AC1, (R2)+",  0176122);
+    TEST("STCFD", "AC1, AC5",    0176105);
+    TEST("LDEXP", "(R3), AC0",   0176413);
+    TEST("LDCLF", "(SP)+, AC1",        0177126);
+    TEST("LDCLF", "#02471267654, AC2", 0177227, 012345, 067654);
+    TEST("LDCDF", "(R4)+, AC2",        0177624);
+
+    TFLT("LDCDF",
+         "#-2.5, AC1",
+         "#1404400000000000000000, AC1",
+         0177527, 0xC120, 0x0000, 0x0000, 0x0000);
+    TFLT("LDF",
+         "#1.0, AC0",
+         "#04020000000, AC0",
+         0172427, 0x4080, 0x0000);
+    TFLT("MULF",
+         "#-2.0, AC2",
+         "#14040000000, AC2",
+         0171227, 0xC100, 0x0000);
+    TFLT("CMPF",
+         "#0.5, AC2",
+         "#04000000000, AC2",
+         0173627, 0x4000, 0x0000);
+}
+
+void test_floating_point_short() {
+    disassembler.setOption("fdmode", "double");
+    disassembler.setOption("flmode", "short");
+
+    TEST("ADDD",  "(R2)+, AC1",  0172122);
+    TEST("STCDI", "AC2, -(SP)",  0175646);
+    TEST("STCDI", "AC2, R4" ,    0175604);
+    TEST("STCDF", "AC1, (R2)+",  0176122);
+    TEST("LDCID", "(SP)+, AC1",     0177126);
+    TEST("LDCID", "#012345, AC2",   0177227, 012345);
+    TEST("LDCFD", "(R4)+, AC2",     0177624);
+}
+
+void test_floating_point_single_short() {
+    TEST("ADDF",  "(R2)+, AC1",  0172122);
+    TEST("STCFI", "AC2, -(SP)",  0175646);
+    TEST("STCFI", "AC2, R4" ,    0175604);
+    TEST("STCFD", "AC1, (R2)+",  0176122);
+    TEST("LDCIF", "(SP)+, AC1",     0177126);
+    TEST("LDCIF", "#012345, AC2",   0177227, 012345);
+    TEST("LDCDF", "(R4)+, AC2",     0177624);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -704,8 +786,13 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program_control);
     RUN_TEST(test_condition_code);
     RUN_TEST(test_miscellaneous);
-    if (dcj11())
+    if (dcj11()) {
         RUN_TEST(test_floating_point);
+        RUN_TEST(test_fp11_mode);
+        RUN_TEST(test_floating_point_single);
+        RUN_TEST(test_floating_point_short);
+        RUN_TEST(test_floating_point_single_short);
+    }
 }
 
 // Local Variables:

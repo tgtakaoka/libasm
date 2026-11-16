@@ -259,102 +259,166 @@ constexpr Entry TABLE_FP11[] PROGMEM = {
     E1(0170300, SZ_DWRD, TEXT_STST,  M_GEND, P_0077),
     E2(0176400, SZ_WORD, TEXT_LDEXP, M_GENS, P_0077, M_AC03, P_0300),
     E2(0175000, SZ_WORD, TEXT_STEXP, M_AC03, P_0300, M_GEND, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11[] PROGMEM = {
+      0,  // TEXT_CFCC
+      8,  // TEXT_LDEXP
+      5,  // TEXT_LDFPS
+      1,  // TEXT_SETD
+      2,  // TEXT_SETF
+      3,  // TEXT_SETI
+      4,  // TEXT_SETL
+      9,  // TEXT_STEXP
+      6,  // TEXT_STFPS
+      7,  // TEXT_STST
+};
+
+constexpr Entry TABLE_FP11_D[] PROGMEM = {
     E1(0170600, SZ_DUBL, TEXT_ABSD,  M_GENG, P_0077),
     E2(0172000, SZ_DUBL, TEXT_ADDD,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170400, SZ_DUBL, TEXT_CLRD,  M_GENG, P_0077),
     E2(0173400, SZ_DUBL, TEXT_CMPD,  M_GENF, P_0077, M_AC03, P_0300),
     E2(0174400, SZ_DUBL, TEXT_DIVD,  M_GENF, P_0077, M_AC03, P_0300),
-    E2(0177400, SZ_DUBL, TEXT_LDCDF, M_GENF, P_0077, M_AC03, P_0300),
-    E2(0177000, SZ_LONG, TEXT_LDCLD, M_GENS, P_0077, M_AC03, P_0300),
-    E2(0177000, SZ_INTG, TEXT_LDCID, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0177400, SZ_FLOT, TEXT_LDCFD, M_GENF, P_0077, M_AC03, P_0300),
     E2(0172400, SZ_DUBL, TEXT_LDD,   M_GENF, P_0077, M_AC03, P_0300),
     E2(0171400, SZ_DUBL, TEXT_MODD,  M_GENF, P_0077, M_AC03, P_0300),
     E2(0171000, SZ_DUBL, TEXT_MULD,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170700, SZ_DUBL, TEXT_NEGD,  M_GENG, P_0077),
     E2(0176000, SZ_FLOT, TEXT_STCDF, M_AC03, P_0300, M_GENG, P_0077),
     E2(0174000, SZ_DUBL, TEXT_STD,   M_AC03, P_0300, M_GENA, P_0077),
-    E2(0175400, SZ_LONG, TEXT_STCDL, M_AC03, P_0300, M_GEND, P_0077),
-    E2(0175400, SZ_INTG, TEXT_STCDI, M_AC03, P_0300, M_GEND, P_0077),
     E2(0173000, SZ_DUBL, TEXT_SUBD,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170500, SZ_DUBL, TEXT_TSTD,  M_GENF, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11_D[] PROGMEM = {
+      0,  // TEXT_ABSD
+      1,  // TEXT_ADDD
+      2,  // TEXT_CLRD
+      3,  // TEXT_CMPD
+      4,  // TEXT_DIVD
+      5,  // TEXT_LDCFD
+      6,  // TEXT_LDD
+      7,  // TEXT_MODD
+      8,  // TEXT_MULD
+      9,  // TEXT_NEGD
+     10,  // TEXT_STCDF
+     11,  // TEXT_STD
+     12,  // TEXT_SUBD
+     13,  // TEXT_TSTD
+};
+
+constexpr Entry TABLE_FP11_F[] PROGMEM = {
     E1(0170600, SZ_FLOT, TEXT_ABSF,  M_GENG, P_0077),
     E2(0172000, SZ_FLOT, TEXT_ADDF,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170400, SZ_FLOT, TEXT_CLRF,  M_GENG, P_0077),
     E2(0173400, SZ_FLOT, TEXT_CMPF,  M_GENF, P_0077, M_AC03, P_0300),
     E2(0174400, SZ_FLOT, TEXT_DIVF,  M_GENF, P_0077, M_AC03, P_0300),
-    E2(0177400, SZ_FLOT, TEXT_LDCFD, M_GENF, P_0077, M_AC03, P_0300),
-    E2(0177000, SZ_LONG, TEXT_LDCLF, M_GENS, P_0077, M_AC03, P_0300),
-    E2(0177000, SZ_INTG, TEXT_LDCIF, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0177400, SZ_DUBL, TEXT_LDCDF, M_GENF, P_0077, M_AC03, P_0300),
     E2(0172400, SZ_FLOT, TEXT_LDF,   M_GENF, P_0077, M_AC03, P_0300),
     E2(0171400, SZ_FLOT, TEXT_MODF,  M_GENF, P_0077, M_AC03, P_0300),
     E2(0171000, SZ_FLOT, TEXT_MULF,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170700, SZ_FLOT, TEXT_NEGF,  M_GENG, P_0077),
     E2(0176000, SZ_DUBL, TEXT_STCFD, M_AC03, P_0300, M_GENG, P_0077),
     E2(0174000, SZ_FLOT, TEXT_STF,   M_AC03, P_0300, M_GENA, P_0077),
-    E2(0175400, SZ_LONG, TEXT_STCFL, M_AC03, P_0300, M_GEND, P_0077),
-    E2(0175400, SZ_INTG, TEXT_STCFI, M_AC03, P_0300, M_GEND, P_0077),
     E2(0173000, SZ_FLOT, TEXT_SUBF,  M_GENF, P_0077, M_AC03, P_0300),
     E1(0170500, SZ_FLOT, TEXT_TSTF,  M_GENF, P_0077),
 };
 
-constexpr uint8_t INDEX_FP11[] PROGMEM = {
-     10,  // TEXT_ABSD
-     28,  // TEXT_ABSF
-     11,  // TEXT_ADDD
-     29,  // TEXT_ADDF
-      0,  // TEXT_CFCC
-     12,  // TEXT_CLRD
-     30,  // TEXT_CLRF
-     13,  // TEXT_CMPD
-     31,  // TEXT_CMPF
-     14,  // TEXT_DIVD
-     32,  // TEXT_DIVF
-     15,  // TEXT_LDCDF
-     33,  // TEXT_LDCFD
-     17,  // TEXT_LDCID
-     35,  // TEXT_LDCIF
-     16,  // TEXT_LDCLD
-     34,  // TEXT_LDCLF
-     18,  // TEXT_LDD
-      8,  // TEXT_LDEXP
-     36,  // TEXT_LDF
-      5,  // TEXT_LDFPS
-     19,  // TEXT_MODD
-     37,  // TEXT_MODF
-     20,  // TEXT_MULD
-     38,  // TEXT_MULF
-     21,  // TEXT_NEGD
-     39,  // TEXT_NEGF
-      1,  // TEXT_SETD
-      2,  // TEXT_SETF
-      3,  // TEXT_SETI
-      4,  // TEXT_SETL
-     22,  // TEXT_STCDF
-     25,  // TEXT_STCDI
-     24,  // TEXT_STCDL
-     40,  // TEXT_STCFD
-     43,  // TEXT_STCFI
-     42,  // TEXT_STCFL
-     23,  // TEXT_STD
-      9,  // TEXT_STEXP
-     41,  // TEXT_STF
-      6,  // TEXT_STFPS
-      7,  // TEXT_STST
-     26,  // TEXT_SUBD
-     44,  // TEXT_SUBF
-     27,  // TEXT_TSTD
-     45,  // TEXT_TSTF
+constexpr uint8_t INDEX_FP11_F[] PROGMEM = {
+      0,  // TEXT_ABSF
+      1,  // TEXT_ADDF
+      2,  // TEXT_CLRF
+      3,  // TEXT_CMPF
+      4,  // TEXT_DIVF
+      5,  // TEXT_LDCDF
+      6,  // TEXT_LDF
+      7,  // TEXT_MODF
+      8,  // TEXT_MULF
+      9,  // TEXT_NEGF
+     10,  // TEXT_STCFD
+     11,  // TEXT_STF
+     12,  // TEXT_SUBF
+     13,  // TEXT_TSTF
+};
+
+constexpr Entry TABLE_FP11_DL[] PROGMEM = {
+    E2(0177000, SZ_LONG, TEXT_LDCLD, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0175400, SZ_LONG, TEXT_STCDL, M_AC03, P_0300, M_GEND, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11_DL[] PROGMEM = {
+      0,  // TEXT_LDCLD
+      1,  // TEXT_STCDL
+};
+
+constexpr Entry TABLE_FP11_DI[] PROGMEM = {
+    E2(0177000, SZ_INTG, TEXT_LDCID, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0175400, SZ_INTG, TEXT_STCDI, M_AC03, P_0300, M_GEND, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11_DI[] PROGMEM = {
+      0,  // TEXT_LDCID
+      1,  // TEXT_STCDI
+};
+
+constexpr Entry TABLE_FP11_FL[] PROGMEM = {
+    E2(0177000, SZ_LONG, TEXT_LDCLF, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0175400, SZ_LONG, TEXT_STCFL, M_AC03, P_0300, M_GEND, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11_FL[] PROGMEM = {
+      0,  // TEXT_LDCLF
+      1,  // TEXT_STCFL
+};
+
+constexpr Entry TABLE_FP11_FI[] PROGMEM = {
+    E2(0177000, SZ_INTG, TEXT_LDCIF, M_GENS, P_0077, M_AC03, P_0300),
+    E2(0175400, SZ_INTG, TEXT_STCFI, M_AC03, P_0300, M_GEND, P_0077),
+};
+
+constexpr uint8_t INDEX_FP11_FI[] PROGMEM = {
+      0,  // TEXT_LDCIF
+      1,  // TEXT_STCFI
 };
 
 // clang-format on
 
-using EntryPage = entry::TableBase<Entry>;
+// FPS FD and FL combinations a page is valid in.
+enum FpsMode : uint8_t {
+    FD0_FL0 = 1,
+    FD0_FL1 = 2,
+    FD1_FL0 = 4,
+    FD1_FL1 = 8,
+    FD0 = FD0_FL0 | FD0_FL1,
+    FD1 = FD1_FL0 | FD1_FL1,
+    FPS_ANY = FD0 | FD1,
+};
+
+struct EntryPage : entry::TableBase<Entry> {
+    constexpr EntryPage(const Entry *head_P, const Entry *tail_P, const uint8_t *index_P,
+            const uint8_t *itail_P, FpsMode fpsMode = FPS_ANY)
+        : TableBase(head_P, tail_P, index_P, itail_P), _fpsMode_P(fpsMode) {}
+
+    bool acceptFps(bool fdDouble, bool flLong) const {
+        return pgm_read_byte(&_fpsMode_P) & (1 << ((fdDouble ? 2 : 0) + (flLong ? 1 : 0)));
+    }
+
+private:
+    const /* PROGMEM */ uint8_t _fpsMode_P;
+};
 
 constexpr EntryPage DCJ11_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_BASE), ARRAY_RANGE(INDEX_BASE)},
         {ARRAY_RANGE(TABLE_EIS), ARRAY_RANGE(INDEX_EIS)},
         {ARRAY_RANGE(TABLE_J11), ARRAY_RANGE(INDEX_J11)},
         {ARRAY_RANGE(TABLE_FP11), ARRAY_RANGE(INDEX_FP11)},
+        {ARRAY_RANGE(TABLE_FP11_D), ARRAY_RANGE(INDEX_FP11_D), FD1},
+        {ARRAY_RANGE(TABLE_FP11_F), ARRAY_RANGE(INDEX_FP11_F), FD0},
+        {ARRAY_RANGE(TABLE_FP11_DL), ARRAY_RANGE(INDEX_FP11_DL), FD1_FL1},
+        {ARRAY_RANGE(TABLE_FP11_DI), ARRAY_RANGE(INDEX_FP11_DI), FD1_FL0},
+        {ARRAY_RANGE(TABLE_FP11_FL), ARRAY_RANGE(INDEX_FP11_FL), FD0_FL1},
+        {ARRAY_RANGE(TABLE_FP11_FI), ARRAY_RANGE(INDEX_FP11_FI), FD0_FL0},
         {ARRAY_RANGE(TABLE_MFPMTP), ARRAY_RANGE(INDEX_MFPMTP)},
 };
 
@@ -415,8 +479,12 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     return opc == entry->readOpCode();
 }
 
+bool pageMatcher(DisInsn &insn, const EntryPage *page) {
+    return page->acceptFps(insn.fdDouble, insn.flLong);
+}
+
 Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher);
     return insn.getError();
 }
 

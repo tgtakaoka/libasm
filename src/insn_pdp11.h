@@ -64,6 +64,10 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
+    // FP11 FPS FD and FL bits, which select the instruction spelling.
+    bool fdDouble = false;
+    bool flLong = false;
+
     uint32_t readUint32Mix();
     uint64_t readUint64Mix();
 #if !defined(LIBASM_DIS_NOFLOAT)
