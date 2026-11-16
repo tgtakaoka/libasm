@@ -40,6 +40,15 @@ int main(int argc, const char **argv) {
                                            : standardTokenizers<IntelNumber>(sym);
     TestGenerator generator(driver, dispdp11, 0x080, toks);
     generator.generate();
+    if (dispdp11.cpuType() == J11) {
+        // FPS FD and FL select the FP11 spelling of a shared opcode.
+        dispdp11.setOption("flmode", "long");
+        generator.generate();
+        dispdp11.setOption("fdmode", "double");
+        generator.generate();
+        dispdp11.setOption("flmode", "short");
+        generator.generate();
+    }
 
     return driver.close();
 }
