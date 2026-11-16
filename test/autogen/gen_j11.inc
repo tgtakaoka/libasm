@@ -6867,6 +6867,411 @@
       STST   @170771Q(R0)
       STST   @170777Q(SP)
       STST   @*-006774Q
+      CLRF   AC0
+      CLRF   (R0)
+      CLRF   (SP)
+      CLRF   (PC)
+      CLRF   (R0)+
+      CLRF   (SP)+
+      CLRF   @(R0)+
+      CLRF   @(SP)+
+      CLRF   @#171040Q
+      CLRF   -(R0)
+      CLRF   -(SP)
+      CLRF   @-(R0)
+      CLRF   @-(SP)
+      CLRF   171061Q(R0)
+      CLRF   171067Q(SP)
+      CLRF   *-006704Q
+      CLRF   @171071Q(R0)
+      CLRF   @171077Q(SP)
+      CLRF   @*-006674Q
+      TSTF   AC0
+      TSTF   (R0)
+      TSTF   (SP)
+      TSTF   (PC)
+      TSTF   (R0)+
+      TSTF   (SP)+
+      TSTF   #-1.07428722E+30
+      TSTF   @(R0)+
+      TSTF   @(SP)+
+      TSTF   @#171140Q
+      TSTF   -(R0)
+      TSTF   -(SP)
+      TSTF   @-(R0)
+      TSTF   @-(SP)
+      TSTF   171161Q(R0)
+      TSTF   171167Q(SP)
+      TSTF   *-006604Q
+      TSTF   @171171Q(R0)
+      TSTF   @171177Q(SP)
+      TSTF   @*-006574Q
+      ABSF   AC0
+      ABSF   (R0)
+      ABSF   (SP)
+      ABSF   (PC)
+      ABSF   (R0)+
+      ABSF   (SP)+
+      ABSF   @(R0)+
+      ABSF   @(SP)+
+      ABSF   @#171240Q
+      ABSF   -(R0)
+      ABSF   -(SP)
+      ABSF   @-(R0)
+      ABSF   @-(SP)
+      ABSF   171261Q(R0)
+      ABSF   171267Q(SP)
+      ABSF   *-006504Q
+      ABSF   @171271Q(R0)
+      ABSF   @171277Q(SP)
+      ABSF   @*-006474Q
+      NEGF   AC0
+      NEGF   (R0)
+      NEGF   (SP)
+      NEGF   (PC)
+      NEGF   (R0)+
+      NEGF   (SP)+
+      NEGF   @(R0)+
+      NEGF   @(SP)+
+      NEGF   @#171340Q
+      NEGF   -(R0)
+      NEGF   -(SP)
+      NEGF   @-(R0)
+      NEGF   @-(SP)
+      NEGF   171361Q(R0)
+      NEGF   171367Q(SP)
+      NEGF   *-006404Q
+      NEGF   @171371Q(R0)
+      NEGF   @171377Q(SP)
+      NEGF   @*-006374Q
+      MULF   AC0, AC0
+      MULF   (R0), AC0
+      MULF   (SP), AC0
+      MULF   (PC), AC0
+      MULF   (R0)+, AC0
+      MULF   (SP)+, AC0
+      MULF   #-3.02955632E+30, AC0
+      MULF   @(R0)+, AC0
+      MULF   @(SP)+, AC0
+      MULF   @#171440Q, AC0
+      MULF   -(R0), AC0
+      MULF   -(SP), AC0
+      MULF   @-(R0), AC0
+      MULF   @-(SP), AC0
+      MULF   171461Q(R0), AC0
+      MULF   171467Q(SP), AC0
+      MULF   *-006304Q, AC0
+      MULF   @171471Q(R0), AC0
+      MULF   @171477Q(SP), AC0
+      MULF   @*-006274Q, AC0
+      MODF   AC0, AC0
+      MODF   (R0), AC0
+      MODF   (SP), AC0
+      MODF   (PC), AC0
+      MODF   (R0)+, AC0
+      MODF   (SP)+, AC0
+      MODF   #-1.21185348E+31, AC0
+      MODF   @(R0)+, AC0
+      MODF   @(SP)+, AC0
+      MODF   @#172040Q, AC0
+      MODF   -(R0), AC0
+      MODF   -(SP), AC0
+      MODF   @-(R0), AC0
+      MODF   @-(SP), AC0
+      MODF   172061Q(R0), AC0
+      MODF   172067Q(SP), AC0
+      MODF   *-005704Q, AC0
+      MODF   @172071Q(R0), AC0
+      MODF   @172077Q(SP), AC0
+      MODF   @*-005674Q, AC0
+      ADDF   AC0, AC0
+      ADDF   (R0), AC0
+      ADDF   (SP), AC0
+      ADDF   (PC), AC0
+      ADDF   (R0)+, AC0
+      ADDF   (SP)+, AC0
+      ADDF   #-4.8475377E+31, AC0
+      ADDF   @(R0)+, AC0
+      ADDF   @(SP)+, AC0
+      ADDF   @#172440Q, AC0
+      ADDF   -(R0), AC0
+      ADDF   -(SP), AC0
+      ADDF   @-(R0), AC0
+      ADDF   @-(SP), AC0
+      ADDF   172461Q(R0), AC0
+      ADDF   172467Q(SP), AC0
+      ADDF   *-005304Q, AC0
+      ADDF   @172471Q(R0), AC0
+      ADDF   @172477Q(SP), AC0
+      ADDF   @*-005274Q, AC0
+      LDF    AC0, AC0
+      LDF    (R0), AC0
+      LDF    (SP), AC0
+      LDF    (PC), AC0
+      LDF    (R0)+, AC0
+      LDF    (SP)+, AC0
+      LDF    #-1.9390646E+32, AC0
+      LDF    @(R0)+, AC0
+      LDF    @(SP)+, AC0
+      LDF    @#173040Q, AC0
+      LDF    -(R0), AC0
+      LDF    -(SP), AC0
+      LDF    @-(R0), AC0
+      LDF    @-(SP), AC0
+      LDF    173061Q(R0), AC0
+      LDF    173067Q(SP), AC0
+      LDF    *-004704Q, AC0
+      LDF    @173071Q(R0), AC0
+      LDF    @173077Q(SP), AC0
+      LDF    @*-004674Q, AC0
+      SUBF   AC0, AC0
+      SUBF   (R0), AC0
+      SUBF   (SP), AC0
+      SUBF   (PC), AC0
+      SUBF   (R0)+, AC0
+      SUBF   (SP)+, AC0
+      SUBF   #-7.75645645E+32, AC0
+      SUBF   @(R0)+, AC0
+      SUBF   @(SP)+, AC0
+      SUBF   @#173440Q, AC0
+      SUBF   -(R0), AC0
+      SUBF   -(SP), AC0
+      SUBF   @-(R0), AC0
+      SUBF   @-(SP), AC0
+      SUBF   173461Q(R0), AC0
+      SUBF   173467Q(SP), AC0
+      SUBF   *-004304Q, AC0
+      SUBF   @173471Q(R0), AC0
+      SUBF   @173477Q(SP), AC0
+      SUBF   @*-004274Q, AC0
+      CMPF   AC0, AC0
+      CMPF   (R0), AC0
+      CMPF   (SP), AC0
+      CMPF   (PC), AC0
+      CMPF   (R0)+, AC0
+      CMPF   (SP)+, AC0
+      CMPF   #-3.10266181E+33, AC0
+      CMPF   @(R0)+, AC0
+      CMPF   @(SP)+, AC0
+      CMPF   @#174040Q, AC0
+      CMPF   -(R0), AC0
+      CMPF   -(SP), AC0
+      CMPF   @-(R0), AC0
+      CMPF   @-(SP), AC0
+      CMPF   174061Q(R0), AC0
+      CMPF   174067Q(SP), AC0
+      CMPF   *-003704Q, AC0
+      CMPF   @174071Q(R0), AC0
+      CMPF   @174077Q(SP), AC0
+      CMPF   @*-003674Q, AC0
+      STF    AC0, (R0)
+      STF    AC0, (SP)
+      STF    AC0, (PC)
+      STF    AC0, (R0)+
+      STF    AC0, (SP)+
+      STF    AC0, @(R0)+
+      STF    AC0, @(SP)+
+      STF    AC0, @#174440Q
+      STF    AC0, -(R0)
+      STF    AC0, -(SP)
+      STF    AC0, @-(R0)
+      STF    AC0, @-(SP)
+      STF    AC0, 174461Q(R0)
+      STF    AC0, 174467Q(SP)
+      STF    AC0, *-003304Q
+      STF    AC0, @174471Q(R0)
+      STF    AC0, @174477Q(SP)
+      STF    AC0, @*-003274Q
+      DIVF   AC0, AC0
+      DIVF   (R0), AC0
+      DIVF   (SP), AC0
+      DIVF   (PC), AC0
+      DIVF   (R0)+, AC0
+      DIVF   (SP)+, AC0
+      DIVF   #-4.96451243E+34, AC0
+      DIVF   @(R0)+, AC0
+      DIVF   @(SP)+, AC0
+      DIVF   @#175040Q, AC0
+      DIVF   -(R0), AC0
+      DIVF   -(SP), AC0
+      DIVF   @-(R0), AC0
+      DIVF   @-(SP), AC0
+      DIVF   175061Q(R0), AC0
+      DIVF   175067Q(SP), AC0
+      DIVF   *-002704Q, AC0
+      DIVF   @175071Q(R0), AC0
+      DIVF   @175077Q(SP), AC0
+      DIVF   @*-002674Q, AC0
+      STEXP  AC0, R0
+      STEXP  AC0, SP
+      STEXP  AC0, PC
+      STEXP  AC0, (R0)
+      STEXP  AC0, (SP)
+      STEXP  AC0, (PC)
+      STEXP  AC0, (R0)+
+      STEXP  AC0, (SP)+
+      STEXP  AC0, @(R0)+
+      STEXP  AC0, @(SP)+
+      STEXP  AC0, @#175440Q
+      STEXP  AC0, -(R0)
+      STEXP  AC0, -(SP)
+      STEXP  AC0, @-(R0)
+      STEXP  AC0, @-(SP)
+      STEXP  AC0, 175461Q(R0)
+      STEXP  AC0, 175467Q(SP)
+      STEXP  AC0, *-002304Q
+      STEXP  AC0, @175471Q(R0)
+      STEXP  AC0, @175477Q(SP)
+      STEXP  AC0, @*-002274Q
+      STCFI  AC0, R0
+      STCFI  AC0, SP
+      STCFI  AC0, PC
+      STCFI  AC0, (R0)
+      STCFI  AC0, (SP)
+      STCFI  AC0, (PC)
+      STCFI  AC0, (R0)+
+      STCFI  AC0, (SP)+
+      STCFI  AC0, @(R0)+
+      STCFI  AC0, @(SP)+
+      STCFI  AC0, @#176040Q
+      STCFI  AC0, -(R0)
+      STCFI  AC0, -(SP)
+      STCFI  AC0, @-(R0)
+      STCFI  AC0, @-(SP)
+      STCFI  AC0, 176061Q(R0)
+      STCFI  AC0, 176067Q(SP)
+      STCFI  AC0, *-001704Q
+      STCFI  AC0, @176071Q(R0)
+      STCFI  AC0, @176077Q(SP)
+      STCFI  AC0, @*-001674Q
+      STCFD  AC0, AC0
+      STCFD  AC0, (R0)
+      STCFD  AC0, (SP)
+      STCFD  AC0, (PC)
+      STCFD  AC0, (R0)+
+      STCFD  AC0, (SP)+
+      STCFD  AC0, @(R0)+
+      STCFD  AC0, @(SP)+
+      STCFD  AC0, @#176440Q
+      STCFD  AC0, -(R0)
+      STCFD  AC0, -(SP)
+      STCFD  AC0, @-(R0)
+      STCFD  AC0, @-(SP)
+      STCFD  AC0, 176461Q(R0)
+      STCFD  AC0, 176467Q(SP)
+      STCFD  AC0, *-001304Q
+      STCFD  AC0, @176471Q(R0)
+      STCFD  AC0, @176477Q(SP)
+      STCFD  AC0, @*-001274Q
+      LDEXP  R0, AC0
+      LDEXP  SP, AC0
+      LDEXP  PC, AC0
+      LDEXP  (R0), AC0
+      LDEXP  (SP), AC0
+      LDEXP  (PC), AC0
+      LDEXP  (R0)+, AC0
+      LDEXP  (SP)+, AC0
+      LDEXP  #177030Q, AC0
+      LDEXP  @(R0)+, AC0
+      LDEXP  @(SP)+, AC0
+      LDEXP  @#177040Q, AC0
+      LDEXP  -(R0), AC0
+      LDEXP  -(SP), AC0
+      LDEXP  @-(R0), AC0
+      LDEXP  @-(SP), AC0
+      LDEXP  177061Q(R0), AC0
+      LDEXP  177067Q(SP), AC0
+      LDEXP  *-000704Q, AC0
+      LDEXP  @177071Q(R0), AC0
+      LDEXP  @177077Q(SP), AC0
+      LDEXP  @*-000674Q, AC0
+      LDCIF  R0, AC0
+      LDCIF  SP, AC0
+      LDCIF  PC, AC0
+      LDCIF  (R0), AC0
+      LDCIF  (SP), AC0
+      LDCIF  (PC), AC0
+      LDCIF  (R0)+, AC0
+      LDCIF  (SP)+, AC0
+      LDCIF  #-000350Q, AC0
+      LDCIF  #000000Q, AC0
+      LDCIF  @(R0)+, AC0
+      LDCIF  @(SP)+, AC0
+      LDCIF  @#177440Q, AC0
+      LDCIF  -(R0), AC0
+      LDCIF  -(SP), AC0
+      LDCIF  @-(R0), AC0
+      LDCIF  @-(SP), AC0
+      LDCIF  177461Q(R0), AC0
+      LDCIF  177467Q(SP), AC0
+      LDCIF  *-000304Q, AC0
+      LDCIF  @177471Q(R0), AC0
+      LDCIF  @177477Q(SP), AC0
+      LDCIF  @*-000274Q, AC0
+      LDCDF  AC0, AC0
+      LDCDF  (R0), AC0
+      LDCDF  (SP), AC0
+      LDCDF  (PC), AC0
+      LDCDF  (R0)+, AC0
+      LDCDF  (SP)+, AC0
+      LDCDF  #0.0, AC0
+      LDCDF  @(R0)+, AC0
+      LDCDF  @(SP)+, AC0
+      LDCDF  @#000040Q, AC0
+      LDCDF  -(R0), AC0
+      LDCDF  -(SP), AC0
+      LDCDF  @-(R0), AC0
+      LDCDF  @-(SP), AC0
+      LDCDF  000061Q(R0), AC0
+      LDCDF  000067Q(SP), AC0
+      LDCDF  *+000074Q, AC0
+      LDCDF  @000071Q(R0), AC0
+      LDCDF  @000077Q(SP), AC0
+      LDCDF  @*+000104Q, AC0
+      STCFL  AC0, R0
+      STCFL  AC0, SP
+      STCFL  AC0, PC
+      STCFL  AC0, (R0)
+      STCFL  AC0, (SP)
+      STCFL  AC0, (PC)
+      STCFL  AC0, (R0)+
+      STCFL  AC0, (SP)+
+      STCFL  AC0, @(R0)+
+      STCFL  AC0, @(SP)+
+      STCFL  AC0, @#176040Q
+      STCFL  AC0, -(R0)
+      STCFL  AC0, -(SP)
+      STCFL  AC0, @-(R0)
+      STCFL  AC0, @-(SP)
+      STCFL  AC0, 176061Q(R0)
+      STCFL  AC0, 176067Q(SP)
+      STCFL  AC0, *-001704Q
+      STCFL  AC0, @176071Q(R0)
+      STCFL  AC0, @176077Q(SP)
+      STCFL  AC0, @*-001674Q
+      LDCLF  R0, AC0
+      LDCLF  SP, AC0
+      LDCLF  PC, AC0
+      LDCLF  (R0), AC0
+      LDCLF  (SP), AC0
+      LDCLF  (PC), AC0
+      LDCLF  (R0)+, AC0
+      LDCLF  (SP)+, AC0
+      LDCLF  #-00071777747Q, AC0
+      LDCLF  #00000000401Q, AC0
+      LDCLF  @(R0)+, AC0
+      LDCLF  @(SP)+, AC0
+      LDCLF  @#177440Q, AC0
+      LDCLF  -(R0), AC0
+      LDCLF  -(SP), AC0
+      LDCLF  @-(R0), AC0
+      LDCLF  @-(SP), AC0
+      LDCLF  177461Q(R0), AC0
+      LDCLF  177467Q(SP), AC0
+      LDCLF  *-000304Q, AC0
+      LDCLF  @177471Q(R0), AC0
+      LDCLF  @177477Q(SP), AC0
+      LDCLF  @*-000274Q, AC0
       CLRD   AC0
       CLRD   (R0)
       CLRD   (SP)
@@ -7102,27 +7507,6 @@
       DIVD   @175071Q(R0), AC0
       DIVD   @175077Q(SP), AC0
       DIVD   @*-002674Q, AC0
-      STEXP  AC0, R0
-      STEXP  AC0, SP
-      STEXP  AC0, PC
-      STEXP  AC0, (R0)
-      STEXP  AC0, (SP)
-      STEXP  AC0, (PC)
-      STEXP  AC0, (R0)+
-      STEXP  AC0, (SP)+
-      STEXP  AC0, @(R0)+
-      STEXP  AC0, @(SP)+
-      STEXP  AC0, @#175440Q
-      STEXP  AC0, -(R0)
-      STEXP  AC0, -(SP)
-      STEXP  AC0, @-(R0)
-      STEXP  AC0, @-(SP)
-      STEXP  AC0, 175461Q(R0)
-      STEXP  AC0, 175467Q(SP)
-      STEXP  AC0, *-002304Q
-      STEXP  AC0, @175471Q(R0)
-      STEXP  AC0, @175477Q(SP)
-      STEXP  AC0, @*-002274Q
       STCDL  AC0, R0
       STCDL  AC0, SP
       STCDL  AC0, PC
@@ -7163,28 +7547,6 @@
       STCDF  AC0, @176471Q(R0)
       STCDF  AC0, @176477Q(SP)
       STCDF  AC0, @*-001274Q
-      LDEXP  R0, AC0
-      LDEXP  SP, AC0
-      LDEXP  PC, AC0
-      LDEXP  (R0), AC0
-      LDEXP  (SP), AC0
-      LDEXP  (PC), AC0
-      LDEXP  (R0)+, AC0
-      LDEXP  (SP)+, AC0
-      LDEXP  #177030Q, AC0
-      LDEXP  @(R0)+, AC0
-      LDEXP  @(SP)+, AC0
-      LDEXP  @#177040Q, AC0
-      LDEXP  -(R0), AC0
-      LDEXP  -(SP), AC0
-      LDEXP  @-(R0), AC0
-      LDEXP  @-(SP), AC0
-      LDEXP  177061Q(R0), AC0
-      LDEXP  177067Q(SP), AC0
-      LDEXP  *-000704Q, AC0
-      LDEXP  @177071Q(R0), AC0
-      LDEXP  @177077Q(SP), AC0
-      LDEXP  @*-000674Q, AC0
       LDCLD  R0, AC0
       LDCLD  SP, AC0
       LDCLD  PC, AC0
@@ -7208,23 +7570,67 @@
       LDCLD  @177471Q(R0), AC0
       LDCLD  @177477Q(SP), AC0
       LDCLD  @*-000274Q, AC0
-      LDCDF  AC0, AC0
-      LDCDF  (R0), AC0
-      LDCDF  (SP), AC0
-      LDCDF  (PC), AC0
-      LDCDF  (R0)+, AC0
-      LDCDF  (SP)+, AC0
-      LDCDF  #0.0, AC0
-      LDCDF  @(R0)+, AC0
-      LDCDF  @(SP)+, AC0
-      LDCDF  @#000040Q, AC0
-      LDCDF  -(R0), AC0
-      LDCDF  -(SP), AC0
-      LDCDF  @-(R0), AC0
-      LDCDF  @-(SP), AC0
-      LDCDF  000061Q(R0), AC0
-      LDCDF  000067Q(SP), AC0
-      LDCDF  *+000074Q, AC0
-      LDCDF  @000071Q(R0), AC0
-      LDCDF  @000077Q(SP), AC0
-      LDCDF  @*+000104Q, AC0
+      LDCFD  AC0, AC0
+      LDCFD  (R0), AC0
+      LDCFD  (SP), AC0
+      LDCFD  (PC), AC0
+      LDCFD  (R0)+, AC0
+      LDCFD  (SP)+, AC0
+      LDCFD  #0.0, AC0
+      LDCFD  @(R0)+, AC0
+      LDCFD  @(SP)+, AC0
+      LDCFD  @#000040Q, AC0
+      LDCFD  -(R0), AC0
+      LDCFD  -(SP), AC0
+      LDCFD  @-(R0), AC0
+      LDCFD  @-(SP), AC0
+      LDCFD  000061Q(R0), AC0
+      LDCFD  000067Q(SP), AC0
+      LDCFD  *+000074Q, AC0
+      LDCFD  @000071Q(R0), AC0
+      LDCFD  @000077Q(SP), AC0
+      LDCFD  @*+000104Q, AC0
+      STCDI  AC0, R0
+      STCDI  AC0, SP
+      STCDI  AC0, PC
+      STCDI  AC0, (R0)
+      STCDI  AC0, (SP)
+      STCDI  AC0, (PC)
+      STCDI  AC0, (R0)+
+      STCDI  AC0, (SP)+
+      STCDI  AC0, @(R0)+
+      STCDI  AC0, @(SP)+
+      STCDI  AC0, @#176040Q
+      STCDI  AC0, -(R0)
+      STCDI  AC0, -(SP)
+      STCDI  AC0, @-(R0)
+      STCDI  AC0, @-(SP)
+      STCDI  AC0, 176061Q(R0)
+      STCDI  AC0, 176067Q(SP)
+      STCDI  AC0, *-001704Q
+      STCDI  AC0, @176071Q(R0)
+      STCDI  AC0, @176077Q(SP)
+      STCDI  AC0, @*-001674Q
+      LDCID  R0, AC0
+      LDCID  SP, AC0
+      LDCID  PC, AC0
+      LDCID  (R0), AC0
+      LDCID  (SP), AC0
+      LDCID  (PC), AC0
+      LDCID  (R0)+, AC0
+      LDCID  (SP)+, AC0
+      LDCID  #-000350Q, AC0
+      LDCID  #000000Q, AC0
+      LDCID  @(R0)+, AC0
+      LDCID  @(SP)+, AC0
+      LDCID  @#177440Q, AC0
+      LDCID  -(R0), AC0
+      LDCID  -(SP), AC0
+      LDCID  @-(R0), AC0
+      LDCID  @-(SP), AC0
+      LDCID  177461Q(R0), AC0
+      LDCID  177467Q(SP), AC0
+      LDCID  *-000304Q, AC0
+      LDCID  @177471Q(R0), AC0
+      LDCID  @177477Q(SP), AC0
+      LDCID  @*-000274Q, AC0

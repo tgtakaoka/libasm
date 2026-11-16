@@ -6867,6 +6867,429 @@
       stst   @0170771(r0)
       stst   @0170777(sp)
       stst   @.-0006774
+      clrf   ac0
+      clrf   (r0)
+      clrf   (sp)
+      clrf   (pc)
+      clrf   (r0)+
+      clrf   (sp)+
+      clrf   @(r0)+
+      clrf   @(sp)+
+      clrf   *$0171040
+      clrf   -(r0)
+      clrf   -(sp)
+      clrf   @-(r0)
+      clrf   @-(sp)
+      clrf   0171061(r0)
+      clrf   0171067(sp)
+      clrf   .-0006704
+      clrf   @0171071(r0)
+      clrf   @0171077(sp)
+      clrf   @.-0006674
+      tstf   ac0
+      tstf   (r0)
+      tstf   (sp)
+      tstf   (pc)
+      tstf   (r0)+
+      tstf   (sp)+
+      tstf   $0f-1.07428722e+30
+      tstf   $0f0.0
+      tstf   $0f2.93887075e-39
+      tstf   @(r0)+
+      tstf   @(sp)+
+      tstf   *$0171140
+      tstf   -(r0)
+      tstf   -(sp)
+      tstf   @-(r0)
+      tstf   @-(sp)
+      tstf   0171161(r0)
+      tstf   0171167(sp)
+      tstf   .-0006604
+      tstf   @0171171(r0)
+      tstf   @0171177(sp)
+      tstf   @.-0006574
+      absf   ac0
+      absf   (r0)
+      absf   (sp)
+      absf   (pc)
+      absf   (r0)+
+      absf   (sp)+
+      absf   @(r0)+
+      absf   @(sp)+
+      absf   *$0171240
+      absf   -(r0)
+      absf   -(sp)
+      absf   @-(r0)
+      absf   @-(sp)
+      absf   0171261(r0)
+      absf   0171267(sp)
+      absf   .-0006504
+      absf   @0171271(r0)
+      absf   @0171277(sp)
+      absf   @.-0006474
+      negf   ac0
+      negf   (r0)
+      negf   (sp)
+      negf   (pc)
+      negf   (r0)+
+      negf   (sp)+
+      negf   @(r0)+
+      negf   @(sp)+
+      negf   *$0171340
+      negf   -(r0)
+      negf   -(sp)
+      negf   @-(r0)
+      negf   @-(sp)
+      negf   0171361(r0)
+      negf   0171367(sp)
+      negf   .-0006404
+      negf   @0171371(r0)
+      negf   @0171377(sp)
+      negf   @.-0006374
+      mulf   ac0, ac0
+      mulf   (r0), ac0
+      mulf   (sp), ac0
+      mulf   (pc), ac0
+      mulf   (r0)+, ac0
+      mulf   (sp)+, ac0
+      mulf   $0f-3.02955632e+30, ac0
+      mulf   $0f0.0, ac0
+      mulf   $0f2.93887075e-39, ac0
+      mulf   @(r0)+, ac0
+      mulf   @(sp)+, ac0
+      mulf   *$0171440, ac0
+      mulf   -(r0), ac0
+      mulf   -(sp), ac0
+      mulf   @-(r0), ac0
+      mulf   @-(sp), ac0
+      mulf   0171461(r0), ac0
+      mulf   0171467(sp), ac0
+      mulf   .-0006304, ac0
+      mulf   @0171471(r0), ac0
+      mulf   @0171477(sp), ac0
+      mulf   @.-0006274, ac0
+      modf   ac0, ac0
+      modf   (r0), ac0
+      modf   (sp), ac0
+      modf   (pc), ac0
+      modf   (r0)+, ac0
+      modf   (sp)+, ac0
+      modf   $0f-1.21185348e+31, ac0
+      modf   $0f0.0, ac0
+      modf   $0f2.93887075e-39, ac0
+      modf   @(r0)+, ac0
+      modf   @(sp)+, ac0
+      modf   *$0172040, ac0
+      modf   -(r0), ac0
+      modf   -(sp), ac0
+      modf   @-(r0), ac0
+      modf   @-(sp), ac0
+      modf   0172061(r0), ac0
+      modf   0172067(sp), ac0
+      modf   .-0005704, ac0
+      modf   @0172071(r0), ac0
+      modf   @0172077(sp), ac0
+      modf   @.-0005674, ac0
+      addf   ac0, ac0
+      addf   (r0), ac0
+      addf   (sp), ac0
+      addf   (pc), ac0
+      addf   (r0)+, ac0
+      addf   (sp)+, ac0
+      addf   $0f-4.8475377e+31, ac0
+      addf   $0f0.0, ac0
+      addf   $0f2.93887075e-39, ac0
+      addf   @(r0)+, ac0
+      addf   @(sp)+, ac0
+      addf   *$0172440, ac0
+      addf   -(r0), ac0
+      addf   -(sp), ac0
+      addf   @-(r0), ac0
+      addf   @-(sp), ac0
+      addf   0172461(r0), ac0
+      addf   0172467(sp), ac0
+      addf   .-0005304, ac0
+      addf   @0172471(r0), ac0
+      addf   @0172477(sp), ac0
+      addf   @.-0005274, ac0
+      ldf    ac0, ac0
+      ldf    (r0), ac0
+      ldf    (sp), ac0
+      ldf    (pc), ac0
+      ldf    (r0)+, ac0
+      ldf    (sp)+, ac0
+      ldf    $0f-1.9390646e+32, ac0
+      ldf    $0f0.0, ac0
+      ldf    $0f2.93887075e-39, ac0
+      ldf    @(r0)+, ac0
+      ldf    @(sp)+, ac0
+      ldf    *$0173040, ac0
+      ldf    -(r0), ac0
+      ldf    -(sp), ac0
+      ldf    @-(r0), ac0
+      ldf    @-(sp), ac0
+      ldf    0173061(r0), ac0
+      ldf    0173067(sp), ac0
+      ldf    .-0004704, ac0
+      ldf    @0173071(r0), ac0
+      ldf    @0173077(sp), ac0
+      ldf    @.-0004674, ac0
+      subf   ac0, ac0
+      subf   (r0), ac0
+      subf   (sp), ac0
+      subf   (pc), ac0
+      subf   (r0)+, ac0
+      subf   (sp)+, ac0
+      subf   $0f-7.75645645e+32, ac0
+      subf   $0f0.0, ac0
+      subf   $0f2.93887075e-39, ac0
+      subf   @(r0)+, ac0
+      subf   @(sp)+, ac0
+      subf   *$0173440, ac0
+      subf   -(r0), ac0
+      subf   -(sp), ac0
+      subf   @-(r0), ac0
+      subf   @-(sp), ac0
+      subf   0173461(r0), ac0
+      subf   0173467(sp), ac0
+      subf   .-0004304, ac0
+      subf   @0173471(r0), ac0
+      subf   @0173477(sp), ac0
+      subf   @.-0004274, ac0
+      cmpf   ac0, ac0
+      cmpf   (r0), ac0
+      cmpf   (sp), ac0
+      cmpf   (pc), ac0
+      cmpf   (r0)+, ac0
+      cmpf   (sp)+, ac0
+      cmpf   $0f-3.10266181e+33, ac0
+      cmpf   $0f0.0, ac0
+      cmpf   $0f2.93887075e-39, ac0
+      cmpf   @(r0)+, ac0
+      cmpf   @(sp)+, ac0
+      cmpf   *$0174040, ac0
+      cmpf   -(r0), ac0
+      cmpf   -(sp), ac0
+      cmpf   @-(r0), ac0
+      cmpf   @-(sp), ac0
+      cmpf   0174061(r0), ac0
+      cmpf   0174067(sp), ac0
+      cmpf   .-0003704, ac0
+      cmpf   @0174071(r0), ac0
+      cmpf   @0174077(sp), ac0
+      cmpf   @.-0003674, ac0
+      stf    ac0, (r0)
+      stf    ac0, (sp)
+      stf    ac0, (pc)
+      stf    ac0, (r0)+
+      stf    ac0, (sp)+
+      stf    ac0, @(r0)+
+      stf    ac0, @(sp)+
+      stf    ac0, *$0174440
+      stf    ac0, -(r0)
+      stf    ac0, -(sp)
+      stf    ac0, @-(r0)
+      stf    ac0, @-(sp)
+      stf    ac0, 0174461(r0)
+      stf    ac0, 0174467(sp)
+      stf    ac0, .-0003304
+      stf    ac0, @0174471(r0)
+      stf    ac0, @0174477(sp)
+      stf    ac0, @.-0003274
+      divf   ac0, ac0
+      divf   (r0), ac0
+      divf   (sp), ac0
+      divf   (pc), ac0
+      divf   (r0)+, ac0
+      divf   (sp)+, ac0
+      divf   $0f-4.96451243e+34, ac0
+      divf   $0f0.0, ac0
+      divf   $0f2.93887075e-39, ac0
+      divf   @(r0)+, ac0
+      divf   @(sp)+, ac0
+      divf   *$0175040, ac0
+      divf   -(r0), ac0
+      divf   -(sp), ac0
+      divf   @-(r0), ac0
+      divf   @-(sp), ac0
+      divf   0175061(r0), ac0
+      divf   0175067(sp), ac0
+      divf   .-0002704, ac0
+      divf   @0175071(r0), ac0
+      divf   @0175077(sp), ac0
+      divf   @.-0002674, ac0
+      stexp  ac0, r0
+      stexp  ac0, sp
+      stexp  ac0, pc
+      stexp  ac0, (r0)
+      stexp  ac0, (sp)
+      stexp  ac0, (pc)
+      stexp  ac0, (r0)+
+      stexp  ac0, (sp)+
+      stexp  ac0, @(r0)+
+      stexp  ac0, @(sp)+
+      stexp  ac0, *$0175440
+      stexp  ac0, -(r0)
+      stexp  ac0, -(sp)
+      stexp  ac0, @-(r0)
+      stexp  ac0, @-(sp)
+      stexp  ac0, 0175461(r0)
+      stexp  ac0, 0175467(sp)
+      stexp  ac0, .-0002304
+      stexp  ac0, @0175471(r0)
+      stexp  ac0, @0175477(sp)
+      stexp  ac0, @.-0002274
+      stcfi  ac0, r0
+      stcfi  ac0, sp
+      stcfi  ac0, pc
+      stcfi  ac0, (r0)
+      stcfi  ac0, (sp)
+      stcfi  ac0, (pc)
+      stcfi  ac0, (r0)+
+      stcfi  ac0, (sp)+
+      stcfi  ac0, @(r0)+
+      stcfi  ac0, @(sp)+
+      stcfi  ac0, *$0176040
+      stcfi  ac0, -(r0)
+      stcfi  ac0, -(sp)
+      stcfi  ac0, @-(r0)
+      stcfi  ac0, @-(sp)
+      stcfi  ac0, 0176061(r0)
+      stcfi  ac0, 0176067(sp)
+      stcfi  ac0, .-0001704
+      stcfi  ac0, @0176071(r0)
+      stcfi  ac0, @0176077(sp)
+      stcfi  ac0, @.-0001674
+      stcfd  ac0, ac0
+      stcfd  ac0, (r0)
+      stcfd  ac0, (sp)
+      stcfd  ac0, (pc)
+      stcfd  ac0, (r0)+
+      stcfd  ac0, (sp)+
+      stcfd  ac0, @(r0)+
+      stcfd  ac0, @(sp)+
+      stcfd  ac0, *$0176440
+      stcfd  ac0, -(r0)
+      stcfd  ac0, -(sp)
+      stcfd  ac0, @-(r0)
+      stcfd  ac0, @-(sp)
+      stcfd  ac0, 0176461(r0)
+      stcfd  ac0, 0176467(sp)
+      stcfd  ac0, .-0001304
+      stcfd  ac0, @0176471(r0)
+      stcfd  ac0, @0176477(sp)
+      stcfd  ac0, @.-0001274
+      ldexp  r0, ac0
+      ldexp  sp, ac0
+      ldexp  pc, ac0
+      ldexp  (r0), ac0
+      ldexp  (sp), ac0
+      ldexp  (pc), ac0
+      ldexp  (r0)+, ac0
+      ldexp  (sp)+, ac0
+      ldexp  $0177030, ac0
+      ldexp  @(r0)+, ac0
+      ldexp  @(sp)+, ac0
+      ldexp  *$0177040, ac0
+      ldexp  -(r0), ac0
+      ldexp  -(sp), ac0
+      ldexp  @-(r0), ac0
+      ldexp  @-(sp), ac0
+      ldexp  0177061(r0), ac0
+      ldexp  0177067(sp), ac0
+      ldexp  .-0000704, ac0
+      ldexp  @0177071(r0), ac0
+      ldexp  @0177077(sp), ac0
+      ldexp  @.-0000674, ac0
+      ldcif  r0, ac0
+      ldcif  sp, ac0
+      ldcif  pc, ac0
+      ldcif  (r0), ac0
+      ldcif  (sp), ac0
+      ldcif  (pc), ac0
+      ldcif  (r0)+, ac0
+      ldcif  (sp)+, ac0
+      ldcif  $-0000350, ac0
+      ldcif  $0000000, ac0
+      ldcif  @(r0)+, ac0
+      ldcif  @(sp)+, ac0
+      ldcif  *$0177440, ac0
+      ldcif  -(r0), ac0
+      ldcif  -(sp), ac0
+      ldcif  @-(r0), ac0
+      ldcif  @-(sp), ac0
+      ldcif  0177461(r0), ac0
+      ldcif  0177467(sp), ac0
+      ldcif  .-0000304, ac0
+      ldcif  @0177471(r0), ac0
+      ldcif  @0177477(sp), ac0
+      ldcif  @.-0000274, ac0
+      ldcdf  ac0, ac0
+      ldcdf  (r0), ac0
+      ldcdf  (sp), ac0
+      ldcdf  (pc), ac0
+      ldcdf  (r0)+, ac0
+      ldcdf  (sp)+, ac0
+      ldcdf  $0d0.0, ac0
+      ldcdf  $0d2.93887075546481324943e-39, ac0
+      ldcdf  $0d-0.0, ac0
+      ldcdf  @(r0)+, ac0
+      ldcdf  @(sp)+, ac0
+      ldcdf  *$0000040, ac0
+      ldcdf  -(r0), ac0
+      ldcdf  -(sp), ac0
+      ldcdf  @-(r0), ac0
+      ldcdf  @-(sp), ac0
+      ldcdf  0000061(r0), ac0
+      ldcdf  0000067(sp), ac0
+      ldcdf  .+0000074, ac0
+      ldcdf  @0000071(r0), ac0
+      ldcdf  @0000077(sp), ac0
+      ldcdf  @.+0000104, ac0
+      stcfl  ac0, r0
+      stcfl  ac0, sp
+      stcfl  ac0, pc
+      stcfl  ac0, (r0)
+      stcfl  ac0, (sp)
+      stcfl  ac0, (pc)
+      stcfl  ac0, (r0)+
+      stcfl  ac0, (sp)+
+      stcfl  ac0, @(r0)+
+      stcfl  ac0, @(sp)+
+      stcfl  ac0, *$0176040
+      stcfl  ac0, -(r0)
+      stcfl  ac0, -(sp)
+      stcfl  ac0, @-(r0)
+      stcfl  ac0, @-(sp)
+      stcfl  ac0, 0176061(r0)
+      stcfl  ac0, 0176067(sp)
+      stcfl  ac0, .-0001704
+      stcfl  ac0, @0176071(r0)
+      stcfl  ac0, @0176077(sp)
+      stcfl  ac0, @.-0001674
+      ldclf  r0, ac0
+      ldclf  sp, ac0
+      ldclf  pc, ac0
+      ldclf  (r0), ac0
+      ldclf  (sp), ac0
+      ldclf  (pc), ac0
+      ldclf  (r0)+, ac0
+      ldclf  (sp)+, ac0
+      ldclf  $-000071777747, ac0
+      ldclf  $000000000401, ac0
+      ldclf  @(r0)+, ac0
+      ldclf  @(sp)+, ac0
+      ldclf  *$0177440, ac0
+      ldclf  -(r0), ac0
+      ldclf  -(sp), ac0
+      ldclf  @-(r0), ac0
+      ldclf  @-(sp), ac0
+      ldclf  0177461(r0), ac0
+      ldclf  0177467(sp), ac0
+      ldclf  .-0000304, ac0
+      ldclf  @0177471(r0), ac0
+      ldclf  @0177477(sp), ac0
+      ldclf  @.-0000274, ac0
       clrd   ac0
       clrd   (r0)
       clrd   (sp)
@@ -7118,27 +7541,6 @@
       divd   @0175071(r0), ac0
       divd   @0175077(sp), ac0
       divd   @.-0002674, ac0
-      stexp  ac0, r0
-      stexp  ac0, sp
-      stexp  ac0, pc
-      stexp  ac0, (r0)
-      stexp  ac0, (sp)
-      stexp  ac0, (pc)
-      stexp  ac0, (r0)+
-      stexp  ac0, (sp)+
-      stexp  ac0, @(r0)+
-      stexp  ac0, @(sp)+
-      stexp  ac0, *$0175440
-      stexp  ac0, -(r0)
-      stexp  ac0, -(sp)
-      stexp  ac0, @-(r0)
-      stexp  ac0, @-(sp)
-      stexp  ac0, 0175461(r0)
-      stexp  ac0, 0175467(sp)
-      stexp  ac0, .-0002304
-      stexp  ac0, @0175471(r0)
-      stexp  ac0, @0175477(sp)
-      stexp  ac0, @.-0002274
       stcdl  ac0, r0
       stcdl  ac0, sp
       stcdl  ac0, pc
@@ -7179,28 +7581,6 @@
       stcdf  ac0, @0176471(r0)
       stcdf  ac0, @0176477(sp)
       stcdf  ac0, @.-0001274
-      ldexp  r0, ac0
-      ldexp  sp, ac0
-      ldexp  pc, ac0
-      ldexp  (r0), ac0
-      ldexp  (sp), ac0
-      ldexp  (pc), ac0
-      ldexp  (r0)+, ac0
-      ldexp  (sp)+, ac0
-      ldexp  $0177030, ac0
-      ldexp  @(r0)+, ac0
-      ldexp  @(sp)+, ac0
-      ldexp  *$0177040, ac0
-      ldexp  -(r0), ac0
-      ldexp  -(sp), ac0
-      ldexp  @-(r0), ac0
-      ldexp  @-(sp), ac0
-      ldexp  0177061(r0), ac0
-      ldexp  0177067(sp), ac0
-      ldexp  .-0000704, ac0
-      ldexp  @0177071(r0), ac0
-      ldexp  @0177077(sp), ac0
-      ldexp  @.-0000674, ac0
       ldcld  r0, ac0
       ldcld  sp, ac0
       ldcld  pc, ac0
@@ -7224,25 +7604,69 @@
       ldcld  @0177471(r0), ac0
       ldcld  @0177477(sp), ac0
       ldcld  @.-0000274, ac0
-      ldcdf  ac0, ac0
-      ldcdf  (r0), ac0
-      ldcdf  (sp), ac0
-      ldcdf  (pc), ac0
-      ldcdf  (r0)+, ac0
-      ldcdf  (sp)+, ac0
-      ldcdf  $0d0.0, ac0
-      ldcdf  $0d2.93887075546481324943e-39, ac0
-      ldcdf  $0d-0.0, ac0
-      ldcdf  @(r0)+, ac0
-      ldcdf  @(sp)+, ac0
-      ldcdf  *$0000040, ac0
-      ldcdf  -(r0), ac0
-      ldcdf  -(sp), ac0
-      ldcdf  @-(r0), ac0
-      ldcdf  @-(sp), ac0
-      ldcdf  0000061(r0), ac0
-      ldcdf  0000067(sp), ac0
-      ldcdf  .+0000074, ac0
-      ldcdf  @0000071(r0), ac0
-      ldcdf  @0000077(sp), ac0
-      ldcdf  @.+0000104, ac0
+      ldcfd  ac0, ac0
+      ldcfd  (r0), ac0
+      ldcfd  (sp), ac0
+      ldcfd  (pc), ac0
+      ldcfd  (r0)+, ac0
+      ldcfd  (sp)+, ac0
+      ldcfd  $0f0.0, ac0
+      ldcfd  $0f2.93887075e-39, ac0
+      ldcfd  $0f-0.0, ac0
+      ldcfd  @(r0)+, ac0
+      ldcfd  @(sp)+, ac0
+      ldcfd  *$0000040, ac0
+      ldcfd  -(r0), ac0
+      ldcfd  -(sp), ac0
+      ldcfd  @-(r0), ac0
+      ldcfd  @-(sp), ac0
+      ldcfd  0000061(r0), ac0
+      ldcfd  0000067(sp), ac0
+      ldcfd  .+0000074, ac0
+      ldcfd  @0000071(r0), ac0
+      ldcfd  @0000077(sp), ac0
+      ldcfd  @.+0000104, ac0
+      stcdi  ac0, r0
+      stcdi  ac0, sp
+      stcdi  ac0, pc
+      stcdi  ac0, (r0)
+      stcdi  ac0, (sp)
+      stcdi  ac0, (pc)
+      stcdi  ac0, (r0)+
+      stcdi  ac0, (sp)+
+      stcdi  ac0, @(r0)+
+      stcdi  ac0, @(sp)+
+      stcdi  ac0, *$0176040
+      stcdi  ac0, -(r0)
+      stcdi  ac0, -(sp)
+      stcdi  ac0, @-(r0)
+      stcdi  ac0, @-(sp)
+      stcdi  ac0, 0176061(r0)
+      stcdi  ac0, 0176067(sp)
+      stcdi  ac0, .-0001704
+      stcdi  ac0, @0176071(r0)
+      stcdi  ac0, @0176077(sp)
+      stcdi  ac0, @.-0001674
+      ldcid  r0, ac0
+      ldcid  sp, ac0
+      ldcid  pc, ac0
+      ldcid  (r0), ac0
+      ldcid  (sp), ac0
+      ldcid  (pc), ac0
+      ldcid  (r0)+, ac0
+      ldcid  (sp)+, ac0
+      ldcid  $-0000350, ac0
+      ldcid  $0000000, ac0
+      ldcid  @(r0)+, ac0
+      ldcid  @(sp)+, ac0
+      ldcid  *$0177440, ac0
+      ldcid  -(r0), ac0
+      ldcid  -(sp), ac0
+      ldcid  @-(r0), ac0
+      ldcid  @-(sp), ac0
+      ldcid  0177461(r0), ac0
+      ldcid  0177467(sp), ac0
+      ldcid  .-0000304, ac0
+      ldcid  @0177471(r0), ac0
+      ldcid  @0177477(sp), ac0
+      ldcid  @.-0000274, ac0
