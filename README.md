@@ -170,6 +170,8 @@ It can read Intel HEX or Motorola S-Record input.
       --external-paren : disp2(disp(ext)) as external addressing (bool: 32032)
       --extmode        : Extended mode (bool: Z380)
       --far-insn       : use callf/jmpf for far call/jump (bool: 8086)
+      --fdmode         : FP11 FD mode: single (default) or double (text: J11)
+      --flmode         : FP11 FL mode: short (default) or long (text: J11)
       --fp-alias       : use FP for the frame pointer (bool: H8/510)
       --fpu            : floating point co-processor (text: AM29200, 80960, 8086, 68000, SH-1, 32032)
       --fwait          : 8087 WAIT before instructions: none (default), auto or asm86 (text: 8086)

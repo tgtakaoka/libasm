@@ -18,11 +18,13 @@
 #include "dec_float.h"
 #include "reg_pdp11.h"
 #include "table_pdp11.h"
+#include "text_pdp11.h"
 
 namespace libasm {
 namespace pdp11 {
 
 using namespace reg;
+using namespace text::pdp11;
 
 const ValueFormatter::Plugins &DisPdp11::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
@@ -33,13 +35,41 @@ const ValueFormatter::Plugins &DisPdp11::defaultPlugins() {
     return PLUGINS;
 }
 
-DisPdp11::DisPdp11(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
+DisPdp11::DisPdp11(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_fdmode),
+      Config(TABLE),
+      _opt_fdmode(this, &DisPdp11::setFdMode, OPT_TEXT_FDMODE, OPT_DESC_FDMODE, &_opt_flmode),
+      _opt_flmode(this, &DisPdp11::setFlMode, OPT_TEXT_FLMODE, OPT_DESC_FLMODE) {
     reset();
 }
 
 void DisPdp11::reset() {
     Disassembler::reset();
     setListRadix(RADIX_8);
+    _fdDouble = false;
+    _flLong = false;
+}
+
+Error DisPdp11::setFdMode(StrScanner &scan) {
+    if (scan.iequals_P(TEXT_FDMODE_SINGLE)) {
+        _fdDouble = false;
+    } else if (scan.iequals_P(TEXT_FDMODE_DOUBLE)) {
+        _fdDouble = true;
+    } else {
+        return UNKNOWN_OPERAND;
+    }
+    return OK;
+}
+
+Error DisPdp11::setFlMode(StrScanner &scan) {
+    if (scan.iequals_P(TEXT_FLMODE_SHORT)) {
+        _flLong = false;
+    } else if (scan.iequals_P(TEXT_FLMODE_LONG)) {
+        _flLong = true;
+    } else {
+        return UNKNOWN_OPERAND;
+    }
+    return OK;
 }
 
 uint32_t DisInsn::readUint32Mix() {
@@ -260,6 +290,8 @@ void DisPdp11::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
 
 Error DisPdp11::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
+    insn.fdDouble = _fdDouble;
+    insn.flLong = _flLong;
     insn.setOpCode(insn.readUint16());
     if (searchOpCode(cpuType(), insn, out))
         return _insn.setError(insn);

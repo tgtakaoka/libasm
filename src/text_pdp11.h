@@ -29,6 +29,14 @@ extern const char TEXT_CPU_DCJ11[];
 extern const char TEXT_CPU_DCT11[];
 extern const char TEXT_CPU_J11[];
 extern const char TEXT_CPU_T11[];
+extern const char TEXT_FDMODE_SINGLE[];
+extern const char TEXT_FDMODE_DOUBLE[];
+extern const char TEXT_FLMODE_SHORT[];
+extern const char TEXT_FLMODE_LONG[];
+extern const char OPT_TEXT_FDMODE[];
+extern const char OPT_DESC_FDMODE[];
+extern const char OPT_TEXT_FLMODE[];
+extern const char OPT_DESC_FLMODE[];
 
 // PDP11 base instructions
 using common::TEXT_ADC;
