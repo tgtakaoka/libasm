@@ -453,10 +453,6 @@ void longJcc(AsmInsn &insn) {
     insn.setOpCode(insn.opCode() + 0x10);  // 0x7n -> 0x0F 0x8n
 }
 
-constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-
 }  // namespace
 
 void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {

@@ -249,12 +249,6 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
     }
 }
 
-namespace {
-constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-}  // namespace
-
 void DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     int16_t delta = 0;
     if (mode == M_RA) {
