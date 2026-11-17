@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
 namespace libasm {
 namespace test {
@@ -147,9 +148,9 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 
 void TestAsserter::equals_P(const char *file, const int line, const char *message,
         const char *expected, const /* PROGMEM */ char *actual_P) {
-    char buffer[strlen_P(actual_P) + 1];
-    strcpy_P(buffer, actual_P);
-    return equals(file, line, message, expected, buffer);
+    std::vector<char> buffer(strlen_P(actual_P) + 1);
+    strcpy_P(buffer.data(), actual_P);
+    return equals(file, line, message, expected, buffer.data());
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message, Error expected,
