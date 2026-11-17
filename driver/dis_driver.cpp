@@ -23,6 +23,7 @@
 #include <cstring>
 #include <list>
 #include <string>
+#include <vector>
 
 namespace libasm {
 namespace driver {
@@ -76,9 +77,9 @@ std::list<std::string> DisDriver::listCpu() const {
     std::list<std::string> list;
     for (auto dis : _disassemblers) {
         const /* PROGMEM */ char *list_P = dis->config().listCpu_P();
-        char listCpu[strlen_P(list_P) + 1];
-        strcpy_P(listCpu, list_P);
-        filter(listCpu, list);
+        std::vector<char> listCpu(strlen_P(list_P) + 1);
+        strcpy_P(listCpu.data(), list_P);
+        filter(listCpu.data(), list);
     }
     return list;
 }
