@@ -41,10 +41,12 @@ struct StoredPrinter : TextPrinter {
         std::va_list args1;
         va_start(args1, fmt);
         const auto len = std::vsnprintf(nullptr, 0, fmt, args1);
-        char out[len + 1];
+        va_end(args1);
+        std::string out(len, '\0');
         std::va_list args2;
         va_start(args2, fmt);
-        std::vsnprintf(out, len + 1, fmt, args2);
+        std::vsnprintf(&out[0], len + 1, fmt, args2);
+        va_end(args2);
         _buffer += out;
         split();
     }

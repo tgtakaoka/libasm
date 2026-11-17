@@ -21,6 +21,8 @@
 #include "stored_printer.h"
 #include "test_reader.h"
 
+#include <vector>
+
 namespace libasm {
 namespace driver {
 namespace test {
@@ -114,14 +116,14 @@ void test_encoder_blocks() {
     EQ("end", "S804000000FB", out.line(6));
 }
 
-#define BLOCK_EQ(_msg, _expected, _actual, _base)                                     \
-    do {                                                                              \
-        asserter.equals(__FILE__, __LINE__, _msg, _expected.size(), _actual->size()); \
-        uint8_t actual[_expected.size()];                                             \
-        auto reader = _actual->reader();                                              \
-        for (size_t i = 0; i < _expected.size() && reader.hasNext(); i++)             \
-            actual[i] = reader.readByte();                                            \
-        asserter.equals(__FILE__, __LINE__, _msg, _expected, actual, sizeof(actual)); \
+#define BLOCK_EQ(_msg, _expected, _actual, _base)                                           \
+    do {                                                                                    \
+        asserter.equals(__FILE__, __LINE__, _msg, _expected.size(), _actual->size());       \
+        std::vector<uint8_t> actual(_expected.size());                                      \
+        auto reader = _actual->reader();                                                    \
+        for (size_t i = 0; i < _expected.size() && reader.hasNext(); i++)                   \
+            actual[i] = reader.readByte();                                                  \
+        asserter.equals(__FILE__, __LINE__, _msg, _expected, actual.data(), actual.size()); \
     } while (0)
 
 void test_decoder() {
