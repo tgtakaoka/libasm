@@ -196,18 +196,13 @@ int GenDriver::parseOption(int argc, const char **argv) {
         }
     }
     if (_cpu.empty()) {
-        const auto cpu_P = _disassembler.config().cpu_P();
-        char cpu[strlen(cpu_P) + 1];
-        strcpy(cpu, cpu_P);
-        _cpu = cpu;
+        _cpu = _disassembler.config().cpu_P();
     }
     return 0;
 }
 
 int GenDriver::usage() const {
     const auto list_P = _disassembler.config().listCpu_P();
-    char listCpu[strlen(list_P) + 1];
-    strcpy(listCpu, list_P);
     fprintf(stderr, R"(usage: %s [-o <output>] [-l <list>]
 options:
   -o <output> : output file
@@ -220,7 +215,7 @@ options:
   -u          : use upper case letter for output
   -d          : dump debug info
 )",
-            _progname, listCpu);
+            _progname, list_P);
     return 2;
 }
 

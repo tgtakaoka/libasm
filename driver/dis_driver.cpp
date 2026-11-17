@@ -75,10 +75,7 @@ Disassembler *DisDriver::setCpu(const char *cpu) {
 std::list<std::string> DisDriver::listCpu() const {
     std::list<std::string> list;
     for (auto dis : _disassemblers) {
-        const char *list_P = dis->config().listCpu_P();
-        char listCpu[strlen(list_P) + 1];
-        strcpy(listCpu, list_P);
-        filter(listCpu, list);
+        filter(dis->config().listCpu_P(), list);
     }
     return list;
 }
