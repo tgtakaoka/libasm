@@ -18,6 +18,7 @@
 
 #include <cstdarg>
 #include <cstring>
+#include <vector>
 
 namespace libasm {
 namespace gen {
@@ -197,17 +198,17 @@ int GenDriver::parseOption(int argc, const char **argv) {
     }
     if (_cpu.empty()) {
         const /* PROGMEM */ auto cpu_P = _disassembler.config().cpu_P();
-        char cpu[strlen_P(cpu_P) + 1];
-        strcpy_P(cpu, cpu_P);
-        _cpu = cpu;
+        std::vector<char> cpu(strlen_P(cpu_P) + 1);
+        strcpy_P(cpu.data(), cpu_P);
+        _cpu = cpu.data();
     }
     return 0;
 }
 
 int GenDriver::usage() const {
     const /* PROGMEM */ auto list_P = _disassembler.config().listCpu_P();
-    char listCpu[strlen_P(list_P) + 1];
-    strcpy_P(listCpu, list_P);
+    std::vector<char> listCpu(strlen_P(list_P) + 1);
+    strcpy_P(listCpu.data(), list_P);
     fprintf(stderr, R"(usage: %s [-o <output>] [-l <list>]
 options:
   -o <output> : output file
@@ -220,7 +221,7 @@ options:
   -u          : use upper case letter for output
   -d          : dump debug info
 )",
-            _progname, listCpu);
+            _progname, listCpu.data());
     return 2;
 }
 

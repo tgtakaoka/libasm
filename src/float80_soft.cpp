@@ -292,7 +292,7 @@ void __float80_soft::ecvt(StrBuffer &out, uint_fast8_t prec, bool suppress) cons
     auto exp = decompose(sig, exp10);
     // number of digits = integral + prec
     auto ndigits = min_digits(1 + prec, MAX_DECIMAL_DIG);
-    uint8_t digits[ndigits];
+    uint8_t digits[MAX_DECIMAL_DIG];
     if (sig.decompose(exp, digits, ndigits))
         ++exp10;
     if (suppress) {
@@ -323,7 +323,7 @@ void __float80_soft::fcvt(StrBuffer &out, uint_fast8_t prec, bool suppress) cons
     // number of digits = integral (exp10+1) + prec, at least 1 even
     // when exp10 < -prec.
     auto ndigits = min_digits(max_digits(exp10 + 1 + prec, 1), MAX_DECIMAL_DIG);
-    uint8_t digits[ndigits];
+    uint8_t digits[MAX_DECIMAL_DIG];
     if (sig.decompose(exp, digits, ndigits))
         ++exp10;
     if (suppress) {
@@ -405,7 +405,7 @@ int __float80_soft::write(char *buf, uint_fast8_t len, uint_fast8_t prec, char f
                 prec = 1;
             auto exp = decompose(sig, exp10);
             const auto ndigits = min_digits(1 + prec, MAX_DECIMAL_DIG);
-            uint8_t digits[ndigits];
+            uint8_t digits[MAX_DECIMAL_DIG];
             if (sig.decompose(exp, digits, ndigits))
                 ++exp10;
             if (static_cast<int_fast16_t>(prec) > exp10 && exp10 >= -4) {
