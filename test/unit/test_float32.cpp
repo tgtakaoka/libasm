@@ -24,20 +24,6 @@ namespace test {
 
 using f32 = float32_t;
 
-constexpr auto INT24_MAX = INT32_C(0x7FFFFF);
-constexpr auto INT24_MIN = -INT32_C(0x800000);
-constexpr auto UINT24_MAX = UINT32_C(0xFFFFFF);
-constexpr auto UINT25_MIN = UINT32_C(0x1000000);
-// String representation
-constexpr char tINT24_MAX[] = "8388507";            // +0x1.FFFFFCp+22
-constexpr char tINT24_MIN[] = "-8388608";           // -0x1.000000p+23
-constexpr char tUINT24_MAX[] = "16777215";          // +0x1.FFFFFEp+23
-constexpr char tUINT25_MIN[] = "16777216";          // +0x1.000000p+24
-constexpr char tFLT_MAX[] = "3.40282347e+38";       // +0x1.FFFFFEp+127
-constexpr char tFLT_MIN[] = "1.17549435e-38";       // +0x1.000000p-126
-constexpr char tFLT_SUBN_MAX[] = "1.17549421e-38";  // +0x0.FFFFFCp-127
-constexpr char tFLT_TRUE_MIN[] = "1.40129846e-45";  // +0x0.000000p-149
-
 void set_up() {}
 
 void tear_down() {}

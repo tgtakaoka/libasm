@@ -142,12 +142,6 @@ void DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
     }
 }
 
-namespace {
-constexpr Config::uintptr_t bank(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-}  // namespace
-
 void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto delta = (mode == M_LREL) ? static_cast<int16_t>(insn.readUint16())
                                         : static_cast<int8_t>(insn.readByte());
