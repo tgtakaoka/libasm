@@ -3009,7 +3009,6 @@ static constexpr auto CALLF = 0x9A;    // CALL far
 static constexpr auto JMPF = 0xEA;     // JMPF far
 static constexpr auto RETFu16 = 0xCA;  // RETF u16
 static constexpr auto RETF = 0xCB;     // RETF
-static constexpr auto PUSHiw = 0x68;   // PUSH iw
 
 bool EntryInsn::leaInsn() const {
     return prefix() == 0 && opCode() == LEA;

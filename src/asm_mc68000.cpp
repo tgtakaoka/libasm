@@ -951,7 +951,6 @@ void AsmMc68000::encodeCacheList(AsmInsn &insn, const Operand &op) const {
 #if !defined(LIBASM_MC68000_NOFPU)
 void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const {
     auto p = op.list;
-    uint_fast8_t n = 0;
     auto reg = REG_UNDEF;
     for (;;) {
         auto a = p;
@@ -959,7 +958,6 @@ void AsmMc68000::encodeFloatControlList(AsmInsn &insn, const Operand &op) const 
         if (!isFloatControlReg(reg))
             insn.setErrorIf(p, REGISTER_NOT_ALLOWED);
         insn.embedPostfix(1 << encodeFloatControlRegPos(reg));
-        ++n;
         if (a.skipSpaces().expect('/')) {
             p = a.skipSpaces();
             continue;

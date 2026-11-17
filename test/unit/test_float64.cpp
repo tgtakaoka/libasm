@@ -24,20 +24,6 @@ namespace test {
 
 using f64 = float64_t;
 
-constexpr auto INT53_MIN = -INT64_C(0x00010000000000000);
-constexpr auto INT53_MAX = INT64_C(0x0000FFFFFFFFFFFFF);
-constexpr auto UINT53_MAX = UINT64_C(0x0001FFFFFFFFFFFFF);
-constexpr auto UINT54_MIN = UINT64_C(0x00020000000000000);
-// String representation
-constexpr char tINT53_MIN[] = "-4503599627370496";           // -0x1.0000000000000p+52
-constexpr char tINT53_MAX[] = "4503599627370495";            // +0x1.0000000000000p+52
-constexpr char tUINT53_MAX[] = "9007199254740991";           // +0x1.FFFFFFFFFFFFFp+53
-constexpr char tUINT54_MIN[] = "9007199254740992";           // +0x1.0000000000000p+54
-constexpr char tDBL_MAX[] = "1.7976931348623157e+308";       // +0x1.FFFFFFFFFFFFFp+1023
-constexpr char tDBL_MIN[] = "2.2250738585072014e-308";       // +0x1.0000000000000p-1022
-constexpr char tDBL_SUBN_MAX[] = "2.2250738585072009e-308";  // +0x0.FFFFFFFFFFFFFp-1022
-constexpr char tDBL_TRUE_MIN[] = "4.9406564584124654e-324";  // +0x0.0000000000001p-1022
-
 void set_up() {}
 
 void tear_down() {}
