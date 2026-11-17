@@ -131,13 +131,11 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
 Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
     auto p = scan;
     uint8_t list = 0;
-    uint8_t n = 0;
     while (true) {
         const auto name = parseRegName(p, parser());
         if (!isGeneric(name))
             return UNKNOWN_OPERAND;
         list |= 1U << encodeRegName(name);
-        n++;
         if (p.skipSpaces().expect(']'))
             break;
         if (!p.expect(','))

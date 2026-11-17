@@ -89,10 +89,6 @@ Error AsmMos6502::setLongIndex(bool enable) {
 
 namespace {
 
-constexpr Config::uintptr_t bank(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-
 constexpr Config::opcode_t BRA = 0x80;
 constexpr Config::opcode_t BRL = 0x82;
 
