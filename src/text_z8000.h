@@ -27,6 +27,9 @@ namespace z8000 {
 extern const char TEXT_Z8000_LIST[];
 extern const char TEXT_CPU_Z8001[];
 extern const char TEXT_CPU_Z8002[];
+extern const char TEXT_FPU_Z8070[];
+using common::TEXT_FPU;
+using common::TEXT_none;
 
 using common::TEXT_ADC;
 using common::TEXT_ADCB;
@@ -218,6 +221,67 @@ extern const char TEXT_TSETB[];
 using common::TEXT_XOR;
 using common::TEXT_XORB;
 
+// Z8070
+using common::TEXT_FABS;
+extern const char TEXT_FABSD[];
+extern const char TEXT_FABSS[];
+using common::TEXT_FADD;
+extern const char TEXT_FADDD[];
+extern const char TEXT_FADDS[];
+extern const char TEXT_FCLR[];
+extern const char TEXT_FCP[];
+extern const char TEXT_FCPD[];
+extern const char TEXT_FCPF[];
+extern const char TEXT_FCPFX[];
+extern const char TEXT_FCPS[];
+extern const char TEXT_FCPX[];
+extern const char TEXT_FCPXD[];
+extern const char TEXT_FCPXS[];
+extern const char TEXT_FCPZ[];
+extern const char TEXT_FCPZFX[];
+extern const char TEXT_FCPZNF[];
+extern const char TEXT_FCPZXNF[];
+using common::TEXT_FDIV;
+extern const char TEXT_FDIVD[];
+extern const char TEXT_FDIVS[];
+using common::TEXT_FINT;
+extern const char TEXT_FINTD[];
+extern const char TEXT_FINTS[];
+using common::TEXT_FLD;
+extern const char TEXT_FLDBCD[];
+extern const char TEXT_FLDCTL[];
+extern const char TEXT_FLDCTLB[];
+extern const char TEXT_FLDD[];
+extern const char TEXT_FLDIL[];
+extern const char TEXT_FLDIQ[];
+extern const char TEXT_FLDM[];
+using common::TEXT_FLDS;
+extern const char TEXT_FLDTL[];
+extern const char TEXT_FLDTQ[];
+using common::TEXT_FMUL;
+extern const char TEXT_FMULD[];
+using common::TEXT_FMULS;
+using common::TEXT_FNEG;
+extern const char TEXT_FNEGD[];
+extern const char TEXT_FNEGS[];
+extern const char TEXT_FREMSNF[];
+extern const char TEXT_FREMSTEP[];
+extern const char TEXT_FRESFLG[];
+extern const char TEXT_FRESTRAP[];
+extern const char TEXT_FSETFLG[];
+extern const char TEXT_FSETMODE[];
+extern const char TEXT_FSETTRAP[];
+extern const char TEXT_FSQR[];
+extern const char TEXT_FSQRD[];
+extern const char TEXT_FSQRS[];
+extern const char TEXT_FSTP[];
+using common::TEXT_FSUB;
+extern const char TEXT_FSUBD[];
+extern const char TEXT_FSUBS[];
+
+using common::TEXT_REG_F;
+extern const char TEXT_REG_FCB[];
+extern const char TEXT_REG_FCTL[];
 extern const char TEXT_REG_FCW[];
 extern const char TEXT_REG_FLAGS[];
 using common::TEXT_REG_NSP;
@@ -253,6 +317,13 @@ using common::TEXT_CC_ULE;
 using common::TEXT_CC_ULT;
 using common::TEXT_CC_Z;
 
+extern const char TEXT_FFLAG_DE[];
+extern const char TEXT_FFLAG_DZ[];
+extern const char TEXT_FFLAG_FOV[];
+extern const char TEXT_FFLAG_INV[];
+extern const char TEXT_FFLAG_INX[];
+extern const char TEXT_FFLAG_UN[];
+
 extern const char TEXT_FLAG_C[];
 extern const char TEXT_FLAG_P[];
 extern const char TEXT_FLAG_S[];
@@ -261,6 +332,9 @@ extern const char TEXT_FLAG_Z[];
 
 extern const char TEXT_INTR_NVI[];
 extern const char TEXT_INTR_VI[];
+
+extern const char TEXT_PREC_DBL[];
+extern const char TEXT_PREC_SGL[];
 
 // clang-format on
 }  // namespace z8000

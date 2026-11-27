@@ -24,6 +24,7 @@ namespace z8000 {
 constexpr char TEXT_Z8000_LIST[] = "Z8001, Z8002";
 constexpr char TEXT_CPU_Z8001[] = "Z8001";
 constexpr char TEXT_CPU_Z8002[] = "Z8002";
+constexpr char TEXT_FPU_Z8070[] = "Z8070";
 
 // constexpr char TEXT_ADC[]   = "ADC";
 // constexpr char TEXT_ADCB[]  = "ADCB";
@@ -215,6 +216,67 @@ constexpr char TEXT_TSETB[]  = "TSETB";
 // constexpr char TEXT_XOR[]   = "XOR";
 // constexpr char TEXT_XORB[]  = "XORB";
 
+// Z8070
+// constexpr char TEXT_FABS[]     = "FABS";
+constexpr char TEXT_FABSD[]    = "FABSD";
+constexpr char TEXT_FABSS[]    = "FABSS";
+// constexpr char TEXT_FADD[]     = "FADD";
+constexpr char TEXT_FADDD[]    = "FADDD";
+constexpr char TEXT_FADDS[]    = "FADDS";
+constexpr char TEXT_FCLR[]     = "FCLR";
+constexpr char TEXT_FCP[]      = "FCP";
+constexpr char TEXT_FCPD[]     = "FCPD";
+constexpr char TEXT_FCPF[]     = "FCPF";
+constexpr char TEXT_FCPFX[]    = "FCPFX";
+constexpr char TEXT_FCPS[]     = "FCPS";
+constexpr char TEXT_FCPX[]     = "FCPX";
+constexpr char TEXT_FCPXD[]    = "FCPXD";
+constexpr char TEXT_FCPXS[]    = "FCPXS";
+constexpr char TEXT_FCPZ[]     = "FCPZ";
+constexpr char TEXT_FCPZFX[]   = "FCPZFX";
+constexpr char TEXT_FCPZNF[]   = "FCPZNF";
+constexpr char TEXT_FCPZXNF[]  = "FCPZXNF";
+// constexpr char TEXT_FDIV[]     = "FDIV";
+constexpr char TEXT_FDIVD[]    = "FDIVD";
+constexpr char TEXT_FDIVS[]    = "FDIVS";
+// constexpr char TEXT_FINT[]     = "FINT";
+constexpr char TEXT_FINTD[]    = "FINTD";
+constexpr char TEXT_FINTS[]    = "FINTS";
+// constexpr char TEXT_FLD[]      = "FLD";
+constexpr char TEXT_FLDBCD[]   = "FLDBCD";
+constexpr char TEXT_FLDCTL[]   = "FLDCTL";
+constexpr char TEXT_FLDCTLB[]  = "FLDCTLB";
+constexpr char TEXT_FLDD[]     = "FLDD";
+constexpr char TEXT_FLDIL[]    = "FLDIL";
+constexpr char TEXT_FLDIQ[]    = "FLDIQ";
+constexpr char TEXT_FLDM[]     = "FLDM";
+// constexpr char TEXT_FLDS[]     = "FLDS";
+constexpr char TEXT_FLDTL[]    = "FLDTL";
+constexpr char TEXT_FLDTQ[]    = "FLDTQ";
+// constexpr char TEXT_FMUL[]     = "FMUL";
+constexpr char TEXT_FMULD[]    = "FMULD";
+// constexpr char TEXT_FMULS[]    = "FMULS";
+// constexpr char TEXT_FNEG[]     = "FNEG";
+constexpr char TEXT_FNEGD[]    = "FNEGD";
+constexpr char TEXT_FNEGS[]    = "FNEGS";
+constexpr char TEXT_FREMSNF[]  = "FREMSNF";
+constexpr char TEXT_FREMSTEP[] = "FREMSTEP";
+constexpr char TEXT_FRESFLG[]  = "FRESFLG";
+constexpr char TEXT_FRESTRAP[] = "FRESTRAP";
+constexpr char TEXT_FSETFLG[]  = "FSETFLG";
+constexpr char TEXT_FSETMODE[] = "FSETMODE";
+constexpr char TEXT_FSETTRAP[] = "FSETTRAP";
+constexpr char TEXT_FSQR[]     = "FSQR";
+constexpr char TEXT_FSQRD[]    = "FSQRD";
+constexpr char TEXT_FSQRS[]    = "FSQRS";
+constexpr char TEXT_FSTP[]     = "FSTP";
+// constexpr char TEXT_FSUB[]     = "FSUB";
+constexpr char TEXT_FSUBD[]    = "FSUBD";
+constexpr char TEXT_FSUBS[]    = "FSUBS";
+
+// constexpr char TEXT_REG_F[]       = "F";
+constexpr char TEXT_REG_FCB[]     = "FCB";
+constexpr char TEXT_REG_FCTL[]    = "FCTL";
 constexpr char TEXT_REG_FCW[]     = "FCW";
 constexpr char TEXT_REG_FLAGS[]   = "FLAGS";
 // constexpr char TEXT_REG_NSP[]     = "NSP";
@@ -250,6 +312,13 @@ constexpr char TEXT_REG_RQ[]      = "RQ";
 // constexpr char TEXT_CC_ULT[] = "ULT";
 // constexpr char TEXT_CC_Z[]   = "Z";
 
+constexpr char TEXT_FFLAG_DE[]  = "DE";
+constexpr char TEXT_FFLAG_DZ[]  = "DZ";
+constexpr char TEXT_FFLAG_FOV[] = "FOV";
+constexpr char TEXT_FFLAG_INV[] = "INV";
+constexpr char TEXT_FFLAG_INX[] = "INX";
+constexpr char TEXT_FFLAG_UN[]  = "UN";
+
 constexpr char TEXT_FLAG_C[] = "C";
 constexpr char TEXT_FLAG_P[] = "P";
 constexpr char TEXT_FLAG_S[] = "S";
@@ -258,6 +327,9 @@ constexpr char TEXT_FLAG_Z[] = "Z";
 
 constexpr char TEXT_INTR_NVI[] = "NVI";
 constexpr char TEXT_INTR_VI[]  = "VI";
+
+constexpr char TEXT_PREC_DBL[] = "DBL";
+constexpr char TEXT_PREC_SGL[] = "SGL";
 
 // clang-format on
 }  // namespace z8000

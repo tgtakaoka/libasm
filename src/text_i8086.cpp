@@ -302,7 +302,7 @@ constexpr char TEXT_RETXA[] = "RETXA";
 // V35
 constexpr char TEXT_BRKCS[]  = "BRKCS";
 constexpr char TEXT_BTCLR[]  = "BTCLR";
-constexpr char TEXT_FINT[]   = "FINT";
+// constexpr char TEXT_FINT[]   = "FINT";
 constexpr char TEXT_MOVSPA[] = "MOVSPA";
 constexpr char TEXT_MOVSPB[] = "MOVSPB";
 constexpr char TEXT_RETRBI[] = "RETRBI";
@@ -342,7 +342,7 @@ constexpr char TEXT_FIST[]     = "FIST";
 constexpr char TEXT_FISTP[]    = "FISTP";
 constexpr char TEXT_FISUB[]    = "FISUB";
 constexpr char TEXT_FISUBR[]   = "FISUBR";
-constexpr char TEXT_FLD[]      = "FLD";
+// constexpr char TEXT_FLD[]      = "FLD";
 constexpr char TEXT_FLD1[]     = "FLD1";
 constexpr char TEXT_FLDCW[]    = "FLDCW";
 constexpr char TEXT_FLDENV[]   = "FLDENV";

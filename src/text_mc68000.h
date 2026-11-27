@@ -384,7 +384,7 @@ extern const char TEXT_FETOX[];
 extern const char TEXT_FETOXM1[];
 extern const char TEXT_FGETEXP[];
 extern const char TEXT_FGETMAN[];
-extern const char TEXT_FINT[];
+using common::TEXT_FINT;
 extern const char TEXT_FINTRZ[];
 extern const char TEXT_FLOG10[];
 extern const char TEXT_FLOG2[];
