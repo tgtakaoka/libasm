@@ -24,6 +24,7 @@ namespace z8000 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+using namespace text::option;
 
 namespace {
 
@@ -46,6 +47,13 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
+// clang-format off
+constexpr AsmZ8000::PseudoZ8000 AsmZ8000::PSEUDO_Z8000_TABLE[] PROGMEM = {
+    { TEXT_FPU, &AsmZ8000::setFpu },
+};
+PROGMEM constexpr AsmZ8000::PseudosZ8000 AsmZ8000::PSEUDOS_Z8000{ARRAY_RANGE(PSEUDO_Z8000_TABLE)};
+// clang-format on
+
 const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
     static const struct final : ValueParser::ZilogPlugins {
         const SymbolParser &symbol() const override { return Z8000SymbolParser::singleton(); }
@@ -54,8 +62,9 @@ const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
 }
 
 AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_shortDirect),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_shortDirect),
       _opt_shortDirect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {
     reset();
@@ -63,7 +72,19 @@ AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
 
 void AsmZ8000::reset() {
     Assembler::reset();
+    setFpuType(FPU_NONE);
     setShortDirect(true);
+}
+
+Error AsmZ8000::setFpu(StrScanner &scan, Insn &insn, uint16_t) {
+    const auto at = scan;
+    const auto error = _opt_fpu.set(scan);
+    return error ? insn.setErrorIf(at, error) : OK;
+}
+
+Error AsmZ8000::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto *p = PSEUDOS_Z8000.search(insn.name());
+    return p ? p->invoke(this, scan, insn) : Assembler::processPseudo(scan, insn);
 }
 
 Error AsmZ8000::setShortDirect(bool enable) {
@@ -176,7 +197,7 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
 }
 
 void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
+    const auto align = mode == M_DA && isWordSize(insn.size());
     const auto addr = op.val.getUnsigned();
     insn.setErrorIf(op, checkAddr(addr, align));
     if (segmentedModel()) {
@@ -286,7 +307,7 @@ void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) con
 namespace {
 // Modes whose operand is written as a name that could equally be a symbol.
 bool isNameMode(AddrMode mode) {
-    return mode == M_CC || mode == M_FLAG || mode == M_INTR;
+    return mode == M_CC || mode == M_FLAG || mode == M_INTR || mode == M_FFLAG;
 }
 }  // namespace
 
@@ -412,6 +433,30 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_CTL:
         emitCtlRegister(insn, pos, op);
         break;
+    case M_FREG:
+        emitData(insn, pos, encodeFpuRegName(op.reg));
+        break;
+    case M_FCB:
+    case M_FCTL:
+        emitData(insn, pos, op.val.getUnsigned());
+        break;
+    case M_FCNT: {
+        const auto count = op.val.getUnsigned();
+        if (op.val.isNegative() || count == 0 || count > 2) {
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+            break;
+        }
+        emitData(insn, pos, count * 5 - 1);
+        break;
+    }
+    case M_FFLAG:
+        insn.embedPostfix(static_cast<Config::opcode_t>(op.val.getUnsigned() & 0x3F) << 8);
+        break;
+    case M_FMODE:
+        if (op.val.overflow(15))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        emitData(insn, pos, op.val.getUnsigned());
+        break;
     default:
         break;
     }
@@ -499,6 +544,24 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
     }
 }
 
+int8_t AsmZ8000::parseFpuFlagNames(StrScanner &scan) const {
+    auto p = scan;
+    int8_t num = 0;
+    while (true) {
+        const auto flag = parseFpuFlagName(p, parser());
+        if (flag == FFLAG_UNDEF)
+            return -1;
+        num |= flag;
+        if (endOfLine(p.skipSpaces())) {
+            scan = p;
+            return num;
+        }
+        if (!p.expect(','))
+            return -1;
+        p.skipSpaces();
+    }
+}
+
 void AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
     auto p = scan;
     const auto delim = p.expect('|');
@@ -539,6 +602,42 @@ void AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
     scan = p;
 }
 
+// Z8070 registers, control registers and flag groups are names only while
+// the Z8070 is enabled.
+bool AsmZ8000::parseFpuOperand(StrScanner &scan, Operand &op) const {
+    if (fpuType() == FPU_NONE)
+        return false;
+    auto p = scan;
+    auto num = parseFpuCtlReg(p);
+    if (num >= 0) {
+        op.val.setUnsigned(num);
+        op.mode = M_FCTL;
+        scan = p;
+        return true;
+    }
+    num = parseFlagGroup(p);
+    if (num >= 0) {
+        op.val.setUnsigned(num);
+        op.mode = M_FCB;
+        scan = p;
+        return true;
+    }
+    op.reg = parseFpuRegName(p);
+    if (op.reg != REG_UNDEF) {
+        op.mode = M_FREG;
+        scan = p;
+        return true;
+    }
+    num = parseFpuFlagNames(p);
+    if (num > 0) {
+        op.val.setUnsigned(num);
+        op.mode = M_FFLAG;
+        scan = p;
+        return true;
+    }
+    return false;
+}
+
 Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
@@ -552,6 +651,11 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (endOfLine(p))
         return OK;
+
+    if (parseFpuOperand(p, op)) {
+        scan = p;
+        return OK;
+    }
 
     if (p.expect('@')) {
         op.reg = parseRegName(p, segmentedModel());
@@ -649,29 +753,72 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
-    AsmInsn insn(_insn);
+// "FXXX rnd dst,src": SGL or DBL in front of the operands, or alone, is the
+// Z8070 result precision when the Z8070 is enabled.
+PrecName AsmZ8000::parsePrecision(StrScanner &scan) const {
+    if (fpuType() == FPU_NONE)
+        return PREC_NONE;
+    auto p = scan.skipSpaces();
+    const auto prec = parsePrecName(p, parser());
+    if (prec == PREC_UNDEF)
+        return PREC_NONE;
+    auto q = p;
+    if (!endOfLine(q) && (!isspace(*p) || *q == ','))
+        return PREC_NONE;  // an operand (list) starting with the name
+    scan = p;
+    return prec;
+}
+
+Error AsmZ8000::parseOperands(StrScanner &scan, AsmInsn &insn) const {
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return _insn.setError(insn.dstOp);
+        return insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return _insn.setError(insn.srcOp);
+            return insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex1Op) && insn.ex1Op.hasError())
-            return _insn.setError(insn.ex1Op);
+            return insn.setError(insn.ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex2Op) && insn.ex2Op.hasError())
-            return _insn.setError(insn.ex2Op);
+            return insn.setError(insn.ex2Op);
         scan.skipSpaces();
     }
+    return OK;
+}
+
+Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
+    auto p = scan;
+    const auto prec = parsePrecision(p);
+    if (prec != PREC_NONE) {
+        // The keyword belongs to an instruction with a precision field;
+        // for any other it is the start of an operand, SGL and DBL being
+        // legal symbol names.
+        AsmInsn insn(_insn);
+        insn.prec = prec;
+        if (parseOperands(p, insn) == OK && searchName(_cpuSpec, insn) == OK &&
+                insn.hasPrecision()) {
+            scan = p;
+            encodeOperands(insn);
+            return _insn.setError(insn);
+        }
+    }
+
+    AsmInsn insn(_insn);
+    if (parseOperands(scan, insn))
+        return _insn.setError(insn);
 
     if (searchName(_cpuSpec, insn))
         return _insn.setError(insn.dstOp, insn);
 
+    encodeOperands(insn);
+    return _insn.setError(insn);
+}
+
+Error AsmZ8000::encodeOperands(AsmInsn &insn) const {
     if (insn.isThreeRegsInsn())
         checkRegisterOverlap(insn, insn.dstOp, insn.srcOp, insn.ex1Op);
     if (insn.isPushPopInsn())
@@ -694,8 +841,10 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     const auto ex1Pos = (insn.ex1() == M_WR ? OP_P8 : OP_P0);
     emitOperand(insn, insn.ex1(), insn.ex1Op, ex1Pos);
     emitOperand(insn, insn.ex2(), insn.ex2Op, OP_P0);
+    if (insn.hasPrecision())
+        insn.embedPostfix(static_cast<Config::opcode_t>(insn.prec) << 12);
     insn.emitInsn();
-    return _insn.setError(insn);
+    return insn.getError();
 }
 
 }  // namespace z8000

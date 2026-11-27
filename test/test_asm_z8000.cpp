@@ -2601,6 +2601,213 @@ void test_sp_alias() {
     }
 }
 
+void test_z8070() {
+    // Off by default.
+    ERUI("FADD F0, F1");
+    ERUI("FLDIL F0, RR6");
+    EQUALS_P("fpu none", "none", asm8000.fpu_P());
+    ERRT("FPU 8087", UNKNOWN_OPERAND, "8087");
+
+    TEST("FPU ON");
+    EQUALS_P("fpu on", "Z8070", asm8000.fpu_P());
+    TEST("FPU NONE");
+    EQUALS_P("fpu none", "none", asm8000.fpu_P());
+    ERUI("FADD F0, F1");
+    TEST("FPU Z8070");
+    EQUALS_P("fpu z8070", "Z8070", asm8000.fpu_P());
+
+    // Register and internal forms
+    TEST("FADD  F0, F4",         0x8E04, 0x4480);
+    TEST("FADD  DBL F0, F4",     0x8E04, 0x7480);
+    TEST("FADD  SGL F2, F4",     0x8E24, 0x5480);
+    TEST("fadd  dbl f2, f4",     0x8E24, 0x7480);
+    TEST("FSUB  DBL F2, F0",     0x8E24, 0x7090);
+    TEST("FMUL  DBL F6, F0",     0x8E64, 0x70B0);
+    TEST("FDIV  F7, F1",         0x8E74, 0x41A0);
+    TEST("FSQR  F1, F2",         0x8E14, 0x82C0);
+    TEST("FABS  F1, F2",         0x8E14, 0x8280);
+    TEST("FNEG  F1, F2",         0x8E14, 0x8290);
+    TEST("FINT  F1, F2",         0x8E14, 0x82D0);
+    TEST("FLD   F1, F2",         0x8E14, 0x8200);
+    TEST("FCLR  F3",             0x8E34, 0x0000);
+    TEST("FCLR  SGL F3",         0x8E34, 0x1000);
+    TEST("FREMSNF  F1, F2",      0x8E14, 0x42C0);
+    TEST("FREMSTEP F1, F2",      0x8E10, 0x42C0);
+    TEST("FCP   F0, F2",         0x8E04, 0x4210);
+    TEST("FCPF  F0, F2",         0x8E00, 0x4210);
+    TEST("FCPX  F0, F2",         0x8E04, 0x4220);
+    TEST("FCPFX F0, F2",         0x8E00, 0x4220);
+    TEST("FCPZ    F5",           0x8E50, 0x0010);
+    TEST("FCPZFX  F5",           0x8E50, 0x0020);
+    TEST("FCPZNF  F5",           0x8E54, 0x0010);
+    TEST("FCPZXNF F5",           0x8E54, 0x0020);
+    TEST("FLDCTLB FCB4",         0x8E40, 0xC010);
+    TEST("FLDCTLB FCB15",        0x8EF0, 0xC010);
+    TEST("FLDCTL  FCTL5, R0, #1",   0x8F58, 0xC000);
+    TEST("FLDCTL  FCTL4, R0, #2",   0x8F48, 0xC001);
+    TEST("FLDCTL  FCTL7, R2, #6",   0x8F78, 0xC205);
+    TEST("FLDCTL  R2, FCTL7, #6",   0x8F70, 0xC205);
+    TEST("FLDCTL  R15, FCTL0, #16", 0x8F00, 0xCF0F);
+    ERRT("FLDCTL  FCTL5, R0, #0",  OVERFLOW_RANGE, "#0",  0x8F58, 0xC000);
+    ERRT("FLDCTL  FCTL5, R0, #17", OVERFLOW_RANGE, "#17", 0x8F58, 0xC000);
+    ERRT("FLDCTL  FCTL5, R0",      OPERAND_NOT_ALLOWED, "FCTL5, R0");
+    ERRT("FLDCTL  FCTL8, R0, #1",  OPERAND_NOT_ALLOWED, "FCTL8, R0, #1");
+    ERRT("FLDCTLB FCB16",          OPERAND_NOT_ALLOWED, "FCB16");
+    ERRT("FADD  F8, F0",           OPERAND_NOT_ALLOWED, "F8, F0");
+    ERRT("FADDS F0, F4",           OPERAND_NOT_ALLOWED, "F0, F4");
+    TEST("FCPF  SGL F0, F2",     0x8E00, 0x5210);
+    TEST("FCPZ  DBL F5",         0x8E50, 0x3010);
+    TEST("FLDCTLB DBL FCB4",     0x8E40, 0xF010);
+    TEST("FSETFLG  INV",         0x8E04, 0xC130);
+    TEST("FSETFLG  INV, FOV, UN, DZ, INX, DE", 0x8E04, 0xFF30);
+    TEST("FRESFLG  DE, DZ",      0x8E04, 0xE820);
+    TEST("FSETTRAP INV, DZ",     0x8E24, 0xC930);
+    TEST("FRESTRAP INX",         0x8E24, 0xD020);
+    TEST("FSETMODE #12, #4",     0x8E04, 0xCC44);
+    TEST("FSETMODE #1, #1",      0x8E04, 0xC141);
+    TEST("FSETMODE #0, #0",      0x8E04, 0xC040);
+    TEST("FSTP",                 0x8E04, 0xC0F0);
+    TEST("FSTP DBL",             0x8E04, 0xF0F0);
+    COMM("FSTP SGL ; comment", "; comment", 0x8E04, 0xD0F0);
+    ERRT("FSETMODE #16, #0",     OVERFLOW_RANGE, "#16, #0", 0x8E04, 0xC040);
+    ERRT("FSETMODE #0, #16",     OVERFLOW_RANGE, "#16",     0x8E04, 0xC040);
+    ERRT("FSETFLG  C",           OPERAND_NOT_ALLOWED, "C");
+    ERRT("FSETFLG  INV, C",      OPERAND_NOT_ALLOWED, "INV, C");
+    ERRT("FSTP F0",              OPERAND_NOT_ALLOWED, "F0");
+    ERRT("FADD  SGL, F0, F4",      OPERAND_NOT_ALLOWED, "SGL, F0, F4");
+    ERRT("FADD  F0, F4, SGL",      OPERAND_NOT_ALLOWED, "F0, F4, SGL");
+
+    // CPU register transfers
+    TEST("FLDIL F0, RR6",        0x8F08, 0x8621);
+    TEST("FLDIQ F2, RQ4",        0x8F28, 0x8423);
+    TEST("FLDIL RR6, F0",        0x8F00, 0x8621);
+    TEST("FLDIQ RQ4, F2",        0x8F20, 0x8423);
+    TEST("FLDTL RR6, F0",        0x8F00, 0x8641);
+    TEST("FLDTQ RQ4, F2",        0x8F20, 0x8443);
+    TEST("FLDBCD F1, R3",        0x8F18, 0x8314);
+    TEST("FLDBCD R3, F1",        0x8F10, 0x8314);
+    TEST("FLDM  F1, R3, #1",     0x8F18, 0x8334);
+    TEST("FLDM  F1, R3, #2",     0x8F18, 0x8339);
+    TEST("FLDM  R3, F1, #1",     0x8F10, 0x8334);
+    TEST("FLDM  DBL F1, R3, #2", 0x8F18, 0xB339);
+    ERRT("FLDM  F1, R3, #0",     OVERFLOW_RANGE, "#0", 0x8F18, 0x8330);
+    ERRT("FLDM  F1, R3, #3",     OVERFLOW_RANGE, "#3", 0x8F18, 0x8330);
+    ERRT("FLDM  F1, R3",         OPERAND_NOT_ALLOWED, "F1, R3");
+    ERRT("FLDM  F1, RR2, #1",    REGISTER_NOT_ALLOWED, "RR2, #1", 0x8F18, 0x8234);
+    TEST("FLDS  F1, RR2",        0x8F18, 0x8201);
+    TEST("FLDD  F1, RQ8",        0x8F18, 0x8803);
+    TEST("FLD   F1, R9",         0x8F18, 0x8904);
+    TEST("FLDS  RR2, F1",        0x8F10, 0x8201);
+    TEST("FLDD  RQ8, F1",        0x8F10, 0x8803);
+    TEST("FLD   R9, F1",         0x8F10, 0x8904);
+    TEST("FADDS DBL F0, RR2",    0x8F08, 0x7281);
+    TEST("FSUBD F0, RQ4",        0x8F08, 0x4493);
+    TEST("FMUL  SGL F0, R6",     0x8F08, 0x56B4);
+    TEST("FDIVS F0, RR2",        0x8F08, 0x42A1);
+    TEST("FSQRD F0, RQ4",        0x8F08, 0x84C3);
+    TEST("FABSS F0, RR2",        0x8F08, 0x8281);
+    TEST("FNEGD F0, RQ4",        0x8F08, 0x8493);
+    TEST("FINTS F0, RR2",        0x8F08, 0x82D1);
+    TEST("FCPS  F0, RR2",        0x8F08, 0x4211);
+    TEST("FCPD  F0, RQ4",        0x8F08, 0x4413);
+    TEST("FCPXS F0, RR2",        0x8F08, 0x4221);
+    ERRT("FLDS  F1, R2",   REGISTER_NOT_ALLOWED, "R2",   0x8F18, 0x8201);
+    ERRT("FLDD  F1, RR2",  REGISTER_NOT_ALLOWED, "RR2",  0x8F18, 0x8203);
+    ERRT("FLD   F1, RQ4",  REGISTER_NOT_ALLOWED, "RQ4",  0x8F18, 0x8404);
+    ERRT("FLDIL F0, RQ4",  REGISTER_NOT_ALLOWED, "RQ4",  0x8F08, 0x8421);
+    ERRT("FLDIQ F0, RR4",  REGISTER_NOT_ALLOWED, "RR4",  0x8F08, 0x8423);
+    ERRT("FLDS  RL1, F1",  REGISTER_NOT_ALLOWED, "RL1, F1", 0x8F10, 0x8901);
+
+    // Memory transfers
+    if (z8001()) {
+        TEST("FLDS  F4, @RR2",          0x0F24, 0x8401);
+        TEST("FLDD  @RR2, F4",          0x0F2C, 0x8403);
+        TEST("FLD   F4, %561234",       0x4F04, 0x8404, 0xD600, 0x1234);
+        TEST("FLD   F4, <<%56>>%1234",  0x4F04, 0x8404, 0xD600, 0x1234);
+        TEST("FLDS  %561234(R14), F0",  0x4FEC, 0x8001, 0xD600, 0x1234);
+        TEST("FMULD DBL F0, %561234",   0x4F04, 0x70B3, 0xD600, 0x1234);
+        TEST("FLDIL F0, %561234(R3)",   0x4F34, 0x8021, 0xD600, 0x1234);
+        TEST("FLDIQ %561234, F0",       0x4F0C, 0x8023, 0xD600, 0x1234);
+        TEST("FLDTL @RR2, F6",          0x0F2C, 0x8641);
+        TEST("FLDTQ @RR2, F6",          0x0F2C, 0x8643);
+        TEST("FLDCTL FCTL4, @RR2, #2",  0x0F24, 0xC401);
+        TEST("FLDCTL %561234, FCTL5, #1", 0x4F0C, 0xC500, 0xD600, 0x1234);
+        TEST("FLDBCD F6, @RR2",         0x0F24, 0x8614);
+        TEST("FLDBCD @RR2, F6",         0x0F2C, 0x8614);
+        TEST("FLDM  F6, @RR2, #1",      0x0F24, 0x8634);
+        TEST("FLDM  %561234, F6, #2",   0x4F0C, 0x8639, 0xD600, 0x1234);
+        TEST("FADDS F1, @RR2",          0x0F24, 0x4181);
+        TEST("FSUBD F1, @RR2",          0x0F24, 0x4193);
+        TEST("FDIV  F1, @RR2",          0x0F24, 0x41A4);
+        TEST("FCPS  F1, @RR2",          0x0F24, 0x4111);
+        TEST("FCPXD F1, @RR2",          0x0F24, 0x4123);
+        TEST("FREMSNF  F1, @RR2",       0x0F24, 0x41C4);
+        TEST("FSQRS F1, @RR2",          0x0F24, 0x81C1);
+        TEST("FABSD F1, @RR2",          0x0F24, 0x8183);
+        TEST("FNEG  F1, @RR2",          0x0F24, 0x8194);
+        TEST("FINTD F1, @RR2",          0x0F24, 0x81D3);
+        ERRT("FLD   F4, %561235", OPERAND_NOT_ALIGNED, "%561235", 0x4F04, 0x8404, 0xD600, 0x1235);
+        ERRT("FLDS  F4, @R2",     REGISTER_NOT_ALLOWED, "@R2", 0x0F24, 0x8401);
+        ERRT("FLDS  F4, @RR0",    REGISTER_NOT_ALLOWED, "@RR0", 0x0F04, 0x8401);
+    } else {
+        TEST("FLDS  F4, @R2",           0x0F24, 0x8401);
+        TEST("FLDD  @R2, F4",           0x0F2C, 0x8403);
+        TEST("FLD   F4, %1234",         0x4F04, 0x8404, 0x1234);
+        TEST("FLDS  %FFE0(R14), F0",    0x4FEC, 0x8001, 0xFFE0);
+        TEST("FMULD DBL F0, %2562",     0x4F04, 0x70B3, 0x2562);
+        TEST("FMULD DBL F0, %FFD2(R14)", 0x4FE4, 0x70B3, 0xFFD2);
+        TEST("FLDIL F0, %1234(R3)",     0x4F34, 0x8021, 0x1234);
+        TEST("FLDIQ %1234, F0",         0x4F0C, 0x8023, 0x1234);
+        TEST("FLDTL @R2, F6",           0x0F2C, 0x8641);
+        TEST("FLDTQ @R2, F6",           0x0F2C, 0x8643);
+        TEST("FLDCTL FCTL4, @R2, #2",   0x0F24, 0xC401);
+        TEST("FLDCTL %1234, FCTL5, #1", 0x4F0C, 0xC500, 0x1234);
+        TEST("FLDBCD F6, @R2",          0x0F24, 0x8614);
+        TEST("FLDBCD @R2, F6",          0x0F2C, 0x8614);
+        TEST("FLDM  F6, @R2, #1",       0x0F24, 0x8634);
+        TEST("FLDM  %1234, F6, #2",     0x4F0C, 0x8639, 0x1234);
+        TEST("FADDS F1, @R2",           0x0F24, 0x4181);
+        TEST("FSUBD F1, @R2",           0x0F24, 0x4193);
+        TEST("FDIV  F1, @R2",           0x0F24, 0x41A4);
+        TEST("FCPS  F1, @R2",           0x0F24, 0x4111);
+        TEST("FCPXD F1, @R2",           0x0F24, 0x4123);
+        TEST("FREMSNF  F1, @R2",        0x0F24, 0x41C4);
+        TEST("FSQRS F1, @R2",           0x0F24, 0x81C1);
+        TEST("FABSD F1, @R2",           0x0F24, 0x8183);
+        TEST("FNEG  F1, @R2",           0x0F24, 0x8194);
+        TEST("FINTD F1, @R2",           0x0F24, 0x81D3);
+        ERRT("FLD   F4, %1235", OPERAND_NOT_ALIGNED, "%1235", 0x4F04, 0x8404, 0x1235);
+        ERRT("FLDS  F4, @RR2",  REGISTER_NOT_ALLOWED, "@RR2", 0x0F24, 0x8401);
+        ERRT("FLDS  F4, @R0",   REGISTER_NOT_ALLOWED, "@R0", 0x0F04, 0x8401);
+    }
+
+    // SGL and DBL stay symbol names away from the precision slot, and F8
+    // is a symbol since there is no such register.
+    symtab.intern(0x1000, "DBL");
+    symtab.intern(0x2000, "SGL");
+    symtab.intern(0x3000, "INV");
+    if (z8001()) {
+        TEST("JP   DBL",         0x5E08, 0x8000, 0x1000);
+        TEST("JP   DBL + 2",     0x5E08, 0x8000, 0x1002);
+        TEST("LD   R0, SGL",     0x6100, 0x8000, 0x2000);
+        TEST("FLD  F1, DBL",     0x4F04, 0x8104, 0x8000, 0x1000);
+        TEST("FLD  DBL F1, SGL", 0x4F04, 0xB104, 0x8000, 0x2000);
+        TEST("JP   INV",         0x5E08, 0x8000, 0x3000);
+        COMM("JP   DBL ; comment", "; comment", 0x5E08, 0x8000, 0x1000);
+        ERUS("FADD F0, F8", "F8", 0x4F04, 0x4084, 0x8000, 0x0000);
+    } else {
+        TEST("JP   DBL",         0x5E08, 0x1000);
+        TEST("JP   DBL + 2",     0x5E08, 0x1002);
+        TEST("LD   R0, SGL",     0x6100, 0x2000);
+        TEST("FLD  F1, DBL",     0x4F04, 0x8104, 0x1000);
+        TEST("FLD  DBL F1, SGL", 0x4F04, 0xB104, 0x2000);
+        TEST("JP   INV",         0x5E08, 0x3000);
+        COMM("JP   DBL ; comment", "; comment", 0x5E08, 0x1000);
+        ERUS("FADD F0, F8", "F8", 0x4F04, 0x4084, 0x0000);
+    }
+    TEST("LD   R0, #DBL",    0x2100, 0x1000);
+}
+
 void test_comment() {
     COMM("ADD R1 , # %1234 ; comment", "; comment", 0x0101, 0x1234);
     if (z8001()) {
@@ -2787,6 +2994,7 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_short_direct);
     }
     RUN_TEST(test_sp_alias);
+    RUN_TEST(test_z8070);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_data_constant);
