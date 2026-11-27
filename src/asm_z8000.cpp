@@ -669,7 +669,7 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (searchName(cpuType(), insn))
+    if (searchName(_cpuSpec, insn))
         return _insn.setError(insn.dstOp, insn);
 
     if (insn.isThreeRegsInsn())

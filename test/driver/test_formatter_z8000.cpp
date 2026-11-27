@@ -110,11 +110,43 @@ test.bin: error: Registers overlapped: "r4)"
             0x1000, 0x0102, 0x0304, 0x5144, 0x0000);
 }
 
+// The Z8070 is off by default, so the listing carries the option that
+// turned it on.
+void test_dis_z8070() {
+    PREP_DIS(z8000::DisZ8000);
+
+    driver.setUpperHex(false);
+    driver.setOption("fpu", "on");
+
+    DIS16("z8002", 0x1000,
+            R"|(      cpu      z8002
+      option   "fpu", "on"
+      org      %1000
+      fldil    f0, rr6
+      fmuld    dbl f0, %2562
+      flds     %ffe0(r14), f0
+      fcpf     f0, f2
+      fldctlb  fcb4
+)|",
+            R"|(       0 :                            cpu      z8002
+       0 :                            option   "fpu", "on"
+    1000 :                            org      %1000
+    1000 : 8f08 8621                  fldil    f0, rr6
+    1004 : 4f04 70b3 2562             fmuld    dbl f0, %2562
+    100a : 4fec 8001 ffe0             flds     %ffe0(r14), f0
+    1010 : 8e00 4210                  fcpf     f0, f2
+    1014 : 8e40 c010                  fldctlb  fcb4
+)|",
+            0x8f08, 0x8621, 0x4f04, 0x70b3, 0x2562, 0x4fec, 0x8001, 0xffe0, 0x8e00, 0x4210,
+            0x8e40, 0xc010);
+}
+
 void run_tests() {
     RUN_TEST(test_asm_z8001);
     RUN_TEST(test_asm_z8002);
     RUN_TEST(test_dis_z8001);
     RUN_TEST(test_dis_z8002);
+    RUN_TEST(test_dis_z8070);
 }
 
 }  // namespace test

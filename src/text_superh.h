@@ -145,7 +145,7 @@ extern const char TEXT_FCMP_GT[];   // "FCMP/GT"
 using common::TEXT_FDIV;
 extern const char TEXT_FLDI0[];
 extern const char TEXT_FLDI1[];
-extern const char TEXT_FLDS[];
+using common::TEXT_FLDS;
 using common::TEXT_FLOAT;
 extern const char TEXT_FMAC[];
 extern const char TEXT_FMOV[];

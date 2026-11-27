@@ -34,6 +34,7 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode ex1() const { return flags().ex1(); }
     AddrMode ex2() const { return flags().ex2(); }
     PostFormat postFormat() const { return flags().postFormat(); }
+    bool hasPrecision() const { return flags().hasPrecision(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos srcPos() const { return flags().srcPos(); }
 

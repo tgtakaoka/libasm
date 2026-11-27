@@ -71,9 +71,25 @@ constexpr NameEntry FLAG_ENTRIES[] = {
     { TEXT_FLAG_Z, FLAG_Z },
 };
 
+constexpr NameEntry FFLAG_ENTRIES[] = {
+    { TEXT_FFLAG_DE,  FFLAG_DE  },
+    { TEXT_FFLAG_DZ,  FFLAG_DZ  },
+    { TEXT_FFLAG_FOV, FFLAG_FOV },
+    { TEXT_FFLAG_INV, FFLAG_INV },
+    { TEXT_FFLAG_INX, FFLAG_INX },
+    { TEXT_FFLAG_UN,  FFLAG_UN  },
+};
+
+constexpr NameEntry PREC_ENTRIES[] = {
+    { TEXT_PREC_DBL, PREC_DBL },
+    { TEXT_PREC_SGL, PREC_SGL },
+};
+
 constexpr NameTable CTL_TABLE{ARRAY_RANGE(CTL_ENTRIES)};
 constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
 constexpr NameTable FLAG_TABLE{ARRAY_RANGE(FLAG_ENTRIES)};
+constexpr NameTable PREC_TABLE{ARRAY_RANGE(PREC_ENTRIES)};
+constexpr NameTable FFLAG_TABLE{ARRAY_RANGE(FFLAG_ENTRIES)};
 
 // clang-format on
 }  // namespace
@@ -128,6 +144,8 @@ RegName parseRegName(StrScanner &scan, bool segmentedModel) {
 StrBuffer &outRegName(StrBuffer &out, RegName name, RegName sp) {
     if (sp != REG_UNDEF && name == sp)
         return out.text_P(TEXT_REG_SP);
+    if (isFpuReg(name))
+        return out.text_P(TEXT_REG_F).int16(name - REG_F0);
     if (isWordReg(name))
         return out.letter('R').int16(name - REG_R0);
     if (isLongReg(name))
@@ -161,6 +179,8 @@ bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name)
     case SZ_ADDR:
         if (segmentedModel)
             return isLongReg(name = decodeLongReg(num));
+        return isWordReg(name = decodeWordReg(num));
+    case SZ_EXTD:  // five consecutive words, named by the first
         return isWordReg(name = decodeWordReg(num));
     default:
         name = REG_UNDEF;
@@ -207,7 +227,7 @@ bool isQuadReg(RegName name) {
 }
 
 bool isCtlReg(RegName name) {
-    return name >= REG_FLAGS;
+    return name >= REG_FLAGS && name < REG_F0;
 }
 
 bool isSegCtlReg(RegName name) {
@@ -340,6 +360,101 @@ bool checkOverlap(RegName dst, RegName src, RegName cnt) {
         return false;
     const auto c = encodeGeneralRegName(cnt);
     return ds == c || de == c || ss == c || se == c;
+}
+
+RegName parseFpuRegName(StrScanner &scan) {
+    auto p = scan;
+    if (p.iexpectText_P(TEXT_REG_F)) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 8) {
+            scan = p;
+            return RegName(REG_F0 + num);
+        }
+    }
+    return REG_UNDEF;
+}
+
+bool isFpuReg(RegName name) {
+    return name >= REG_F0 && name <= REG_F7;
+}
+
+uint8_t encodeFpuRegName(RegName name) {
+    return name - REG_F0;
+}
+
+RegName decodeFpuRegNum(uint8_t num) {
+    return RegName(REG_F0 + (num & 7));
+}
+
+int8_t parseFlagGroup(StrScanner &scan) {
+    auto p = scan;
+    if (p.iexpectText_P(TEXT_REG_FCB)) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 16) {
+            scan = p;
+            return num;
+        }
+    }
+    return -1;
+}
+
+StrBuffer &outFlagGroup(StrBuffer &out, uint8_t num) {
+    return out.text_P(TEXT_REG_FCB).int16(num & 0xF);
+}
+
+int8_t parseFpuCtlReg(StrScanner &scan) {
+    auto p = scan;
+    if (p.iexpectText_P(TEXT_REG_FCTL)) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 8) {
+            scan = p;
+            return num;
+        }
+    }
+    return -1;
+}
+
+StrBuffer &outFpuCtlReg(StrBuffer &out, uint8_t num) {
+    return out.text_P(TEXT_REG_FCTL).int16(num & 7);
+}
+
+PrecName parsePrecName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = PREC_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return PrecName(entry->name());
+    }
+    return PREC_UNDEF;
+}
+
+StrBuffer &outPrecName(StrBuffer &out, PrecName name) {
+    const auto *entry = PREC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
+}
+
+FpuFlagName parseFpuFlagName(StrScanner &scan, const ValueParser &parser) {
+    auto p = scan;
+    const auto *entry = FFLAG_TABLE.searchText(parser.readRegName(p));
+    if (entry) {
+        scan = p;
+        return FpuFlagName(entry->name());
+    }
+    return FFLAG_UNDEF;
+}
+
+StrBuffer &outFpuFlagNames(StrBuffer &out, uint8_t flags) {
+    char sep = 0;
+    for (uint8_t bit = FFLAG_INV; bit <= FFLAG_DE; bit <<= 1) {
+        if (flags & bit) {
+            if (sep)
+                out.letter(sep);
+            sep = ',';
+            const auto *entry = FFLAG_TABLE.searchName(bit);
+            out.text_P(entry->text_P());
+        }
+    }
+    return out;
 }
 
 }  // namespace reg

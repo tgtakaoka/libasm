@@ -307,7 +307,7 @@ extern const char TEXT_RETXA[];
 // V35
 extern const char TEXT_BRKCS[];
 extern const char TEXT_BTCLR[];
-extern const char TEXT_FINT[];
+using common::TEXT_FINT;
 extern const char TEXT_MOVSPA[];
 extern const char TEXT_MOVSPB[];
 extern const char TEXT_RETRBI[];
@@ -347,7 +347,7 @@ extern const char TEXT_FIST[];
 extern const char TEXT_FISTP[];
 extern const char TEXT_FISUB[];
 extern const char TEXT_FISUBR[];
-extern const char TEXT_FLD[];
+using common::TEXT_FLD;
 extern const char TEXT_FLD1[];
 extern const char TEXT_FLDCW[];
 extern const char TEXT_FLDENV[];

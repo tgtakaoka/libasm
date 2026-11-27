@@ -31,9 +31,9 @@ struct TableZ8000 final : InsnTable<CpuType> {
 
 extern const TableZ8000 TABLE;
 
-Error searchName(CpuType, AsmInsn &insn);
-Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out);
-Error searchOpCodeAlias(CpuType, DisInsn &insn, StrBuffer &out);
+Error searchName(const CpuSpec &, AsmInsn &insn);
+Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out);
+Error searchOpCodeAlias(const CpuSpec &, DisInsn &insn, StrBuffer &out);
 
 }  // namespace z8000
 }  // namespace libasm
