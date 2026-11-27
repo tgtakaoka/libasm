@@ -19,6 +19,9 @@
 
 #include "config_base.h"
 
+/** Disable Z8070 FPU instructions */
+// #define LIBASM_Z8000_NOFPU
+
 namespace libasm {
 namespace z8000 {
 
@@ -27,14 +30,41 @@ enum CpuType : uint8_t {
     Z8002,
 };
 
+enum FpuType : uint8_t {
+    FPU_NONE,
+#if !defined(LIBASM_Z8000_NOFPU)
+    FPU_ON,
+    FPU_Z8070,
+#endif
+};
+
+struct CpuSpec final {
+    CpuSpec(CpuType cpu_, FpuType fpu_) : cpu(cpu_), fpu(fpu_) {}
+    CpuType cpu;
+    FpuType fpu;
+};
+
 struct Config : ConfigImpl<CpuType, ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8001) {}
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8001), _cpuSpec(Z8001, FPU_NONE) {}
 
     bool segmentedModel() const { return cpuType() == Z8001; }
 
     AddressWidth addressWidth() const override {
         return segmentedModel() ? ADDRESS_23BIT : ADDRESS_16BIT;
     }
+    uint8_t nameMax() const override { return _cpuSpec.fpu == FPU_NONE ? 6 : 8; }
+
+    void setCpuType(CpuType cpuType) override {
+        _cpuSpec.cpu = cpuType;
+        ConfigImpl::setCpuType(cpuType);
+    }
+    const char *fpu_P() const;
+    FpuType fpuType() const { return _cpuSpec.fpu; }
+    Error setFpuType(FpuType fpuType);
+    Error setFpuName(StrScanner &scan) override;
+
+protected:
+    CpuSpec _cpuSpec;
 };
 
 }  // namespace z8000

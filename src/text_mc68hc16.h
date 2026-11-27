@@ -142,7 +142,7 @@ using common::TEXT_EORB;
 using common::TEXT_EORD;
 extern const char TEXT_EORE[]   PROGMEM;
 using common::TEXT_FDIV;
-extern const char TEXT_FMULS[]  PROGMEM;
+using common::TEXT_FMULS;
 using common::TEXT_IDIV;
 using common::TEXT_INC;
 using common::TEXT_INCA;

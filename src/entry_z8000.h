@@ -32,7 +32,13 @@ enum OprSize : uint8_t {
     SZ_QUAD = Size::SZ_QUAD,
     SZ_OCTA = Size::SZ_OCTA,
     SZ_ADDR = Size::SZ_ADDR,
+    SZ_EXTD = 7,  // 10 byte: Z8070 extended precision or BCD operand
 };
+
+// Whether a memory operand of |size| is word data, so needs an even address.
+inline bool isWordSize(OprSize size) {
+    return size == SZ_WORD || size == SZ_QUAD || size == SZ_OCTA || size == SZ_EXTD;
+}
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
@@ -70,6 +76,12 @@ enum AddrMode : uint8_t {
     M_DBLR = 27,  // Double-Sized Register: WORD:RRn LONG:RQn
     M_WR07 = 28,  // R0~R7
     M_IRIO = 29,  // Indirect Register IO Address: @R1~R15
+    M_FREG = 30,  // Z8070 Register: F0~F7
+    M_FCB = 31,   // Z8070 Flag Group: FCB0~FCB15
+    M_FCTL = 32,  // Z8070 Control Register: FCTL0~FCTL7
+    M_FCNT = 33,  // Z8070 Register Count: #1/2 (5 words each)
+    M_FFLAG = 34, // Z8070 Flags: INV/FOV/UN/DZ/INX/DE
+    M_FMODE = 35, // Z8070 Mode nibble: #0~15
 };
 
 enum PostFormat : uint8_t {
@@ -80,6 +92,14 @@ enum PostFormat : uint8_t {
     PF_0X0X = 4,  // 0s are part of instruction
     PF_0X00 = 5,  // 0s are part of instruction
     PF_0XXX = 6,  // 0 is part of instruction
+    // Z8070 second word; the operation is fixed, P marks a precision field
+    // (bits 13-12), R a register field (11-8), N a count field (3-0) and F
+    // a flag mask (13-8).
+    PF_EPU_P = 7,
+    PF_EPU_PR = 8,
+    PF_EPU_PRN = 9,
+    PF_EPU_RN = 10,
+    PF_EPU_F = 11,
 };
 
 enum CodeFormat : uint8_t {
@@ -95,6 +115,7 @@ enum CodeFormat : uint8_t {
     CF_C0F0 = 9,
     CF_C0FF = 10,
     CF_X0FF = 11,  // CF_C0FF with extra check
+    CF_40F0 = 12,  // Z8070 memory transfer: IR or DA/X mode
 };
 
 enum OprPos : uint8_t {
@@ -109,16 +130,24 @@ enum OprPos : uint8_t {
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint16_t _mode;
+        uint32_t _mode;
         uint16_t _attr;
+        uint16_t _post;  // Z8070 second word template
 
         static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2,
                 OprSize size, OprPos dstPos, OprPos srcPos, CodeFormat cf, PostFormat pf) {
-            return Flags{mode(dst, src, ex1, ex2, size), attr(dstPos, srcPos, cf, pf)};
+            return Flags{mode(dst, src, ex1, ex2, size), attr(dstPos, srcPos, cf, pf), 0};
         }
 
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-            return Flags{mode(dst, src, ex1, ex2, SZ_NONE), attr(OP_NO, OP_NO, CF_0000, PF_NONE)};
+            return Flags{
+                    mode(dst, src, ex1, ex2, SZ_NONE), attr(OP_NO, OP_NO, CF_0000, PF_NONE), 0};
+        }
+
+        static constexpr Flags epu(AddrMode dst, AddrMode src, AddrMode ex1, OprSize size,
+                OprPos dstPos, OprPos srcPos, CodeFormat cf, PostFormat pf,
+                Config::opcode_t post) {
+            return Flags{mode(dst, src, ex1, M_NONE, size), attr(dstPos, srcPos, cf, pf), post};
         }
 
         AddrMode dst() const { return AddrMode((_mode >> dst_gp) & dst_gm); }
@@ -130,8 +159,15 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos srcPos() const { return OprPos((_attr >> srcPos_gp) & srcPos_gm); }
         PostFormat postFormat() const { return PostFormat((_attr >> pf_gp) & pf_gm); }
         CodeFormat codeFormat() const { return CodeFormat((_attr >> cf_gp) & cf_gm); }
+        bool isEpu() const { return postFormat() >= PF_EPU_P; }
+        bool hasPrecision() const {
+            const auto pf = postFormat();
+            return pf == PF_EPU_P || pf == PF_EPU_PR || pf == PF_EPU_PRN;
+        }
 
         Config::opcode_t postVal() const {
+            if (isEpu())
+                return _post;
             static constexpr Config::opcode_t POSTFIXES[] PROGMEM = {
                     0x0000,  // PF_NONE
                     0x0000,  // PF_0XX0
@@ -153,6 +189,11 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xF0F0,  // PF_0X0X
                     0xF0FF,  // PF_0X00
                     0xF000,  // PF_0XXX
+                    0xCFFF,  // PF_EPU_P
+                    0xC0FF,  // PF_EPU_PR
+                    0xC0F0,  // PF_EPU_PRN
+                    0xF0F0,  // PF_EPU_RN
+                    0xC0FF,  // PF_EPU_F
             };
             return pgm_read_word(POSTMASKS + postFormat());
         }
@@ -171,15 +212,17 @@ struct Entry final : entry::Base<Config::opcode_t> {
                     0xC0F0,  // CF_C0F0
                     0xC0FF,  // CF_C0FF
                     0xC0FF,  // CF_X0FF
+                    0x40F0,  // CF_40F0
             };
             return pgm_read_word(CODEMASKS + codeFormat());
         }
 
     private:
-        static constexpr uint16_t mode(
+        static constexpr uint32_t mode(
                 AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2, OprSize size) {
-            return (dst << dst_gp) | (src << src_gp) | (ex1 << ex1_gp) | (ex2 << ex2_gp) |
-                   (size << size_gp);
+            return (static_cast<uint32_t>(dst) << dst_gp) | (static_cast<uint32_t>(src) << src_gp) |
+                   (static_cast<uint32_t>(ex1) << ex1_gp) | (static_cast<uint32_t>(ex2) << ex2_gp) |
+                   (static_cast<uint32_t>(size) << size_gp);
         }
 
         static constexpr uint16_t attr(OprPos dstPos, OprPos srcPos, CodeFormat cf, PostFormat pf) {
@@ -188,15 +231,15 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
         // |_mode|
         static constexpr int dst_gp = 0;
-        static constexpr int src_gp = 5;
-        static constexpr int ex1_gp = 10;
-        static constexpr int ex2_gp = 12;
-        static constexpr int size_gp = 13;
-        static constexpr auto dst_gm = UINT16_C(0x1F);
-        static constexpr auto src_gm = UINT16_C(0x1F);
-        static constexpr auto ex1_gm = UINT16_C(0x3);
-        static constexpr auto ex2_gm = UINT16_C(0x1);
-        static constexpr auto size_gm = UINT16_C(0x7);
+        static constexpr int src_gp = 6;
+        static constexpr int ex1_gp = 12;
+        static constexpr int ex2_gp = 18;
+        static constexpr int size_gp = 19;
+        static constexpr auto dst_gm = UINT32_C(0x3F);
+        static constexpr auto src_gm = UINT32_C(0x3F);
+        static constexpr auto ex1_gm = UINT32_C(0x3F);
+        static constexpr auto ex2_gm = UINT32_C(0x1);
+        static constexpr auto size_gm = UINT32_C(0x7);
         // |_attr|
         static constexpr int dstPos_gp = 0;
         static constexpr int srcPos_gp = 3;
@@ -205,14 +248,15 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr auto dstPos_gm = UINT16_C(0x7);
         static constexpr auto srcPos_gm = UINT16_C(0x7);
         static constexpr auto cf_gm = UINT16_C(0xF);
-        static constexpr auto pf_gm = UINT16_C(0x7);
+        static constexpr auto pf_gm = UINT16_C(0xF);
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const /* PROGMEM */ char *name_P)
         : Base(name_P, opCode), _flags_P(flags) {}
 
     Flags readFlags() const {
-        return Flags{pgm_read_word(&_flags_P._mode), pgm_read_word(&_flags_P._attr)};
+        return Flags{pgm_read_dword(&_flags_P._mode), pgm_read_word(&_flags_P._attr),
+                pgm_read_word(&_flags_P._post)};
     }
 
 private:

@@ -35,6 +35,7 @@ struct DisZ8000 final : Disassembler, Config {
     Error setSpAlias(bool enable);
 
 private:
+    const TextOption<Config> _opt_fpu;
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_segmentedAddr;
     const BoolOption<DisZ8000> _opt_externSymbol;
@@ -58,6 +59,7 @@ private:
     Error checkRegisterOverlap(DisInsn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
+    bool currentOption(const char *&name, const char *&value) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

@@ -307,7 +307,7 @@ extern const char TEXT_RETXA[] PROGMEM;
 // V35
 extern const char TEXT_BRKCS[]  PROGMEM;
 extern const char TEXT_BTCLR[]  PROGMEM;
-extern const char TEXT_FINT[]   PROGMEM;
+using common::TEXT_FINT;
 extern const char TEXT_MOVSPA[] PROGMEM;
 extern const char TEXT_MOVSPB[] PROGMEM;
 extern const char TEXT_RETRBI[] PROGMEM;
@@ -347,7 +347,7 @@ extern const char TEXT_FIST[]    PROGMEM;
 extern const char TEXT_FISTP[]   PROGMEM;
 extern const char TEXT_FISUB[]   PROGMEM;
 extern const char TEXT_FISUBR[]  PROGMEM;
-extern const char TEXT_FLD[]     PROGMEM;
+using common::TEXT_FLD;
 extern const char TEXT_FLD1[]    PROGMEM;
 extern const char TEXT_FLDCW[]   PROGMEM;
 extern const char TEXT_FLDENV[]  PROGMEM;
