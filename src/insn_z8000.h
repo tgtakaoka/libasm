@@ -67,19 +67,17 @@ struct Operand final : ErrorAt {
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), prec(PREC_NONE) {}
 
     Operand dstOp, srcOp, ex1Op, ex2Op;
+    PrecName prec;  // Z8070 result precision
 
     void emitInsn() {
         emitUint16(opCode(), 0);
-        const auto format = postFormat();
-        if (format == PF_0XX8)
-            embedPostfix(0x8);
-        if (format == PF_0XXE)
-            embedPostfix(0xE);
-        if (format != PF_NONE)
+        if (postFormat() != PF_NONE) {
+            embedPostfix(flags().postVal());
             emitUint16(postfix(), 2);
+        }
     }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }

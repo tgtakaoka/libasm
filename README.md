@@ -100,7 +100,7 @@ It can generate Intel HEX or Motorola S-Record output.
       --smart-branch    : optimize branch instruction (bool)
       --advanced-mode   : H8/300H 24-bit advanced mode (bool: H8/300)
       --extmode         : Extended mode (bool: Z380)
-      --fpu             : floating point co-processor (text: AM29200, 80960, 8086, 68000, SH-1, 32032)
+      --fpu             : floating point co-processor (text: AM29200, 80960, 8086, 68000, SH-1, Z8001, 32032)
       --fwait           : 8087 WAIT before instructions: none (default), auto or asm86 (text: 8086)
       --gnu-as          : GNU assembler compatible (bool: 8086)
       --implicit-word   : unknown instruction defines word (bool: 6100, J11)
