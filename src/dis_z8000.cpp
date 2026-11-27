@@ -22,6 +22,7 @@ namespace libasm {
 namespace z8000 {
 
 using namespace reg;
+using namespace text::option;
 
 namespace {
 
@@ -41,8 +42,9 @@ const ValueFormatter::Plugins &DisZ8000::defaultPlugins() {
 }
 
 DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
-    : Disassembler(plugins, &_opt_shortDirect),
+    : Disassembler(plugins, &_opt_fpu),
       Config(TABLE),
+      _opt_fpu(this, &Config::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_shortDirect),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
       _opt_segmentedAddr(this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR,
@@ -55,6 +57,7 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
 
 void DisZ8000::reset() {
     Disassembler::reset();
+    setFpuType(FPU_NONE);
     setShortDirect(true);
     setSegmentedAddr(true);
     setExternSymbol(false);
@@ -81,6 +84,17 @@ Error DisZ8000::setSpAlias(bool enable) {
     return OK;
 }
 
+// The Z8070 is off by default, so its instructions re-assemble only when
+// the source turns it on.
+bool DisZ8000::currentOption(const char *&name, const char *&value) const {
+    if (fpuType() != FPU_NONE) {
+        name = "fpu";
+        value = "on";
+        return true;
+    }
+    return false;
+}
+
 void DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size) const {
     out.letter('#');
     if (mode == M_IM8) {
@@ -92,7 +106,7 @@ void DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         const auto count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
-            searchOpCodeAlias(cpuType(), insn, out);
+            searchOpCodeAlias(_cpuSpec, insn, out);
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
@@ -208,7 +222,7 @@ void DisZ8000::decodeGenericAddressing(
 }
 
 void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
+    const auto align = mode == M_DA && isWordSize(insn.size());
     const auto val16 = insn.readUint16();
     if (segmentedModel()) {
         const auto seg = (val16 >> 8) & 0x7F;
@@ -355,7 +369,7 @@ void DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         break;
     case M_CNT:
         out.letter('#');
-        if (insn.ex1() == M_CNT) {  // LDM
+        if (insn.isLoadMultiInsn()) {
             const auto reg = modePos(insn, OP_P8);
             const auto cnt = modePos(insn, OP_P0);
             if (reg + cnt >= 16)
@@ -374,6 +388,38 @@ void DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         break;
     case M_X:
         decodeGenericAddressing(insn, out, mode, num);
+        break;
+    case M_FREG:
+        if (num >= 8) {
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+            break;
+        }
+        outRegName(out, decodeFpuRegNum(num), REG_UNDEF);
+        break;
+    case M_FCB:
+        outFlagGroup(out, num);
+        break;
+    case M_FCTL:
+        if (num >= 8) {
+            insn.setErrorIf(out, ILLEGAL_REGISTER);
+            break;
+        }
+        outFpuCtlReg(out, num);
+        break;
+    case M_FCNT:  // one or two 5-word registers
+        if (num != 4 && num != 9)
+            insn.setErrorIf(out, ILLEGAL_OPERAND);
+        outHex(out.letter('#'), (num + 1) / 5, 2);
+        break;
+    case M_FFLAG: {
+        const auto flags = (insn.postfix() >> 8) & 0x3F;
+        if (flags == 0)
+            insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
+        outFpuFlagNames(out, flags);
+        break;
+    }
+    case M_FMODE:
+        outHex(out.letter('#'), num, 4);
         break;
     default:
         break;
@@ -429,10 +475,18 @@ StrBuffer &DisZ8000::outComma(
 Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
-    if (searchOpCode(cpuType(), insn, out))
+    if (searchOpCode(_cpuSpec, insn, out))
         return _insn.setError(insn);
 
     const auto dst = insn.dst();
+    if (insn.hasPrecision()) {
+        const auto prec = PrecName((insn.postfix() >> 12) & 3);
+        if (prec != PREC_NONE) {
+            outPrecName(out, prec);
+            if (dst != M_NONE)
+                out.letter(' ');
+        }
+    }
     decodeOperand(insn, out, dst, insn.dstPos());
     const auto src = insn.src();
     if (src != M_NONE) {
@@ -442,7 +496,7 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
         decodeOperand(insn, out, src, insn.srcPos());
         const auto ex1 = insn.ex1();
         if (ex1 != M_NONE) {
-            const auto ex1Pos = (ex1 == M_CNT ? OP_P0 : OP_P8);
+            const auto ex1Pos = (ex1 == M_WR ? OP_P8 : OP_P0);
             outComma(out, insn, ex1, ex1Pos);
             if (insn.isThreeRegsInsn())
                 insn.setCheckRegisterOverlap(2);

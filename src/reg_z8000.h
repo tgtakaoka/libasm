@@ -90,6 +90,15 @@ enum RegName : int8_t {
     REG_NSPOFF = REG_CTLBASE + 7,
     REG_PSAP = REG_PSAPOFF + 8,
     REG_NSP = REG_NSPOFF + 8,
+    // Z8070 Register: 80~87
+    REG_F0 = 80,
+    REG_F1 = REG_F0 + 1,
+    REG_F2 = REG_F0 + 2,
+    REG_F3 = REG_F0 + 3,
+    REG_F4 = REG_F0 + 4,
+    REG_F5 = REG_F0 + 5,
+    REG_F6 = REG_F0 + 6,
+    REG_F7 = REG_F0 + 7,
 };
 
 enum CcName : int8_t {
@@ -133,6 +142,25 @@ enum IntrName : int8_t {
     INTR_VI = 2,   // Vectored Interrupt
 };
 
+// Z8070 flags; the values are bits of the FSETFLG/FRESFLG mask.
+enum FpuFlagName : int8_t {
+    FFLAG_UNDEF = 0,
+    FFLAG_INV = 0x01,  // Invalid operation
+    FFLAG_FOV = 0x02,  // Overflow
+    FFLAG_UN = 0x04,   // Underflow
+    FFLAG_DZ = 0x08,   // Divide by zero
+    FFLAG_INX = 0x10,  // Inexact result
+    FFLAG_DE = 0x20,   // Denormalized number
+};
+
+// Z8070 result precision; the values are the second word's bits 13-12.
+enum PrecName : int8_t {
+    PREC_UNDEF = -1,
+    PREC_NONE = 0,  // Extended
+    PREC_SGL = 1,   // Single
+    PREC_DBL = 3,   // Double
+};
+
 namespace reg {
 
 RegName parseRegName(StrScanner &scan, bool segmentedModel);
@@ -170,6 +198,19 @@ StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs);
 uint8_t encodeIntrName(IntrName name);
 
 bool checkOverlap(RegName dst, RegName src, RegName cnt = REG_UNDEF);
+
+RegName parseFpuRegName(StrScanner &scan);
+bool isFpuReg(RegName name);
+uint8_t encodeFpuRegName(RegName name);
+RegName decodeFpuRegNum(uint8_t num);
+int8_t parseFlagGroup(StrScanner &scan);
+StrBuffer &outFlagGroup(StrBuffer &out, uint8_t num);
+int8_t parseFpuCtlReg(StrScanner &scan);
+StrBuffer &outFpuCtlReg(StrBuffer &out, uint8_t num);
+PrecName parsePrecName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outPrecName(StrBuffer &out, PrecName name);
+FpuFlagName parseFpuFlagName(StrScanner &scan, const ValueParser &parser);
+StrBuffer &outFpuFlagNames(StrBuffer &out, uint8_t flags);
 
 StrBuffer &outCtlName(StrBuffer &out, RegName name);
 uint8_t ctlRegLen(RegName name);

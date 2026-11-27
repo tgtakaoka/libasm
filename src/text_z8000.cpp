@@ -24,6 +24,7 @@ namespace z8000 {
 constexpr char TEXT_Z8000_LIST[] PROGMEM = "Z8001, Z8002";
 constexpr char TEXT_CPU_Z8001[] PROGMEM = "Z8001";
 constexpr char TEXT_CPU_Z8002[] PROGMEM = "Z8002";
+constexpr char TEXT_FPU_Z8070[] PROGMEM = "Z8070";
 
 // constexpr char TEXT_ADC[]   PROGMEM = "ADC";
 // constexpr char TEXT_ADCB[]  PROGMEM = "ADCB";
@@ -215,6 +216,67 @@ constexpr char TEXT_TSETB[]  PROGMEM = "TSETB";
 // constexpr char TEXT_XOR[]   PROGMEM = "XOR";
 // constexpr char TEXT_XORB[]  PROGMEM = "XORB";
 
+// Z8070
+// constexpr char TEXT_FABS[]     PROGMEM = "FABS";
+constexpr char TEXT_FABSD[]    PROGMEM = "FABSD";
+constexpr char TEXT_FABSS[]    PROGMEM = "FABSS";
+// constexpr char TEXT_FADD[]     PROGMEM = "FADD";
+constexpr char TEXT_FADDD[]    PROGMEM = "FADDD";
+constexpr char TEXT_FADDS[]    PROGMEM = "FADDS";
+constexpr char TEXT_FCLR[]     PROGMEM = "FCLR";
+constexpr char TEXT_FCP[]      PROGMEM = "FCP";
+constexpr char TEXT_FCPD[]     PROGMEM = "FCPD";
+constexpr char TEXT_FCPF[]     PROGMEM = "FCPF";
+constexpr char TEXT_FCPFX[]    PROGMEM = "FCPFX";
+constexpr char TEXT_FCPS[]     PROGMEM = "FCPS";
+constexpr char TEXT_FCPX[]     PROGMEM = "FCPX";
+constexpr char TEXT_FCPXD[]    PROGMEM = "FCPXD";
+constexpr char TEXT_FCPXS[]    PROGMEM = "FCPXS";
+constexpr char TEXT_FCPZ[]     PROGMEM = "FCPZ";
+constexpr char TEXT_FCPZFX[]   PROGMEM = "FCPZFX";
+constexpr char TEXT_FCPZNF[]   PROGMEM = "FCPZNF";
+constexpr char TEXT_FCPZXNF[]  PROGMEM = "FCPZXNF";
+// constexpr char TEXT_FDIV[]     PROGMEM = "FDIV";
+constexpr char TEXT_FDIVD[]    PROGMEM = "FDIVD";
+constexpr char TEXT_FDIVS[]    PROGMEM = "FDIVS";
+// constexpr char TEXT_FINT[]     PROGMEM = "FINT";
+constexpr char TEXT_FINTD[]    PROGMEM = "FINTD";
+constexpr char TEXT_FINTS[]    PROGMEM = "FINTS";
+// constexpr char TEXT_FLD[]      PROGMEM = "FLD";
+constexpr char TEXT_FLDBCD[]   PROGMEM = "FLDBCD";
+constexpr char TEXT_FLDCTL[]   PROGMEM = "FLDCTL";
+constexpr char TEXT_FLDCTLB[]  PROGMEM = "FLDCTLB";
+constexpr char TEXT_FLDD[]     PROGMEM = "FLDD";
+constexpr char TEXT_FLDIL[]    PROGMEM = "FLDIL";
+constexpr char TEXT_FLDIQ[]    PROGMEM = "FLDIQ";
+constexpr char TEXT_FLDM[]     PROGMEM = "FLDM";
+// constexpr char TEXT_FLDS[]     PROGMEM = "FLDS";
+constexpr char TEXT_FLDTL[]    PROGMEM = "FLDTL";
+constexpr char TEXT_FLDTQ[]    PROGMEM = "FLDTQ";
+// constexpr char TEXT_FMUL[]     PROGMEM = "FMUL";
+constexpr char TEXT_FMULD[]    PROGMEM = "FMULD";
+// constexpr char TEXT_FMULS[]    PROGMEM = "FMULS";
+// constexpr char TEXT_FNEG[]     PROGMEM = "FNEG";
+constexpr char TEXT_FNEGD[]    PROGMEM = "FNEGD";
+constexpr char TEXT_FNEGS[]    PROGMEM = "FNEGS";
+constexpr char TEXT_FREMSNF[]  PROGMEM = "FREMSNF";
+constexpr char TEXT_FREMSTEP[] PROGMEM = "FREMSTEP";
+constexpr char TEXT_FRESFLG[]  PROGMEM = "FRESFLG";
+constexpr char TEXT_FRESTRAP[] PROGMEM = "FRESTRAP";
+constexpr char TEXT_FSETFLG[]  PROGMEM = "FSETFLG";
+constexpr char TEXT_FSETMODE[] PROGMEM = "FSETMODE";
+constexpr char TEXT_FSETTRAP[] PROGMEM = "FSETTRAP";
+constexpr char TEXT_FSQR[]     PROGMEM = "FSQR";
+constexpr char TEXT_FSQRD[]    PROGMEM = "FSQRD";
+constexpr char TEXT_FSQRS[]    PROGMEM = "FSQRS";
+constexpr char TEXT_FSTP[]     PROGMEM = "FSTP";
+// constexpr char TEXT_FSUB[]     PROGMEM = "FSUB";
+constexpr char TEXT_FSUBD[]    PROGMEM = "FSUBD";
+constexpr char TEXT_FSUBS[]    PROGMEM = "FSUBS";
+
+// constexpr char TEXT_REG_F[]       PROGMEM = "F";
+constexpr char TEXT_REG_FCB[]     PROGMEM = "FCB";
+constexpr char TEXT_REG_FCTL[]    PROGMEM = "FCTL";
 constexpr char TEXT_REG_FCW[]     PROGMEM = "FCW";
 constexpr char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
 // constexpr char TEXT_REG_NSP[]     PROGMEM = "NSP";
@@ -250,6 +312,13 @@ constexpr char TEXT_REG_RQ[]      PROGMEM = "RQ";
 // constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
 // constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
 
+constexpr char TEXT_FFLAG_DE[]  PROGMEM = "DE";
+constexpr char TEXT_FFLAG_DZ[]  PROGMEM = "DZ";
+constexpr char TEXT_FFLAG_FOV[] PROGMEM = "FOV";
+constexpr char TEXT_FFLAG_INV[] PROGMEM = "INV";
+constexpr char TEXT_FFLAG_INX[] PROGMEM = "INX";
+constexpr char TEXT_FFLAG_UN[]  PROGMEM = "UN";
+
 constexpr char TEXT_FLAG_C[] PROGMEM = "C";
 constexpr char TEXT_FLAG_P[] PROGMEM = "P";
 constexpr char TEXT_FLAG_S[] PROGMEM = "S";
@@ -258,6 +327,9 @@ constexpr char TEXT_FLAG_Z[] PROGMEM = "Z";
 
 constexpr char TEXT_INTR_NVI[] PROGMEM = "NVI";
 constexpr char TEXT_INTR_VI[]  PROGMEM = "VI";
+
+constexpr char TEXT_PREC_DBL[] PROGMEM = "DBL";
+constexpr char TEXT_PREC_SGL[] PROGMEM = "SGL";
 
 // clang-format on
 }  // namespace z8000

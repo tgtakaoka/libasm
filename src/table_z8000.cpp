@@ -34,6 +34,12 @@ namespace z8000 {
     X2(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, PF_NONE)
 #define E1(_opc, _name, _cf, _sz, _dst, _dpos) E2(_opc, _name, _cf, _sz, _dst, M_NONE, _dpos, OP_NO)
 #define E0(_opc, _name, _cf) E1(_opc, _name, _cf, SZ_NONE, M_NONE, OP_NO)
+#define F3(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _ex1, _pf, _post) \
+    {_opc, Entry::Flags::epu(_dst, _src, _ex1, _sz, _dpos, _spos, _cf, _pf, _post), _name}
+#define F2(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, _pf, _post) \
+    F3(_opc, _name, _cf, _sz, _dst, _src, _dpos, _spos, M_NONE, _pf, _post)
+#define F1(_opc, _name, _cf, _sz, _dst, _dpos, _pf, _post) \
+    F2(_opc, _name, _cf, _sz, _dst, M_NONE, _dpos, OP_NO, _pf, _post)
 
 // clang-format off
 constexpr Entry TABLE_Z8000[] PROGMEM = {
@@ -505,6 +511,274 @@ constexpr uint8_t INDEX_Z8000[] PROGMEM = {
     103,  // TEXT_XOR
     102,  // TEXT_XORB
 };
+#if !defined(LIBASM_Z8000_NOFPU)
+// Z8070 extended instructions.  The first word is the CPU template of the
+// Z8000 CPU Technical Manual section 6.8: 8E04 internal operation, 8E00 FCW
+// from EPU, 8F00 CPU register from EPU, 8F08 EPU from CPU register, 0F0C
+// memory from EPU and 0F04 EPU from memory, with EPU ID 0.  The second
+// word holds the operation in bits 15-14 and 7-4, the result precision in
+// bits 13-12, a register in bits 11-8 and the transfer word count less one
+// in bits 3-0.  The Z8070 Product Specification gives no encoding; the
+// second word follows Zilog's Z8070 emulation package for CP/M-8000, as
+// does the output of its C compiler.  FSETFLG, FRESFLG, FSETTRAP and
+// FRESTRAP carry their flag mask in bits 13-8, FSETMODE its mask and
+// setting nibbles in bits 11-8 and 3-0.
+constexpr Entry TABLE_Z8070[] PROGMEM = {
+    F2(0x8E04, TEXT_FADD,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4080),
+    F2(0x8F08, TEXT_FADDS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4081),
+    F2(0x8F08, TEXT_FADDD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4083),
+    F2(0x8F08, TEXT_FADD,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4084),
+    F2(0x0F04, TEXT_FADDS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4081),
+    F2(0x0F04, TEXT_FADDD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4083),
+    F2(0x0F04, TEXT_FADD,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4084),
+    F2(0x8E04, TEXT_FSUB,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4090),
+    F2(0x8F08, TEXT_FSUBS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4091),
+    F2(0x8F08, TEXT_FSUBD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4093),
+    F2(0x8F08, TEXT_FSUB,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4094),
+    F2(0x0F04, TEXT_FSUBS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4091),
+    F2(0x0F04, TEXT_FSUBD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4093),
+    F2(0x0F04, TEXT_FSUB,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4094),
+    F2(0x8E04, TEXT_FDIV,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x40A0),
+    F2(0x8F08, TEXT_FDIVS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40A1),
+    F2(0x8F08, TEXT_FDIVD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40A3),
+    F2(0x8F08, TEXT_FDIV,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40A4),
+    F2(0x0F04, TEXT_FDIVS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40A1),
+    F2(0x0F04, TEXT_FDIVD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40A3),
+    F2(0x0F04, TEXT_FDIV,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40A4),
+    F2(0x8E04, TEXT_FMUL,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x40B0),
+    F2(0x8F08, TEXT_FMULS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40B1),
+    F2(0x8F08, TEXT_FMULD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40B3),
+    F2(0x8F08, TEXT_FMUL,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40B4),
+    F2(0x0F04, TEXT_FMULS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40B1),
+    F2(0x0F04, TEXT_FMULD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40B3),
+    F2(0x0F04, TEXT_FMUL,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40B4),
+    F2(0x8E04, TEXT_FSQR,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x80C0),
+    F2(0x8F08, TEXT_FSQRS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80C1),
+    F2(0x8F08, TEXT_FSQRD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80C3),
+    F2(0x8F08, TEXT_FSQR,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80C4),
+    F2(0x0F04, TEXT_FSQRS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80C1),
+    F2(0x0F04, TEXT_FSQRD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80C3),
+    F2(0x0F04, TEXT_FSQR,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80C4),
+    F2(0x8E04, TEXT_FABS,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8080),
+    F2(0x8F08, TEXT_FABSS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8081),
+    F2(0x8F08, TEXT_FABSD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8083),
+    F2(0x8F08, TEXT_FABS,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8084),
+    F2(0x0F04, TEXT_FABSS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8081),
+    F2(0x0F04, TEXT_FABSD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8083),
+    F2(0x0F04, TEXT_FABS,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8084),
+    F2(0x8E04, TEXT_FNEG,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8090),
+    F2(0x8F08, TEXT_FNEGS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8091),
+    F2(0x8F08, TEXT_FNEGD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8093),
+    F2(0x8F08, TEXT_FNEG,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8094),
+    F2(0x0F04, TEXT_FNEGS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8091),
+    F2(0x0F04, TEXT_FNEGD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8093),
+    F2(0x0F04, TEXT_FNEG,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8094),
+    F2(0x8E04, TEXT_FINT,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x80D0),
+    F2(0x8F08, TEXT_FINTS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80D1),
+    F2(0x8F08, TEXT_FINTD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80D3),
+    F2(0x8F08, TEXT_FINT,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x80D4),
+    F2(0x0F04, TEXT_FINTS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80D1),
+    F2(0x0F04, TEXT_FINTD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80D3),
+    F2(0x0F04, TEXT_FINT,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x80D4),
+    F2(0x8E04, TEXT_FREMSNF,  CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x40C0),
+    F2(0x8F08, TEXT_FREMSNF,  CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x40C4),
+    F2(0x0F04, TEXT_FREMSNF,  CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x40C4),
+    F2(0x8E00, TEXT_FREMSTEP, CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x40C0),
+    F2(0x8E04, TEXT_FCP,      CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4010),
+    F2(0x8F08, TEXT_FCPS,     CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4011),
+    F2(0x8F08, TEXT_FCPD,     CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4013),
+    F2(0x8F08, TEXT_FCP,      CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4014),
+    F2(0x0F04, TEXT_FCPS,     CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4011),
+    F2(0x0F04, TEXT_FCPD,     CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4013),
+    F2(0x0F04, TEXT_FCP,      CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4014),
+    F2(0x8E00, TEXT_FCPF,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4010),
+    F2(0x8E04, TEXT_FCPX,     CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4020),
+    F2(0x8F08, TEXT_FCPXS,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4021),
+    F2(0x8F08, TEXT_FCPXD,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4023),
+    F2(0x8F08, TEXT_FCPX,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x4024),
+    F2(0x0F04, TEXT_FCPXS,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4021),
+    F2(0x0F04, TEXT_FCPXD,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4023),
+    F2(0x0F04, TEXT_FCPX,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x4024),
+    F2(0x8E00, TEXT_FCPFX,    CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x4020),
+    F1(0x8E00, TEXT_FCPZ,     CF_00F0, SZ_NONE, M_FREG,         OP_C4,        PF_EPU_P,  0x0010),
+    F1(0x8E00, TEXT_FCPZFX,   CF_00F0, SZ_NONE, M_FREG,         OP_C4,        PF_EPU_P,  0x0020),
+    F1(0x8E04, TEXT_FCPZNF,   CF_00F0, SZ_NONE, M_FREG,         OP_C4,        PF_EPU_P,  0x0010),
+    F1(0x8E04, TEXT_FCPZXNF,  CF_00F0, SZ_NONE, M_FREG,         OP_C4,        PF_EPU_P,  0x0020),
+    F1(0x8E04, TEXT_FCLR,     CF_00F0, SZ_NONE, M_FREG,         OP_C4,        PF_EPU_P,  0x0000),
+    F2(0x8E04, TEXT_FLD,      CF_00F0, SZ_NONE, M_FREG, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8000),
+    F2(0x8F08, TEXT_FLDS,     CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8001),
+    F2(0x8F08, TEXT_FLDD,     CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8003),
+    F2(0x8F08, TEXT_FLD,      CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8004),
+    F2(0x0F04, TEXT_FLDS,     CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8001),
+    F2(0x0F04, TEXT_FLDD,     CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8003),
+    F2(0x0F04, TEXT_FLD,      CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8004),
+    F2(0x8F00, TEXT_FLDS,     CF_00F0, SZ_QUAD, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8001),
+    F2(0x0F0C, TEXT_FLDS,     CF_40F0, SZ_QUAD, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8001),
+    F2(0x8F00, TEXT_FLDD,     CF_00F0, SZ_OCTA, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8003),
+    F2(0x0F0C, TEXT_FLDD,     CF_40F0, SZ_OCTA, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8003),
+    F2(0x8F00, TEXT_FLD,      CF_00F0, SZ_EXTD, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8004),
+    F2(0x0F0C, TEXT_FLD,      CF_40F0, SZ_EXTD, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8004),
+    F2(0x8F08, TEXT_FLDBCD,   CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8014),
+    F2(0x0F04, TEXT_FLDBCD,   CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8014),
+    F2(0x8F00, TEXT_FLDBCD,   CF_00F0, SZ_EXTD, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8014),
+    F2(0x0F0C, TEXT_FLDBCD,   CF_40F0, SZ_EXTD, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8014),
+    F2(0x8F08, TEXT_FLDIL,    CF_00F0, SZ_QUAD, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8021),
+    F2(0x0F04, TEXT_FLDIL,    CF_40F0, SZ_QUAD, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8021),
+    F2(0x8F00, TEXT_FLDIL,    CF_00F0, SZ_QUAD, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8021),
+    F2(0x0F0C, TEXT_FLDIL,    CF_40F0, SZ_QUAD, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8021),
+    F2(0x8F08, TEXT_FLDIQ,    CF_00F0, SZ_OCTA, M_FREG, M_R,    OP_C4, OP_P8, PF_EPU_PR, 0x8023),
+    F2(0x0F04, TEXT_FLDIQ,    CF_40F0, SZ_OCTA, M_FREG, M_GENA, OP_P8, OP_C4, PF_EPU_PR, 0x8023),
+    F2(0x8F00, TEXT_FLDIQ,    CF_00F0, SZ_OCTA, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8023),
+    F2(0x0F0C, TEXT_FLDIQ,    CF_40F0, SZ_OCTA, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8023),
+    F2(0x8F00, TEXT_FLDTL,    CF_00F0, SZ_QUAD, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8041),
+    F2(0x0F0C, TEXT_FLDTL,    CF_40F0, SZ_QUAD, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8041),
+    F2(0x8F00, TEXT_FLDTQ,    CF_00F0, SZ_OCTA, M_R,    M_FREG, OP_P8, OP_C4, PF_EPU_PR, 0x8043),
+    F2(0x0F0C, TEXT_FLDTQ,    CF_40F0, SZ_OCTA, M_GENA, M_FREG, OP_C4, OP_P8, PF_EPU_PR, 0x8043),
+    F1(0x8E00, TEXT_FLDCTLB,  CF_00F0, SZ_NONE, M_FCB,          OP_C4,        PF_EPU_P,  0xC010),
+    F3(0x8F08, TEXT_FLDM,     CF_00F0, SZ_EXTD, M_FREG, M_R,    OP_C4, OP_P8, M_FCNT, PF_EPU_PRN, 0x8030),
+    F3(0x8F00, TEXT_FLDM,     CF_00F0, SZ_EXTD, M_R,    M_FREG, OP_P8, OP_C4, M_FCNT, PF_EPU_PRN, 0x8030),
+    F3(0x0F04, TEXT_FLDM,     CF_40F0, SZ_EXTD, M_FREG, M_GENA, OP_P8, OP_C4, M_FCNT, PF_EPU_PRN, 0x8030),
+    F3(0x0F0C, TEXT_FLDM,     CF_40F0, SZ_EXTD, M_GENA, M_FREG, OP_C4, OP_P8, M_FCNT, PF_EPU_PRN, 0x8030),
+    F1(0x8E04, TEXT_FRESFLG,  CF_0000, SZ_NONE, M_FFLAG,        OP_P8,        PF_EPU_F,  0xC020),
+    F1(0x8E04, TEXT_FSETFLG,  CF_0000, SZ_NONE, M_FFLAG,        OP_P8,        PF_EPU_F,  0xC030),
+    F1(0x8E24, TEXT_FRESTRAP, CF_0000, SZ_NONE, M_FFLAG,        OP_P8,        PF_EPU_F,  0xC020),
+    F1(0x8E24, TEXT_FSETTRAP, CF_0000, SZ_NONE, M_FFLAG,        OP_P8,        PF_EPU_F,  0xC030),
+    F2(0x8E04, TEXT_FSETMODE, CF_0000, SZ_NONE, M_FMODE, M_FMODE, OP_P8, OP_P0,      PF_EPU_RN, 0xC040),
+    F1(0x8E04, TEXT_FSTP,     CF_0000, SZ_NONE, M_NONE,         OP_NO,        PF_EPU_P,  0xC0F0),
+    F3(0x8F08, TEXT_FLDCTL,   CF_00F0, SZ_WORD, M_FCTL, M_R,    OP_C4, OP_P8, M_CNT, PF_EPU_PRN,0xC000),
+    F3(0x8F00, TEXT_FLDCTL,   CF_00F0, SZ_WORD, M_R,    M_FCTL, OP_P8, OP_C4, M_CNT, PF_EPU_PRN,0xC000),
+    F3(0x0F04, TEXT_FLDCTL,   CF_40F0, SZ_WORD, M_FCTL, M_GENA, OP_P8, OP_C4, M_CNT, PF_EPU_PRN,0xC000),
+    F3(0x0F0C, TEXT_FLDCTL,   CF_40F0, SZ_WORD, M_GENA, M_FCTL, OP_C4, OP_P8, M_CNT, PF_EPU_PRN,0xC000),
+};
+
+constexpr uint8_t INDEX_Z8070[] PROGMEM = {
+     35,  // TEXT_FABS
+     38,  // TEXT_FABS
+     41,  // TEXT_FABS
+     37,  // TEXT_FABSD
+     40,  // TEXT_FABSD
+     36,  // TEXT_FABSS
+     39,  // TEXT_FABSS
+      0,  // TEXT_FADD
+      3,  // TEXT_FADD
+      6,  // TEXT_FADD
+      2,  // TEXT_FADDD
+      5,  // TEXT_FADDD
+      1,  // TEXT_FADDS
+      4,  // TEXT_FADDS
+     80,  // TEXT_FCLR
+     60,  // TEXT_FCP
+     63,  // TEXT_FCP
+     66,  // TEXT_FCP
+     62,  // TEXT_FCPD
+     65,  // TEXT_FCPD
+     67,  // TEXT_FCPF
+     75,  // TEXT_FCPFX
+     61,  // TEXT_FCPS
+     64,  // TEXT_FCPS
+     68,  // TEXT_FCPX
+     71,  // TEXT_FCPX
+     74,  // TEXT_FCPX
+     70,  // TEXT_FCPXD
+     73,  // TEXT_FCPXD
+     69,  // TEXT_FCPXS
+     72,  // TEXT_FCPXS
+     76,  // TEXT_FCPZ
+     77,  // TEXT_FCPZFX
+     78,  // TEXT_FCPZNF
+     79,  // TEXT_FCPZXNF
+     14,  // TEXT_FDIV
+     17,  // TEXT_FDIV
+     20,  // TEXT_FDIV
+     16,  // TEXT_FDIVD
+     19,  // TEXT_FDIVD
+     15,  // TEXT_FDIVS
+     18,  // TEXT_FDIVS
+     49,  // TEXT_FINT
+     52,  // TEXT_FINT
+     55,  // TEXT_FINT
+     51,  // TEXT_FINTD
+     54,  // TEXT_FINTD
+     50,  // TEXT_FINTS
+     53,  // TEXT_FINTS
+     81,  // TEXT_FLD
+     84,  // TEXT_FLD
+     87,  // TEXT_FLD
+     92,  // TEXT_FLD
+     93,  // TEXT_FLD
+     94,  // TEXT_FLDBCD
+     95,  // TEXT_FLDBCD
+     96,  // TEXT_FLDBCD
+     97,  // TEXT_FLDBCD
+    121,  // TEXT_FLDCTL
+    122,  // TEXT_FLDCTL
+    123,  // TEXT_FLDCTL
+    124,  // TEXT_FLDCTL
+    110,  // TEXT_FLDCTLB
+     83,  // TEXT_FLDD
+     86,  // TEXT_FLDD
+     90,  // TEXT_FLDD
+     91,  // TEXT_FLDD
+     98,  // TEXT_FLDIL
+     99,  // TEXT_FLDIL
+    100,  // TEXT_FLDIL
+    101,  // TEXT_FLDIL
+    102,  // TEXT_FLDIQ
+    103,  // TEXT_FLDIQ
+    104,  // TEXT_FLDIQ
+    105,  // TEXT_FLDIQ
+    111,  // TEXT_FLDM
+    112,  // TEXT_FLDM
+    113,  // TEXT_FLDM
+    114,  // TEXT_FLDM
+     82,  // TEXT_FLDS
+     85,  // TEXT_FLDS
+     88,  // TEXT_FLDS
+     89,  // TEXT_FLDS
+    106,  // TEXT_FLDTL
+    107,  // TEXT_FLDTL
+    108,  // TEXT_FLDTQ
+    109,  // TEXT_FLDTQ
+     21,  // TEXT_FMUL
+     24,  // TEXT_FMUL
+     27,  // TEXT_FMUL
+     23,  // TEXT_FMULD
+     26,  // TEXT_FMULD
+     22,  // TEXT_FMULS
+     25,  // TEXT_FMULS
+     42,  // TEXT_FNEG
+     45,  // TEXT_FNEG
+     48,  // TEXT_FNEG
+     44,  // TEXT_FNEGD
+     47,  // TEXT_FNEGD
+     43,  // TEXT_FNEGS
+     46,  // TEXT_FNEGS
+     56,  // TEXT_FREMSNF
+     57,  // TEXT_FREMSNF
+     58,  // TEXT_FREMSNF
+     59,  // TEXT_FREMSTEP
+    115,  // TEXT_FRESFLG
+    117,  // TEXT_FRESTRAP
+    116,  // TEXT_FSETFLG
+    119,  // TEXT_FSETMODE
+    118,  // TEXT_FSETTRAP
+     28,  // TEXT_FSQR
+     31,  // TEXT_FSQR
+     34,  // TEXT_FSQR
+     30,  // TEXT_FSQRD
+     33,  // TEXT_FSQRD
+     29,  // TEXT_FSQRS
+     32,  // TEXT_FSQRS
+    120,  // TEXT_FSTP
+      7,  // TEXT_FSUB
+     10,  // TEXT_FSUB
+     13,  // TEXT_FSUB
+      9,  // TEXT_FSUBD
+     12,  // TEXT_FSUBD
+      8,  // TEXT_FSUBS
+     11,  // TEXT_FSUBS
+};
+#endif
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
@@ -524,6 +798,25 @@ const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
+#if !defined(LIBASM_Z8000_NOFPU)
+#define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
+
+constexpr EntryPage Z8070_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_Z8070), ARRAY_RANGE(INDEX_Z8070)},
+};
+
+using Fpu = entry::CpuBase<FpuType, EntryPage>;
+
+constexpr Fpu FPU_TABLE[] PROGMEM = {
+        {FPU_Z8070, TEXT_FPU_Z8070, ARRAY_RANGE(Z8070_PAGES)},
+        {FPU_NONE, TEXT_none, EMPTY_RANGE(Z8070_PAGES)},
+};
+
+const Fpu *fpu(FpuType fpuType) {
+    return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
+}
+#endif
+
 bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -532,7 +825,8 @@ bool acceptMode(AddrMode opr, AddrMode table) {
                table == M_DBLR;
     if (opr == M_IM)
         return table == M_GENI || table == M_IM8 || table == M_BIT || table == M_CNT ||
-               table == M_QCNT || table == M_SCNT || table == M_NCNT || table == M_IO;
+               table == M_QCNT || table == M_SCNT || table == M_NCNT || table == M_IO ||
+               table == M_FCNT || table == M_FMODE;
     if (opr == M_IR)
         return table == M_GENI || table == M_GEND || table == M_GENA || table == M_IRIO;
     if (opr == M_DA)
@@ -542,8 +836,8 @@ bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_GENI || table == M_GEND || table == M_GENA;
     if (opr == M_CC)  // C & Z are flag names as well
         return table == M_FLAG || acceptMode(M_DA, table);
-    if (opr == M_INTR || opr == M_FLAG)
-        return acceptMode(M_DA, table);  // VI/NVI and P/S/V are symbol names too
+    if (opr == M_INTR || opr == M_FLAG || opr == M_FFLAG)
+        return acceptMode(M_DA, table);  // VI/NVI, P/S/V and INV/FOV/... are symbol names too
     if (opr == M_NONE)
         return table == M_CC || table == M_INTR || table == M_FLAG;
     return false;
@@ -555,8 +849,12 @@ bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
 
-Error searchName(CpuType cpuType, AsmInsn &insn) {
-    cpu(cpuType)->searchName(insn, acceptModes);
+Error searchName(const CpuSpec &cpuSpec, AsmInsn &insn) {
+    cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+#if !defined(LIBASM_Z8000_NOFPU)
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+#endif
     return insn.getError();
 }
 
@@ -572,20 +870,28 @@ bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *) {
     if (opc == entry->readOpCode()) {
         if (flags.postFormat() != PF_NONE) {
             insn.readPostfix();
-            return (insn.postfix() & flags.postMask()) == flags.postVal();
+            const auto post = insn.postfix();
+            // Precision 10 is reserved.
+            if (flags.hasPrecision() && (post & 0x3000) == 0x2000)
+                return false;
+            return (post & flags.postMask()) == flags.postVal();
         }
         return true;
     }
     return false;
 }
 
-Error searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
+    cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+#if !defined(LIBASM_Z8000_NOFPU)
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
+#endif
     return insn.getError();
 }
 
-Error searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error searchOpCodeAlias(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) {
+    auto entry = cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;
         Cpu::defaultReadName(insn, entry, out);
@@ -608,6 +914,40 @@ Error TableZ8000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
         return OK;
     }
     return UNSUPPORTED_CPU;
+}
+
+const char *Config::fpu_P() const {
+#if defined(LIBASM_Z8000_NOFPU)
+    return TEXT_none;
+#else
+    return fpu(_cpuSpec.fpu)->name_P();
+#endif
+}
+
+Error Config::setFpuType(FpuType fpuType) {
+    if (fpuType == FPU_NONE) {
+        _cpuSpec.fpu = FPU_NONE;
+        return OK;
+    }
+#if !defined(LIBASM_Z8000_NOFPU)
+    if (fpuType == FPU_ON || fpuType == FPU_Z8070) {
+        _cpuSpec.fpu = FPU_Z8070;
+        return OK;
+    }
+#endif
+    return UNKNOWN_OPERAND;
+}
+
+Error Config::setFpuName(StrScanner &scan) {
+    if (scan.expectFalse())
+        return setFpuType(FPU_NONE);
+#if !defined(LIBASM_Z8000_NOFPU)
+    if (scan.expectTrue())
+        return setFpuType(FPU_ON);
+    if (scan.iequals_P(TEXT_FPU_Z8070))
+        return setFpuType(FPU_Z8070);
+#endif
+    return UNKNOWN_OPERAND;
 }
 
 const TableZ8000 TABLE;
