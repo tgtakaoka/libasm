@@ -90,6 +90,7 @@ TGT_i8086    = i8086 i80186 i80286 i80386 i80486 v30 v33 v35
 GENOPT_v30   = -O lock-insn=on
 GENOPT_v33   = -O lock-insn=on
 GENOPT_v35   = -O lock-insn=on
+GENOPT_z8070 = -O fpu=on
 TGT_i8096    = i8096 i80196kb i80196 i80196n i80296
 TGT_ins8060  = ins8060
 TGT_ins8070  = ins8070
@@ -115,7 +116,7 @@ TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9980 tms9995 tms99105 tms99110
 TGT_z280     = z280
 TGT_z380     = z380
-TGT_z8000    = z8001 z8002
+TGT_z8000    = z8001 z8002 z8070
 TGT_z80      = z80 z180
 TGT_z8       = z8 z86c z88
 
@@ -238,6 +239,7 @@ CPU_z280     = Z280
 CPU_z380     = Z380
 CPU_z8001    = Z8001
 CPU_z8002    = Z8002
+CPU_z8070    = Z8002
 CPU_z80      = Z80
 CPU_z86c     = Z86C40
 CPU_z88      = Z88C00

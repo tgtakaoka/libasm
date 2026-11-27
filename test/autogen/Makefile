@@ -40,7 +40,7 @@ INC_targets = w65c816 tlcs90 $(TGT_tlcs900) i8086 i80186 i80386 i80486 v30 \
     cp1600 $(TGT_superh) $(TGT_z8) $(TGT_am29000) mc68hcs12 mc68hcs12x \
     $(TGT_c166)
 # target which for GNU assembler (also ".ginc" targets)
-GINC_targets = $(TGT_mc68000) $(TGT_z8000) $(TGT_pdp11) $(TGT_h8300) \
+GINC_targets = $(TGT_mc68000) z8001 z8002 $(TGT_pdp11) $(TGT_h8300) \
     $(TGT_h8500) $(TGT_superh) $(TGT_am29000) $(TGT_i960) ns32000 mc68hc11 \
     $(TGT_mc68hc12) i8086 i80186 i80286 i80386 i80486 tms320c30 tms320c31 \
     tms320c32 $(TGT_c166)
@@ -72,8 +72,9 @@ NOASM_targets = i80286 h8s2000n h8s2000 h8s2600n h8s2600 i960
 # See ~/asl_bugs/asl_bug_superh.md.
 # xc16x: ASL has no XC16X (C166S V2) selector, so it knows neither the MAC unit
 # nor JMPA+/-, the USR conditions, SBRK and ENWDT.
+# z8070: ASL has no Z8070 support.
 ASL_exclude = mb8861 i80286 h8300hn h8300h h8s2000n h8s2000 h8s2600n h8s2600 \
-    shdsp $(TGT_h8500) am29050 i960 h16 xc16x
+    shdsp $(TGT_h8500) am29050 i960 h16 xc16x z8070
 # CPU variants whose gas toolchain does not produce a manual-conforming
 # encoding. h8300-elf-as has no -mach=h8300; it always emits the H8/300H
 # 4-byte form for JMP/JSR @aa:16, producing bytes that don't execute on
