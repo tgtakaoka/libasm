@@ -32,14 +32,20 @@ struct AsmZ8000 final : Assembler, Config {
     Error setShortDirect(bool enable);
 
 private:
+    const TextOption<Config> _opt_fpu;
     const BoolOption<AsmZ8000> _opt_shortDirect;
 
     bool _autoShortDirect;
 
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;
+    int8_t parseFpuFlagNames(StrScanner &scan) const;
     void parseAddress(StrScanner &scan, Operand &op) const;
+    bool parseFpuOperand(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
+    PrecName parsePrecision(StrScanner &scan) const;
+    Error parseOperands(StrScanner &scan, AsmInsn &insn) const;
+    Error encodeOperands(AsmInsn &insn) const;
 
     void emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data) const;
     void emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const;
@@ -58,10 +64,17 @@ private:
     void checkRegisterOverlap(
             AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) const;
 
+    Error setFpu(StrScanner &scan, Insn &insn, uint16_t extra);
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();
+
+    using PseudoZ8000 = pseudo::__Pseudo<AsmZ8000, Insn>;
+    using PseudosZ8000 = pseudo::__Pseudos<PseudoZ8000>;
+    static const PseudoZ8000 PSEUDO_Z8000_TABLE[] PROGMEM;
+    static const PseudosZ8000 PSEUDOS_Z8000 PROGMEM;
 };
 
 }  // namespace z8000
