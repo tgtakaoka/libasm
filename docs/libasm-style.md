@@ -2149,6 +2149,49 @@ and `sh2a` an external adjudicator for the first time.
   matched entry asked for an address. That fires only on the label path; the
   keyword path keeps `mode == op.mode` and runs the original code.
 
+#### Z8070 FPU (`--fpu=z8070`, off by default)
+
+- **The Z8070 Product Specification gives mnemonics and operand forms but NO
+  encoding.** Word 1 is the CPU template of the Z8000 CPU Technical Manual
+  section 6.8 (8E04 internal, 8E00 FCW<-EPU, 8F00 CPU<-EPU, 8F08 EPU<-CPU, 0F0C
+  memory<-EPU, 0F04 EPU<-memory; EPU ID bits 1-0 are always 0). Word 2 comes
+  from Zilog's Z8070 emulation package for CP/M-8000 (`fpe.z8k` in `8k0583.zip`,
+  byte-identical to the shipped FPE.O): operation in bits 15-14 and 7-4, result
+  precision in bits 13-12 (00 extended, 01 SGL, 11 DBL, 10 reserved), a
+  register in bits 11-8 (CPU register on CPU transfers, else an F register),
+  words-minus-one in bits 3-0 (S=1, D=3, extended/BCD=4, 0 on internal and FCW
+  forms). The F and NF mnemonic variants (FCPZ/FCPZNF, FCPF/FCP, FREMSTEP/
+  FREMSNF) differ in word 1 only. Confirmed on zcc compiler output (fmandel,
+  fops) that Zilog's FPE executes correctly.
+- **Precision is a keyword in front of the operands**, `FMULD DBL F0,addr`,
+  as the spec's `FXXX[S,D] rnd dst,src` shows; zcc's own assembler never
+  spells it and writes `fsub f2,f0` for 7090 (precision 11). The S/D suffix
+  names the size of the CPU or memory operand (RRn/RQn/Rn for 2/4/5 words).
+  The parser takes SGL/DBL as precision only when the Z8070 is on and the
+  matched entry has a precision field, so both stay usable as symbols.
+- **The emulator is the implementation to follow** (user decision 2026-11-27):
+  what it executes is in, what it does not is out. The precision bits are
+  accepted on every operation because it reads them on every operation.
+- **Operand spellings with no manual source**: `FCBn` flag groups follow
+  Zilog's debugger (`fldctlb fcb4`; zcc writes `comflg`), `FCTLn` control
+  registers mirror that, and FLDCTL requires its `#count`. FSETFLG/FRESFLG and
+  FSETTRAP/FRESTRAP take the spec's sticky-flag names INV, FOV, UN, DZ, INX, DE
+  as word-2 bits 8-13 (the emulator's mask is the whole high byte, so its bits
+  6-7 are always set by the opcode); the trap forms differ in word 1 (8E24).
+  FSETMODE is `#mask, #setting` nibbles (bits 11-8 and 3-0; bits 3-2 of each
+  are the rounding mode, bit 0 an infinity mode the 1985 spec no longer has).
+  FLDM `dst,src,#n` moves n (1 or 2) five-word registers, count field 5n-1.
+  FSTP (not in the spec) is a no-op in the emulator and decodes as `FSTP`.
+- **Not implemented**: FRDIV, FRVSUB, FLDNF and FPWR2 are absent from the
+  emulator. FREMSNF has no S/D forms (the spec lists none). FCPZNF and FCPZXNF
+  take an F register only: the spec allows CPU and memory operands, but the
+  emulator's compare-with-zero reads the register slot, not the transferred
+  data. The emulator's third FSETFLG target (word-1 field 1, its own compare
+  flags byte) has no name and stays unknown. Unknown templates stay
+  UNKNOWN_INSTRUCTION; there is no generic EPU form.
+- GNU as knows only one-word `ext0f #n` placeholders, so the `z8070` autogen
+  target has no `.ginc` and no ASL cross-check.
+
 ### MC68HC12 / MC68HCS12 / MC68HCS12X
 
 - CpuTypes MC68HC12, MC68HCS12, MC68HCS12X (`68HC12X` alias for ASL). HCS12
